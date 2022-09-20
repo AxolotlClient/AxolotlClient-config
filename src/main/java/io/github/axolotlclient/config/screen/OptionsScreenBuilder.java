@@ -1,7 +1,7 @@
 package io.github.axolotlclient.config.screen;
 
 import com.mojang.blaze3d.platform.GlStateManager;
-import io.github.axolotlclient.config.AxolotlClientConfig;
+import io.github.axolotlclient.config.AxolotlClientConfigManager;
 import io.github.axolotlclient.config.AxolotlClientConfigConfig;
 import io.github.axolotlclient.config.options.ColorOption;
 import io.github.axolotlclient.config.options.Tooltippable;
@@ -67,7 +67,7 @@ public class OptionsScreenBuilder extends Screen {
     }
 
     public void closeColorPicker() {
-        AxolotlClientConfig.saveCurrentConfig();
+        AxolotlClientConfigManager.saveCurrentConfig();
         picker=null;
     }
 
@@ -114,7 +114,7 @@ public class OptionsScreenBuilder extends Screen {
             if(isPickerOpen()){
                 closeColorPicker();
             }
-            AxolotlClientConfig.saveCurrentConfig();
+            AxolotlClientConfigManager.saveCurrentConfig();
             MinecraftClient.getInstance().openScreen(parent);
         }
     }
@@ -242,7 +242,7 @@ public class OptionsScreenBuilder extends Screen {
     protected OptionCategory getAllOptions(){
         OptionCategory temp = new OptionCategory("", false);
 
-        for(OptionCategory cat: AxolotlClientConfig.getModConfig(modid).getCategories()) {
+        for(OptionCategory cat: AxolotlClientConfigManager.getModConfig(modid).getCategories()) {
             setupOptionsList(temp, cat);
         }
 

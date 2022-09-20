@@ -1,7 +1,7 @@
 package io.github.axolotlclient.config;
 
 import com.google.gson.*;
-import io.github.axolotlclient.config.AxolotlClientConfig;
+import io.github.axolotlclient.config.AxolotlClientConfigManager;
 import io.github.axolotlclient.config.options.Option;
 import io.github.axolotlclient.config.options.OptionCategory;
 import net.fabricmc.loader.api.FabricLoader;
@@ -20,14 +20,14 @@ public class DefaultConfigManager implements ConfigManager {
 
     public DefaultConfigManager(String modid){
         this.modid = modid;
-        categories = AxolotlClientConfig.getModConfig(modid).getCategories();
+        categories = AxolotlClientConfigManager.getModConfig(modid).getCategories();
     }
 
     public void save(){
         try{
             saveFile();
         } catch (IOException e) {
-            AxolotlClientConfig.LOGGER.error("Failed to save config for mod: {}!", modid);
+            AxolotlClientConfigManager.LOGGER.error("Failed to save config for mod: {}!", modid);
         }
     }
 
@@ -74,7 +74,7 @@ public class DefaultConfigManager implements ConfigManager {
                 }
             }
         } catch (Exception e){
-            AxolotlClientConfig.LOGGER.error("Failed to load config for modid {}! Using default values... \nError: ", modid);
+            AxolotlClientConfigManager.LOGGER.error("Failed to load config for modid {}! Using default values... \nError: ", modid);
             e.printStackTrace();
         }
     }
@@ -97,7 +97,7 @@ public class DefaultConfigManager implements ConfigManager {
     }
 
     public void loadDefaults(){
-        AxolotlClientConfig.getModConfig(modid).getCategories().forEach(this::setOptionDefaults);
+        AxolotlClientConfigManager.getModConfig(modid).getCategories().forEach(this::setOptionDefaults);
     }
 
     public void setOptionDefaults(OptionCategory category){

@@ -1,7 +1,5 @@
 package io.github.axolotlclient.config;
 
-import io.github.axolotlclient.config.ConfigManager;
-import io.github.axolotlclient.config.DefaultConfigManager;
 import io.github.axolotlclient.config.options.OptionCategory;
 import io.github.axolotlclient.config.screen.OptionsScreenBuilder;
 import net.minecraft.client.MinecraftClient;
@@ -10,15 +8,11 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.HashMap;
 
-public class AxolotlClientConfig {
+public class AxolotlClientConfigManager {
     private static final HashMap<String, ConfigHolder> configs = new HashMap<>();
     private static final HashMap<String, ConfigManager> managers = new HashMap<>();
 
     public static Logger LOGGER = LogManager.getLogger("AxolotlClient Config");
-
-    public AxolotlClientConfig(){
-
-    }
 
     public static void registerConfig(String modid, ConfigHolder config, ConfigManager manager){
         configs.put(modid, config);

@@ -2,7 +2,7 @@ package io.github.axolotlclient.config.screen;
 
 import com.google.common.collect.Lists;
 import com.mojang.blaze3d.platform.GlStateManager;
-import io.github.axolotlclient.config.AxolotlClientConfig;
+import io.github.axolotlclient.config.AxolotlClientConfigManager;
 import io.github.axolotlclient.config.AxolotlClientConfigConfig;
 import io.github.axolotlclient.config.options.*;
 import io.github.axolotlclient.config.screen.widgets.*;
@@ -344,27 +344,27 @@ public class ButtonWidgetList extends EntryListWidget {
         protected void onClick(ButtonWidget button, int mouseX, int mouseY, int mB){
             if (button instanceof OptionSliderWidget){
                 button.isMouseOver(client, mouseX, mouseY);
-                AxolotlClientConfig.saveCurrentConfig();
+                AxolotlClientConfigManager.saveCurrentConfig();
             } else if (button instanceof CategoryWidget) {
                 ((CategoryWidget) button).mouseClicked(mouseX, mouseY);
 
             } else if (button instanceof EnumOptionWidget) {
                 button.playDownSound(client.getSoundManager());
                 ((EnumOptionWidget) button).mouseClicked(mB);
-                AxolotlClientConfig.saveCurrentConfig();
+                AxolotlClientConfigManager.saveCurrentConfig();
 
             } else if (button instanceof StringOptionWidget) {
                 ((StringOptionWidget) button).textField.mouseClicked(mouseX, mouseY, 0);
-                AxolotlClientConfig.saveCurrentConfig();
+                AxolotlClientConfigManager.saveCurrentConfig();
 
             } else if (button instanceof BooleanWidget) {
                 button.playDownSound(client.getSoundManager());
                 ((BooleanWidget) button).mouseClicked(mouseX, mouseY, mB);
-                AxolotlClientConfig.saveCurrentConfig();
+                AxolotlClientConfigManager.saveCurrentConfig();
 
             } else if (button instanceof ColorOptionWidget) {
                 ((ColorOptionWidget) button).mouseClicked(mouseX, mouseY);
-                AxolotlClientConfig.saveCurrentConfig();
+                AxolotlClientConfigManager.saveCurrentConfig();
 
             } else if (button instanceof GenericOptionWidget){
                 button.playDownSound(client.getSoundManager());

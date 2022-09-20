@@ -1,6 +1,6 @@
 package io.github.axolotlclient.config.options;
 
-import io.github.axolotlclient.config.AxolotlClientConfig;
+import io.github.axolotlclient.config.AxolotlClientConfigManager;
 import io.github.axolotlclient.config.util.ConfigUtils;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.text.LiteralText;
@@ -71,7 +71,7 @@ public class OptionCategory implements Tooltippable {
                         o.onCommandExec(new String[]{});
                     }
 
-                    AxolotlClientConfig.saveCurrentConfig();
+                    AxolotlClientConfigManager.saveCurrentConfig();
                 }
             }
         } else {
