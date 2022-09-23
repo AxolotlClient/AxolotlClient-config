@@ -45,7 +45,9 @@ public class ButtonWidgetList extends EntryListWidget {
 
                 this.entries.add(new CategoryPair(subCat, buttonWidget, subCat2, buttonWidget2));
             }
-            this.entries.add(new Spacer());
+            if(!category.getOptions().isEmpty()) {
+                this.entries.add(new Spacer());
+            }
         }
 
         for (int i = 0; i < (category.getOptions().size()); i ++) {
