@@ -15,7 +15,7 @@ public class StringOptionWidget extends ButtonWidget {
 
     public StringOptionWidget(int id, int x, int y, StringOption option){
         super(id, x, y, 150, 40, option.get());
-        textField = new TextFieldWidget(0, MinecraftClient.getInstance().textRenderer, x, y, 150, 20){
+        textField = new TextFieldWidget(0, MinecraftClient.getInstance().textRenderer, x, y, 149, 20){
             @Override
             public void mouseClicked(int mouseX, int mouseY, int button) {
                 if(isMouseOver(MinecraftClient.getInstance(), mouseX, mouseY)) {

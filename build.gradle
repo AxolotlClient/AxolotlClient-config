@@ -42,6 +42,7 @@ dependencies {
 
 	implementation('org.apache.logging.log4j:log4j-core:2.18.0')
 
+	modImplementation files("libs/legacy-modmenu-1.1.1-dev.jar")
 }
 
 // More hacks that make mac os work

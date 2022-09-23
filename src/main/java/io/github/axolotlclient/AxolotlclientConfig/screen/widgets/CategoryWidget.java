@@ -82,7 +82,9 @@ public class CategoryWidget extends ButtonWidget {
             enabledButton.mouseClicked(mouseX, mouseY, 0);
         } else {
             if(MinecraftClient.getInstance().currentScreen instanceof OptionsScreenBuilder) {
-                MinecraftClient.getInstance().openScreen(new OptionsScreenBuilder(MinecraftClient.getInstance().currentScreen, category, ((OptionsScreenBuilder) MinecraftClient.getInstance().currentScreen).modid));
+                MinecraftClient.getInstance().openScreen(
+                        new OptionsScreenBuilder(MinecraftClient.getInstance().currentScreen, category,
+                                ((OptionsScreenBuilder) MinecraftClient.getInstance().currentScreen).modid));
             }
         }
     }

@@ -16,12 +16,27 @@ public class EnumOptionWidget extends ButtonWidget {
 
     @Override
     public boolean isMouseOver(MinecraftClient client, int mouseX, int mouseY) {
+        if(canHover()) {
+            return mouseX >= this.x && mouseY >= this.y && mouseX < this.x + this.width && mouseY < this.y + this.height;
+        }
+        return false;
+    }
+
+    protected boolean canHover(){
         if(MinecraftClient.getInstance().currentScreen instanceof OptionsScreenBuilder &&
                 ((OptionsScreenBuilder) MinecraftClient.getInstance().currentScreen).isPickerOpen()){
             this.hovered = false;
             return false;
         }
-        return super.isMouseOver(client, mouseX, mouseY);
+        return true;
+    }
+
+    @Override
+    protected int getYImage(boolean isHovered) {
+        if(canHover()) {
+            return super.getYImage(isHovered);
+        }
+        return 1;
     }
 
     public void mouseClicked(int button){

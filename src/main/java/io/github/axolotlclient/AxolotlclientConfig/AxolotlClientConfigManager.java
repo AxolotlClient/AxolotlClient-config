@@ -6,7 +6,9 @@ import net.minecraft.client.MinecraftClient;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class AxolotlClientConfigManager {
     private static final HashMap<String, ConfigHolder> configs = new HashMap<>();
@@ -28,10 +30,21 @@ public class AxolotlClientConfigManager {
     }
 
     public static ConfigHolder getModConfig(String modid){
+        if(modid.equals("axolotlclientconfig")){
+            return new ConfigHolder() {
+                @Override
+                public List<OptionCategory> getCategories() {
+                    return new ArrayList<>();
+                }
+            };
+        }
         return configs.get(modid);
     }
 
     public static void save(String modid) {
+        if(modid.equals("axolotlclientconfig")){
+            return;
+        }
         managers.get(modid).save();
     }
 

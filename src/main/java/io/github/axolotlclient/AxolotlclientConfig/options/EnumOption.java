@@ -26,6 +26,11 @@ public class EnumOption extends OptionBase<String> {
         values = e;
     }
 
+    public EnumOption(String name, String[] e, ChangedListener<String> onChange, String def) {
+        super(name, onChange, def);
+        values = e;
+    }
+
     @Override
     public void setValueFromJsonElement(JsonElement element) {
         for(int i=0; i<values.length;i++){

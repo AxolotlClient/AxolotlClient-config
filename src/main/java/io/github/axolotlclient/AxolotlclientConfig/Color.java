@@ -72,6 +72,9 @@ public class Color {
     }
 
     public static Color getChroma(){
+        if(chromaColors.isEmpty()){
+            setupChroma();
+        }
         return chromaColors.get(chromaColorIndex);
     }
 

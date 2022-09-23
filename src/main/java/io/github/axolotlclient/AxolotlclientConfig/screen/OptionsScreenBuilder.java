@@ -18,6 +18,7 @@ import org.lwjgl.input.Keyboard;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 
 public class OptionsScreenBuilder extends Screen {
@@ -74,7 +75,6 @@ public class OptionsScreenBuilder extends Screen {
     public boolean isPickerOpen(){
         return picker!=null;
     }
-
     @Override
     protected void mouseDragged(int i, int j, int k, long l) {
         if(!isPickerOpen()) {
@@ -95,9 +95,8 @@ public class OptionsScreenBuilder extends Screen {
                 picker.onClick(mouseX, mouseY);
             }
         } else {
-            searchWidget.mouseClicked(mouseX, mouseY, button);
-
             this.list.mouseClicked(mouseX, mouseY, button);
+            searchWidget.mouseClicked(mouseX, mouseY, button);
         }
     }
 
@@ -138,7 +137,7 @@ public class OptionsScreenBuilder extends Screen {
             @Override
             public void mouseClicked(int mouseX, int mouseY, int button) {
                 if(isHovered(mouseX, mouseY)) {
-                    if(!isFocused() && cat.getName().equals("config")){
+                    if(!isFocused() && cat.toString().toLowerCase(Locale.ROOT).contains(modid.toLowerCase(Locale.ROOT))){
                         MinecraftClient.getInstance().openScreen(new OptionsScreenBuilder(that(), getAllOptions(), modid));
                         return;
                     }
@@ -150,13 +149,13 @@ public class OptionsScreenBuilder extends Screen {
 
             @Override
             public void render() {
-                if(getText().isEmpty()) {
+                if(!isFocused()) {
                     drawWithShadow(MinecraftClient.getInstance().textRenderer, Formatting.ITALIC + I18n.translate("search")+"...", x-1, y, -8355712);
                 }
 
                 super.render();
 
-                drawVerticalLine(x-5, y-1, y+11, -1);
+                //drawVerticalLine(x-5, y-1, y+11, -1); // Toad didn't like this.
                 drawHorizontalLine(x-5, x+100, y+11, -1);
             }
 
@@ -171,9 +170,9 @@ public class OptionsScreenBuilder extends Screen {
         };
 
         this.buttons.add(new ButtonWidget(0, this.width/2-100, this.height-40, 200, 20, I18n.translate("back")));
-        if(!Objects.equals(cat.getName(), "config")) {
+        /*if(searchFocused) {
             searchWidget.setFocused(true);
-        }
+        }*/
 
         searchWidget.setListener(new PagedEntryListWidget.Listener() {
             @Override
