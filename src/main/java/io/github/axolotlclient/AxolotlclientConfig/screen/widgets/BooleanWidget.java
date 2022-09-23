@@ -16,7 +16,6 @@ public class BooleanWidget extends ButtonWidget {
         super(id, x, y, width, height, "");
         this.active=true;
         this.option=option;
-        updateMessage();
     }
 
     public void updateMessage(){
@@ -27,7 +26,6 @@ public class BooleanWidget extends ButtonWidget {
         if(!option.getForceDisabled()){
             option.toggle();
         }
-        updateMessage();
     }
 
     @Override
@@ -61,6 +59,7 @@ public class BooleanWidget extends ButtonWidget {
         }
 
         int color = option.get()? 0x55FF55 : 0xFF5555;
+        updateMessage();
 
         this.drawCenteredString(textRenderer, this.message, this.x + this.width / 2, this.y + (this.height - 8) / 2, color);
 
