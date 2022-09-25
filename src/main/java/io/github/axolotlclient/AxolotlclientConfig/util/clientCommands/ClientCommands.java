@@ -2,6 +2,12 @@ package io.github.axolotlclient.AxolotlclientConfig.util.clientCommands;
 
 import java.util.HashMap;
 
+/**
+ * A class badly implementing client-sided commands.
+ * Promise: has bugs.
+ * Is functional though.
+ */
+
 public class ClientCommands {
 
     private static final ClientCommands Instance = new ClientCommands();

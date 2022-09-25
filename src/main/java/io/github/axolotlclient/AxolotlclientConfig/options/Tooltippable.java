@@ -8,6 +8,11 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Objects;
 
+/**
+ * A basic interface representing an element with a tooltip.
+ * The tooltip should be located at key.tooltip
+ */
+
 public interface Tooltippable {
 
     String getName();
@@ -27,6 +32,10 @@ public interface Tooltippable {
         }
         return null;
     }
+
+    /**
+     * A simple comparator to sort elements alphabetically
+     */
 
     class AlphabeticalComparator implements Comparator<Tooltippable> {
 

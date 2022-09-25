@@ -12,6 +12,11 @@ import java.nio.file.Path;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * A default config manager to use by mods not implementing a custom one.
+ * The modid (all lowercase) is used for the file name, in json format.
+ */
+
 public class DefaultConfigManager implements ConfigManager {
     private final List<OptionCategory> categories;
     private final String modid;

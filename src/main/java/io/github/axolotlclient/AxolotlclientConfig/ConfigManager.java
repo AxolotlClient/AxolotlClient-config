@@ -5,6 +5,11 @@ import com.google.gson.JsonObject;
 import io.github.axolotlclient.AxolotlclientConfig.options.Option;
 import io.github.axolotlclient.AxolotlclientConfig.options.OptionCategory;
 
+/**
+ * The class handling config saving/loading.
+ * Also has some common methods for category saving and loading.
+ */
+
 public interface ConfigManager {
 
     void save();

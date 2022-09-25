@@ -2,11 +2,16 @@ package io.github.axolotlclient.AxolotlclientConfig.util.clientCommands;
 
 import java.util.List;
 
+/**
+ * A class representing a client-sided command,
+ * its suggestions and its execution callback
+ */
+
 public class Command {
 
-    String command;
-    CommandSuggestionCallback suggestions;
-    CommandExecutionCallback exec;
+    private final String command;
+    private final CommandSuggestionCallback suggestions;
+    private final CommandExecutionCallback exec;
 
     public Command(String command, CommandSuggestionCallback suggestions, CommandExecutionCallback onExecute) {
         this.command = command;

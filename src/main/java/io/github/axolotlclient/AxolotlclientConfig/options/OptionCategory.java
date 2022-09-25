@@ -10,7 +10,7 @@ import java.util.*;
 
 public class OptionCategory implements Tooltippable {
 
-    String name;
+    private final String name;
     private final List<OptionBase<?>> options = new ArrayList<>();
     private final List<OptionCategory> subCategories = new ArrayList<>();
 

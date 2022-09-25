@@ -8,12 +8,37 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
+/**
+ * A basic option
+ * @param <T> The type of option this should be.
+ */
+
 public abstract class OptionBase<T> implements Option {
 
+    /**
+     * The current value of this option
+     */
     protected T option;
+
+    /**
+     * The default value.
+     */
     protected final T def;
+
+    /**
+     * This option's translation key
+     */
     public String name;
+
+    /**
+     * (If set) this option's tooltip key prefix
+     */
     public String tooltipKeyPrefix;
+
+    /**
+     * This option's callback to be called on changes of the value.
+     * Will not be called on initial load.
+     */
     protected final ChangedListener<T> changeCallback;
 
     public OptionBase(String name, T def){

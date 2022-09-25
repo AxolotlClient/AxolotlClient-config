@@ -8,6 +8,12 @@ import io.github.axolotlclient.AxolotlclientConfig.options.OptionCategory;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Config options for this config lib.
+ * Add these options to your config to make them available to the user.
+ * They universally are applied to every config screen created by this lib, but that shouldn't matter.
+ */
+
 public class AxolotlClientConfigConfig extends ConfigHolder {
 
     public static BooleanOption showQuickToggles = new BooleanOption("showQuickToggles", true);
