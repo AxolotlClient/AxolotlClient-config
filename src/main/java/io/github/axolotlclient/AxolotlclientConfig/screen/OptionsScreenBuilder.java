@@ -142,7 +142,7 @@ public class OptionsScreenBuilder extends Screen {
             public boolean mouseClicked(double mouseX, double mouseY, int button) {
                 if(isMouseOver(mouseX, mouseY)) {
                     if (!isFocused() && cat.toString().toLowerCase(Locale.ROOT).contains(modid.toLowerCase(Locale.ROOT))) {
-                        MinecraftClient.getInstance().setScreen(new OptionsScreenBuilder(MinecraftClient.getInstance().currentScreen, getAllOptions(), modid));
+                        MinecraftClient.getInstance().setScreen(new OptionsScreenBuilder(that(), getAllOptions(), modid));
                         return true;
                     }
                     setSuggestion("");
@@ -244,5 +244,9 @@ public class OptionsScreenBuilder extends Screen {
                 setupOptionsList(target, sub);
             }
         }
+    }
+
+    private OptionsScreenBuilder that(){
+        return this;
     }
 }
