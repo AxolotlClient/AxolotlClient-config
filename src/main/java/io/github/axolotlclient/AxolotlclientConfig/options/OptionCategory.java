@@ -28,7 +28,9 @@ public class OptionCategory implements Tooltippable {
     public OptionCategory(String key, boolean registerCommand){
         this.name=key;
         if(registerCommand) {
-            ClientCommandRegistrationCallback.EVENT.register((dispatcher, buildContext, environment) -> ClientCommandManager.getDispatcher().register(buildCommand()));
+            try {
+                ClientCommandRegistrationCallback.EVENT.register((dispatcher, buildContext, environment) -> ClientCommandManager.getDispatcher().register(buildCommand()));
+            } catch (NoClassDefFoundError ignored){}
         }
     }
 

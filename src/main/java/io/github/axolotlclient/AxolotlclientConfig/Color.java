@@ -1,6 +1,6 @@
 package io.github.axolotlclient.AxolotlclientConfig;
 
-import org.quiltmc.qsl.lifecycle.api.client.event.ClientTickEvents;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -83,7 +83,7 @@ public class Color {
     public static Color getChroma(){
         if(chromaColors.isEmpty()){
             setupChroma();
-            ClientTickEvents.END.register((client)->tickChroma());
+            ClientTickEvents.END_CLIENT_TICK.register(client -> tickChroma());
         }
         return chromaColors.get(chromaColorIndex);
     }

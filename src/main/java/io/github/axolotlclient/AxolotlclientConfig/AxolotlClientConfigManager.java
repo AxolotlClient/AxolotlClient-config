@@ -6,6 +6,7 @@ import net.minecraft.client.MinecraftClient;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.ApiStatus;
+import org.quiltmc.loader.api.QuiltLoader;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -26,6 +27,12 @@ public class AxolotlClientConfigManager {
     public static void registerConfig(String modid, ConfigHolder config, ConfigManager manager){
         configs.put(modid, config);
         managers.put(modid, manager);
+
+        try {
+            QuiltLoader.getModContainer("");
+        } catch (NoClassDefFoundError e){
+            AxolotlClientConfigManager.LOGGER.warn("Running under Fabric, Commands for mod {} will not work!", modid);
+        }
     }
 
     public static void registerConfig(String modid, ConfigHolder config){
