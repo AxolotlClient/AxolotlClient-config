@@ -1,5 +1,7 @@
 package io.github.axolotlclient.AxolotlclientConfig;
 
+import org.quiltmc.qsl.lifecycle.api.client.event.ClientTickEvents;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,7 +37,7 @@ public class Color {
         this.color = color;
     }
 
-    public static void setupChroma(){
+    private static void setupChroma(){
         for (int r=0; r<75; r++) chromaColors.add(new Color(r*255/75,       255,         0));
         for (int g=75; g>0; g--) chromaColors.add(new Color(      255, g*255/75,         0));
         for (int b=0; b<75; b++) chromaColors.add(new Color(      255,         0, b*255/75));
@@ -45,7 +47,7 @@ public class Color {
         chromaColors.add(new Color(0,255,0));
     }
 
-    public static void tickChroma(){
+    private static void tickChroma(){
         chromaColorIndex+= AxolotlClientConfigConfig.chromaSpeed.get();
         if(chromaColorIndex >= chromaColors.size()-1)chromaColorIndex=0;
         else if(chromaColorIndex<0){chromaColorIndex=0;}
@@ -71,9 +73,17 @@ public class Color {
         return setData(color >> 16 & 0xFF, color >> 8 & 0xFF, color & 0xFF, color >> 24 & 0xFF);
     }
 
+    /**
+     * Get the current Color for a chroma value.
+     * Speed can be changed via the corresponding option. {@see AxolotlClientConfigConfig}
+     *
+     * @return The current Chroma value, as a Color
+     */
+
     public static Color getChroma(){
         if(chromaColors.isEmpty()){
             setupChroma();
+            ClientTickEvents.END.register((client)->tickChroma());
         }
         return chromaColors.get(chromaColorIndex);
     }

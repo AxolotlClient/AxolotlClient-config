@@ -1,7 +1,7 @@
 package io.github.axolotlclient.AxolotlclientConfig.options;
 
 import com.google.gson.JsonElement;
-import io.github.axolotlclient.AxolotlclientConfig.util.clientCommands.CommandResponse;
+import io.github.axolotlclient.AxolotlclientConfig.util.CommandResponse;
 import org.jetbrains.annotations.NotNull;
 
 public class DoubleOption extends NumericOption<Double> {
@@ -25,10 +25,10 @@ public class DoubleOption extends NumericOption<Double> {
     }
 
     @Override
-    protected CommandResponse onCommandExecution(String[] args) {
+    protected CommandResponse onCommandExecution(String arg) {
         try {
-            if (args.length > 0) {
-                set(Double.parseDouble(args[0]));
+            if (arg.length() > 0) {
+                set(Double.parseDouble(arg));
                 return new CommandResponse(true, "Successfully set "+getName()+" to "+get()+"!");
             }
         } catch (NumberFormatException ignored){

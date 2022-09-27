@@ -3,6 +3,7 @@ package io.github.axolotlclient.AxolotlclientConfig.util;
 import io.github.axolotlclient.AxolotlclientConfig.Color;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawableHelper;
+import net.minecraft.client.util.math.MatrixStack;
 
 /**
  * This implementation of Hud modules is based on KronHUD.
@@ -12,42 +13,42 @@ import net.minecraft.client.gui.DrawableHelper;
 
 public class DrawUtil extends DrawableHelper{
 
-    public static void fillRect(Rectangle rectangle, Color color) {
-        fillRect(rectangle.x, rectangle.y, rectangle.width,
+    public static void fillRect(MatrixStack stack, Rectangle rectangle, Color color) {
+        fillRect(stack, rectangle.x, rectangle.y, rectangle.width,
                 rectangle.height,
                 color.getAsInt());
     }
 
-    public static void fillRect(int x, int y, int width, int height, int color) {
-        DrawableHelper.fill(x, y, x + width, y + height, color);
+    public static void fillRect(MatrixStack stack, int x, int y, int width, int height, int color) {
+        DrawableHelper.fill(stack, x, y, x + width, y + height, color);
     }
 
-    public static void outlineRect(Rectangle rectangle, Color color) {
-        outlineRect(rectangle.x, rectangle.y, rectangle.width, rectangle.height, color.getAsInt());
+    public static void outlineRect(MatrixStack stack, Rectangle rectangle, Color color) {
+        outlineRect(stack, rectangle.x, rectangle.y, rectangle.width, rectangle.height, color.getAsInt());
     }
 
-    public static void outlineRect(int x, int y, int width, int height, int color) {
-        fillRect(x, y, 1, height-1, color);
-        fillRect(x + width - 1, y + 1, 1, height-1, color);
-        fillRect(x+1, y, width-1, 1, color);
-        fillRect(x, y + height - 1, width-1, 1, color);
+    public static void outlineRect(MatrixStack stack, int x, int y, int width, int height, int color) {
+        fillRect(stack, x, y, 1, height-1, color);
+        fillRect(stack, x + width - 1, y + 1, 1, height-1, color);
+        fillRect(stack, x+1, y, width-1, 1, color);
+        fillRect(stack, x, y + height - 1, width-1, 1, color);
     }
 
-    public static void drawCenteredString(TextRenderer renderer,
+    public static void drawCenteredString(MatrixStack stack, TextRenderer renderer,
                                           String text, int centerX, int y,
                                           int color, boolean shadow) {
-        drawString(renderer, text, centerX - renderer.getStringWidth(text) / 2,
+        drawString(stack, renderer, text, centerX - renderer.getWidth(text) / 2,
                 y,
                 color, shadow);
     }
 
-    public static void drawString(TextRenderer renderer, String text, int x, int y,
+    public static void drawString(MatrixStack stack, TextRenderer renderer, String text, int x, int y,
                                   int color, boolean shadow) {
         if(shadow) {
-            renderer.drawWithShadow(text, x, y, color);
+            renderer.drawWithShadow(stack, text, x, y, color);
         }
         else {
-            renderer.draw(text, x, y, color);
+            renderer.draw(stack, text, x, y, color);
         }
     }
 

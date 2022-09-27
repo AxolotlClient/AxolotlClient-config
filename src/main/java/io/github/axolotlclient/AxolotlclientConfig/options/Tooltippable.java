@@ -1,12 +1,18 @@
 package io.github.axolotlclient.AxolotlclientConfig.options;
 
 import net.minecraft.client.resource.language.I18n;
+import net.minecraft.text.Text;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Objects;
+
+/**
+ * A basic interface representing an element with a tooltip.
+ * The tooltip should be located at key.tooltip
+ */
 
 public interface Tooltippable {
 
@@ -21,12 +27,16 @@ public interface Tooltippable {
     }
 
     default @Nullable String getTooltip(String location){
-        String translation = I18n.translate(location + ".tooltip");
+        String translation = Text.translatable(location + ".tooltip").getString();
         if(!Objects.equals(translation, location + ".tooltip")) {
             return translation;
         }
         return null;
     }
+
+    /**
+     * A simple comparator to sort elements alphabetically
+     */
 
     class AlphabeticalComparator implements Comparator<Tooltippable> {
 

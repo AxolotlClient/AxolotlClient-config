@@ -3,9 +3,6 @@ package io.github.axolotlclient.AxolotlclientConfig.options;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 
-import java.util.Collections;
-import java.util.List;
-
 public abstract class NumericOption<T extends Number> extends OptionBase<T>{
 
     protected final T min, max;
@@ -40,11 +37,6 @@ public abstract class NumericOption<T extends Number> extends OptionBase<T>{
 
     public T getMax(){
         return max;
-    }
-
-    @Override
-    public List<String> getCommandSuggestions() {
-        return Collections.singletonList(String.valueOf(def));
     }
 
     @Override

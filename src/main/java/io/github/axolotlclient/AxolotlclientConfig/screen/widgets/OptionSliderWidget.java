@@ -1,6 +1,6 @@
 package io.github.axolotlclient.AxolotlclientConfig.screen.widgets;
 
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import io.github.axolotlclient.AxolotlclientConfig.options.DoubleOption;
 import io.github.axolotlclient.AxolotlclientConfig.options.FloatOption;
 import io.github.axolotlclient.AxolotlclientConfig.options.IntegerOption;
@@ -8,8 +8,10 @@ import io.github.axolotlclient.AxolotlclientConfig.options.NumericOption;
 import io.github.axolotlclient.AxolotlclientConfig.screen.OptionsScreenBuilder;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.widget.ButtonWidget;
+import net.minecraft.client.gui.widget.ClickableWidget;
+import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.text.Text;
 import net.minecraft.util.math.MathHelper;
-import org.jetbrains.annotations.NotNull;
 
 import java.text.DecimalFormat;
 
@@ -23,30 +25,30 @@ public class OptionSliderWidget<T extends NumericOption<N>, N extends Number> ex
     private final N min;
     private final N max;
 
-    public OptionSliderWidget(int id, int x, int y, T option) {
-        this(id, x, y, option, option.getMin(), option.getMax());
+    public OptionSliderWidget(int x, int y, T option) {
+        this(x, y, option, option.getMin(), option.getMax());
     }
 
-    public OptionSliderWidget(int id, int x, int y, int width, int height, T option) {
-        this(id, x, y, width, height, option, option.getMin(), option.getMax());
+    public OptionSliderWidget(int x, int y, int width, int height, T option) {
+        this(x, y, width, height, option, option.getMin(), option.getMax());
     }
 
-    public OptionSliderWidget(int id, int x, int y, T option, N min, N max) {
-        this(id, x, y, 150, 20, option, min, max);
+    public OptionSliderWidget(int x, int y, T option, N min, N max) {
+        this(x, y, 150, 20, option, min, max);
     }
 
-    public OptionSliderWidget(int id, int x, int y, int width, int height, T option, N min, N max) {
-        super(id, x, y, width, height, "");
+    public OptionSliderWidget(int x, int y, int width, int height, T option, N min, N max) {
+        super(x, y, width, height, Text.empty(), (buttonWidget)->{});
         this.option = option;
         this.min = min;
         this.max = max;
         this.value = (option.get().doubleValue() - min.doubleValue()) / (max.doubleValue() - min.doubleValue());
-        this.message = this.getMessage();
+        this.setMessage(this.getMessage());
     }
 
     public void update(){
         value = (option.get().doubleValue() - min.doubleValue()) / max.doubleValue() - min.doubleValue();
-        this.message = this.getMessage();
+        this.setMessage(this.getMessage());
     }
 
     public Double getSliderValue() {
@@ -63,8 +65,8 @@ public class OptionSliderWidget<T extends NumericOption<N>, N extends Number> ex
         return Double.parseDouble(format.format(value));
     }
 
-    protected @NotNull String getMessage() {
-        return ""+ (option instanceof IntegerOption ? getSliderValueAsInt()+"".split("\\.")[0]: this.getSliderValue());
+    public Text getMessage() {
+        return Text.of(""+ (option instanceof IntegerOption ? getSliderValueAsInt()+"".split("\\.")[0]: this.getSliderValue()));
     }
 
     protected int getYImage(boolean isHovered) {
@@ -72,7 +74,7 @@ public class OptionSliderWidget<T extends NumericOption<N>, N extends Number> ex
     }
 
     @SuppressWarnings("unchecked")
-    protected void renderBg(MinecraftClient client, int mouseX, int mouseY) {
+    public void renderButton(MatrixStack matrices, int mouseX, int mouseY, float f) {
         if (this.visible) {
             if (this.dragging) {
                 this.value = (float)(mouseX - (this.x + 4)) / (float)(this.width - 8);
@@ -90,13 +92,22 @@ public class OptionSliderWidget<T extends NumericOption<N>, N extends Number> ex
                     else if (option instanceof IntegerOption) ((IntegerOption) option).set(getSliderValueAsInt());
                 }
 
-                this.message = this.getMessage();
+                this.setMessage(this.getMessage());
             }
 
-            client.getTextureManager().bindTexture(WIDGETS_LOCATION);
-            GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-            this.drawTexture(this.x + (int)(this.value * (float)(this.width - 8)), this.y, 0, 66 + (hovered ? 20:0), 4, 20);
-            this.drawTexture(this.x + (int)(this.value * (float)(this.width - 8)) + 4, this.y, 196, 66 + (hovered ? 20:0), 4, 20);
+            RenderSystem.setShaderTexture(0, ClickableWidget.WIDGETS_TEXTURE);
+            RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+
+            this.drawTexture(matrices, this.x, this.y, 0, 46, this.width / 2, this.height);
+            this.drawTexture(matrices, this.x + this.width / 2, this.y, 200 - this.width / 2, 46, this.width / 2, this.height);
+
+            this.drawTexture(matrices, this.x + (int)(this.value * (float)(this.width - 8)), this.y, 0, 66 + (isHoveredOrFocused() ? 20:0), 4, 20);
+            this.drawTexture(matrices, this.x + (int)(this.value * (float)(this.width - 8)) + 4, this.y, 196, 66 + (isHoveredOrFocused() ? 20:0), 4, 20);
+
+            int j = this.active ? 16777215 : 10526880;
+            drawCenteredText(
+                    matrices, MinecraftClient.getInstance().textRenderer, this.getMessage(), this.x + this.width / 2, this.y + (this.height - 8) / 2, j | MathHelper.ceil(this.alpha * 255.0F) << 24
+            );
         }
     }
 
@@ -110,16 +121,16 @@ public class OptionSliderWidget<T extends NumericOption<N>, N extends Number> ex
     }
 
     @SuppressWarnings("unchecked")
-    public boolean isMouseOver(MinecraftClient client, int mouseX, int mouseY) {
+    public boolean isMouseOver(double mouseX, double mouseY) {
         if(canHover()) {
 
-            if (super.isMouseOver(client, mouseX, mouseY) || dragging) {
+            if (super.isMouseOver(mouseX, mouseY) || dragging) {
                 this.value = (float) (mouseX - (this.x + 4)) / (float) (this.width - 8);
                 this.value = MathHelper.clamp(this.value, 0.0F, 1.0F);
                 if (option instanceof FloatOption) option.set((N) (Float) getSliderValue().floatValue());
                 else if (option instanceof DoubleOption) ((DoubleOption) option).set(getSliderValue());
                 else if (option instanceof IntegerOption) ((IntegerOption) option).set(getSliderValueAsInt());
-                this.message = getMessage();
+                this.setMessage(getMessage());
                 this.dragging = true;
                 return true;
             } else {
@@ -133,8 +144,13 @@ public class OptionSliderWidget<T extends NumericOption<N>, N extends Number> ex
         return option;
     }
 
-    public void mouseReleased(int mouseX, int mouseY) {
+    public boolean mouseReleased(double mouseX, double mouseY, int button) {
         this.dragging = false;
+        return super.mouseReleased(mouseX, mouseY, button);
     }
 
+    @Override
+    public boolean isHoveredOrFocused() {
+        return super.isHoveredOrFocused() || dragging;
+    }
 }

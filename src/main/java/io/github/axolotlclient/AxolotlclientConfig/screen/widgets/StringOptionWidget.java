@@ -1,29 +1,37 @@
 package io.github.axolotlclient.AxolotlclientConfig.screen.widgets;
 
-import com.mojang.blaze3d.platform.GlStateManager;
 import io.github.axolotlclient.AxolotlclientConfig.options.StringOption;
 import io.github.axolotlclient.AxolotlclientConfig.screen.OptionsScreenBuilder;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
+import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.text.Text;
 
-public class StringOptionWidget extends ButtonWidget {
+public class StringOptionWidget extends TextFieldWidget {
+
+	public final StringOption option;
 
     public TextFieldWidget textField;
 
-    public final StringOption option;
-
-    public StringOptionWidget(int id, int x, int y, StringOption option){
-        super(id, x, y, 150, 40, option.get());
-        textField = new TextFieldWidget(0, MinecraftClient.getInstance().textRenderer, x, y, 149, 20){
-            @Override
-            public void mouseClicked(int mouseX, int mouseY, int button) {
-                if(isMouseOver(MinecraftClient.getInstance(), mouseX, mouseY)) {
-                    super.mouseClicked(mouseX, mouseY, button);
+    public StringOptionWidget(int x, int y, StringOption option){
+        super(MinecraftClient.getInstance().textRenderer, x, y, 150, 40, Text.literal(option.get()));
+        textField = new TextFieldWidget(MinecraftClient.getInstance().textRenderer, x, y, 150, 20, Text.empty()){
+	        @Override
+	        public boolean mouseClicked(double mouseX, double mouseY, int button) {
+                if(isMouseOver(mouseX, mouseY)) {
+                    return super.mouseClicked(mouseX, mouseY, button);
                 } else {
                     this.setFocused(false);
+					return false;
                 }
             }
+
+	        @Override
+	        public boolean charTyped(char chr, int modifiers) {
+		        boolean bool = super.charTyped(chr, modifiers);
+		        option.set(textField.getText());
+				return bool;
+	        }
         };
         this.option=option;
         textField.setText(option.get());
@@ -32,30 +40,45 @@ public class StringOptionWidget extends ButtonWidget {
         textField.setMaxLength(512);
     }
 
-    @Override
-    public void render(MinecraftClient client, int mouseX, int mouseY) {
-        GlStateManager.disableDepthTest();
+	@Override
+	public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+		this.textField.keyPressed(keyCode, scanCode, modifiers);
+		this.option.set(textField.getText());
+		return super.keyPressed(keyCode, scanCode, modifiers);
+	}
+
+	@Override
+	public boolean charTyped(char chr, int modifiers) {
+		return textField.charTyped(chr, modifiers) || super.charTyped(chr, modifiers);
+	}
+
+	@Override
+	public void renderButton(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         textField.y = y;
         textField.x = x;
-        textField.render();
-        GlStateManager.enableDepthTest();
-        if(!textField.getText().equals(option.get())){
-            textField.setText(option.get());
-        }
-    }
-    
-    public void keyPressed(char c, int code){
-        this.textField.keyPressed(c, code);
-        this.option.set(textField.getText());
+        textField.render(matrices, mouseX, mouseY, delta);
     }
 
+	@Override
+	public void tick() {
+		if(textField.isFocused()) {
+			textField.tick();
+		}
+	}
+
+	@Override
+	public void setTextFieldFocused(boolean focused) {
+		textField.setTextFieldFocused(focused);
+		super.setTextFieldFocused(focused);
+	}
+
     @Override
-    public boolean isMouseOver(MinecraftClient client, int mouseX, int mouseY) {
+    public boolean isMouseOver(double mouseX, double mouseY) {
         if(MinecraftClient.getInstance().currentScreen instanceof OptionsScreenBuilder &&
-                ((OptionsScreenBuilder) MinecraftClient.getInstance().currentScreen).isPickerOpen()){
+            ((OptionsScreenBuilder) MinecraftClient.getInstance().currentScreen).isPickerOpen()){
             this.hovered = false;
             return false;
         }
-        return super.isMouseOver(client, mouseX, mouseY);
+        return super.isMouseOver(mouseX, mouseY);
     }
 }

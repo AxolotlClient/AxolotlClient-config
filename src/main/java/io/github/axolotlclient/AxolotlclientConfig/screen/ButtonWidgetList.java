@@ -1,66 +1,53 @@
 package io.github.axolotlclient.AxolotlclientConfig.screen;
 
-import com.google.common.collect.Lists;
-import com.mojang.blaze3d.platform.GlStateManager;
-import io.github.axolotlclient.AxolotlclientConfig.AxolotlClientConfigManager;
 import io.github.axolotlclient.AxolotlclientConfig.AxolotlClientConfigConfig;
+import io.github.axolotlclient.AxolotlclientConfig.AxolotlClientConfigManager;
 import io.github.axolotlclient.AxolotlclientConfig.options.*;
 import io.github.axolotlclient.AxolotlclientConfig.screen.widgets.*;
 import io.github.axolotlclient.AxolotlclientConfig.util.ConfigUtils;
-import io.github.axolotlclient.AxolotlclientConfig.util.DrawUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.client.gui.widget.EntryListWidget;
-import net.minecraft.client.render.BufferBuilder;
-import net.minecraft.client.render.Tessellator;
-import net.minecraft.client.render.VertexFormats;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.client.gui.DrawableHelper;
+import net.minecraft.client.gui.widget.AlwaysSelectedEntryListWidget;
+import net.minecraft.client.gui.widget.ClickableWidget;
+import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.text.Text;
 import org.lwjgl.opengl.GL11;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 import java.util.stream.Collectors;
 
-public class ButtonWidgetList extends EntryListWidget {
+public class ButtonWidgetList extends AlwaysSelectedEntryListWidget<ButtonWidgetList.Pair> {
 
-    public List<Pair> entries = Lists.newArrayList();
+    public List<Pair> entries;
 
     private final OptionCategory category;
 
     public ButtonWidgetList(MinecraftClient minecraftClient, int width, int height, int top, int bottom, int entryHeight, OptionCategory category) {
         super(minecraftClient, width, height, top, bottom, entryHeight);
-        this.category=category;
 
-        if(!category.getSubCategories().isEmpty()) {
-            for (int i = 0; i < category.getSubCategories().size(); i += 2) {
-                OptionCategory subCat = category.getSubCategories().get(i);
-                ButtonWidget buttonWidget = this.createCategoryWidget(width / 2 - 155, subCat);
+        this.setRenderBackground(false);
+        this.setRenderHorizontalShadows(false);
+        this.setRenderHeader(false, 0);
+        this.setRenderSelection(false);
+        this.category=category; // same as above
 
-                OptionCategory subCat2 = i < category.getSubCategories().size() - 1 ? category.getSubCategories().get(i + 1) : null;
-                ButtonWidget buttonWidget2 = this.createCategoryWidget(width / 2 - 155 + 160, subCat2);
-
-                this.entries.add(new CategoryPair(subCat, buttonWidget, subCat2, buttonWidget2));
-            }
-            if(!category.getOptions().isEmpty()) {
-                this.entries.add(new Spacer());
-            }
-        }
-
-        for (int i = 0; i < (category.getOptions().size()); i ++) {
-
-            Option option = category.getOptions().get(i);
-            if(option.getName().equals("x")||option.getName().equals("y")) continue;
-            ButtonWidget buttonWidget = this.createWidget(width / 2 - 155, option);
-
-            this.entries.add(new OptionEntry(buttonWidget, option, width));
+        this.entries = constructEntries(category);
+        for(Pair p:entries){
+            addEntry(p);
         }
     }
 
-    private ButtonWidget createCategoryWidget(int x, OptionCategory cat){
+
+
+    @Override
+	protected int addEntry(Pair entry) {
+		//if(entry != null) this.entries.add(entry);
+		return super.addEntry(entry);
+	}
+
+	private ClickableWidget createCategoryWidget(int x, OptionCategory cat){
         if(cat==null) {
             return null;
         } else {
@@ -68,13 +55,9 @@ public class ButtonWidgetList extends EntryListWidget {
         }
     }
 
-    protected int getScrollbarPosition() {
-        return super.getScrollbarPosition() + 32;
-    }
-
-    private ButtonWidget createWidget(int x, Option option) {
+    private ClickableWidget createWidget(int x, Option option) {
         if (option != null) {
-            if (option instanceof NumericOption) return OptionWidgetProvider.getSliderWidget(x, 0, (NumericOption<?>) option);
+            if (option instanceof NumericOption<?>) return OptionWidgetProvider.getSliderWidget(x, 0, (NumericOption<?>) option);
             else if (option instanceof BooleanOption) return OptionWidgetProvider.getBooleanWidget(x, 0, 35, 20, (BooleanOption) option);
             else if (option instanceof StringOption) return OptionWidgetProvider.getStringWidget(x, 0, (StringOption) option);
             else if (option instanceof ColorOption) return OptionWidgetProvider.getColorWidget(x, 0, (ColorOption) option);
@@ -84,71 +67,22 @@ public class ButtonWidgetList extends EntryListWidget {
         return null;
     }
 
-    @Override
-    public void render(int mouseX, int mouseY, float delta){
-        if (this.visible) {
-            GlStateManager.enableDepthTest();
-            GlStateManager.pushMatrix();
-            GlStateManager.translatef(0, 0, 1F);
-            this.lastMouseX = mouseX;
-            this.lastMouseY = mouseY;
-            int i = this.getScrollbarPosition();
-            int j = i + 6;
-            this.capYPosition();
-            GlStateManager.disableLighting();
-            GlStateManager.disableFog();
-            int k = this.xStart + this.width / 2 - 125;
-            int l = this.yStart + 4 - (int)this.scrollAmount;
-
-
-            int n = this.getMaxScroll();
-            if (n > 0) {
-                int o = (this.yEnd - this.yStart) * (this.yEnd - this.yStart) / this.getMaxPosition();
-                o = MathHelper.clamp(o, 32, this.yEnd - this.yStart - 8);
-                int p = (int)this.scrollAmount * (this.yEnd - this.yStart - o) / n + this.yStart;
-                if (p < this.yStart) {
-                    p = this.yStart;
-                }
-                GlStateManager.disableTexture();
-                Tessellator tessellator = Tessellator.getInstance();
-                BufferBuilder bufferBuilder = tessellator.getBuffer();
-
-                bufferBuilder.begin(7, VertexFormats.POSITION_TEXTURE_COLOR);
-                bufferBuilder.vertex(i, this.yEnd, 0.0).texture(0.0, 1.0).color(0, 0, 0, 255).next();
-                bufferBuilder.vertex(j, this.yEnd, 0.0).texture(1.0, 1.0).color(0, 0, 0, 255).next();
-                bufferBuilder.vertex(j, this.yStart, 0.0).texture(1.0, 0.0).color(0, 0, 0, 255).next();
-                bufferBuilder.vertex(i, this.yStart, 0.0).texture(0.0, 0.0).color(0, 0, 0, 255).next();
-                tessellator.draw();
-                bufferBuilder.begin(7, VertexFormats.POSITION_TEXTURE_COLOR);
-                bufferBuilder.vertex(i, (p + o), 0.0).texture(0.0, 1.0).color(128, 128, 128, 255).next();
-                bufferBuilder.vertex(j, (p + o), 0.0).texture(1.0, 1.0).color(128, 128, 128, 255).next();
-                bufferBuilder.vertex(j, p, 0.0).texture(1.0, 0.0).color(128, 128, 128, 255).next();
-                bufferBuilder.vertex(i, p, 0.0).texture(0.0, 0.0).color(128, 128, 128, 255).next();
-                tessellator.draw();
-                bufferBuilder.begin(7, VertexFormats.POSITION_TEXTURE_COLOR);
-                bufferBuilder.vertex(i, (p + o - 1), 0.0).texture(0.0, 1.0).color(192, 192, 192, 255).next();
-                bufferBuilder.vertex((j - 1), (p + o - 1), 0.0).texture(1.0, 1.0).color(192, 192, 192, 255).next();
-                bufferBuilder.vertex((j - 1), p, 0.0).texture(1.0, 0.0).color(192, 192, 192, 255).next();
-                bufferBuilder.vertex(i, p, 0.0).texture(0.0, 0.0).color(192, 192, 192, 255).next();
-                tessellator.draw();
+	@Override
+	public boolean mouseClicked(double mouseX, double mouseY, int button) {
+		setFocused(null);
+		boolean bl = super.mouseClicked(mouseX, mouseY, button);
+        entries.forEach(pair -> {
+            if(pair.left instanceof StringOptionWidget && ((StringOptionWidget) pair.left).textField.isFocused()){
+                ((StringOptionWidget) pair.left).textField.mouseClicked(mouseX, mouseY, button);
             }
-            GlStateManager.enableTexture();
-
-            this.renderList(k, l, mouseX, mouseY);
-
-            GlStateManager.shadeModel(7424);
-            GlStateManager.enableAlphaTest();
-            //GlStateManager.disableDepthTest();
-            GlStateManager.popMatrix();
-            GlStateManager.disableBlend();
-        }
-    }
-
-    protected void renderTooltips(int mouseX, int mouseY){
-        ConfigUtils.applyScissor(0, yStart, this.width, yEnd-yStart);
-        entries.forEach(pair -> pair.renderTooltips(mouseX, mouseY));
-        GL11.glDisable(GL11.GL_SCISSOR_TEST);
-    }
+            if(pair.left instanceof ColorOptionWidget){
+                if(((ColorOptionWidget) pair.left).textField.isFocused()) {
+                    ((ColorOptionWidget) pair.left).textField.mouseClicked(mouseX, mouseY, button);
+                }
+            }
+        });
+        return bl;
+	}
 
     @Override
     public int getRowWidth() {
@@ -156,27 +90,64 @@ public class ButtonWidgetList extends EntryListWidget {
     }
 
     @Override
-    protected void renderList(int x, int y, int mouseX, int mouseY) {
-        ConfigUtils.applyScissor(0, yStart, this.width, yEnd-yStart);
-        super.renderList(x, y, mouseX, mouseY);
+	public int getRowLeft() {
+		return this.width / 2 -155;
+	}
+
+    public void renderTooltips(MatrixStack matrices, int mouseX, int mouseY){
+        ConfigUtils.applyScissor(0, top, this.width, bottom-top);
+        entries.forEach(pair -> pair.renderTooltips(matrices, mouseX, mouseY));
         GL11.glDisable(GL11.GL_SCISSOR_TEST);
     }
 
-    public void tick(){
-        entries.forEach(pair -> {
-            if(pair.left instanceof StringOptionWidget && ((StringOptionWidget) pair.left).textField.isFocused()){
-                ((StringOptionWidget) pair.left).textField.tick();
-            } else if(pair.right instanceof StringOptionWidget && ((StringOptionWidget) pair.right).textField.isFocused()){
-                ((StringOptionWidget) pair.right).textField.tick();
-            }
+	@Override
+	protected void renderList(MatrixStack matrices, int x, int y, float delta) {
+		ConfigUtils.applyScissor(0, top, this.width, bottom-top);
+		super.renderList(matrices, x, y, delta);
+		GL11.glDisable(GL11.GL_SCISSOR_TEST);
+	}
 
-            if(pair.left instanceof ColorOptionWidget) {
-                ((ColorOptionWidget) pair.left).tick();
-            }
-        });
+    @Override
+    protected int getScrollbarPositionX() {
+        return super.getScrollbarPositionX() + 32;
     }
 
+    private boolean halftick = true;
+
+    public void tick(){
+		if(halftick) {
+			for (Pair pair : entries) {
+				if (pair.tickable) pair.tick();
+			}
+		}
+	    halftick=!halftick;
+    }
+
+    public boolean keyPressed(int keyCode, int scanCode, int modifiers){
+        for (Pair pair:entries) if(pair.keyPressed(keyCode, scanCode, modifiers)){
+			return true;
+        }
+        if (getSelectedOrNull() != null) {
+            return getSelectedOrNull().keyPressed(keyCode, scanCode, modifiers);
+        }
+	    return super.keyPressed(keyCode, scanCode, modifiers);
+    }
+
+    protected void m_enzpxkzi(MatrixStack matrices, int i, int j, float f, int k, int l, int m, int n, int o) {
+        Pair entry = this.getEntry(k);
+
+        entry.render(matrices, k, m, l, n, o, i, j, Objects.equals(getSelectedOrNull(), entry), f);
+    }
+
+	public boolean charTyped(char c, int modifiers){
+		for(Pair pair:entries){
+			if(pair.charTyped(c, modifiers)) return true;
+		}
+		return false;
+	}
+
     public void filter(final String searchTerm) {
+        clearEntries();
         entries.clear();
 
         Collection<Tooltippable> children = getEntries();
@@ -208,9 +179,12 @@ public class ButtonWidgetList extends EntryListWidget {
             }
         }
         entries = constructEntries(filtered);
+        for(Pair p:entries){
+            addEntry(p);
+        }
 
-        if (getScrollAmount() > Math.max(0, this.getMaxPosition() - (yEnd - this.yStart - 4))) {
-            scrollAmount = Math.max(0, this.getMaxPosition() - (this.yEnd - this.yStart - 4));
+        if (getScrollAmount() > Math.max(0, this.getMaxPosition() - (bottom - this.top - 4))) {
+            setScrollAmount(Math.max(0, this.getMaxPosition() - (this.bottom - this.top - 4)));
         }
     }
 
@@ -232,10 +206,10 @@ public class ButtonWidgetList extends EntryListWidget {
         if(!category.getSubCategories().isEmpty()) {
             for (int i = 0; i < category.getSubCategories().size(); i += 2) {
                 OptionCategory subCat = category.getSubCategories().get(i);
-                ButtonWidget buttonWidget = this.createCategoryWidget(width / 2 - 155, subCat);
+                ClickableWidget buttonWidget = this.createCategoryWidget(width / 2 - 155, subCat);
 
                 OptionCategory subCat2 = i < category.getSubCategories().size() - 1 ? category.getSubCategories().get(i + 1) : null;
-                ButtonWidget buttonWidget2 = this.createCategoryWidget(width / 2 - 155 + 160, subCat2);
+                ClickableWidget buttonWidget2 = this.createCategoryWidget(width / 2 - 155 + 160, subCat2);
 
                 entries.add(new CategoryPair(subCat, buttonWidget, subCat2, buttonWidget2));
             }
@@ -246,96 +220,65 @@ public class ButtonWidgetList extends EntryListWidget {
 
             Option option = category.getOptions().get(i);
             if(option.getName().equals("x")||option.getName().equals("y")) continue;
-            ButtonWidget buttonWidget = this.createWidget(width / 2 - 155, option);
+            ClickableWidget buttonWidget = this.createWidget(width / 2 - 155+160, option);
 
+            //addEntry(new OptionEntry(buttonWidget, option, width));
             entries.add(new OptionEntry(buttonWidget, option, width));
         }
         return entries;
     }
 
-    @Override
-    public Entry getEntry(int index) {
-        return entries.get(index);
-    }
-
-    @Override
-    protected int getEntryCount() {
-        return entries.size();
-    }
-
-    public void keyPressed(char c, int code){
-        entries.forEach(pair -> {
-            if(pair.left instanceof StringOptionWidget && ((StringOptionWidget) pair.left).textField.isFocused()){
-                ((StringOptionWidget) pair.left).keyPressed(c, code);
-            } else if(pair.right instanceof StringOptionWidget && ((StringOptionWidget) pair.right).textField.isFocused()){
-                ((StringOptionWidget) pair.right).keyPressed(c, code);
-            }
-
-            if(pair.left instanceof ColorOptionWidget) {
-                ((ColorOptionWidget) pair.left).keyPressed(c, code);
-            }
-        });
-    }
-
-    @Override
-    public boolean mouseClicked(int mouseX, int mouseY, int button) {
-        boolean bl = super.mouseClicked(mouseX, mouseY, button);
-        entries.forEach(pair -> {
-            if(pair.left instanceof StringOptionWidget && ((StringOptionWidget) pair.left).textField.isFocused()){
-                ((StringOptionWidget) pair.left).textField.mouseClicked(mouseX, mouseY, button);
-            }
-            if(pair.left instanceof ColorOptionWidget){
-                if(((ColorOptionWidget) pair.left).textField.isFocused()) {
-                    ((ColorOptionWidget) pair.left).textField.mouseClicked(mouseX, mouseY, button);
-                }
-            }
-        });
-        return bl;
-    }
-
     @Environment(EnvType.CLIENT)
-    public class Pair extends DrawUtil implements Entry {
+    public class Pair extends Entry<Pair> {
         protected final MinecraftClient client = MinecraftClient.getInstance();
-        protected final ButtonWidget left;
-        private final ButtonWidget right;
+        protected final ClickableWidget left;
+        protected final ClickableWidget right;
 
-        public Pair(ButtonWidget left, ButtonWidget right) {
-            this.left = left;
+		protected final boolean tickable;
+
+        public Pair(ClickableWidget left, ClickableWidget right) {
+			super();
+	        this.left = left;
             this.right = right;
+
+			tickable = left instanceof StringOptionWidget || left instanceof ColorOptionWidget;
         }
 
-        public void render(int index, int x, int y, int rowWidth, int rowHeight, int mouseX, int mouseY, boolean hovered) {
+	    @Override
+	    public void render(MatrixStack matrices, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float tickDelta) {
+
             if (this.left != null) {
                 this.left.y = y;
-                this.left.render(this.client, mouseX, mouseY);
+                this.left.render(matrices, mouseX, mouseY, tickDelta);
             }
 
             if (this.right != null) {
                 this.right.y = y;
-                this.right.render(this.client, mouseX, mouseY);
+                this.right.render(matrices, mouseX, mouseY, tickDelta);
             }
 
         }
 
-        public void renderTooltips(int mouseX, int mouseY){
+        public void renderTooltips(MatrixStack matrices, int mouseX, int mouseY){
 
         }
 
-        protected void renderTooltip(Tooltippable option, int x, int y){
-            if(isMouseInList(y) && MinecraftClient.getInstance().currentScreen instanceof OptionsScreenBuilder &&
-                    AxolotlClientConfigConfig.showOptionTooltips.get() && option.getTooltip()!=null){
-                GL11.glDisable(GL11.GL_SCISSOR_TEST);
-                ((OptionsScreenBuilder) MinecraftClient.getInstance().currentScreen).renderTooltip(option, x, y);
-                ConfigUtils.applyScissor(0, yStart, width, yEnd-yStart);
-            }
-        }
+		protected void renderTooltip(MatrixStack matrices, Tooltippable option, int x, int y){
+			if(MinecraftClient.getInstance().currentScreen instanceof OptionsScreenBuilder &&
+				AxolotlClientConfigConfig.showOptionTooltips.get() && option.getTooltip()!=null){
+				GL11.glDisable(GL11.GL_SCISSOR_TEST);
+				((OptionsScreenBuilder) MinecraftClient.getInstance().currentScreen).renderTooltip(matrices, option, x, y);
+				ConfigUtils.applyScissor(0, top, width, bottom-top);
+			}
+		}
 
-        public boolean mouseClicked(int index, int mouseX, int mouseY, int button, int x, int y) {
-            if (this.left.isMouseOver(this.client, mouseX, mouseY)) {
+        @Override
+	    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+            if (this.left.isMouseOver(mouseX, mouseY)) {
                 onClick(this.left, mouseX, mouseY, button);
 
                 return true;
-            } else if (this.right != null && this.right.isMouseOver(this.client, mouseX, mouseY)) {
+            } else if (this.right != null && this.right.isMouseOver(mouseX, mouseY)) {
                 onClick(this.right, mouseX, mouseY, button);
 
                 return true;
@@ -343,16 +286,16 @@ public class ButtonWidgetList extends EntryListWidget {
             return false;
         }
 
-        protected void onClick(ButtonWidget button, int mouseX, int mouseY, int mB){
+        protected void onClick(ClickableWidget button, double mouseX, double mouseY, int mB){
             if (button instanceof OptionSliderWidget){
-                button.isMouseOver(client, mouseX, mouseY);
+                button.isMouseOver(mouseX, mouseY);
                 AxolotlClientConfigManager.saveCurrentConfig();
             } else if (button instanceof CategoryWidget) {
-                ((CategoryWidget) button).mouseClicked(mouseX, mouseY);
+                button.mouseClicked(mouseX, mouseY, mB);
 
             } else if (button instanceof EnumOptionWidget) {
                 button.playDownSound(client.getSoundManager());
-                ((EnumOptionWidget) button).mouseClicked(mB);
+                button.mouseClicked(mouseX, mouseY, mB);
                 AxolotlClientConfigManager.saveCurrentConfig();
 
             } else if (button instanceof StringOptionWidget) {
@@ -361,70 +304,94 @@ public class ButtonWidgetList extends EntryListWidget {
 
             } else if (button instanceof BooleanWidget) {
                 button.playDownSound(client.getSoundManager());
-                ((BooleanWidget) button).mouseClicked(mouseX, mouseY, mB);
+                ((BooleanWidget) button).option.toggle();
                 AxolotlClientConfigManager.saveCurrentConfig();
 
             } else if (button instanceof ColorOptionWidget) {
-                ((ColorOptionWidget) button).mouseClicked(mouseX, mouseY);
+                button.mouseClicked(mouseX, mouseY, 0);
                 AxolotlClientConfigManager.saveCurrentConfig();
 
             } else if (button instanceof GenericOptionWidget){
                 button.playDownSound(client.getSoundManager());
-                ((GenericOptionWidget) button).onClick(mouseX, mouseY);
+                button.onClick(mouseX, mouseY);
             }
+
         }
 
-        public void mouseReleased(int index, int mouseX, int mouseY, int button, int x, int y) {
+		@Override
+		public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+			if(left!=null && left.keyPressed(keyCode, scanCode, modifiers)) return true;
+			return super.keyPressed(keyCode, scanCode, modifiers);
+		}
+
+		@Override
+		public boolean charTyped(char c, int modifiers) {
+			return this.left != null && left.charTyped(c, modifiers);
+		}
+
+		@Override
+	    public boolean mouseReleased(double mouseX, double mouseY, int button) {
             if (this.left != null) {
-                this.left.mouseReleased(mouseX, mouseY);
+                return this.left.mouseReleased(mouseX, mouseY, button);
             }
 
             if (this.right != null) {
-                this.right.mouseReleased(mouseX, mouseY);
+                return this.right.mouseReleased(mouseX, mouseY, button);
             }
+
+		    return super.mouseReleased(mouseX, mouseY, button);
 
         }
 
-        public void updatePosition(int index, int x, int y) {
+		public void tick(){
+			if(left instanceof StringOptionWidget) ((StringOptionWidget) left).tick();
+			else if (left instanceof ColorOptionWidget) ((ColorOptionWidget) left).tick();
+
+		}
+
+        @Override
+        public Text getNarration() {
+            return null;
         }
     }
 
-    public class CategoryPair extends Pair {
+	public class CategoryPair extends Pair {
 
-        protected OptionCategory left;
-        protected OptionCategory right;
+		protected OptionCategory left;
+		protected OptionCategory right;
 
-        public CategoryPair(OptionCategory catLeft, ButtonWidget btnLeft, OptionCategory catRight, ButtonWidget btnRight) {
-            super(btnLeft, btnRight);
-            left = catLeft;
-            right = catRight;
+		public CategoryPair(OptionCategory catLeft, ClickableWidget btnLeft, OptionCategory catRight, ClickableWidget btnRight) {
+			super(btnLeft, btnRight);
+			left = catLeft;
+			right = catRight;
+		}
+
+		@Override
+		public void render(MatrixStack matrices, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float tickDelta) {
+            super.render(matrices, index, y, x, entryWidth, entryHeight, mouseX, mouseY, hovered, tickDelta);
+
         }
 
         @Override
-        public void render(int index, int x, int y, int rowWidth, int rowHeight, int mouseX, int mouseY, boolean hovered) {
-            super.render(index, x, y, rowWidth, rowHeight, mouseX, mouseY, hovered);
-
-        }
-
-        public void renderTooltips(int mouseX, int mouseY){
+        public void renderTooltips(MatrixStack matrices, int mouseX, int mouseY) {
             if(AxolotlClientConfigConfig.showCategoryTooltips.get()) {
-                if (super.left != null && super.left.isMouseOver(client, mouseX, mouseY)) {
-                    if(AxolotlClientConfigConfig.showQuickToggles.get() && ((CategoryWidget)super.left).enabledButton != null && ((CategoryWidget)super.left).enabledButton.isMouseOver(client, mouseX, mouseY)){
-                        renderTooltip(((CategoryWidget) super.left).enabledButton.option, mouseX, mouseY);
+				if (super.left != null && super.left.isMouseOver(mouseX, mouseY)) {
+                    if(AxolotlClientConfigConfig.showQuickToggles.get() && ((CategoryWidget)super.left).enabledButton != null && ((CategoryWidget)super.left).enabledButton.isMouseOver(mouseX, mouseY)){
+                        renderTooltip(matrices, ((CategoryWidget) super.left).enabledButton.option, mouseX, mouseY);
                     } else {
-                        renderTooltip(left, mouseX, mouseY);
+                        renderTooltip(matrices, left, mouseX, mouseY);
                     }
-                }
-                if (super.right != null && super.right.isMouseOver(client, mouseX, mouseY)) {
-                    if(AxolotlClientConfigConfig.showQuickToggles.get() && ((CategoryWidget)super.right).enabledButton != null && ((CategoryWidget)super.right).enabledButton.isMouseOver(client, mouseX, mouseY)){
-                        renderTooltip(((CategoryWidget) super.right).enabledButton.option, mouseX, mouseY);
+				}
+				if (super.right != null && super.right.isMouseOver(mouseX, mouseY)) {
+                    if(AxolotlClientConfigConfig.showQuickToggles.get() && ((CategoryWidget)super.right).enabledButton != null && ((CategoryWidget)super.right).enabledButton.isMouseOver(mouseX, mouseY)){
+                        renderTooltip(matrices, ((CategoryWidget) super.right).enabledButton.option, mouseX, mouseY);
                     } else {
-                        renderTooltip(right, mouseX, mouseY);
+                        renderTooltip(matrices, right, mouseX, mouseY);
                     }
-                }
-            }
-        }
-    }
+				}
+			}
+		}
+	}
 
     public class OptionEntry extends Pair {
 
@@ -432,29 +399,31 @@ public class ButtonWidgetList extends EntryListWidget {
         protected int renderX;
         private final int nameWidth;
 
-        public OptionEntry(ButtonWidget left, Option option, int width) {
+        public OptionEntry(ClickableWidget left, Option option, int width) {
             super(left, null);
             this.option = option;
             if(left instanceof BooleanWidget) left.x = width / 2 + 5 + 57;
             else left.x = width / 2 + 5;
-            nameWidth = MinecraftClient.getInstance().textRenderer.getStringWidth(option.getTranslatedName());
+            nameWidth = MinecraftClient.getInstance().textRenderer.getWidth(option.getTranslatedName());
         }
 
-        @Override
-        public void render(int index, int x, int y, int rowWidth, int rowHeight, int mouseX, int mouseY, boolean hovered) {
+	    @Override
+	    public void render(MatrixStack matrices, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float tickDelta) {
 
-            drawString(client.textRenderer, option.getTranslatedName(), x, y+5, -1, true);
+            DrawableHelper.drawTextWithShadow(matrices, client.textRenderer, Text.of(option.getTranslatedName()), x, y + 5, -1);
             left.y = y;
-            left.render(client, mouseX, mouseY);
+            left.render(matrices, mouseX, mouseY, tickDelta);
 
             renderX = x;
         }
 
-        public void renderTooltips(int mouseX, int mouseY){
-            if(AxolotlClientConfigConfig.showOptionTooltips.get() &&
-                    (mouseX>=renderX && mouseX<=(renderX + nameWidth) && mouseY>= left.y && mouseY<= left.y + 20)){
-                renderTooltip(option, mouseX, mouseY);
-            }
+        @Override
+        public void renderTooltips(MatrixStack matrices, int mouseX, int mouseY) {
+		    if(AxolotlClientConfigConfig.showOptionTooltips.get() &&
+			    mouseX>=renderX && mouseX<=(renderX + nameWidth) && mouseY>= left.y && mouseY<= left.y + left.getHeight()){
+			    renderTooltip(matrices, option, mouseX, mouseY);
+		    }
+
         }
     }
 
@@ -464,17 +433,23 @@ public class ButtonWidgetList extends EntryListWidget {
             super(null, null);
         }
 
-        @Override
-        public void render(int index, int x, int y, int rowWidth, int rowHeight, int mouseX, int mouseY, boolean hovered) {
-        }
+	    @Override
+	    public void render(MatrixStack matrices, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float tickDelta) {
+	    }
 
-        @Override
-        public boolean mouseClicked(int index, int mouseX, int mouseY, int button, int x, int y) {
-            return false;
-        }
+	    @Override
+	    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+			return false;
+	    }
 
-        @Override
-        public void mouseReleased(int index, int mouseX, int mouseY, int button, int x, int y) {
-        }
+	    @Override
+	    public boolean mouseReleased(double mouseX, double mouseY, int button) {
+		    return false;
+	    }
+
+	    @Override
+	    public boolean changeFocus(boolean lookForwards) {
+		    return false;
+	    }
     }
 }

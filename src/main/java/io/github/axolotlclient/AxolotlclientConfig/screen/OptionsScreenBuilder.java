@@ -1,22 +1,21 @@
 package io.github.axolotlclient.AxolotlclientConfig.screen;
 
-import com.mojang.blaze3d.platform.GlStateManager;
-import io.github.axolotlclient.AxolotlclientConfig.AxolotlClientConfigManager;
 import io.github.axolotlclient.AxolotlclientConfig.AxolotlClientConfigConfig;
+import io.github.axolotlclient.AxolotlclientConfig.AxolotlClientConfigManager;
 import io.github.axolotlclient.AxolotlclientConfig.options.ColorOption;
-import io.github.axolotlclient.AxolotlclientConfig.options.Tooltippable;
 import io.github.axolotlclient.AxolotlclientConfig.options.OptionCategory;
+import io.github.axolotlclient.AxolotlclientConfig.options.Tooltippable;
 import io.github.axolotlclient.AxolotlclientConfig.screen.widgets.ColorSelectionWidget;
+import io.github.axolotlclient.AxolotlclientConfig.util.DrawUtil;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.client.gui.widget.PagedEntryListWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
-import net.minecraft.client.resource.language.I18n;
+import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
-import org.lwjgl.input.Keyboard;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
@@ -24,50 +23,44 @@ import java.util.Objects;
 public class OptionsScreenBuilder extends Screen {
 
     private final Screen parent;
+    public String modid;
     protected OptionCategory cat;
 
     protected ColorSelectionWidget picker;
-
-    private ButtonWidgetList list;
     protected TextFieldWidget searchWidget;
 
-    public final String modid;
+    private ButtonWidgetList list;
 
     public OptionsScreenBuilder(Screen parent, OptionCategory category, String modid){
-        this.parent=parent;
+	    super(Text.of(""));
+	    this.parent=parent;
         this.cat=category;
         this.modid = modid;
     }
 
-    @Override
-    public void render(int mouseX, int mouseY, float tickDelta) {
+	@Override
+	public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+        if(MinecraftClient.getInstance().world!=null) DrawUtil.fill(matrices,0,0, width, height, 0xB0100E0E);
+        else renderBackgroundTexture(0);
 
-        if(this.client.world!=null)fill(0,0, width, height, 0xB0100E0E);
-        else renderDirtBackground(0);
 
-
-        drawCenteredString(textRenderer, cat.getTranslatedName(), width/2, 25, -1);
-
-        super.render(mouseX, mouseY, tickDelta);
-
-        this.list.render(mouseX, mouseY, tickDelta);
-
-        searchWidget.render();
+        this.list.render(matrices, mouseX, mouseY, delta);
+        drawCenteredText(matrices, textRenderer, cat.getTranslatedName(), width/2, 25, -1);
 
         if(picker!=null){
-            GlStateManager.disableDepthTest();
-            picker.render(MinecraftClient.getInstance(), mouseX, mouseY);
-            GlStateManager.enableDepthTest();
+            picker.render(matrices, mouseX, mouseY, delta);
         } else {
-            list.renderTooltips(mouseX, mouseY);
+            list.renderTooltips(matrices, mouseX, mouseY);
         }
+
+        super.render(matrices, mouseX, mouseY, delta);
     }
 
     public void openColorPicker(ColorOption option){
         picker = new ColorSelectionWidget(option);
     }
 
-    public void closeColorPicker() {
+    public void closeColorPicker(){
         AxolotlClientConfigManager.saveCurrentConfig();
         picker=null;
     }
@@ -75,19 +68,29 @@ public class OptionsScreenBuilder extends Screen {
     public boolean isPickerOpen(){
         return picker!=null;
     }
+
     @Override
-    protected void mouseDragged(int i, int j, int k, long l) {
-        if(!isPickerOpen()) {
-            super.mouseDragged(i, j, k, l);
+    public boolean mouseScrolled(double mouseX, double mouseY, double amount) {
+        if(list.isMouseOver(mouseX, mouseY)) {
+            return list.mouseScrolled(mouseX, mouseY, amount);
         }
+        return super.mouseScrolled(mouseX, mouseY, amount);
     }
 
     @Override
-    protected void mouseClicked(int mouseX, int mouseY, int button) {
-        super.mouseClicked(mouseX, mouseY, button);
+    public boolean mouseDragged(double mouseX, double mouseY, int button, double deltaX, double deltaY) {
+        if(isPickerOpen()){
+            return false;
+        }
+        return list.mouseDragged(mouseX, mouseY, button, deltaX, deltaY);
+    }
+
+    @Override
+	public boolean mouseClicked(double mouseX, double mouseY, int button) {
+        boolean bl = super.mouseClicked(mouseX, mouseY, button);
 
         if(isPickerOpen()){
-            if(!picker.isMouseOver(MinecraftClient.getInstance(), mouseX, mouseY)) {
+            if(!picker.isMouseOver(mouseX, mouseY)) {
                 closeColorPicker();
                 this.list.mouseClicked(mouseX, mouseY, button);
 
@@ -95,30 +98,21 @@ public class OptionsScreenBuilder extends Screen {
                 picker.onClick(mouseX, mouseY);
             }
         } else {
-            this.list.mouseClicked(mouseX, mouseY, button);
             searchWidget.mouseClicked(mouseX, mouseY, button);
+            return bl || this.list.mouseClicked(mouseX, mouseY, button);
         }
-    }
+        return bl;
+	}
 
-    @Override
-    protected void mouseReleased(int mouseX, int mouseY, int button) {
-        super.mouseReleased(mouseX, mouseY, button);
-        this.list.mouseReleased(mouseX, mouseY, button);
-        if(isPickerOpen()) picker.mouseReleased(mouseX, mouseY);
-    }
-
-    @Override
-    protected void buttonClicked(ButtonWidget button) {
-        if(button.id==0){
-            if(isPickerOpen()){
-                closeColorPicker();
-            }
-            AxolotlClientConfigManager.saveCurrentConfig();
-            MinecraftClient.getInstance().openScreen(parent);
+	@Override
+	public boolean mouseReleased(double mouseX, double mouseY, int button) {
+        if(isPickerOpen() && picker.mouseReleased(mouseX, mouseY, button)){
+            return true;
         }
-    }
+        return this.list.mouseReleased(mouseX, mouseY, button) || super.mouseReleased(mouseX, mouseY, button);
+	}
 
-    @Override
+	@Override
     public void tick() {
         this.list.tick();
         searchWidget.tick();
@@ -129,109 +123,93 @@ public class OptionsScreenBuilder extends Screen {
 
     @Override
     public void init() {
-        Keyboard.enableRepeatEvents(true);
         createWidgetList(cat);
 
-        searchWidget = new TextFieldWidget(123, MinecraftClient.getInstance().textRenderer, width - 120, 20, 100, 20){
+		this.addSelectableChild(list);
+
+        this.addDrawableChild(new ButtonWidget(this.width/2-100, this.height-40, 200, 20, Text.translatable("back"), buttonWidget -> {
+            if(isPickerOpen()){
+                closeColorPicker();
+            }
+
+            AxolotlClientConfigManager.saveCurrentConfig();
+            MinecraftClient.getInstance().setScreen(parent);
+        }));
+
+        this.addDrawableChild(searchWidget = new TextFieldWidget(MinecraftClient.getInstance().textRenderer, width - 120, 20, 100, 20, Text.translatable("search")){
 
             @Override
-            public void mouseClicked(int mouseX, int mouseY, int button) {
-                if(isHovered(mouseX, mouseY)) {
-                    if(!isFocused() && cat.toString().toLowerCase(Locale.ROOT).contains(modid.toLowerCase(Locale.ROOT))){
-                        MinecraftClient.getInstance().openScreen(new OptionsScreenBuilder(that(), getAllOptions(), modid));
-                        return;
+            public boolean mouseClicked(double mouseX, double mouseY, int button) {
+                if(isMouseOver(mouseX, mouseY)) {
+                    if (!isFocused() && cat.toString().toLowerCase(Locale.ROOT).contains(modid.toLowerCase(Locale.ROOT))) {
+                        MinecraftClient.getInstance().setScreen(new OptionsScreenBuilder(MinecraftClient.getInstance().currentScreen, getAllOptions(), modid));
+                        return true;
                     }
-                    super.mouseClicked(mouseX, mouseY, button);
-                } else {
-                    setFocused(false);
+                    setSuggestion("");
+                    return super.mouseClicked(mouseX, mouseY, button);
                 }
+                setFocused(false);
+                setSuggestion(Formatting.ITALIC + Text.translatable("search").append("...").getString());
+                return false;
             }
 
             @Override
-            public void render() {
-                if(!isFocused()) {
-                    drawWithShadow(MinecraftClient.getInstance().textRenderer, Formatting.ITALIC + I18n.translate("search")+"...", x-1, y, -8355712);
-                }
+            public void renderButton(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+                super.renderButton(matrices, mouseX, mouseY, delta);
 
-                super.render();
-
-                //drawVerticalLine(x-5, y-1, y+11, -1); // Toad didn't like this.
-                drawHorizontalLine(x-5, x+100, y+11, -1);
-            }
-
-            public boolean isHovered(int mouseX, int mouseY){
-                return mouseX >= this.x && mouseX < this.x + 100 && mouseY >= this.y && mouseY < this.y + 20;
-            }
-
-            @Override
-            public boolean keyPressed(char character, int code) {
-                return super.keyPressed(character, code);
-            }
-        };
-
-        this.buttons.add(new ButtonWidget(0, this.width/2-100, this.height-40, 200, 20, I18n.translate("back")));
-        /*if(searchFocused) {
-            searchWidget.setFocused(true);
-        }*/
-
-        searchWidget.setListener(new PagedEntryListWidget.Listener() {
-            @Override
-            public void setBooleanValue(int id, boolean value) {}
-
-            @Override
-            public void setFloatValue(int id, float value) {}
-
-            @Override
-            public void setStringValue(int id, String text) {
-                list.filter(text);
+                drawHorizontalLine(matrices, x-5, x+width, y+11, -1);
             }
         });
-        searchWidget.setHasBorder(false);
+
+        searchWidget.setDrawsBackground(false);
+        searchWidget.setSuggestion(Formatting.ITALIC + Text.translatable("search").append("...").getString());
+        searchWidget.setChangedListener(s -> {
+            list.filter(s);
+
+            /*if(!s.equals("")){
+                searchWidget.setSuggestion("");
+            } else {
+                searchWidget.setSuggestion(Formatting.ITALIC + Text.translatable("search").append("...").getString());
+            }*/
+        });
     }
 
-    @Override
-    public void handleMouse() {
-        super.handleMouse();
-        if(!isPickerOpen()) {
-            this.list.handleMouse();
+	@Override
+	public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+        if(isPickerOpen() && picker.keyPressed(keyCode, scanCode, modifiers)){
+            return true;
         }
-    }
+		//return this.list.keyPressed(keyCode, scanCode, modifiers) ||
+        return super.keyPressed(keyCode, scanCode, modifiers);
+	}
 
-    @Override
-    public void removed() {
-        Keyboard.enableRepeatEvents(false);
-    }
-
-    @Override
-    protected void keyPressed(char character, int code) {
-        super.keyPressed(character, code);
-        if(!isPickerOpen()) {
-            if(searchWidget.isFocused()){
-                searchWidget.keyPressed(character, code);
-                return;
-            }
-            this.list.keyPressed(character, code);
-        } else {
-            picker.keyPressed(character, code);
+	@Override
+	public boolean charTyped(char chr, int modifiers) {
+        if(isPickerOpen() && picker.charTyped(chr, modifiers)){
+            return true;
         }
-    }
+        return super.charTyped(chr, modifiers);
+	}
 
-    @Override
-    public boolean shouldPauseGame() {
-        return false;
-    }
+	public void renderTooltip(MatrixStack matrices, Tooltippable option, int x, int y){
+		List<Text> text = new ArrayList<>();
+		String[] tooltip = Objects.requireNonNull(option.getTooltip()).split("<br>");
+		for(String s:tooltip) text.add(Text.literal(s));
+		this.renderTooltip(matrices, text, x, y);
+	}
+
+	@Override
+	public boolean isPauseScreen() {
+		return false;
+	}
 
     @Override
     public void resize(MinecraftClient client, int width, int height) {
-        if(picker!=null){
+        if(isPickerOpen()){
             picker.init();
         }
+        AxolotlClientConfigManager.saveCurrentConfig();
         super.resize(client, width, height);
-    }
-
-    public void renderTooltip(Tooltippable tooltippable, int x, int y){
-        String[] tooltip = Objects.requireNonNull(tooltippable.getTooltip()).split("<br>");
-        this.renderTooltip(Arrays.asList(tooltip), x, y);
     }
 
     protected void createWidgetList(OptionCategory category){
@@ -266,9 +244,5 @@ public class OptionsScreenBuilder extends Screen {
                 setupOptionsList(target, sub);
             }
         }
-    }
-
-    private OptionsScreenBuilder that(){
-        return this;
     }
 }

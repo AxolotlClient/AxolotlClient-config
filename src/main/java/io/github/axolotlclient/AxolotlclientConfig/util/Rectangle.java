@@ -25,7 +25,7 @@ public class Rectangle {
         this.height=height;
     }
 
-    public boolean isMouseOver(int mouseX, int mouseY){
+    public boolean isMouseOver(double mouseX, double mouseY){
         return mouseX>=x && mouseX<=x+width && mouseY >=y && mouseY <= y+height;
     }
 

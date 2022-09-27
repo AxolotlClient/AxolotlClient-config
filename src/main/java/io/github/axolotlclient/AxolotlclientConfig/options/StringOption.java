@@ -2,11 +2,8 @@ package io.github.axolotlclient.AxolotlclientConfig.options;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
-import io.github.axolotlclient.AxolotlclientConfig.util.clientCommands.CommandResponse;
+import io.github.axolotlclient.AxolotlclientConfig.util.CommandResponse;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.Collections;
-import java.util.List;
 
 public class StringOption extends OptionBase<String> {
 
@@ -29,21 +26,12 @@ public class StringOption extends OptionBase<String> {
     }
 
     @Override
-    protected CommandResponse onCommandExecution(String[] args) {
-        if(args.length>0){
-            StringBuilder v = new StringBuilder();
-            for(String s:args){
-                v.append(s);
-                v.append(" ");
-            }
-            set(v.toString());
-            return new CommandResponse(true, "Successfully set "+getName()+" to "+v+"!");
+    protected CommandResponse onCommandExecution(String arg) {
+        if(arg.length()>0){
+
+            set(arg);
+            return new CommandResponse(true, "Successfully set "+getName()+" to "+arg+"!");
         }
         return new CommandResponse(true, getName() + " is currently set to '"+get()+"'.");
-    }
-
-    @Override
-    public List<String> getCommandSuggestions() {
-        return Collections.singletonList(String.valueOf(def));
     }
 }

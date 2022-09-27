@@ -3,7 +3,7 @@ package io.github.axolotlclient.AxolotlclientConfig;
 import com.google.gson.*;
 import io.github.axolotlclient.AxolotlclientConfig.options.Option;
 import io.github.axolotlclient.AxolotlclientConfig.options.OptionCategory;
-import net.fabricmc.loader.api.FabricLoader;
+import org.quiltmc.loader.api.QuiltLoader;
 
 import java.io.FileReader;
 import java.io.IOException;
@@ -12,10 +12,15 @@ import java.nio.file.Path;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * A default config manager to use by mods not implementing a custom one.
+ * The modid (all lowercase) is used for the file name, in json format.
+ */
+
 public class DefaultConfigManager implements ConfigManager {
     private final List<OptionCategory> categories;
     private final String modid;
-    private final Path confPath = FabricLoader.getInstance().getConfigDir().resolve(".json");
+    private final Path confPath = QuiltLoader.getConfigDir().resolve(".json");
 
     public DefaultConfigManager(String modid){
         this.modid = modid;
@@ -65,7 +70,7 @@ public class DefaultConfigManager implements ConfigManager {
         loadDefaults();
 
         try {
-            JsonObject config = new JsonParser().parse(new FileReader(confPath.toString())).getAsJsonObject();
+            JsonObject config = JsonParser.parseReader(new FileReader(confPath.toString())).getAsJsonObject();
 
             for(OptionCategory category:categories) {
                 if(config.has(category.getName())) {

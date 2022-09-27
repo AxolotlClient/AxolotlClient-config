@@ -4,11 +4,8 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import io.github.axolotlclient.AxolotlclientConfig.Color;
-import io.github.axolotlclient.AxolotlclientConfig.util.clientCommands.CommandResponse;
+import io.github.axolotlclient.AxolotlclientConfig.util.CommandResponse;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.Collections;
-import java.util.List;
 
 public class ColorOption extends OptionBase<Color> {
 
@@ -65,23 +62,18 @@ public class ColorOption extends OptionBase<Color> {
     }
 
     @Override
-    protected CommandResponse onCommandExecution(String[] args) {
-        if(args.length>0){
-            Color newColor = Color.parse(args[0]);
+    protected CommandResponse onCommandExecution(String arg) {
+        if(arg.length()>0){
+            Color newColor = Color.parse(arg);
             if(newColor== Color.ERROR){
                 return new CommandResponse(false, "Please enter a valid Color in Hex format!");
             } else {
                 set(newColor);
-                return new CommandResponse(true, "Successfully set "+getName() + " to "+args[0]);
+                return new CommandResponse(true, "Successfully set "+getName() + " to "+arg);
             }
 
         }
 
         return new CommandResponse(true, getName() + " is currently set to '"+get()+"'.");
-    }
-
-    @Override
-    public List<String> getCommandSuggestions() {
-        return Collections.singletonList("#FFFFFFFF");
     }
 }

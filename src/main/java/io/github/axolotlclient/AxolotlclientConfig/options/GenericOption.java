@@ -2,10 +2,7 @@ package io.github.axolotlclient.AxolotlclientConfig.options;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
-import io.github.axolotlclient.AxolotlclientConfig.util.clientCommands.CommandResponse;
-
-import java.util.ArrayList;
-import java.util.List;
+import io.github.axolotlclient.AxolotlclientConfig.util.CommandResponse;
 
 public class GenericOption extends OptionBase<GenericOption.OnClick> {
     private final String label;
@@ -35,16 +32,9 @@ public class GenericOption extends OptionBase<GenericOption.OnClick> {
     }
 
     @Override
-    protected CommandResponse onCommandExecution(String[] args) {
+    protected CommandResponse onCommandExecution(String args) {
         return new CommandResponse(false, "baba");
     }
-
-    @Override
-    public List<String> getCommandSuggestions() {
-        return new ArrayList<>();
-    }
-
-
 
     public interface OnClick {
          void onClick(int mouseX, int mouseY);

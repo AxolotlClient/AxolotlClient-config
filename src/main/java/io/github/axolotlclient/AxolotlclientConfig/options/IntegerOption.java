@@ -1,7 +1,7 @@
 package io.github.axolotlclient.AxolotlclientConfig.options;
 
 import com.google.gson.JsonElement;
-import io.github.axolotlclient.AxolotlclientConfig.util.clientCommands.CommandResponse;
+import io.github.axolotlclient.AxolotlclientConfig.util.CommandResponse;
 import org.jetbrains.annotations.NotNull;
 
 public class IntegerOption extends NumericOption<Integer> {
@@ -29,10 +29,10 @@ public class IntegerOption extends NumericOption<Integer> {
     }
 
     @Override
-    protected CommandResponse onCommandExecution(String[] args) {
+    protected CommandResponse onCommandExecution(String arg) {
         try {
-            if (args.length > 0) {
-                set(Integer.parseInt(args[0]));
+            if (arg.length() > 0) {
+                set(Integer.parseInt(arg));
                 return new CommandResponse(true, "Successfully set "+getName()+" to "+get()+"!");
             }
         } catch (NumberFormatException ignored){
@@ -40,5 +40,6 @@ public class IntegerOption extends NumericOption<Integer> {
         }
 
         return new CommandResponse(true, getName() + " is currently set to '"+get()+"'.");
+
     }
 }

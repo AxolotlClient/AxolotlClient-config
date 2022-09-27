@@ -2,12 +2,10 @@ package io.github.axolotlclient.AxolotlclientConfig.options;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
-import io.github.axolotlclient.AxolotlclientConfig.util.clientCommands.CommandResponse;
+import io.github.axolotlclient.AxolotlclientConfig.util.CommandResponse;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Arrays;
-import java.util.List;
 import java.util.Locale;
 
 public class BooleanOption extends OptionBase<Boolean> {
@@ -79,33 +77,26 @@ public class BooleanOption extends OptionBase<Boolean> {
     }
 
     @Override
-    protected CommandResponse onCommandExecution(String[] args) {
-        if(args.length>0){
-
-            String arg = args[0];
-            if(forceOff){
-                return new CommandResponse(false, "You cannot use this option since it's force disabled.");
-            }
-
+    protected CommandResponse onCommandExecution(String arg) {
+        if(arg.length()>0){
             switch (arg) {
-                case "toggle":
+                case "toggle" -> {
                     toggle();
                     return new CommandResponse(true, "Successfully toggled " + getName() + "!");
-                case "true":
+                }
+                case "true" -> {
                     set(true);
                     return new CommandResponse(true, "Successfully set " + getName() + " to true!");
-                case "false":
+                }
+                case "false" -> {
                     set(false);
                     return new CommandResponse(true, "Successfully set " + getName() + " to false!");
+                }
             }
 
             return new CommandResponse(false, "Please specify either toggle, true or false!");
         }
 
         return new CommandResponse(true, getName() + " is currently set to '"+get()+"'.");
-    }
-
-    public List<String> getCommandSuggestions(){
-        return Arrays.asList("true", "false");
     }
 }

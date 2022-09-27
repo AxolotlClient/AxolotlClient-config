@@ -1,6 +1,6 @@
 package io.github.axolotlclient.AxolotlclientConfig.screen.widgets;
 
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import io.github.axolotlclient.AxolotlclientConfig.Color;
 import io.github.axolotlclient.AxolotlclientConfig.options.ColorOption;
 import io.github.axolotlclient.AxolotlclientConfig.screen.OptionsScreenBuilder;
@@ -8,6 +8,8 @@ import io.github.axolotlclient.AxolotlclientConfig.util.DrawUtil;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
+import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
 import java.util.Objects;
@@ -23,82 +25,104 @@ public class ColorOptionWidget extends ButtonWidget {
      * <a href="https://store.kde.org/p/1425426">KDE Store Link</a>
      * @license GPL-3
      **/
-    protected final Identifier pipette = new Identifier("axolotlclient","textures/gui/pipette.png");
+    protected Identifier pipette = new Identifier("axolotlclient", "textures/gui/pipette.png");
 
-    public ColorOptionWidget(int id, int x, int y, ColorOption option) {
-        super(id, x, y, 150, 20, "");
+    public ColorOptionWidget(int x, int y, ColorOption option) {
+        super(x, y, 150, 20, Text.of(""), buttonWidget -> {});
         this.option=option;
-        textField = new TextFieldWidget(0, MinecraftClient.getInstance().textRenderer, x, y, 128, 19);
+        textField = new TextFieldWidget(MinecraftClient.getInstance().textRenderer, x, y, 128, 19, getMessage());
         textField.write(option.get().toString());
 
-        openPicker = new ButtonWidget(2, x+128, y, 21, 21, ""){
-            @Override
-            public void render(MinecraftClient client, int mouseX, int mouseY) {
-                DrawUtil.fill(x, y, x+width, y+height, option.get().getAsInt());
-                DrawUtil.outlineRect(x, y, width, height, -6250336);
+        openPicker = new ButtonWidget(x+128, y, 21, 21, Text.of(""), buttonWidget -> {}){
+	        @Override
+	        public void renderButton(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+                DrawUtil.fill(matrices, x, y, x+width, y+height, option.get().getAsInt());
+                DrawUtil.outlineRect(matrices, x, y, width, height, -6250336);
 
-                GlStateManager.color3f(1, 1,1);
-                MinecraftClient.getInstance().getTextureManager().bindTexture(pipette);
-                drawTexture(x, y, 0, 0, 20, 20, 21, 21);
+                RenderSystem.setShaderTexture(0, pipette);
+                drawTexture(matrices, x, y, 0, 0, 20, 20, 21, 21);
             }
         };
     }
 
-    @Override
-    public void render(MinecraftClient client, int mouseX, int mouseY) {
+	@Override
+	public void renderButton(MatrixStack matrices, int mouseX, int mouseY, float delta) {
 
         textField.y = y;
         textField.x = x;
-        textField.render();
+        textField.render(matrices, mouseX, mouseY, delta);
 
         openPicker.y = y-1;
         openPicker.x = x+128;
-        openPicker.render(client, mouseX, mouseY);
+        openPicker.render(matrices, mouseX, mouseY, delta);
 
     }
 
-    @Override
-    public void mouseReleased(int mouseX, int mouseY) {
-        super.mouseReleased(mouseX, mouseY);
-    }
-
-    @Override
-    public boolean isMouseOver(MinecraftClient client, int mouseX, int mouseY) {
-        if(MinecraftClient.getInstance().currentScreen instanceof OptionsScreenBuilder &&
-                ((OptionsScreenBuilder) MinecraftClient.getInstance().currentScreen).isPickerOpen()) return false;
-        return super.isMouseOver(client, mouseX, mouseY);
-    }
-
-    public void mouseClicked(int mouseX, int mouseY){
-        if(openPicker.isMouseOver(MinecraftClient.getInstance(), mouseX, mouseY)){
-
+	@Override
+	public boolean mouseClicked(double mouseX, double mouseY, int button) {
+        if(openPicker.isMouseOver(mouseX, mouseY)){
             if(MinecraftClient.getInstance().currentScreen instanceof OptionsScreenBuilder){
                 ((OptionsScreenBuilder) MinecraftClient.getInstance().currentScreen).openColorPicker(option);
             }
+            return true;
+        } else if(textField.isMouseOver(mouseX, mouseY)) {
+            this.playDownSound(MinecraftClient.getInstance().getSoundManager());
+            return textField.mouseClicked(mouseX, mouseY, 0);
+
         } else {
-            textField.mouseClicked(mouseX, mouseY, 0);
-            if(MinecraftClient.getInstance().currentScreen instanceof OptionsScreenBuilder){
-                ((OptionsScreenBuilder) MinecraftClient.getInstance().currentScreen).closeColorPicker();
-            }
+			textField.setTextFieldFocused(false);
+	        if(MinecraftClient.getInstance().currentScreen instanceof OptionsScreenBuilder){
+		        ((OptionsScreenBuilder) MinecraftClient.getInstance().currentScreen).closeColorPicker();
+	        }
         }
+		return super.mouseClicked(mouseX, mouseY, button);
+    }
+
+    @Override
+    public boolean isMouseOver(double mouseX, double mouseY) {
+        if(canHover()) {
+            return super.isMouseOver(mouseX, mouseY);
+        }
+        return false;
+    }
+
+    protected boolean canHover(){
+        if(MinecraftClient.getInstance().currentScreen instanceof OptionsScreenBuilder &&
+            ((OptionsScreenBuilder) MinecraftClient.getInstance().currentScreen).isPickerOpen()){
+            this.hovered = false;
+            return false;
+        }
+        return true;
     }
 
     public void tick(){
         if(textField.isFocused()) {
             textField.tick();
         } else {
-            if((MinecraftClient.getInstance().currentScreen instanceof OptionsScreenBuilder &&
-                    ((OptionsScreenBuilder) MinecraftClient.getInstance().currentScreen).isPickerOpen() || option.getChroma()) &&
+            if(MinecraftClient.getInstance().currentScreen instanceof OptionsScreenBuilder &&
+                    ((OptionsScreenBuilder) MinecraftClient.getInstance().currentScreen).isPickerOpen() &&
                     !Objects.equals(textField.getText(), option.get().toString())){
                 textField.setText(option.get().toString());
             }
         }
     }
 
-    public void keyPressed(char c, int code){
+    public boolean keyPressed(int keyCode, int scanCode, int modifiers){
         if(textField.isFocused()) {
-            textField.keyPressed(c, code);
+            textField.keyPressed(keyCode, scanCode, modifiers);
             option.set(Color.parse(textField.getText()));
+			return true;
         }
+	    return false;
     }
+
+	@Override
+	public boolean charTyped(char c, int modifiers) {
+		if(textField.isFocused()) {
+			textField.charTyped(c, modifiers);
+			option.set(Color.parse(textField.getText()));
+			return true;
+		}
+		return false;
+	}
 }

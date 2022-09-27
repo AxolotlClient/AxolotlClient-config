@@ -2,9 +2,11 @@ package io.github.axolotlclient.AxolotlclientConfig.options;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
-import io.github.axolotlclient.AxolotlclientConfig.util.clientCommands.CommandResponse;
+import io.github.axolotlclient.AxolotlclientConfig.util.CommandResponse;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 public class EnumOption extends OptionBase<String> {
 
@@ -80,25 +82,25 @@ public class EnumOption extends OptionBase<String> {
     }
 
     @Override
-    protected CommandResponse onCommandExecution(String[] args) {
-        if(args.length>0){
-            if(args[0].equals("next")){
+    protected CommandResponse onCommandExecution(String arg) {
+        if(arg.length()>0){
+            if(arg.equals("next")){
                 next();
                 return new CommandResponse(true, "Successfully set "+getName()+" to "+get()+"!");
-            } else if(args[0].equals("last")){
+            } else if(arg.equals("last")){
                 last();
                 return new CommandResponse(true, "Successfully set "+getName()+" to "+get()+"!");
             }
 
             for (int i=0;i<values.length;i++){
-                if(args[0].equalsIgnoreCase(values[i])){
+                if(arg.equalsIgnoreCase(values[i])){
                     this.i=i;
                     return new CommandResponse(true, "Successfully set "+getName()+" to "+get()+" (Index: "+i+")!");
                 }
             }
 
             try {
-                int value = Integer.parseInt(args[0]);
+                int value = Integer.parseInt(arg);
                 if(value>values.length-1 || value < 0){
                     throw new IndexOutOfBoundsException();
                 }
@@ -111,10 +113,5 @@ public class EnumOption extends OptionBase<String> {
             }
         }
         return new CommandResponse(true, getName() + " is currently set to '"+get()+"'.");
-    }
-
-    @Override
-    public List<String> getCommandSuggestions() {
-        return Arrays.asList(values);
     }
 }

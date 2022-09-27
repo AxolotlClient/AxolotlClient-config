@@ -1,14 +1,12 @@
 package io.github.axolotlclient.AxolotlclientConfig.example;
 
+import com.terraformersmc.modmenu.api.ConfigScreenFactory;
+import com.terraformersmc.modmenu.api.ModMenuApi;
 import io.github.axolotlclient.AxolotlclientConfig.Color;
 import io.github.axolotlclient.AxolotlclientConfig.options.*;
 import io.github.axolotlclient.AxolotlclientConfig.screen.OptionsScreenBuilder;
-import io.github.prospector.modmenu.api.ModMenuApi;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.screen.SettingsScreen;
-
-import java.util.function.Function;
+import net.minecraft.client.gui.screen.option.OptionsScreen;
 
 public class ModMenuExampleConfig implements ModMenuApi {
 
@@ -21,9 +19,9 @@ public class ModMenuExampleConfig implements ModMenuApi {
                     new EnumOption("Example Enum Option", new String[]{"Option 1", "Option 2", "Option 3"}, "Option 1"),
                     new ColorOption("Example Color Option", -162555),
                     new StringOption("Example String Option", "Example §2String"),
-                    new GenericOption("Example Generic Option", "Open Minecraft Options", (mouseX, mouseY)->{
-                        MinecraftClient.getInstance().openScreen(new SettingsScreen(MinecraftClient.getInstance().currentScreen, MinecraftClient.getInstance().options));
-                    }));
+                    new GenericOption("Example Generic Option", "Open Minecraft Options", (mouseX, mouseY)->
+                        MinecraftClient.getInstance().setScreen(new OptionsScreen(MinecraftClient.getInstance().currentScreen, MinecraftClient.getInstance().options))
+                    ));
             OptionCategory sub = new OptionCategory("Example Sub Category");
             sub.add(new BooleanOption("Example Toggle", true),
                     new ColorOption("Example Color Option", Color.parse("#FF550055")),
@@ -33,12 +31,7 @@ public class ModMenuExampleConfig implements ModMenuApi {
     }
 
     @Override
-    public String getModId() {
-        return "axolotlclientconfig";
-    }
-
-    @Override
-    public Function<Screen, ? extends Screen> getConfigScreenFactory() {
+    public ConfigScreenFactory<?> getModConfigScreenFactory() {
         return (parent) -> new OptionsScreenBuilder(parent, example, "axolotlclientconfig");
     }
 }

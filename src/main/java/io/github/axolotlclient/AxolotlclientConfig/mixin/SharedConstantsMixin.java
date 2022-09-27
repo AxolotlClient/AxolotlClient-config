@@ -1,8 +1,8 @@
 package io.github.axolotlclient.AxolotlclientConfig.mixin;
 
 import io.github.axolotlclient.AxolotlclientConfig.screen.OptionsScreenBuilder;
+import net.minecraft.SharedConstants;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.util.SharedConstants;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;

@@ -1,16 +1,23 @@
 package io.github.axolotlclient.AxolotlclientConfig.options;
 
-import io.github.axolotlclient.AxolotlclientConfig.AxolotlClientConfigManager;
+import com.mojang.brigadier.Command;
+import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import io.github.axolotlclient.AxolotlclientConfig.util.ConfigUtils;
 import net.minecraft.client.resource.language.I18n;
-import net.minecraft.text.LiteralText;
+import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
+import org.quiltmc.qsl.command.api.client.ClientCommandManager;
+import org.quiltmc.qsl.command.api.client.ClientCommandRegistrationCallback;
+import org.quiltmc.qsl.command.api.client.QuiltClientCommandSource;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 public class OptionCategory implements Tooltippable {
 
-    String name;
+    private final String name;
     private final List<OptionBase<?>> options = new ArrayList<>();
     private final List<OptionCategory> subCategories = new ArrayList<>();
 
@@ -21,7 +28,7 @@ public class OptionCategory implements Tooltippable {
     public OptionCategory(String key, boolean registerCommand){
         this.name=key;
         if(registerCommand) {
-            ConfigUtils.registerCommand(name.toLowerCase(Locale.ENGLISH), this::getCommandSuggestions, this::onCommandExec);
+            ClientCommandRegistrationCallback.EVENT.register((dispatcher, buildContext, environment) -> ClientCommandManager.getDispatcher().register(buildCommand()));
         }
     }
 
@@ -57,45 +64,19 @@ public class OptionCategory implements Tooltippable {
         return getName();
     }
 
-    private void onCommandExec(String[] args) {
-        if(args.length>0){
-            for(OptionBase<?> o:getOptions()){
-                if(o.getName().equals(args[0])){
-                    StringBuilder newArgs= new StringBuilder();
-                    if(args.length>1) {
-                        for (int i = 1; i < args.length; i++) {
-                            newArgs.append(args[i]);
-                        }
-                        o.onCommandExec(new String[]{newArgs.toString()});
-                    } else {
-                        o.onCommandExec(new String[]{});
-                    }
-
-                    AxolotlClientConfigManager.saveCurrentConfig();
-                }
-            }
-        } else {
-            StringBuilder builder = new StringBuilder();
+    public LiteralArgumentBuilder<QuiltClientCommandSource> buildCommand(){
+        LiteralArgumentBuilder<QuiltClientCommandSource> builder = ClientCommandManager.literal(getName());
+        for(OptionBase<?> o:getOptions()){
+            o.getCommand(builder);
+        }
+        builder.executes(context -> {
+            StringBuilder string = new StringBuilder();
             for (OptionBase<?> o : getOptions()) {
-                builder.append("    ").append(Formatting.AQUA).append(o.getName()).append(": ").append(o.get()).append("\n");
+                string.append("    ").append(Formatting.AQUA).append(o.getName()).append(": ").append(o.get()).append("\n");
             }
-            ConfigUtils.sendChatMessage(new LiteralText(Formatting.BLUE + "Values in this category are: \n" + builder));
-        }
-    }
-
-    protected List<String> getCommandSuggestions(String[] args){
-        List<String> list = new ArrayList<>();
-        if(args.length>=1){
-            for(OptionBase<?> o:getOptions()){
-                if(o.getName().equals(args[0])){
-                    list.addAll(o.getCommandSuggestions());
-                }
-            }
-        } else {
-            for (Option o : getOptions()) {
-                list.add(o.getName());
-            }
-        }
-        return list;
+            ConfigUtils.sendChatMessage(Text.literal(Formatting.BLUE + "Values in this category are: \n" + string));
+            return Command.SINGLE_SUCCESS;
+        });
+        return builder;
     }
 }
