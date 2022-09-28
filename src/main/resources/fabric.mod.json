@@ -22,7 +22,9 @@
   "icon": "assets/axolotlclient/icon.png",
   "environment": "client",
   "entrypoints": {
-    "modmenu": ["io.github.axolotlclient.AxolotlclientConfig.example.ModMenuExampleConfig"]
+    "modmenu": [
+      "io.github.axolotlclient.AxolotlclientConfig.screen.ModMenuScreens"
+    ]
   },
   "mixins": [
     "axolotlclientconfig.mixins.json"

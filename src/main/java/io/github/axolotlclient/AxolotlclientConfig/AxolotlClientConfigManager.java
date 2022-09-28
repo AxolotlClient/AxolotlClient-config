@@ -80,4 +80,9 @@ public class AxolotlClientConfigManager {
             save(((OptionsScreenBuilder) MinecraftClient.getInstance().currentScreen).modid);
         }
     }
+
+    @ApiStatus.Internal
+    public static HashMap<String, ConfigHolder> getConfigs(){
+        return configs;
+    }
 }

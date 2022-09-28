@@ -1,20 +1,22 @@
-package io.github.axolotlclient.AxolotlclientConfig.example;
+package io.github.axolotlclient.AxolotlclientConfig.screen;
 
+import io.github.axolotlclient.AxolotlclientConfig.AxolotlClientConfigManager;
 import io.github.axolotlclient.AxolotlclientConfig.Color;
 import io.github.axolotlclient.AxolotlclientConfig.options.*;
-import io.github.axolotlclient.AxolotlclientConfig.screen.OptionsScreenBuilder;
 import io.github.prospector.modmenu.api.ModMenuApi;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.SettingsScreen;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.function.Function;
 
-public class ModMenuExampleConfig implements ModMenuApi {
+public class ModMenuScreens implements ModMenuApi {
 
-    private static final OptionCategory example = new OptionCategory("Example Config");
+    private static final OptionCategory example = new OptionCategory("Example Config", false);
 
-    public ModMenuExampleConfig(){
+    public ModMenuScreens(){
         if(example.getOptions().isEmpty()){
             example.add(new BooleanOption("Example Toggle", false),
                     new DoubleOption("Example Slider", 5D, 1, 10),
@@ -24,7 +26,7 @@ public class ModMenuExampleConfig implements ModMenuApi {
                     new GenericOption("Example Generic Option", "Open Minecraft Options", (mouseX, mouseY)->{
                         MinecraftClient.getInstance().openScreen(new SettingsScreen(MinecraftClient.getInstance().currentScreen, MinecraftClient.getInstance().options));
                     }));
-            OptionCategory sub = new OptionCategory("Example Sub Category");
+            OptionCategory sub = new OptionCategory("Example Sub Category", false);
             sub.add(new BooleanOption("Example Toggle", true),
                     new ColorOption("Example Color Option", Color.parse("#FF550055")),
                     new StringOption("Example String Option", "Example §bString"));
@@ -41,4 +43,14 @@ public class ModMenuExampleConfig implements ModMenuApi {
     public Function<Screen, ? extends Screen> getConfigScreenFactory() {
         return (parent) -> new OptionsScreenBuilder(parent, example, "axolotlclientconfig");
     }
+
+    /*@Override // For when 1.8.9 has a modmenu version that supports crazy shit like this
+    public Map<String, ConfigScreenFactory<?>> getProvidedConfigScreenFactories() {
+        HashMap<String, ConfigScreenFactory<?>> factories = new HashMap<>();
+        AxolotlClientConfigManager.getConfigs().forEach((s, configHolder) ->
+                factories.put(s, (parent) ->
+                        new OptionsScreenBuilder(parent, new OptionCategory(s +" Config", false)
+                                .addSubCategories(AxolotlClientConfigManager.getModConfig(s).getCategories()), s)));
+        return factories;
+    }*/
 }

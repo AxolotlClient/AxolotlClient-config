@@ -10,7 +10,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collections;
-import java.util.List;
 
 /**
  * A default config manager to use by mods not implementing a custom one.
@@ -18,13 +17,14 @@ import java.util.List;
  */
 
 public class DefaultConfigManager implements ConfigManager {
-    private final List<OptionCategory> categories;
     private final String modid;
-    private final Path confPath = FabricLoader.getInstance().getConfigDir().resolve(".json");
+    private final Path confPath;
+
+    protected static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
     public DefaultConfigManager(String modid){
         this.modid = modid;
-        categories = AxolotlClientConfigManager.getModConfig(modid).getCategories();
+        confPath = FabricLoader.getInstance().getConfigDir().resolve(modid+".json");
     }
 
     public void save(){
@@ -38,14 +38,12 @@ public class DefaultConfigManager implements ConfigManager {
     private void saveFile() throws IOException {
 
         JsonObject config = new JsonObject();
-        for(OptionCategory category : categories) {
+        for(OptionCategory category : AxolotlClientConfigManager.getModConfig(modid).getCategories()) {
             JsonObject object = new JsonObject();
 
             config.add(category.getName(), getConfig(object, category));
 
         }
-
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
         Files.write(confPath, Collections.singleton(gson.toJson(config)));
     }
@@ -72,7 +70,7 @@ public class DefaultConfigManager implements ConfigManager {
         try {
             JsonObject config = new JsonParser().parse(new FileReader(confPath.toString())).getAsJsonObject();
 
-            for(OptionCategory category:categories) {
+            for(OptionCategory category:AxolotlClientConfigManager.getModConfig(modid).getCategories()) {
                 if(config.has(category.getName())) {
                     setOptions(config.get(category.getName()).getAsJsonObject(), category);
                 }
