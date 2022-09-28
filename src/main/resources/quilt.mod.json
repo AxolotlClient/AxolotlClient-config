@@ -22,7 +22,9 @@
 		},
 		"intermediate_mappings": "net.fabricmc:intermediary",
 		"entrypoints": {
-			"modmenu": [ "io.github.axolotlclient.AxolotlclientConfig.example.ModMenuExampleConfig" ]
+			"modmenu": [
+				"io.github.axolotlclient.AxolotlclientConfig.screen.ModMenuConfigScreens"
+			]
 		},
 		"depends": [
 			{

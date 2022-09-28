@@ -33,6 +33,8 @@ public class AxolotlClientConfigManager {
         } catch (NoClassDefFoundError e){
             AxolotlClientConfigManager.LOGGER.warn("Running under Fabric, Commands for mod {} will not work!", modid);
         }
+
+        load(modid);
     }
 
     public static void registerConfig(String modid, ConfigHolder config){
@@ -44,7 +46,7 @@ public class AxolotlClientConfigManager {
      * @param modid the modid the config screen should be opened for.
      */
     public static void openConfigScreen(String modid){
-       MinecraftClient.getInstance().setScreen(new OptionsScreenBuilder(MinecraftClient.getInstance().currentScreen, new OptionCategory(modid+"Config", false).addSubCategories(configs.get(modid).getCategories()), modid));
+       MinecraftClient.getInstance().setScreen(new OptionsScreenBuilder(MinecraftClient.getInstance().currentScreen, new OptionCategory(modid+" Config", false).addSubCategories(configs.get(modid).getCategories()), modid));
     }
 
     @ApiStatus.Internal
@@ -86,5 +88,10 @@ public class AxolotlClientConfigManager {
         if(MinecraftClient.getInstance().currentScreen instanceof OptionsScreenBuilder){
             save(((OptionsScreenBuilder) MinecraftClient.getInstance().currentScreen).modid);
         }
+    }
+
+    @ApiStatus.Internal
+    public static HashMap<String, ConfigHolder> getConfigs(){
+        return configs;
     }
 }
