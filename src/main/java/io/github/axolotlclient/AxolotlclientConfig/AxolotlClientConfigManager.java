@@ -26,6 +26,8 @@ public class AxolotlClientConfigManager {
     public static void registerConfig(String modid, ConfigHolder config, ConfigManager manager){
         configs.put(modid, config);
         managers.put(modid, manager);
+
+        manager.load();
     }
 
     public static void registerConfig(String modid, ConfigHolder config){
