@@ -34,7 +34,7 @@ public class AxolotlClientConfigManager {
             AxolotlClientConfigManager.LOGGER.warn("Running under Fabric, Commands for mod {} will not work!", modid);
         }
 
-        load(modid);
+        manager.load();
     }
 
     public static void registerConfig(String modid, ConfigHolder config){
