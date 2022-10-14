@@ -265,7 +265,7 @@ public class ButtonWidgetList extends AlwaysSelectedEntryListWidget<ButtonWidget
 
 		protected void renderTooltip(MatrixStack matrices, Tooltippable option, int x, int y){
 			if(MinecraftClient.getInstance().currentScreen instanceof OptionsScreenBuilder &&
-				AxolotlClientConfigConfig.showOptionTooltips.get() && option.getTooltip()!=null){
+				option.getTooltip()!=null){
 				GL11.glDisable(GL11.GL_SCISSOR_TEST);
 				((OptionsScreenBuilder) MinecraftClient.getInstance().currentScreen).renderTooltip(matrices, option, x, y);
 				ConfigUtils.applyScissor(0, top, width, bottom-top);
@@ -420,7 +420,8 @@ public class ButtonWidgetList extends AlwaysSelectedEntryListWidget<ButtonWidget
         @Override
         public void renderTooltips(MatrixStack matrices, int mouseX, int mouseY) {
 		    if(AxolotlClientConfigConfig.showOptionTooltips.get() &&
-			    mouseX>=renderX && mouseX<=(renderX + nameWidth) && mouseY>= left.y && mouseY<= left.y + left.getHeight()){
+			    mouseX>=renderX && mouseX<=(renderX + nameWidth) && mouseY>= left.y && mouseY<= left.y + left.getHeight()||
+                    (option instanceof BooleanOption && ((BooleanOption) option).getForceDisabled() && mouseY>= left.y && mouseY<= left.y + 20)){
 			    renderTooltip(matrices, option, mouseX, mouseY);
 		    }
 
