@@ -323,7 +323,7 @@ public class ButtonWidgetList extends EntryListWidget {
 
         protected void renderTooltip(Tooltippable option, int x, int y){
             if(isMouseInList(y) && MinecraftClient.getInstance().currentScreen instanceof OptionsScreenBuilder &&
-                    AxolotlClientConfigConfig.showOptionTooltips.get() && option.getTooltip()!=null){
+                    option.getTooltip() != null){
                 GL11.glDisable(GL11.GL_SCISSOR_TEST);
                 ((OptionsScreenBuilder) MinecraftClient.getInstance().currentScreen).renderTooltip(option, x, y);
                 ConfigUtils.applyScissor(0, yStart, width, yEnd-yStart);
@@ -409,14 +409,18 @@ public class ButtonWidgetList extends EntryListWidget {
         public void renderTooltips(int mouseX, int mouseY){
             if(AxolotlClientConfigConfig.showCategoryTooltips.get()) {
                 if (super.left != null && super.left.isMouseOver(client, mouseX, mouseY)) {
-                    if(AxolotlClientConfigConfig.showQuickToggles.get() && ((CategoryWidget)super.left).enabledButton != null && ((CategoryWidget)super.left).enabledButton.isMouseOver(client, mouseX, mouseY)){
+                    if(AxolotlClientConfigConfig.showQuickToggles.get() &&
+                            ((CategoryWidget)super.left).enabledButton != null &&
+                            ((CategoryWidget)super.left).enabledButton.isMouseOver(client, mouseX, mouseY)){
                         renderTooltip(((CategoryWidget) super.left).enabledButton.option, mouseX, mouseY);
                     } else {
                         renderTooltip(left, mouseX, mouseY);
                     }
                 }
                 if (super.right != null && super.right.isMouseOver(client, mouseX, mouseY)) {
-                    if(AxolotlClientConfigConfig.showQuickToggles.get() && ((CategoryWidget)super.right).enabledButton != null && ((CategoryWidget)super.right).enabledButton.isMouseOver(client, mouseX, mouseY)){
+                    if(AxolotlClientConfigConfig.showQuickToggles.get() &&
+                            ((CategoryWidget)super.right).enabledButton != null &&
+                            ((CategoryWidget)super.right).enabledButton.isMouseOver(client, mouseX, mouseY)){
                         renderTooltip(((CategoryWidget) super.right).enabledButton.option, mouseX, mouseY);
                     } else {
                         renderTooltip(right, mouseX, mouseY);
@@ -452,7 +456,8 @@ public class ButtonWidgetList extends EntryListWidget {
 
         public void renderTooltips(int mouseX, int mouseY){
             if(AxolotlClientConfigConfig.showOptionTooltips.get() &&
-                    (mouseX>=renderX && mouseX<=(renderX + nameWidth) && mouseY>= left.y && mouseY<= left.y + 20)){
+                    (mouseX>=renderX && mouseX<=(renderX + nameWidth) && mouseY>= left.y && mouseY<= left.y + 20) ||
+                    (option instanceof BooleanOption && ((BooleanOption) option).getForceDisabled() && mouseY>= left.y && mouseY<= left.y + 20) ){
                 renderTooltip(option, mouseX, mouseY);
             }
         }
