@@ -31,7 +31,7 @@ public class DefaultConfigManager implements ConfigManager {
         try{
             saveFile();
         } catch (IOException e) {
-            AxolotlClientConfigManager.LOGGER.error("Failed to save config for mod: {}!", modid);
+            AxolotlClientConfigManager.LOGGER.error("Failed to save config for mod: "+modid+"!");
         }
     }
 
@@ -76,8 +76,8 @@ public class DefaultConfigManager implements ConfigManager {
                 }
             }
         } catch (Exception e){
-            AxolotlClientConfigManager.LOGGER.error("Failed to load config for modid {}! Using default values... \nError: ", modid);
-            e.printStackTrace();
+            AxolotlClientConfigManager.LOGGER.error("Failed to load config for modid "+modid+"! Using default values...");
+            //e.printStackTrace();
         }
     }
 
