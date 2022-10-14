@@ -421,7 +421,8 @@ public class ButtonWidgetList extends AlwaysSelectedEntryListWidget<ButtonWidget
         public void renderTooltips(MatrixStack matrices, int mouseX, int mouseY) {
 		    if(AxolotlClientConfigConfig.showOptionTooltips.get() &&
 			    mouseX>=renderX && mouseX<=(renderX + nameWidth) && mouseY>= left.y && mouseY<= left.y + left.getHeight()||
-                    (option instanceof BooleanOption && ((BooleanOption) option).getForceDisabled() && mouseY>= left.y && mouseY<= left.y + 20)){
+                    (option instanceof BooleanOption && ((BooleanOption) option).getForceDisabled() &&
+                            mouseY>= left.y && mouseY<= left.y + 20 && mouseX>=renderX && mouseX<=left.x+left.getWidth())){
 			    renderTooltip(matrices, option, mouseX, mouseY);
 		    }
 
