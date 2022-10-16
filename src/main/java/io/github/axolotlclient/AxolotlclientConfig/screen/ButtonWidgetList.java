@@ -133,12 +133,6 @@ public class ButtonWidgetList extends AlwaysSelectedEntryListWidget<ButtonWidget
 	    return super.keyPressed(keyCode, scanCode, modifiers);
     }
 
-    protected void m_enzpxkzi(MatrixStack matrices, int i, int j, float f, int k, int l, int m, int n, int o) {
-        Pair entry = this.getEntry(k);
-
-        entry.render(matrices, k, m, l, n, o, i, j, Objects.equals(getSelectedOrNull(), entry), f);
-    }
-
 	public boolean charTyped(char c, int modifiers){
 		for(Pair pair:entries){
 			if(pair.charTyped(c, modifiers)) return true;
@@ -351,7 +345,7 @@ public class ButtonWidgetList extends AlwaysSelectedEntryListWidget<ButtonWidget
 
         @Override
         public Text getNarration() {
-            return null;
+            return Text.empty();
         }
     }
 
