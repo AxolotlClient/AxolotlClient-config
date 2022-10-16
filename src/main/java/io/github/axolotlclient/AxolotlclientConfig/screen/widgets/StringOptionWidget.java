@@ -5,6 +5,7 @@ import io.github.axolotlclient.AxolotlclientConfig.screen.OptionsScreenBuilder;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 
 public class StringOptionWidget extends TextFieldWidget {
@@ -19,6 +20,7 @@ public class StringOptionWidget extends TextFieldWidget {
 	        @Override
 	        public boolean mouseClicked(double mouseX, double mouseY, int button) {
                 if(isMouseOver(mouseX, mouseY)) {
+					setTextFieldFocused(true);
                     return super.mouseClicked(mouseX, mouseY, button);
                 } else {
                     this.setFocused(false);
@@ -77,8 +79,14 @@ public class StringOptionWidget extends TextFieldWidget {
         if(MinecraftClient.getInstance().currentScreen instanceof OptionsScreenBuilder &&
             ((OptionsScreenBuilder) MinecraftClient.getInstance().currentScreen).isPickerOpen()){
             this.hovered = false;
+			this.setFocused(false);
             return false;
         }
         return super.isMouseOver(mouseX, mouseY);
     }
+
+	@Override
+	protected MutableText getNarrationMessage() {
+		return Text.literal("Value: "+option.get());
+	}
 }

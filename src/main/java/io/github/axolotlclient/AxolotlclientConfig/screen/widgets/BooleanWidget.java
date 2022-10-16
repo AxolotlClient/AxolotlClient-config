@@ -3,6 +3,7 @@ package io.github.axolotlclient.AxolotlclientConfig.screen.widgets;
 import com.mojang.blaze3d.systems.RenderSystem;
 import io.github.axolotlclient.AxolotlclientConfig.options.BooleanOption;
 import io.github.axolotlclient.AxolotlclientConfig.screen.OptionsScreenBuilder;
+import io.github.axolotlclient.AxolotlclientConfig.util.DrawUtil;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.ClickableWidget;
@@ -35,6 +36,7 @@ public class BooleanWidget extends ButtonWidget {
         if(MinecraftClient.getInstance().currentScreen instanceof OptionsScreenBuilder &&
             ((OptionsScreenBuilder) MinecraftClient.getInstance().currentScreen).isPickerOpen()){
             this.hovered = false;
+            this.setFocused(false);
             return false;
         }
         return true;
@@ -45,11 +47,13 @@ public class BooleanWidget extends ButtonWidget {
 
         RenderSystem.setShaderTexture(0, ClickableWidget.WIDGETS_TEXTURE);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        this.hovered = isMouseOver(mouseX, mouseY);
+        this.hovered = isMouseOver(mouseX, mouseY) || isFocused();
 
         renderBg(matrices);
         if(!option.getForceDisabled()) {
             renderSwitch(matrices);
+        } else if (isFocused()) {
+            DrawUtil.outlineRect(matrices, x-1, y-1, width+2, height+2, -1);
         }
 
         int color = option.get()? 0x55FF55 : 0xFF5555;

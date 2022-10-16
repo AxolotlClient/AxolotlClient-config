@@ -9,16 +9,25 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawableHelper;
-import net.minecraft.client.gui.widget.AlwaysSelectedEntryListWidget;
+import net.minecraft.client.gui.Element;
+import net.minecraft.client.gui.ParentElement;
+import net.minecraft.client.gui.Selectable;
+import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
+import net.minecraft.client.gui.screen.narration.NarrationPart;
 import net.minecraft.client.gui.widget.ClickableWidget;
+import net.minecraft.client.gui.widget.ElementListWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
+import org.jetbrains.annotations.Nullable;
 import org.lwjgl.opengl.GL11;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Locale;
 import java.util.stream.Collectors;
 
-public class ButtonWidgetList extends AlwaysSelectedEntryListWidget<ButtonWidgetList.Pair> {
+public class ButtonWidgetList extends ElementListWidget<ButtonWidgetList.Pair> {
 
     public List<Pair> entries;
 
@@ -31,21 +40,13 @@ public class ButtonWidgetList extends AlwaysSelectedEntryListWidget<ButtonWidget
         this.setRenderHorizontalShadows(false);
         this.setRenderHeader(false, 0);
         this.setRenderSelection(false);
-        this.category=category; // same as above
+        this.category=category;
 
         this.entries = constructEntries(category);
         for(Pair p:entries){
             addEntry(p);
         }
     }
-
-
-
-    @Override
-	protected int addEntry(Pair entry) {
-		//if(entry != null) this.entries.add(entry);
-		return super.addEntry(entry);
-	}
 
 	private ClickableWidget createCategoryWidget(int x, OptionCategory cat){
         if(cat==null) {
@@ -69,7 +70,6 @@ public class ButtonWidgetList extends AlwaysSelectedEntryListWidget<ButtonWidget
 
 	@Override
 	public boolean mouseClicked(double mouseX, double mouseY, int button) {
-		setFocused(null);
 		boolean bl = super.mouseClicked(mouseX, mouseY, button);
         entries.forEach(pair -> {
             if(pair.left instanceof StringOptionWidget && ((StringOptionWidget) pair.left).textField.isFocused()){
@@ -112,25 +112,10 @@ public class ButtonWidgetList extends AlwaysSelectedEntryListWidget<ButtonWidget
         return super.getScrollbarPositionX() + 32;
     }
 
-    private boolean halftick = true;
-
     public void tick(){
-		if(halftick) {
-			for (Pair pair : entries) {
-				if (pair.tickable) pair.tick();
-			}
-		}
-	    halftick=!halftick;
-    }
-
-    public boolean keyPressed(int keyCode, int scanCode, int modifiers){
-        for (Pair pair:entries) if(pair.keyPressed(keyCode, scanCode, modifiers)){
-			return true;
+        for (Pair pair : entries) {
+            if (pair.tickable) pair.tick();
         }
-        if (getSelectedOrNull() != null) {
-            return getSelectedOrNull().keyPressed(keyCode, scanCode, modifiers);
-        }
-	    return super.keyPressed(keyCode, scanCode, modifiers);
     }
 
 	public boolean charTyped(char c, int modifiers){
@@ -203,7 +188,9 @@ public class ButtonWidgetList extends AlwaysSelectedEntryListWidget<ButtonWidget
                 ClickableWidget buttonWidget = this.createCategoryWidget(width / 2 - 155, subCat);
 
                 OptionCategory subCat2 = i < category.getSubCategories().size() - 1 ? category.getSubCategories().get(i + 1) : null;
+
                 ClickableWidget buttonWidget2 = this.createCategoryWidget(width / 2 - 155 + 160, subCat2);
+
 
                 entries.add(new CategoryPair(subCat, buttonWidget, subCat2, buttonWidget2));
             }
@@ -216,14 +203,13 @@ public class ButtonWidgetList extends AlwaysSelectedEntryListWidget<ButtonWidget
             if(option.getName().equals("x")||option.getName().equals("y")) continue;
             ClickableWidget buttonWidget = this.createWidget(width / 2 - 155+160, option);
 
-            //addEntry(new OptionEntry(buttonWidget, option, width));
             entries.add(new OptionEntry(buttonWidget, option, width));
         }
         return entries;
     }
 
     @Environment(EnvType.CLIENT)
-    public class Pair extends Entry<Pair> {
+    public class Pair extends ElementListWidget.Entry<Pair> implements ParentElement {
         protected final MinecraftClient client = MinecraftClient.getInstance();
         protected final ClickableWidget left;
         protected final ClickableWidget right;
@@ -235,6 +221,9 @@ public class ButtonWidgetList extends AlwaysSelectedEntryListWidget<ButtonWidget
 	        this.left = left;
             this.right = right;
 
+            if(left != null){
+                setFocused(left);
+            }
 			tickable = left instanceof StringOptionWidget || left instanceof ColorOptionWidget;
         }
 
@@ -259,12 +248,24 @@ public class ButtonWidgetList extends AlwaysSelectedEntryListWidget<ButtonWidget
 
 		protected void renderTooltip(MatrixStack matrices, Tooltippable option, int x, int y){
 			if(MinecraftClient.getInstance().currentScreen instanceof OptionsScreenBuilder &&
-				option.getTooltip()!=null){
+				option.getTooltip()!=null && y<bottom && y>top){
 				GL11.glDisable(GL11.GL_SCISSOR_TEST);
 				((OptionsScreenBuilder) MinecraftClient.getInstance().currentScreen).renderTooltip(matrices, option, x, y);
 				ConfigUtils.applyScissor(0, top, width, bottom-top);
 			}
 		}
+
+        @Override
+        public List<? extends Element> children() {
+            //return List.of(left, right);
+            if(left != null) {
+                if (right != null) {
+                    return List.of(left, right);
+                }
+                return List.of(left);
+            }
+            return new ArrayList<>();
+        }
 
         @Override
 	    public boolean mouseClicked(double mouseX, double mouseY, int button) {
@@ -314,7 +315,9 @@ public class ButtonWidgetList extends AlwaysSelectedEntryListWidget<ButtonWidget
 
 		@Override
 		public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-			if(left!=null && left.keyPressed(keyCode, scanCode, modifiers)) return true;
+			if(left!=null) {
+                return left.keyPressed(keyCode, scanCode, modifiers);
+            }
 			return super.keyPressed(keyCode, scanCode, modifiers);
 		}
 
@@ -344,8 +347,23 @@ public class ButtonWidgetList extends AlwaysSelectedEntryListWidget<ButtonWidget
 		}
 
         @Override
-        public Text getNarration() {
-            return Text.empty();
+        public List<? extends Selectable> selectableChildren() {
+            if(left != null) {
+                if (right != null) {
+                    return List.of(left, right);
+                }
+                return List.of(left);
+            }
+            return new ArrayList<>();
+        }
+
+        @Nullable
+        @Override
+        public Element getFocused() {
+            if(super.getFocused() == null && left != null){
+                setFocused(left);
+            }
+            return super.getFocused();
         }
     }
 
@@ -360,12 +378,6 @@ public class ButtonWidgetList extends AlwaysSelectedEntryListWidget<ButtonWidget
 			right = catRight;
 		}
 
-		@Override
-		public void render(MatrixStack matrices, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float tickDelta) {
-            super.render(matrices, index, y, x, entryWidth, entryHeight, mouseX, mouseY, hovered, tickDelta);
-
-        }
-
         @Override
         public void renderTooltips(MatrixStack matrices, int mouseX, int mouseY) {
             if(AxolotlClientConfigConfig.showCategoryTooltips.get()) {
@@ -375,17 +387,29 @@ public class ButtonWidgetList extends AlwaysSelectedEntryListWidget<ButtonWidget
                     } else {
                         renderTooltip(matrices, left, mouseX, mouseY);
                     }
-				}
-				if (super.right != null && super.right.isMouseOver(mouseX, mouseY)) {
+				} else if (super.left != null && super.left.isFocused()) {
+                    if(AxolotlClientConfigConfig.showQuickToggles.get() && ((CategoryWidget)super.left).enabledButton != null && ((CategoryWidget)super.left).enabledButton.isFocused()){
+                        renderTooltip(matrices, ((CategoryWidget) super.left).enabledButton.option, super.left.x + super.left.getWidth()/2, super.left.y);
+                    } else {
+                        renderTooltip(matrices, left, super.left.x + super.left.getWidth()/2, super.left.y);
+                    }
+                }
+                if (super.right != null && super.right.isMouseOver(mouseX, mouseY)) {
                     if(AxolotlClientConfigConfig.showQuickToggles.get() && ((CategoryWidget)super.right).enabledButton != null && ((CategoryWidget)super.right).enabledButton.isMouseOver(mouseX, mouseY)){
                         renderTooltip(matrices, ((CategoryWidget) super.right).enabledButton.option, mouseX, mouseY);
                     } else {
                         renderTooltip(matrices, right, mouseX, mouseY);
                     }
-				}
+				} else if (super.right != null && super.right.isFocused()) {
+                    if(AxolotlClientConfigConfig.showQuickToggles.get() && ((CategoryWidget)super.right).enabledButton != null && ((CategoryWidget)super.right).enabledButton.isFocused()){
+                        renderTooltip(matrices, ((CategoryWidget) super.right).enabledButton.option, super.right.x + super.right.getWidth()/2, super.right.y);
+                    } else {
+                        renderTooltip(matrices, right, super.right.x + super.right.getWidth()/2, super.right.y);
+                    }
+                }
 			}
 		}
-	}
+    }
 
     public class OptionEntry extends Pair {
 
@@ -413,13 +437,31 @@ public class ButtonWidgetList extends AlwaysSelectedEntryListWidget<ButtonWidget
 
         @Override
         public void renderTooltips(MatrixStack matrices, int mouseX, int mouseY) {
-		    if(AxolotlClientConfigConfig.showOptionTooltips.get() &&
-			    mouseX>=renderX && mouseX<=(renderX + nameWidth) && mouseY>= left.y && mouseY<= left.y + left.getHeight()||
+		    if(AxolotlClientConfigConfig.showOptionTooltips.get()){
+                if(mouseX>=renderX && mouseX<=(renderX + nameWidth) && mouseY>= left.y && mouseY<= left.y + left.getHeight()||
                     (option instanceof BooleanOption && ((BooleanOption) option).getForceDisabled() &&
-                            mouseY>= left.y && mouseY<= left.y + 20 && mouseX>=renderX && mouseX<=left.x+left.getWidth())){
-			    renderTooltip(matrices, option, mouseX, mouseY);
+                            mouseY>= left.y && mouseY<= left.y + 20 && mouseX>=renderX && mouseX<=left.x+left.getWidth())) {
+                    renderTooltip(matrices, option, mouseX, mouseY);
+                } else if(left.isFocused()){
+                    renderTooltip(matrices, option, left.x+left.getWidth()/2, left.y);
+                }
 		    }
+        }
 
+        @Override
+        public List<? extends Element> children() {
+            return List.of(left);
+        }
+
+        @Override
+        public List<? extends Selectable> selectableChildren() {
+            return List.of(left);
+        }
+
+        @Override
+        public void appendNarrations(NarrationMessageBuilder builder){
+            builder.put(NarrationPart.TITLE, option.getTranslatedName());
+            super.appendNarrations(builder);
         }
     }
 
@@ -447,5 +489,15 @@ public class ButtonWidgetList extends AlwaysSelectedEntryListWidget<ButtonWidget
 	    public boolean changeFocus(boolean lookForwards) {
 		    return false;
 	    }
+
+        @Override
+        public List<? extends Element> children() {
+            return List.of();
+        }
+
+        @Override
+        public List<? extends Selectable> selectableChildren() {
+            return List.of();
+        }
     }
 }

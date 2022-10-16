@@ -19,8 +19,10 @@ public class GenericOptionWidget extends ButtonWidget {
 
     @Override
     public void render(MatrixStack stack, int mouseX, int mouseY, float delta) {
-        hovered = isMouseOver(mouseX, mouseY);
-        super.render(stack, mouseX, mouseY, delta);
+        hovered = isMouseOver(mouseX, mouseY) || isFocused();
+        if(visible){
+            renderButton(stack, mouseX, mouseY, delta);
+        }
     }
 
     @Override
@@ -43,9 +45,23 @@ public class GenericOptionWidget extends ButtonWidget {
         if(MinecraftClient.getInstance().currentScreen instanceof OptionsScreenBuilder &&
                 ((OptionsScreenBuilder) MinecraftClient.getInstance().currentScreen).isPickerOpen()){
             this.hovered = false;
+            this.setFocused(false);
             return false;
         }
         return true;
+    }
+
+    @Override
+    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+        if (!this.active || !this.visible) {
+            return false;
+        } else if (keyCode != 257 && keyCode != 32 && keyCode != 335) {
+            return false;
+        } else {
+            this.playDownSound(MinecraftClient.getInstance().getSoundManager());
+            onClick(x+1, y+1);
+            return true;
+        }
     }
 
     public void onClick(double mouseX, double mouseY) {

@@ -1,14 +1,18 @@
 package io.github.axolotlclient.AxolotlclientConfig.screen.widgets;
 
+import com.mojang.blaze3d.platform.InputUtil;
 import com.mojang.blaze3d.systems.RenderSystem;
 import io.github.axolotlclient.AxolotlclientConfig.Color;
 import io.github.axolotlclient.AxolotlclientConfig.options.ColorOption;
 import io.github.axolotlclient.AxolotlclientConfig.screen.OptionsScreenBuilder;
 import io.github.axolotlclient.AxolotlclientConfig.util.DrawUtil;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
+import net.minecraft.client.gui.screen.narration.NarrationPart;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
@@ -58,7 +62,7 @@ public class ColorOptionWidget extends ButtonWidget {
 
     }
 
-	@Override
+    @Override
 	public boolean mouseClicked(double mouseX, double mouseY, int button) {
         if(openPicker.isMouseOver(mouseX, mouseY)){
             if(MinecraftClient.getInstance().currentScreen instanceof OptionsScreenBuilder){
@@ -66,6 +70,7 @@ public class ColorOptionWidget extends ButtonWidget {
             }
             return true;
         } else if(textField.isMouseOver(mouseX, mouseY)) {
+            textField.setTextFieldFocused(true);
             this.playDownSound(MinecraftClient.getInstance().getSoundManager());
             return textField.mouseClicked(mouseX, mouseY, 0);
 
@@ -108,12 +113,27 @@ public class ColorOptionWidget extends ButtonWidget {
     }
 
     public boolean keyPressed(int keyCode, int scanCode, int modifiers){
+        if (keyCode == InputUtil.KEY_ENTER_CODE) {
+            if(MinecraftClient.getInstance().currentScreen instanceof OptionsScreenBuilder){
+                ((OptionsScreenBuilder) MinecraftClient.getInstance().currentScreen).openColorPicker(option);
+            }
+            return true;
+        }
         if(textField.isFocused()) {
             textField.keyPressed(keyCode, scanCode, modifiers);
             option.set(Color.parse(textField.getText()));
 			return true;
         }
-	    return false;
+        if (!this.active || !this.visible) {
+            return false;
+        } else if (keyCode != 32 && keyCode != 335) {
+            return super.keyPressed(keyCode, scanCode, modifiers);
+        } else {
+            this.playDownSound(MinecraftClient.getInstance().getSoundManager());
+            mouseClicked(0, 0, 0);
+            return true;
+        }
+
     }
 
 	@Override
@@ -125,4 +145,15 @@ public class ColorOptionWidget extends ButtonWidget {
 		}
 		return false;
 	}
+
+    @Override
+    protected MutableText getNarrationMessage() {
+        return Text.literal("Value: "+option.get());
+    }
+
+    @Override
+    public void appendNarrations(NarrationMessageBuilder builder) {
+        super.appendNarrations(builder);
+        builder.put(NarrationPart.HINT, "Press Enter to open color picker");
+    }
 }

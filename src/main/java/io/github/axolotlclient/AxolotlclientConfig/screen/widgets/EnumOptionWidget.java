@@ -4,6 +4,7 @@ import io.github.axolotlclient.AxolotlclientConfig.options.EnumOption;
 import io.github.axolotlclient.AxolotlclientConfig.screen.OptionsScreenBuilder;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.widget.ButtonWidget;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 
 public class EnumOptionWidget extends ButtonWidget {
@@ -17,12 +18,36 @@ public class EnumOptionWidget extends ButtonWidget {
 
     @Override
     public boolean isMouseOver(double mouseX, double mouseY) {
+        if(canHover()) {
+            return mouseX >= this.x && mouseY >= this.y && mouseX < this.x + this.width && mouseY < this.y + this.height;
+        }
+        return false;
+    }
+
+    @Override
+    protected int getYImage(boolean isHovered) {
+        if(canHover()) {
+            return super.getYImage(isHovered);
+        }
+        return 1;
+    }
+
+    protected boolean canHover(){
         if(MinecraftClient.getInstance().currentScreen instanceof OptionsScreenBuilder &&
-            ((OptionsScreenBuilder) MinecraftClient.getInstance().currentScreen).isPickerOpen()){
+                ((OptionsScreenBuilder) MinecraftClient.getInstance().currentScreen).isPickerOpen()){
             this.hovered = false;
+            this.setFocused(false);
             return false;
         }
-        return super.isMouseOver(mouseX, mouseY);
+        return true;
+    }
+
+    @Override
+    public void render(MatrixStack stack, int mouseX, int mouseY, float delta) {
+        hovered = isMouseOver(mouseX, mouseY) || isFocused();
+        if(visible){
+            renderButton(stack, mouseX, mouseY, delta);
+        }
     }
 
     @Override

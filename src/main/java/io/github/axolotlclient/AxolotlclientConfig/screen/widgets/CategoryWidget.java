@@ -51,7 +51,7 @@ public class CategoryWidget extends ButtonWidget {
         if (this.visible) {
 	        RenderSystem.setShaderTexture(0, ClickableWidget.WIDGETS_TEXTURE);
             RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-            this.hovered = mouseX >= this.x && mouseY >= this.y && mouseX < this.x + this.width && mouseY < this.y + this.height && !(enabledButton!=null && enabledButton.isHoveredOrFocused());
+            this.hovered = mouseX >= this.x && mouseY >= this.y && mouseX < this.x + this.width && mouseY < this.y + this.height && !(enabledButton!=null && enabledButton.isHoveredOrFocused()) || isFocused();
             int i = this.getYImage(this.hovered);
             this.drawTexture(matrices, this.x, this.y, 0, 46 + i * 20, this.width / 2, this.height);
             this.drawTexture(matrices,this.x + this.width / 2, this.y, 200 - this.width / 2, 46 + i * 20, this.width / 2, this.height);
@@ -89,5 +89,17 @@ public class CategoryWidget extends ButtonWidget {
 		return super.mouseClicked(mouseX, mouseY, button);
     }
 
+    @Override
+    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+        if (!this.active || !this.visible) {
+            return false;
+        } else if (keyCode != 257 && keyCode != 32 && keyCode != 335) {
+            return false;
+        } else {
+            this.playDownSound(MinecraftClient.getInstance().getSoundManager());
+            mouseClicked(0, 0, 0);
+            return true;
+        }
+    }
 
 }

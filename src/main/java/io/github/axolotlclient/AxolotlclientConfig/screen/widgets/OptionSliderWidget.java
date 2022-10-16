@@ -1,5 +1,6 @@
 package io.github.axolotlclient.AxolotlclientConfig.screen.widgets;
 
+import com.mojang.blaze3d.platform.InputUtil;
 import com.mojang.blaze3d.systems.RenderSystem;
 import io.github.axolotlclient.AxolotlclientConfig.options.DoubleOption;
 import io.github.axolotlclient.AxolotlclientConfig.options.FloatOption;
@@ -12,6 +13,7 @@ import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.MathHelper;
+import org.lwjgl.glfw.GLFW;
 
 import java.text.DecimalFormat;
 
@@ -115,6 +117,7 @@ public class OptionSliderWidget<T extends NumericOption<N>, N extends Number> ex
         if(MinecraftClient.getInstance().currentScreen instanceof OptionsScreenBuilder &&
                 ((OptionsScreenBuilder) MinecraftClient.getInstance().currentScreen).isPickerOpen()){
             this.hovered = false;
+            this.setFocused(false);
             return false;
         }
         return true;
@@ -152,5 +155,18 @@ public class OptionSliderWidget<T extends NumericOption<N>, N extends Number> ex
     @Override
     public boolean isHoveredOrFocused() {
         return super.isHoveredOrFocused() || dragging;
+    }
+
+    @Override
+    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+        if (!this.active || !this.visible) {
+            return false;
+        } else if (keyCode == InputUtil.KEY_RIGHT_CODE) {
+            value += 0.01;
+            return true;
+        } else if (keyCode == InputUtil.KEY_LEFT_CODE) {
+            value -= 0.01;
+            return true;
+        } else return keyCode == 257 || keyCode == 32 || keyCode == 335;
     }
 }
