@@ -12,7 +12,6 @@ import net.minecraft.client.gui.screen.narration.NarrationPart;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
@@ -41,7 +40,7 @@ public class ColorOptionWidget extends ButtonWidget {
 	        @Override
 	        public void renderButton(MatrixStack matrices, int mouseX, int mouseY, float delta) {
                 DrawUtil.fill(matrices, x, y, x+width, y+height, option.get().getAsInt());
-                DrawUtil.outlineRect(matrices, x, y, width, height, -6250336);
+                DrawUtil.outlineRect(matrices, x, y, width, height, ColorOptionWidget.this.isFocused() ? -1 :-6250336 );
 
                 RenderSystem.setShaderTexture(0, pipette);
                 drawTexture(matrices, x, y, 0, 0, 20, 20, 21, 21);
@@ -147,13 +146,14 @@ public class ColorOptionWidget extends ButtonWidget {
 	}
 
     @Override
-    protected MutableText getNarrationMessage() {
-        return Text.literal("Value: "+option.get());
+    public void appendNarrations(NarrationMessageBuilder builder) {
+        super.appendNarrations(builder);
+        builder.put(NarrationPart.TITLE, Text.translatable("narration.value").append(option.get().toString()));
+        builder.put(NarrationPart.HINT, "Press Enter to open color picker.");
     }
 
     @Override
-    public void appendNarrations(NarrationMessageBuilder builder) {
-        super.appendNarrations(builder);
-        builder.put(NarrationPart.HINT, "Press Enter to open color picker");
+    protected void onFocusedChanged(boolean newFocused) {
+        textField.setTextFieldFocused(newFocused);
     }
 }

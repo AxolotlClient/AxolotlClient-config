@@ -119,8 +119,6 @@ public class ColorSelectionWidget extends Screen {
                 blueSlider.update();
             }
         });
-
-        addSelectableChild(parent.backButton);
     }
 
     @Override
@@ -201,8 +199,14 @@ public class ColorSelectionWidget extends Screen {
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         if(!picker.isMouseOver(mouseX, mouseY)){
             parent.closeColorPicker();
+            return true;
         }
-        return onClick(mouseX, mouseY) || super.mouseClicked(mouseX, mouseY, button) || parent.mouseClicked(mouseX, mouseY, button);
+        if(parent.backButton.isMouseOver(mouseX, mouseY)){
+            parent.backButton.playDownSound(MinecraftClient.getInstance().getSoundManager());
+            parent.closeColorPicker();
+            return true;
+        }
+        return onClick(mouseX, mouseY) || super.mouseClicked(mouseX, mouseY, button);
     }
 
     public boolean onClick(double mouseX, double mouseY){

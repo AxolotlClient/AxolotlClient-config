@@ -5,6 +5,8 @@ import io.github.axolotlclient.AxolotlclientConfig.options.BooleanOption;
 import io.github.axolotlclient.AxolotlclientConfig.screen.OptionsScreenBuilder;
 import io.github.axolotlclient.AxolotlclientConfig.util.DrawUtil;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
+import net.minecraft.client.gui.screen.narration.NarrationPart;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.util.math.MatrixStack;
@@ -53,7 +55,7 @@ public class BooleanWidget extends ButtonWidget {
         if(!option.getForceDisabled()) {
             renderSwitch(matrices);
         } else if (isFocused()) {
-            DrawUtil.outlineRect(matrices, x-1, y-1, width+2, height+2, -1);
+            DrawUtil.outlineRect(matrices, x, y, width-1, height, -1);
         }
 
         int color = option.get()? 0x55FF55 : 0xFF5555;
@@ -75,5 +77,13 @@ public class BooleanWidget extends ButtonWidget {
         this.drawTexture(matrixStack, this.x, this.y + height/2, 0, 66 - height/2, this.width / 2, this.height/2);
         this.drawTexture(matrixStack, this.x + this.width / 2, this.y, 200 - this.width / 2, 46, this.width / 2, this.height);
         this.drawTexture(matrixStack, this.x + this.width / 2, this.y + height/2, 200 - this.width / 2, 66 - height/2, this.width / 2, this.height/2);
+    }
+
+    @Override
+    public void appendNarrations(NarrationMessageBuilder builder) {
+        super.appendNarrations(builder);
+        if(option.getForceDisabled()){
+            builder.put(NarrationPart.USAGE, option.getStrippedTooltip());
+        }
     }
 }

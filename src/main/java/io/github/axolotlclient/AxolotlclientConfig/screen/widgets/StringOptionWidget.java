@@ -3,9 +3,10 @@ package io.github.axolotlclient.AxolotlclientConfig.screen.widgets;
 import io.github.axolotlclient.AxolotlclientConfig.options.StringOption;
 import io.github.axolotlclient.AxolotlclientConfig.screen.OptionsScreenBuilder;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
+import net.minecraft.client.gui.screen.narration.NarrationPart;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 
 public class StringOptionWidget extends TextFieldWidget {
@@ -86,7 +87,13 @@ public class StringOptionWidget extends TextFieldWidget {
     }
 
 	@Override
-	protected MutableText getNarrationMessage() {
-		return Text.literal("Value: "+option.get());
+	public void appendNarrations(NarrationMessageBuilder builder) {
+		super.appendNarrations(builder);
+		builder.put(NarrationPart.TITLE, Text.translatable("narration.value").getString()+option.get());
+	}
+
+	@Override
+	protected void onFocusedChanged(boolean newFocused) {
+		textField.setTextFieldFocused(newFocused);
 	}
 }

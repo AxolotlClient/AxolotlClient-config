@@ -59,7 +59,7 @@ public class ButtonWidgetList extends ElementListWidget<ButtonWidgetList.Pair> {
     private ClickableWidget createWidget(int x, Option option) {
         if (option != null) {
             if (option instanceof NumericOption<?>) return OptionWidgetProvider.getSliderWidget(x, 0, (NumericOption<?>) option);
-            else if (option instanceof BooleanOption) return OptionWidgetProvider.getBooleanWidget(x, 0, 35, 20, (BooleanOption) option);
+            else if (option instanceof BooleanOption) return OptionWidgetProvider.getBooleanWidget(x, 0, 34, 20, (BooleanOption) option);
             else if (option instanceof StringOption) return OptionWidgetProvider.getStringWidget(x, 0, (StringOption) option);
             else if (option instanceof ColorOption) return OptionWidgetProvider.getColorWidget(x, 0, (ColorOption) option);
             else if (option instanceof EnumOption) return OptionWidgetProvider.getEnumWidget(x, 0, (EnumOption) option);

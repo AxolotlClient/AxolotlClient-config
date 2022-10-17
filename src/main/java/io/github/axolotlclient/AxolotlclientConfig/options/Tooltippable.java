@@ -26,6 +26,10 @@ public interface Tooltippable {
         return this.getTooltip(getTooltipLocation());
     }
 
+    default String getStrippedTooltip(){
+        return getTooltip().strip().replace("<br>", "");
+    }
+
     default @Nullable String getTooltip(String location){
         String translation = Text.translatable(location + ".tooltip").getString();
         if(!Objects.equals(translation, location + ".tooltip")) {
