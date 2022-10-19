@@ -9,6 +9,16 @@ title_short=Options du Client
 sky_loading_text=Chargement des textures du Ciel du pack
 resource_loading_finished=Chargement terminé ! Démarrage de Minecraft...
 
+searchOptions=Rechercher toutes les Options
+search=Rechercher
+searchFilters=Filtres de Recherche
+searchIgnoreCase=Ignorer la Casse
+searchForOptions=Inclure les options de recherche
+searchSort=Résultats des filtres
+searchSortOrder=Ordre des filtres
+ASCENDING=Croissant
+DESCENDING=Décroissant
+
 general=Général
 general.tooltip=Options Générales
 loadingBgColor=Couleur de Chargement d'Arrière-plan
@@ -54,7 +64,20 @@ blockOutlines=Contours des Blocs
 outlineWidth=Épaisseur du Contour
 scrollableTooltips=Défilement des Info-bulles
 shiftHorizontalScroll=Défiler Horizontalement (Majuscule)
+shiftHorizontalScroll.tooltip=Autoriser le défilement horizontal si la touche spécifique <br>est enfoncée. <br>La touche peut être modifiée dans le menu Contrôles.
 scrollAmount=Niveau de Défilement
+scrollAmount.tooltip=Lors du défilement, déplacez l’infobulle autour de ce montant.
+tnttime=Secondes TNT
+particles=Particules
+particles.color.tooltip=La couleur de la particule. <br>Nécessite "Couleur personnalisée" activé.
+count=Multiplicateur
+count.tooltip=Augmenter de combien la quantité de particules produites. <br>Ne fonctionne que sur EmitterParticles <br>(toutes celles qui s'étalent et se composent généralement de 16 particules individuelles, <br>ex.: particules Crit).
+customColor=Couleur personnalisée
+customColor.tooltip=Utiliser une couleur personnalisée pour cette particule.
+alwaysCrit=Toujours afficher
+alwaysCrit.tooltip=Toujours émettre ces particules en frappant.
+hotbarhud=Hotbar HUD
+
 nametagOptions=Options des Noms
 showOwnNametag=Afficher son propre Nom
 useShadows=Forcer les Ombres
@@ -96,13 +119,16 @@ hideOwnSkin=Cacher votre Skin
 hideOtherSkins=Cacher les skins des autres
 autoBoop=AutoBoop
 autoBoop.enabled.tooltip=Exécuter /boop <joueur> lorsqu'un de vos amis rejoint Hypixel.
+
 category.axolotlclient=AxolotlClient
+
 key.zoom=Zoom
 key.openHud=Ouvrir l'éditeur de HUD
 key.toggleSneak=Basculer l'Accroupissement
 key.toggleSprint=Basculer le Sprint
 hud=Options de HUD
 pinghud=Ping HUD
+refreshTime=Délai de Rafraîchissement
 cpshud=CPS HUD
 cpskeybind=CPS des Keybinds
 rightcps=Afficher les CPS du Clic-Droit
@@ -119,6 +145,8 @@ scores=Afficher les Scores
 scorecolor=Couleur des Scores
 crosshairhud=Crosshair HUD
 crosshair_type=Type
+CROSS=Croix
+
 showInF5=Montrer en 3ème Perspective
 showInF3=Forcer lors du HUD de Debuggage
 defaultcolor=Couleur (défaut)
@@ -126,10 +154,12 @@ entitycolor=Couleur (Entités)
 blockcolor=Couleur (Containeur)
 attackindicatorbg=Indicateur d'attaque (Arrière-plan)
 attackindicatorfg=Indicateur d'attaque (Premier plan)
+
 TEXTURE=Texture
+
 DIRECTION=Direction
 DOT=Point
-CROSS=Croix
+
 firsttextcolor=Première Couleur
 secondtextcolor=Deuxième Couleur
 decimalplaces=Chiffres Décimaux
@@ -138,6 +168,12 @@ actionbarhud=ActionBar HUD
 actionBarPlaceholder=Action Bar
 bossbarhud=BossBar HUD
 chathud=Tchat HUD
+chatHistoryLength=Longueur de l’Historique du tchat
+chatHistoryLength.tooltip=Définit la limite de taille de l’historique de tchat. <br>Infini lorsqu’il est défini au maximum. <br>Fonctionne également dans le tchat par défaut.
+chathud.background.tooltip=Active ou désactive l’arrière-plan du tchat <br>Fonctionne également dans le tchat par défaut.
+scrollbarColor=Couleur de la Barre de Défilement
+lineSpacing=Espace Interligne
+
 arrowhud=Flèche HUD
 dynamic=Dynamique
 itemupdatehud=Mise-à-Jour d'Item HUD
@@ -168,6 +204,16 @@ sprinting_pressed=Sprint [Touche appuyée]
 sneaking_pressed=Accroupi [Touche appuyée]
 iphud=IP HUD
 iconhud=Icône HUD
+memoryhud=Mémoire HUD
+showGraph=Afficher le Graphique
+graphFreeColor=Couleur du Graphique (Libre)
+graphUsedColor=Couleur du Graphique (Utilisé)
+showText=Afficher le Texte
+showAllocated=Afficher la RAM allouée
+allocated=Alloué
+playercounthud=Nombre de Joueurs HUD
+players=Joueur(s)
+
 toggleSprint=Activer le basculage de Sprint
 toggleSneak=Activer le basculage d'accroupissement
 sneakToggled=En train d'être Accroupi
@@ -178,6 +224,9 @@ enabled=Activé
 scale=Taille
 textColor=Couleur du Texte
 textAlignment=Alignement du Texte
+center=Centre
+left=Gauche
+right=Droite
 color=Couleur
 chroma=Chroma
 chromaSpeed=Vitesse du Chroma
@@ -194,6 +243,14 @@ showActivity=Afficher votre Activité
 showActivity.tooltip=Afficher votre Activité dans le Jeu.
 showTime=Afficher l'Heure
 showTime.tooltip=Afficher un horodatage (timestamp).
+
+freelook=Freelook
+perspective=Perspective
+FIRST_PERSON=Première Personne
+THIRD_PERSON_BACK=Troisième Personne (Arrière)
+THIRD_PERSON_FRONT=Troisième Personne (Avant)
+invert=Inverser
+
 credits=Crédits
 creditsBGM=Musique 
 contributors=Contributeurs
