@@ -103,7 +103,9 @@ public class OptionsScreenBuilder extends Screen {
     @Override
     protected void mouseReleased(int mouseX, int mouseY, int button) {
         super.mouseReleased(mouseX, mouseY, button);
-        this.list.mouseReleased(mouseX, mouseY, button);
+        if(list != null) {
+            this.list.mouseReleased(mouseX, mouseY, button);
+        }
         if(isPickerOpen()) picker.mouseReleased(mouseX, mouseY);
     }
 
@@ -138,7 +140,7 @@ public class OptionsScreenBuilder extends Screen {
             public void mouseClicked(int mouseX, int mouseY, int button) {
                 if(isHovered(mouseX, mouseY)) {
                     if(!isFocused() && cat.toString().toLowerCase(Locale.ROOT).contains(modid.toLowerCase(Locale.ROOT))){
-                        MinecraftClient.getInstance().openScreen(new OptionsScreenBuilder(that(), getAllOptions(), modid));
+                        MinecraftClient.getInstance().openScreen(new OptionsScreenBuilder(OptionsScreenBuilder.this, getAllOptions(), modid));
                         return;
                     }
                     super.mouseClicked(mouseX, mouseY, button);
@@ -154,8 +156,6 @@ public class OptionsScreenBuilder extends Screen {
                 }
 
                 super.render();
-
-                //drawVerticalLine(x-5, y-1, y+11, -1); // Toad didn't like this.
                 drawHorizontalLine(x-5, x+100, y+11, -1);
             }
 
@@ -170,9 +170,6 @@ public class OptionsScreenBuilder extends Screen {
         };
 
         this.buttons.add(new ButtonWidget(0, this.width/2-100, this.height-40, 200, 20, I18n.translate("back")));
-        /*if(searchFocused) {
-            searchWidget.setFocused(true);
-        }*/
 
         searchWidget.setListener(new PagedEntryListWidget.Listener() {
             @Override
@@ -266,9 +263,5 @@ public class OptionsScreenBuilder extends Screen {
                 setupOptionsList(target, sub);
             }
         }
-    }
-
-    private OptionsScreenBuilder that(){
-        return this;
     }
 }

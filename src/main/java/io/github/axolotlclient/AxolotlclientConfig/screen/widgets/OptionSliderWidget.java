@@ -50,6 +50,7 @@ public class OptionSliderWidget<T extends NumericOption<N>, N extends Number> ex
     }
 
     public Double getSliderValue() {
+        format.applyLocalizedPattern("###.##");
         return Double.parseDouble(format.format(this.min.doubleValue() + (this.max.doubleValue() - this.min.doubleValue()) * this.value));
     }
     public int getSliderValueAsInt() {
