@@ -101,7 +101,13 @@ public class OptionsScreenBuilder extends Screen {
 
 	@Override
 	public boolean mouseReleased(double mouseX, double mouseY, int button) {
-        return this.list.mouseReleased(mouseX, mouseY, button) || super.mouseReleased(mouseX, mouseY, button);
+        boolean li;
+        if(list!=null){
+            li = list.mouseReleased(mouseX, mouseY, button);
+        } else {
+            li = false;
+        }
+        return li || super.mouseReleased(mouseX, mouseY, button);
 	}
 
 	@Override

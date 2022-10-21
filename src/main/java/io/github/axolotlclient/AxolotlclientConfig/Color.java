@@ -83,6 +83,7 @@ public class Color {
     public static Color getChroma(){
         if(chromaColors.isEmpty()){
             setupChroma();
+            //noinspection deprecation
             ClientTickEvents.END_CLIENT_TICK.register(client -> tickChroma());
         }
         return chromaColors.get(chromaColorIndex);
