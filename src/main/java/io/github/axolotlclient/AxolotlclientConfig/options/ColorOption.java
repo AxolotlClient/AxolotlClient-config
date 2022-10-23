@@ -24,7 +24,15 @@ public class ColorOption extends OptionBase<Color> {
     }
 
     public ColorOption(String name, Color def){
-        this(name, null, def);
+        super(name, def);
+    }
+
+    public ColorOption(String name, ChangedListener<Color> onChange, Color def){
+        super(name, onChange, def);
+    }
+
+    public ColorOption(String name, String tooltipKeyPrefix, ChangedListener<Color> onChange, Color def){
+        super(name, tooltipKeyPrefix, onChange, def);
     }
 
     public Color get(){

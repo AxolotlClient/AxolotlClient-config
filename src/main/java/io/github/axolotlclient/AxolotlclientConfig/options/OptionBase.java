@@ -33,12 +33,12 @@ public abstract class OptionBase<T> implements Option {
     /**
      * This option's translation key
      */
-    public String name;
+    protected final String name;
 
     /**
      * (If set) this option's tooltip key prefix
      */
-    public String tooltipKeyPrefix;
+    protected final String tooltipKeyPrefix;
 
     /**
      * This option's callback to be called on changes of the value.
