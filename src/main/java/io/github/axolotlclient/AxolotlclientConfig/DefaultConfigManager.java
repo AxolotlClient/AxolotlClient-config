@@ -23,26 +23,43 @@ public class DefaultConfigManager implements ConfigManager {
     protected static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
     public DefaultConfigManager(String modid){
+        this(modid, FabricLoader.getInstance().getConfigDir().resolve(modid+".json"));
+
+    }
+
+    public DefaultConfigManager(String modid, String configFileName){
+        this(modid, FabricLoader.getInstance().getConfigDir().resolve(configFileName));
+    }
+
+    public DefaultConfigManager(String modid, Path confPath){
         this.modid = modid;
-        confPath = FabricLoader.getInstance().getConfigDir().resolve(modid+".json");
+        this.confPath = confPath;
     }
 
     public void save(){
         try{
             saveFile();
         } catch (IOException e) {
-            AxolotlClientConfigManager.LOGGER.error("Failed to save config for mod: "+modid+"!");
+            AxolotlClientConfigManager.LOGGER.error("Failed to save config for mod: {}!", modid);
         }
     }
 
     private void saveFile() throws IOException {
 
-        JsonObject config = new JsonObject();
+        JsonObject config;
+        try {
+            config = new JsonParser().parse(new FileReader(confPath.toString())).getAsJsonObject();
+        } catch (Exception e){
+            config = new JsonObject();
+        }
         for(OptionCategory category : AxolotlClientConfigManager.getModConfig(modid).getCategories()) {
-            JsonObject object = new JsonObject();
-
-            config.add(category.getName(), getConfig(object, category));
-
+            JsonObject o;
+            if(config.has(category.getName()) && config.get(category.getName()).isJsonObject()) {
+                o = config.get(category.getName()).getAsJsonObject();
+            } else {
+                o = new JsonObject();
+            }
+            config.add(category.getName(), getConfig(o, category));
         }
 
         Files.write(confPath, Collections.singleton(gson.toJson(config)));
@@ -56,7 +73,12 @@ public class DefaultConfigManager implements ConfigManager {
 
         if(!category.getSubCategories().isEmpty()){
             for(OptionCategory sub:category.getSubCategories()){
-                JsonObject subOption = new JsonObject();
+                JsonObject subOption;
+                if(object.has(category.getName()) && object.get(category.getName()).isJsonObject()) {
+                    subOption = object.get(category.getName()).getAsJsonObject();
+                } else {
+                    subOption = new JsonObject();
+                }
                 object.add(sub.getName(), getConfig(subOption, sub));
             }
         }
@@ -76,8 +98,7 @@ public class DefaultConfigManager implements ConfigManager {
                 }
             }
         } catch (Exception e){
-            AxolotlClientConfigManager.LOGGER.error("Failed to load config for modid "+modid+"! Using default values...");
-            //e.printStackTrace();
+            AxolotlClientConfigManager.LOGGER.error("Failed to load config for modid {}! Using default values...", modid);
         }
     }
 
