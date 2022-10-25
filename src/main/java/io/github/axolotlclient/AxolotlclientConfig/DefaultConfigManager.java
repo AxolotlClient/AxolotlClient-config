@@ -23,8 +23,17 @@ public class DefaultConfigManager implements ConfigManager {
     protected static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
     public DefaultConfigManager(String modid){
+        this(modid, QuiltLoader.getConfigDir().resolve(modid+".json"));
+
+    }
+
+    public DefaultConfigManager(String modid, String configFileName){
+        this(modid, QuiltLoader.getConfigDir().resolve(configFileName));
+    }
+
+    public DefaultConfigManager(String modid, Path confPath){
         this.modid = modid;
-        confPath = QuiltLoader.getConfigDir().resolve(modid+".json");
+        this.confPath = confPath;
     }
 
     public void save(){
@@ -39,10 +48,13 @@ public class DefaultConfigManager implements ConfigManager {
 
         JsonObject config = new JsonObject();
         for(OptionCategory category : AxolotlClientConfigManager.getModConfig(modid).getCategories()) {
-            JsonObject object = new JsonObject();
-
-            config.add(category.getName(), getConfig(object, category));
-
+            JsonObject o;
+            if(config.has(category.getName()) && config.get(category.getName()).isJsonObject()) {
+                o = config.get(category.getName()).getAsJsonObject();
+            } else {
+                o = new JsonObject();
+            }
+            config.add(category.getName(), getConfig(o, category));
         }
 
         Files.write(confPath, Collections.singleton(gson.toJson(config)));
@@ -56,7 +68,12 @@ public class DefaultConfigManager implements ConfigManager {
 
         if(!category.getSubCategories().isEmpty()){
             for(OptionCategory sub:category.getSubCategories()){
-                JsonObject subOption = new JsonObject();
+                JsonObject subOption;
+                if(object.has(category.getName()) && object.get(category.getName()).isJsonObject()) {
+                    subOption = object.get(category.getName()).getAsJsonObject();
+                } else {
+                    subOption = new JsonObject();
+                }
                 object.add(sub.getName(), getConfig(subOption, sub));
             }
         }
