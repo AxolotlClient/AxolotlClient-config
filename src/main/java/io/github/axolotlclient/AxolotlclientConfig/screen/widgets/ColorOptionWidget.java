@@ -103,8 +103,7 @@ public class ColorOptionWidget extends ButtonWidget {
         if(textField.isFocused()) {
             textField.tick();
         } else {
-            if(MinecraftClient.getInstance().currentScreen instanceof OptionsScreenBuilder &&
-                    ((OptionsScreenBuilder) MinecraftClient.getInstance().currentScreen).isPickerOpen() &&
+            if(MinecraftClient.getInstance().currentScreen instanceof ColorSelectionWidget &&
                     !Objects.equals(textField.getText(), option.get().toString())){
                 textField.setText(option.get().toString());
             }
