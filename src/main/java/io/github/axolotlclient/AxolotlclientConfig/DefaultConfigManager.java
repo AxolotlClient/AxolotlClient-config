@@ -7,6 +7,7 @@ import org.quiltmc.loader.api.QuiltLoader;
 
 import java.io.FileReader;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collections;
@@ -46,7 +47,12 @@ public class DefaultConfigManager implements ConfigManager {
 
     private void saveFile() throws IOException {
 
-        JsonObject config = new JsonObject();
+        JsonObject config;
+        try {
+            config = JsonParser.parseReader(new FileReader(confPath.toString(), StandardCharsets.UTF_8)).getAsJsonObject();
+        } catch (Exception e){
+            config = new JsonObject();
+        }
         for(OptionCategory category : AxolotlClientConfigManager.getModConfig(modid).getCategories()) {
             JsonObject o;
             if(config.has(category.getName()) && config.get(category.getName()).isJsonObject()) {
@@ -93,8 +99,7 @@ public class DefaultConfigManager implements ConfigManager {
                 }
             }
         } catch (Exception e){
-            AxolotlClientConfigManager.LOGGER.error("Failed to load config for modid {}! Using default values... \nError: ", modid);
-            e.printStackTrace();
+            AxolotlClientConfigManager.LOGGER.error("Failed to load config for modid {}! Using default values...", modid);
         }
     }
 
