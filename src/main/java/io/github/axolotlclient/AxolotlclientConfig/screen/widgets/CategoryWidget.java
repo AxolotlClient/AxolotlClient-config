@@ -5,7 +5,6 @@ import io.github.axolotlclient.AxolotlclientConfig.AxolotlClientConfigConfig;
 import io.github.axolotlclient.AxolotlclientConfig.options.BooleanOption;
 import io.github.axolotlclient.AxolotlclientConfig.options.OptionCategory;
 import io.github.axolotlclient.AxolotlclientConfig.screen.OptionsScreenBuilder;
-import io.github.axolotlclient.AxolotlclientConfig.util.ConfigUtils;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.ClickableWidget;
@@ -19,7 +18,7 @@ public class CategoryWidget extends ButtonWidget {
     public BooleanWidget enabledButton;
 
     public CategoryWidget(OptionCategory category, int x, int y, int width, int height) {
-        super(x, y, width, 20, ConfigUtils.formatFromCodes(category.getTranslatedName()).copy().append("..."),
+        super(x, y, width, 20, Text.of(category.getTranslatedName()).copy().append("..."),
 	        buttonWidget -> {});
         this.category=category;
 

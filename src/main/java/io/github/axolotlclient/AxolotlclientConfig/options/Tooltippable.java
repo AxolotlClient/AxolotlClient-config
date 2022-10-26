@@ -1,5 +1,6 @@
 package io.github.axolotlclient.AxolotlclientConfig.options;
 
+import net.minecraft.client.resource.language.I18n;
 import net.minecraft.text.Text;
 import org.jetbrains.annotations.Nullable;
 
