@@ -54,14 +54,6 @@ public class Color {
         else if(chromaColorIndex<0){chromaColorIndex=0;}
     }
 
-    private void updateColor(){
-        int color = alpha;
-        color = (color << 8) + red;
-        color = (color << 8) + green;
-        color = (color << 8) + blue;
-        this.color = color;
-    }
-
     public Color setData(int red, int green, int blue, int alpha){
         this.red = red;
         this.green = green;
@@ -106,9 +98,7 @@ public class Color {
     }
 
     public Color withAlpha(int alpha){
-        this.alpha=alpha;
-        updateColor();
-        return this;
+        return new Color(getRed(), getGreen(), getBlue(), alpha);
     }
 
     public int getAsInt(){
@@ -152,7 +142,7 @@ public class Color {
     public static Color SELECTOR_RED = new Color(191, 34, 34);
     public static Color GOLD = Color.parse("#b8860b");
     public static Color SELECTOR_GREEN = new Color(53, 219, 103);
-    public static Color SELECTOR_BLUE = new Color(51, 153, 255, 100);
+    public static Color SELECTOR_BLUE = new Color(51, 153, 255, 255);
     public static Color ERROR = new Color(255, 0, 255);
 
     /**
