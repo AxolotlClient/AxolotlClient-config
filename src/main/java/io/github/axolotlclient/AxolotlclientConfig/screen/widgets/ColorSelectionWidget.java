@@ -60,7 +60,6 @@ public class ColorSelectionWidget extends Screen {
         super(Text.of("Pick Color"));
         this.parent = parent;
         this.option=option;
-        init();
     }
 
     public void init(){
@@ -70,13 +69,62 @@ public class ColorSelectionWidget extends Screen {
 
         picker = new Rectangle(100, 50, width, height);
 
-        pickerImage = new Rectangle(120, 70, width/2, height/2);
-        pickerOutline = new Rectangle(pickerImage.x-1, pickerImage.y-1, pickerImage.width+2, pickerImage.height+2);
-        currentRect = new Rectangle(pickerImage.x + pickerImage.width + 20, pickerImage.y + 10, width - pickerImage.width - 60, 20);
-
         chroma.set(option.getChroma());
 
         alpha.set(option.get().getAlpha());
+
+        if(width>500){
+            initLarge();
+        } else {
+            initSmall();
+        }
+
+        if(slidersVisible) {
+            red.set(option.get().getRed());
+            green.set(option.get().getGreen());
+            blue.set(option.get().getBlue());
+        }
+    }
+
+    private void initLarge(){
+        pickerImage = new Rectangle(120, 70, width*3/4, height*3/4);
+        pickerOutline = new Rectangle(pickerImage.x-1, pickerImage.y-1, pickerImage.width+2, pickerImage.height+2);
+        currentRect = new Rectangle(pickerImage.x + pickerImage.width + 20, pickerImage.y + 10, width - pickerImage.width - 60, 80);
+
+        slidersVisible = true;
+
+        addDrawableChild(textInput = new TextFieldWidget(MinecraftClient.getInstance().textRenderer,
+                currentRect.x, currentRect.y + currentRect.height + 10, currentRect.width, 20, Text.empty()));
+
+        addDrawableChild(chromaWidget = new BooleanWidget(currentRect.x, currentRect.y + currentRect.height + 40, currentRect.width, 20, chroma){
+            @Override
+            protected boolean canHover() {
+                return true;
+            }
+
+            @Override
+            public Text getMessage() {
+                return Text.of(this.option.getTranslatedName()).copy().append(": ").append(super.getMessage());
+            }
+        });
+
+        addDrawableChild(redSlider = new ColorSliderWidget(currentRect.x, currentRect.y + currentRect.height + 65, currentRect.width, 20, red));
+        addDrawableChild(greenSlider = new ColorSliderWidget(currentRect.x, currentRect.y + currentRect.height + 90, currentRect.width, 20, green));
+        addDrawableChild(blueSlider = new ColorSliderWidget(currentRect.x, currentRect.y + currentRect.height + 115, currentRect.width, 20, blue));
+        addDrawableChild(alphaSlider = new ColorSliderWidget(currentRect.x, currentRect.y+ currentRect.height + 140, currentRect.width, 20, alpha));
+
+        textInput.setChangedListener(s -> {
+            alphaSlider.update();
+            redSlider.update();
+            greenSlider.update();
+            blueSlider.update();
+        });
+    }
+
+    private void initSmall(){
+        pickerImage = new Rectangle(120, 70, width/2, height/2);
+        pickerOutline = new Rectangle(pickerImage.x-1, pickerImage.y-1, pickerImage.width+2, pickerImage.height+2);
+        currentRect = new Rectangle(pickerImage.x + pickerImage.width + 20, pickerImage.y + 10, width - pickerImage.width - 60, 20);
 
         slidersVisible = height>175;
 
