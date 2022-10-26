@@ -11,6 +11,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collections;
+import java.util.List;
 
 /**
  * A default config manager to use by mods not implementing a custom one.
@@ -20,6 +21,7 @@ import java.util.Collections;
 public class DefaultConfigManager implements ConfigManager {
     private final String modid;
     private final Path confPath;
+    private final List<OptionCategory> modConfig;
 
     protected static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
@@ -33,8 +35,13 @@ public class DefaultConfigManager implements ConfigManager {
     }
 
     public DefaultConfigManager(String modid, Path confPath){
+        this(modid, confPath, AxolotlClientConfigManager.getModConfig(modid).getCategories());
+    }
+
+    public DefaultConfigManager(String modid, Path confPath, List<OptionCategory> modConfig){
         this.modid = modid;
         this.confPath = confPath;
+        this.modConfig = modConfig;
     }
 
     public void save(){
@@ -53,7 +60,7 @@ public class DefaultConfigManager implements ConfigManager {
         } catch (Exception e){
             config = new JsonObject();
         }
-        for(OptionCategory category : AxolotlClientConfigManager.getModConfig(modid).getCategories()) {
+        for(OptionCategory category : modConfig) {
             JsonObject o;
             if(config.has(category.getName()) && config.get(category.getName()).isJsonObject()) {
                 o = config.get(category.getName()).getAsJsonObject();
@@ -93,7 +100,7 @@ public class DefaultConfigManager implements ConfigManager {
         try {
             JsonObject config = JsonParser.parseReader(new FileReader(confPath.toString())).getAsJsonObject();
 
-            for(OptionCategory category:AxolotlClientConfigManager.getModConfig(modid).getCategories()) {
+            for(OptionCategory category : modConfig) {
                 if(config.has(category.getName())) {
                     setOptions(config.get(category.getName()).getAsJsonObject(), category);
                 }
@@ -121,7 +128,7 @@ public class DefaultConfigManager implements ConfigManager {
     }
 
     public void loadDefaults(){
-        AxolotlClientConfigManager.getModConfig(modid).getCategories().forEach(this::setOptionDefaults);
+        modConfig.forEach(this::setOptionDefaults);
     }
 
     public void setOptionDefaults(OptionCategory category){
