@@ -18,6 +18,7 @@ import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.gui.widget.ElementListWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.opengl.GL11;
 
@@ -422,13 +423,13 @@ public class ButtonWidgetList extends ElementListWidget<ButtonWidgetList.Pair> {
             this.option = option;
             if(left instanceof BooleanWidget) left.x = width / 2 + 5 + 57;
             else left.x = width / 2 + 5;
-            nameWidth = MinecraftClient.getInstance().textRenderer.getWidth(option.getTranslatedName());
+            nameWidth = MinecraftClient.getInstance().textRenderer.getWidth(Formatting.strip(option.getTranslatedName()));
         }
 
 	    @Override
 	    public void render(MatrixStack matrices, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float tickDelta) {
 
-            DrawableHelper.drawTextWithShadow(matrices, client.textRenderer, Text.of(option.getTranslatedName()), x, y + 5, -1);
+            DrawableHelper.drawTextWithShadow(matrices, client.textRenderer, ConfigUtils.formatFromCodes(option.getTranslatedName()), x, y + 5, -1);
             left.y = y;
             left.render(matrices, mouseX, mouseY, tickDelta);
 

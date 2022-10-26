@@ -2,9 +2,14 @@ package io.github.axolotlclient.AxolotlclientConfig.util;
 
 import com.mojang.blaze3d.glfw.Window;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
 import org.jetbrains.annotations.ApiStatus;
 import org.lwjgl.opengl.GL11;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Holds commonly used methods of this config lib.
@@ -36,9 +41,30 @@ public class ConfigUtils {
         GL11.glScissor(x * scale, (window.getScaledHeight() - height - y) * scale, width * scale, height * scale);
     }
 
-    public static String[] copyArrayWithoutFirstEntry(String[] strings) {
-        String[] strings2 = new String[strings.length - 1];
-        System.arraycopy(strings, 1, strings2, 0, strings.length - 1);
-        return strings2;
+    public static Text formatFromCodes(String formattedString){
+        MutableText text = Text.empty();
+        String[] arr = formattedString.split("§");
+
+        List<Formatting> modifiers = new ArrayList<>();
+        for (String s:arr){
+
+            Formatting formatting = Formatting.byCode(s.length()>0 ? s.charAt(0) : 0);
+            if(formatting != null && formatting.isModifier()){
+                modifiers.add(formatting);
+            }
+            MutableText part = Text.literal(s.length()>0 ? s.substring(1):"");
+            if(formatting != null){
+                part.formatted(formatting);
+
+                if(!modifiers.isEmpty()){
+                    modifiers.forEach(part::formatted);
+                    if(formatting.equals(Formatting.RESET)) {
+                        modifiers.clear();
+                    }
+                }
+            }
+            text.append(part);
+        }
+        return text;
     }
 }

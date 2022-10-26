@@ -7,6 +7,7 @@ import io.github.axolotlclient.AxolotlclientConfig.options.ColorOption;
 import io.github.axolotlclient.AxolotlclientConfig.options.OptionCategory;
 import io.github.axolotlclient.AxolotlclientConfig.options.Tooltippable;
 import io.github.axolotlclient.AxolotlclientConfig.screen.widgets.ColorSelectionWidget;
+import io.github.axolotlclient.AxolotlclientConfig.util.ConfigUtils;
 import io.github.axolotlclient.AxolotlclientConfig.util.DrawUtil;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
@@ -203,7 +204,7 @@ public class OptionsScreenBuilder extends Screen {
 	public void renderTooltip(MatrixStack matrices, Tooltippable option, int x, int y){
 		List<Text> text = new ArrayList<>();
 		String[] tooltip = Objects.requireNonNull(option.getTooltip()).split("<br>");
-		for(String s:tooltip) text.add(Text.literal(s));
+		for(String s:tooltip) text.add(ConfigUtils.formatFromCodes(s));
 		this.renderTooltip(matrices, text, x, y);
 	}
 
