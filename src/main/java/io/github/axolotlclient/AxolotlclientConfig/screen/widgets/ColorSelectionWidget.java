@@ -11,6 +11,7 @@ import io.github.axolotlclient.AxolotlclientConfig.util.Rectangle;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.gui.widget.ButtonWidget;
+import net.minecraft.client.gui.widget.PagedEntryListWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.util.Window;
@@ -66,21 +67,32 @@ public class ColorSelectionWidget extends ButtonWidget {
 
         picker = new Rectangle(100, 50, width, height);
 
-        pickerImage = new Rectangle(120, 70, width/2, height/2);
-        pickerOutline = new Rectangle(pickerImage.x-1, pickerImage.y-1, pickerImage.width+2, pickerImage.height+2);
-        currentRect = new Rectangle(pickerImage.x + pickerImage.width + 20, pickerImage.y + 10, width - pickerImage.width - 60, 20);
-
         chroma.set(option.getChroma());
 
         alpha.set(option.get().getAlpha());
 
-        slidersVisible = height>175;
+        if(width>500){
+            initLarge();
+        } else {
+            initSmall();
+        }
 
         if(slidersVisible) {
             red.set(option.get().getRed());
             green.set(option.get().getGreen());
             blue.set(option.get().getBlue());
         }
+    }
+
+    private void initLarge(){
+        pickerImage = new Rectangle(120, 70, width*3/4, height*3/4);
+        pickerOutline = new Rectangle(pickerImage.x-1, pickerImage.y-1, pickerImage.width+2, pickerImage.height+2);
+        currentRect = new Rectangle(pickerImage.x + pickerImage.width + 20, pickerImage.y + 10, width - pickerImage.width - 60, 80);
+
+        slidersVisible = true;
+
+        textInput = new TextFieldWidget(0, MinecraftClient.getInstance().textRenderer,
+                currentRect.x, currentRect.y + currentRect.height + 10, currentRect.width, 20);
 
         chromaWidget = new BooleanWidget(0, currentRect.x, currentRect.y + currentRect.height + 40, currentRect.width, 20, chroma){
             @Override
@@ -94,16 +106,87 @@ public class ColorSelectionWidget extends ButtonWidget {
             }
         };
 
-        alphaSlider = new ColorSliderWidget(0, pickerImage.x, pickerImage.y + pickerImage.height + 20, pickerImage.width, 20, alpha);
+        redSlider = new ColorSliderWidget(currentRect.x, currentRect.y + currentRect.height + 65, currentRect.width, 20, red);
+        greenSlider = new ColorSliderWidget(currentRect.x, currentRect.y + currentRect.height + 90, currentRect.width, 20, green);
+        blueSlider = new ColorSliderWidget(currentRect.x, currentRect.y + currentRect.height + 115, currentRect.width, 20, blue);
+        alphaSlider = new ColorSliderWidget(currentRect.x, currentRect.y+ currentRect.height + 140, currentRect.width, 20, alpha);
+
+        textInput.setListener(new PagedEntryListWidget.Listener() {
+            @Override
+            public void setBooleanValue(int id, boolean value) {}
+
+            @Override
+            public void setFloatValue(int id, float value) {}
+
+            @Override
+            public void setStringValue(int id, String text) {
+                alphaSlider.update();
+                redSlider.update();
+                greenSlider.update();
+                blueSlider.update();
+            }
+        });
+    }
+
+    private void initSmall(){
+        pickerImage = new Rectangle(120, 70, width/2, height/2);
+        pickerOutline = new Rectangle(pickerImage.x-1, pickerImage.y-1, pickerImage.width+2, pickerImage.height+2);
+        currentRect = new Rectangle(pickerImage.x + pickerImage.width + 20, pickerImage.y + 10, width - pickerImage.width - 60, 20);
+
+        slidersVisible = height>175;
 
         if(slidersVisible) {
-            redSlider = new ColorSliderWidget(0, currentRect.x, currentRect.y + currentRect.height + 65, currentRect.width, 20, red);
-            greenSlider = new ColorSliderWidget(0, currentRect.x, currentRect.y + currentRect.height + 90, currentRect.width, 20, green);
-            blueSlider = new ColorSliderWidget(0, currentRect.x, currentRect.y + currentRect.height + 115, currentRect.width, 20, blue);
+            red.set(option.get().getRed());
+            green.set(option.get().getGreen());
+            blue.set(option.get().getBlue());
         }
 
         textInput = new TextFieldWidget(0, MinecraftClient.getInstance().textRenderer,
                 currentRect.x, currentRect.y + currentRect.height + 10, currentRect.width, 20);
+
+        chromaWidget = new BooleanWidget(0, currentRect.x, currentRect.y + currentRect.height + 40, currentRect.width, 20, chroma){
+            @Override
+            protected boolean canHover() {
+                return true;
+            }
+
+            @Override
+            public void updateMessage() {
+                this.message = option.getTranslatedName() + ": " + (option.get()? I18n.translate ("options."+"on"): I18n.translate ("options."+"off"));
+            }
+        };
+
+        alphaSlider = new ColorSliderWidget(pickerImage.x, pickerImage.y + pickerImage.height + 20, pickerImage.width, 20, alpha);
+
+        if(slidersVisible) {
+
+            redSlider = new ColorSliderWidget(currentRect.x, currentRect.y + currentRect.height + 65, currentRect.width, 20, red);
+            greenSlider = new ColorSliderWidget(currentRect.x, currentRect.y + currentRect.height + 90, currentRect.width, 20, green);
+            blueSlider = new ColorSliderWidget(currentRect.x, currentRect.y + currentRect.height + 115, currentRect.width, 20, blue);
+        }
+
+        textInput.setListener(new PagedEntryListWidget.Listener() {
+            @Override
+            public void setBooleanValue(int id, boolean value) {
+
+            }
+
+            @Override
+            public void setFloatValue(int id, float value) {
+
+            }
+
+            @Override
+            public void setStringValue(int id, String text) {
+                alphaSlider.update();
+
+                if (slidersVisible) {
+                    redSlider.update();
+                    greenSlider.update();
+                    blueSlider.update();
+                }
+            }
+        });
     }
 
     @Override
@@ -261,8 +344,8 @@ public class ColorSelectionWidget extends ButtonWidget {
 
     private class ColorSliderWidget extends OptionSliderWidget<IntegerOption, Integer> {
 
-        public ColorSliderWidget(int id, int x, int y, int width, int height, IntegerOption option) {
-            super(id, x, y, width, height, option);
+        public ColorSliderWidget(int x, int y, int width, int height, IntegerOption option) {
+            super(0, x, y, width, height, option);
         }
 
         @Override
