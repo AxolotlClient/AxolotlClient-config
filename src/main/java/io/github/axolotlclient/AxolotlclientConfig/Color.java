@@ -53,14 +53,6 @@ public class Color {
         else if(chromaColorIndex<0){chromaColorIndex=0;}
     }
 
-    private void updateColor(){
-        int color = alpha;
-        color = (color << 8) + red;
-        color = (color << 8) + green;
-        color = (color << 8) + blue;
-        this.color = color;
-    }
-
     public Color setData(int red, int green, int blue, int alpha){
         this.red = red;
         this.green = green;
@@ -106,9 +98,7 @@ public class Color {
     }
 
     public Color withAlpha(int alpha){
-        this.alpha=alpha;
-        updateColor();
-        return this;
+        return new Color(getRed(), getGreen(), getBlue(), alpha);
     }
 
     public int getAsInt(){
