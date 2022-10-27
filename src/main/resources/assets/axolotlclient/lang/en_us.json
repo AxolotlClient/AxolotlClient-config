@@ -9,6 +9,14 @@
 	"ASCENDING": "Ascending",
 	"DESCENDING": "Descending",
 
+	"showQuickToggles": "Quick Toggles",
+	"showQuickToggles.tooltip": "Whether to show small switches on categories<br>containing an 'enabled' option.",
+	"showOptionTooltips": "Show Option Tooltips",
+	"showOptionTooltips.tooltip": "Whether to show Tooltips on Options in the menu.",
+	"showCategoryTooltips": "Show Category Tooltips",
+	"showCategoryTooltips.tooltip": "Whether to show Tooltips on Categories in the menu.",
+
+
 	"chromaSpeed": "Chroma Speed",
 
 	"pickColor": "Pick Color",
