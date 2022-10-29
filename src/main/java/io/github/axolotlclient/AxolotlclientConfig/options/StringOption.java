@@ -15,7 +15,15 @@ public class StringOption extends OptionBase<String> {
     }
 
     public StringOption(String name, String def){
-        this(name, null, def);
+        super(name, def);
+    }
+
+    public StringOption(String name, ChangedListener<String> onChange, String def){
+        super(name, onChange, def);
+    }
+
+    public StringOption(String name, String tooltipLocation, ChangedListener<String> onChange, String def){
+        super(name, tooltipLocation, onChange, def);
     }
 
     @Override
