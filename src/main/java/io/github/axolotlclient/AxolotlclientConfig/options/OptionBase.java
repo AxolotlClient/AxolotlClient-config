@@ -18,7 +18,7 @@ import org.quiltmc.qsl.command.api.client.QuiltClientCommandSource;
  * @param <T> The type of option this should be.
  */
 
-public abstract class OptionBase<T> implements Option {
+public abstract class OptionBase<T> implements Option<T> {
 
     /**
      * The current value of this option
@@ -59,7 +59,7 @@ public abstract class OptionBase<T> implements Option {
     }
 
     public OptionBase(String name, String tooltipKeyPrefix, ChangedListener<T> onChange, T def){
-        this.name=name;
+        this.name = name;
         this.def = def;
         this.option = def;
         changeCallback = onChange;
@@ -77,10 +77,6 @@ public abstract class OptionBase<T> implements Option {
 
     public T getDefault(){
         return def;
-    }
-
-    public void setDefaults(){
-        set(getDefault());
     }
 
     @Override
@@ -110,13 +106,6 @@ public abstract class OptionBase<T> implements Option {
 
     protected abstract CommandResponse onCommandExecution(String arg);
 
-    public void getCommand(LiteralArgumentBuilder<QuiltClientCommandSource> builder){
-        builder.then(ClientCommandManager.literal(getName())
-                .then(ClientCommandManager.argument("value",
-                        StringArgumentType.greedyString()).executes(ctx -> onCommandExec(StringArgumentType.getString(ctx, "value"))))
-                .executes(ctx -> onCommandExec(""))
-        );
-    }
     public interface ChangedListener<T> {
         void onChanged(T value);
     }

@@ -3,7 +3,6 @@ package io.github.axolotlclient.AxolotlclientConfig.options;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import io.github.axolotlclient.AxolotlclientConfig.util.ConfigUtils;
-import net.minecraft.client.resource.language.I18n;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import org.quiltmc.qsl.command.api.client.ClientCommandManager;
@@ -18,7 +17,7 @@ import java.util.List;
 public class OptionCategory implements Tooltippable {
 
     private final String name;
-    private final List<OptionBase<?>> options = new ArrayList<>();
+    private final List<Option<?>> options = new ArrayList<>();
     private final List<OptionCategory> subCategories = new ArrayList<>();
 
     public OptionCategory(String key){
@@ -26,7 +25,7 @@ public class OptionCategory implements Tooltippable {
     }
 
     public OptionCategory(String key, boolean registerCommand){
-        this.name=key;
+        this.name = key;
         if(registerCommand) {
             try {
                 ClientCommandRegistrationCallback.EVENT.register((dispatcher, buildContext, environment) -> ClientCommandManager.getDispatcher().register(buildCommand()));
@@ -34,29 +33,46 @@ public class OptionCategory implements Tooltippable {
         }
     }
 
-    public List<OptionBase<?>> getOptions(){return options;}
+    public List<Option<?>> getOptions(){
+        return options;
+    }
 
-    public void add(OptionBase<?> option){options.add(option);}
+    public void add(Option<?> option){
+        options.add(option);
+    }
 
-    public void add(OptionBase<?>... options){
+    public void add(Option<?>... options){
         Collections.addAll(this.options, options);
     }
 
-    public void add(Collection<OptionBase<?>> options){this.options.addAll(options);}
+    public void add(Collection<Option<?>> options){
+        this.options.addAll(options);
+    }
 
-    public void addSubCategory(OptionCategory category){subCategories.add(category);}
+    public void add(OptionCategory category){
+        subCategories.add(category);
+    }
 
-    public OptionCategory addSubCategories(List<OptionCategory> categories){subCategories.addAll(categories); return this;}
+    public void addSubCategory(OptionCategory category){
+        subCategories.add(category);
+    }
 
-    public List<OptionCategory> getSubCategories(){return subCategories;}
+    public OptionCategory addSubCategories(List<OptionCategory> categories){
+        subCategories.addAll(categories);
+        return this;
+    }
 
-    public void clearOptions(){options.clear();}
+    public List<OptionCategory> getSubCategories(){
+        return subCategories;
+    }
+
+    public void clearOptions(){
+        options.clear();
+    }
 
     public String getName() {
         return name;
     }
-
-    public String getTranslatedName(){return I18n.translate(name);}
 
     @Override
     public String toString() {
@@ -68,12 +84,12 @@ public class OptionCategory implements Tooltippable {
 
     public LiteralArgumentBuilder<QuiltClientCommandSource> buildCommand(){
         LiteralArgumentBuilder<QuiltClientCommandSource> builder = ClientCommandManager.literal(getName());
-        for(OptionBase<?> o:getOptions()){
+        for(Option<?> o:getOptions()){
             o.getCommand(builder);
         }
         builder.executes(context -> {
             StringBuilder string = new StringBuilder();
-            for (OptionBase<?> o : getOptions()) {
+            for (Option<?> o : getOptions()) {
                 string.append("    ").append(Formatting.AQUA).append(o.getName()).append(": ").append(o.get()).append("\n");
             }
             ConfigUtils.sendChatMessage(Text.literal(Formatting.BLUE + "Values in this category are: \n" + string));

@@ -27,11 +27,7 @@
 	"blue": "Blue",
 	"chroma": "Chroma",
 
-	"disableReason.crash.tooltip": "This option has been disabled <br>because it would crash your game.",
-	"disableReason.ban_reason.tooltip": "This option is disabled <br>because it is known to be bannable on your current server.",
-
 	"back": "Back",
-	"close": "Close",
 
 	"narration.value": "Value: ",
 	"narration.open_picker": "Press Enter to open color picker",

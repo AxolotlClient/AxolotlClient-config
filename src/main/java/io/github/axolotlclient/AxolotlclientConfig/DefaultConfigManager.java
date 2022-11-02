@@ -1,7 +1,9 @@
 package io.github.axolotlclient.AxolotlclientConfig;
 
-import com.google.gson.*;
-import io.github.axolotlclient.AxolotlclientConfig.options.Option;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import io.github.axolotlclient.AxolotlclientConfig.options.OptionCategory;
 import org.quiltmc.loader.api.QuiltLoader;
 
@@ -26,7 +28,7 @@ public class DefaultConfigManager implements ConfigManager {
     protected static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
     public DefaultConfigManager(String modid){
-        this(modid, QuiltLoader.getConfigDir().resolve(modid+".json"));
+        this(modid, modid+".json");
 
     }
 
@@ -62,35 +64,15 @@ public class DefaultConfigManager implements ConfigManager {
         }
         for(OptionCategory category : modConfig) {
             JsonObject o;
-            if(config.has(category.getName()) && config.get(category.getName()).isJsonObject()) {
-                o = config.get(category.getName()).getAsJsonObject();
+            if(config.has(getName(category)) && config.get(getName(category)).isJsonObject()) {
+                o = config.get(getName(category)).getAsJsonObject();
             } else {
                 o = new JsonObject();
             }
-            config.add(category.getName(), getConfig(o, category));
+            config.add(getName(category), getConfig(o, category));
         }
 
         Files.write(confPath, Collections.singleton(gson.toJson(config)));
-    }
-
-    public JsonObject getConfig(JsonObject object, OptionCategory category){
-        for (Option option : category.getOptions()) {
-
-            object.add(option.getName(), option.getJson());
-        }
-
-        if(!category.getSubCategories().isEmpty()){
-            for(OptionCategory sub:category.getSubCategories()){
-                JsonObject subOption;
-                if(object.has(category.getName()) && object.get(category.getName()).isJsonObject()) {
-                    subOption = object.get(category.getName()).getAsJsonObject();
-                } else {
-                    subOption = new JsonObject();
-                }
-                object.add(sub.getName(), getConfig(subOption, sub));
-            }
-        }
-        return object;
     }
 
     public void load() {
@@ -101,8 +83,8 @@ public class DefaultConfigManager implements ConfigManager {
             JsonObject config = JsonParser.parseReader(new FileReader(confPath.toString())).getAsJsonObject();
 
             for(OptionCategory category : modConfig) {
-                if(config.has(category.getName())) {
-                    setOptions(config.get(category.getName()).getAsJsonObject(), category);
+                if(config.has(getName(category))) {
+                    setOptions(config.get(getName(category)).getAsJsonObject(), category);
                 }
             }
         } catch (Exception e){
@@ -110,33 +92,7 @@ public class DefaultConfigManager implements ConfigManager {
         }
     }
 
-    public void setOptions(JsonObject config, OptionCategory category){
-        for (Option option : category.getOptions()) {
-            if (config.has(option.getName())) {
-                JsonElement part = config.get(option.getName());
-                option.setValueFromJsonElement(part);
-            }
-        }
-        if(!category.getSubCategories().isEmpty()){
-            for (OptionCategory sub: category.getSubCategories()) {
-                if (config.has(sub.getName())) {
-                    JsonObject subCat = config.get(sub.getName()).getAsJsonObject();
-                    setOptions(subCat, sub);
-                }
-            }
-        }
-    }
-
     public void loadDefaults(){
         modConfig.forEach(this::setOptionDefaults);
-    }
-
-    public void setOptionDefaults(OptionCategory category){
-        category.getOptions().forEach(Option::setDefaults);
-        if(!category.getSubCategories().isEmpty()){
-            for (OptionCategory sub: category.getSubCategories()) {
-                setOptionDefaults(sub);
-            }
-        }
     }
 }

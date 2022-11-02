@@ -56,7 +56,7 @@ public class ButtonWidgetList extends ElementListWidget<ButtonWidgetList.Pair> {
         }
     }
 
-    private ClickableWidget createWidget(int x, Option option) {
+    private ClickableWidget createWidget(int x, Option<?> option) {
         if (option != null) {
             if (option instanceof NumericOption<?>) return OptionWidgetProvider.getSliderWidget(x, 0, (NumericOption<?>) option);
             else if (option instanceof BooleanOption) return OptionWidgetProvider.getBooleanWidget(x, 0, 34, 20, (BooleanOption) option);
@@ -151,8 +151,8 @@ public class ButtonWidgetList extends ElementListWidget<ButtonWidgetList.Pair> {
         OptionCategory filtered = new OptionCategory(category.getName(), false);
         for (Tooltippable tooltippable : matched) {
 
-            if(tooltippable instanceof OptionBase<?>){
-                filtered.add((OptionBase<?>) tooltippable);
+            if(tooltippable instanceof Option<?>){
+                filtered.add((Option<?>) tooltippable);
             } else if (tooltippable instanceof OptionCategory){
                 filtered.addSubCategory((OptionCategory) tooltippable);
             }
@@ -199,7 +199,7 @@ public class ButtonWidgetList extends ElementListWidget<ButtonWidgetList.Pair> {
 
         for (int i = 0; i < (category.getOptions().size()); i ++) {
 
-            Option option = category.getOptions().get(i);
+            Option<?> option = category.getOptions().get(i);
             if(option.getName().equals("x")||option.getName().equals("y")) continue;
             ClickableWidget buttonWidget = this.createWidget(width / 2 - 155+160, option);
 
@@ -413,11 +413,11 @@ public class ButtonWidgetList extends ElementListWidget<ButtonWidgetList.Pair> {
 
     public class OptionEntry extends Pair {
 
-        private final Option option;
+        private final Option<?> option;
         protected int renderX;
         private final int nameWidth;
 
-        public OptionEntry(ClickableWidget left, Option option, int width) {
+        public OptionEntry(ClickableWidget left, Option<?> option, int width) {
             super(left, null);
             this.option = option;
             if(left instanceof BooleanWidget) left.x = width / 2 + 5 + 57;

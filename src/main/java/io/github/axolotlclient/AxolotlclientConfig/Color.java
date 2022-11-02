@@ -67,7 +67,7 @@ public class Color {
 
     /**
      * Get the current Color for a chroma value.
-     * Speed can be changed via the corresponding option. {@see AxolotlClientConfigConfig}
+     * Speed can be changed via the corresponding option. See {@link AxolotlClientConfigConfig}
      *
      * @return The current Chroma value, as a Color
      */

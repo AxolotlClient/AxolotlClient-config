@@ -3,6 +3,7 @@ package io.github.axolotlclient.AxolotlclientConfig.options;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 import io.github.axolotlclient.AxolotlclientConfig.util.CommandResponse;
+import net.minecraft.client.MinecraftClient;
 
 public class GenericOption extends OptionBase<GenericOption.OnClick> {
     private final String label;
@@ -33,7 +34,8 @@ public class GenericOption extends OptionBase<GenericOption.OnClick> {
 
     @Override
     protected CommandResponse onCommandExecution(String args) {
-        return new CommandResponse(false, "baba");
+        get().onClick((int) MinecraftClient.getInstance().mouse.getX(), (int) MinecraftClient.getInstance().mouse.getY());
+        return new CommandResponse(false, "");
     }
 
     public interface OnClick {
