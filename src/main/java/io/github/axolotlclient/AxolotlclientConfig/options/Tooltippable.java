@@ -13,9 +13,7 @@ import java.util.Objects;
  * The tooltip should be located at key.tooltip
  */
 
-public interface Tooltippable {
-
-    String getName();
+public interface Tooltippable extends Identifiable {
 
     default String getTooltipLocation(){
         return getName();
@@ -23,6 +21,11 @@ public interface Tooltippable {
 
     default String getTooltip(){
         return this.getTooltip(getTooltipLocation());
+    }
+
+    // This method is here in case someone ever ports a narrator feature to 1.8.9
+    default String getStrippedTooltip(){
+        return getTooltip().replace("<br>", "");
     }
 
     default @Nullable String getTooltip(String location){
@@ -33,22 +36,5 @@ public interface Tooltippable {
         return null;
     }
 
-    /**
-     * A simple comparator to sort elements alphabetically
-     */
 
-    class AlphabeticalComparator implements Comparator<Tooltippable> {
-
-        // Function to compare
-        public int compare(Tooltippable s1, Tooltippable s2) {
-            if(s1.toString().equals(s2.toString())) return 0;
-            String[] strings = {s1.toString(), s2.toString()};
-            Arrays.sort(strings, Collections.reverseOrder());
-
-            if (strings[0].equals(s1.toString()))
-                return 1;
-            else
-                return -1;
-        }
-    }
 }

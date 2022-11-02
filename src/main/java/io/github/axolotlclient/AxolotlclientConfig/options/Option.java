@@ -1,19 +1,32 @@
 package io.github.axolotlclient.AxolotlclientConfig.options;
 
 import com.google.gson.JsonElement;
-import net.minecraft.client.resource.language.I18n;
 
-public interface Option extends Tooltippable {
+import java.util.List;
 
-    String getName();
+/**
+ * Represents the most basic type of option.
+ * If you want to create your own, implement this interface.
+ * If you want to not have to implement this basic stuff, extend {@link OptionBase}.
+ */
 
-    default String getTranslatedName(){
-        return I18n.translate(this.getName());
-    }
+public interface Option<T> extends Tooltippable {
 
     void setValueFromJsonElement(JsonElement element);
 
-    void setDefaults();
-
     JsonElement getJson();
+
+    T get();
+
+    void set(T newValue);
+
+    T getDefault();
+
+    default void setDefaults(){
+        set(getDefault());
+    }
+
+    void onCommandExec(String[] args);
+
+    List<String> getCommandSuggestions();
 }

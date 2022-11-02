@@ -3,6 +3,7 @@ package io.github.axolotlclient.AxolotlclientConfig.options;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 import io.github.axolotlclient.AxolotlclientConfig.util.clientCommands.CommandResponse;
+import org.lwjgl.input.Mouse;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,7 +37,8 @@ public class GenericOption extends OptionBase<GenericOption.OnClick> {
 
     @Override
     protected CommandResponse onCommandExecution(String[] args) {
-        return new CommandResponse(false, "baba");
+        get().onClick(Mouse.getX(), Mouse.getY());
+        return new CommandResponse(false, "");
     }
 
     @Override

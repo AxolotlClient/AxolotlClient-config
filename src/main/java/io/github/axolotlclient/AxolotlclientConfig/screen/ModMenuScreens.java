@@ -19,10 +19,10 @@ public class ModMenuScreens implements ModMenuApi {
     public ModMenuScreens(){
         if(example.getOptions().isEmpty()){
             BooleanOption disabledExample = new BooleanOption("Disabled Example Toggle", true);
-            disabledExample.setForceOff(true, DisableReason.CRASH);
+            disabledExample.setForceOff(true, "Example Reason");
             example.add(new BooleanOption("Example Toggle", false),
-                    new DoubleOption("Example Slider", 5D, 1, 10),
-                    new EnumOption("Example Enum Option", new String[]{"Option 1", "Option 2", "Option 3"}, "Option 1"),
+                    new DoubleOption("Example Slider", 5D, 0, 10),
+                    new EnumOption("Example Enum Option", new String[]{"Option 1", "Option 2", "Option 3"}, "Option 2"),
                     new ColorOption("Example Color Option", -162555),
                     new StringOption("Example String Option", "Example §2String"),
                     new GenericOption("Example Generic Option", "Open Minecraft Options", (mouseX, mouseY)->{

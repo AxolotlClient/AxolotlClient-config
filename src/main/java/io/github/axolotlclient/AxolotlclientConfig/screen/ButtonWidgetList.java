@@ -52,7 +52,7 @@ public class ButtonWidgetList extends EntryListWidget {
 
         for (int i = 0; i < (category.getOptions().size()); i ++) {
 
-            Option option = category.getOptions().get(i);
+            Option<?> option = category.getOptions().get(i);
             if(option.getName().equals("x")||option.getName().equals("y")) continue;
             ButtonWidget buttonWidget = this.createWidget(width / 2 - 155, option);
 
@@ -72,10 +72,10 @@ public class ButtonWidgetList extends EntryListWidget {
         return super.getScrollbarPosition() + 32;
     }
 
-    private ButtonWidget createWidget(int x, Option option) {
+    private ButtonWidget createWidget(int x, Option<?> option) {
         if (option != null) {
             if (option instanceof NumericOption) return OptionWidgetProvider.getSliderWidget(x, 0, (NumericOption<?>) option);
-            else if (option instanceof BooleanOption) return OptionWidgetProvider.getBooleanWidget(x, 0, 35, 20, (BooleanOption) option);
+            else if (option instanceof BooleanOption) return OptionWidgetProvider.getBooleanWidget(x, 0, 34, 20, (BooleanOption) option);
             else if (option instanceof StringOption) return OptionWidgetProvider.getStringWidget(x, 0, (StringOption) option);
             else if (option instanceof ColorOption) return OptionWidgetProvider.getColorWidget(x, 0, (ColorOption) option);
             else if (option instanceof EnumOption) return OptionWidgetProvider.getEnumWidget(x, 0, (EnumOption) option);
@@ -201,8 +201,8 @@ public class ButtonWidgetList extends EntryListWidget {
         OptionCategory filtered = new OptionCategory(category.getName(), false);
         for (Tooltippable tooltippable : matched) {
 
-            if(tooltippable instanceof OptionBase<?>){
-                filtered.add((OptionBase<?>) tooltippable);
+            if(tooltippable instanceof Option<?>){
+                filtered.add((Option<?>) tooltippable);
             } else if (tooltippable instanceof OptionCategory){
                 filtered.addSubCategory((OptionCategory) tooltippable);
             }
@@ -244,7 +244,7 @@ public class ButtonWidgetList extends EntryListWidget {
 
         for (int i = 0; i < (category.getOptions().size()); i ++) {
 
-            Option option = category.getOptions().get(i);
+            Option<?> option = category.getOptions().get(i);
             if(option.getName().equals("x")||option.getName().equals("y")) continue;
             ButtonWidget buttonWidget = this.createWidget(width / 2 - 155, option);
 
@@ -432,11 +432,11 @@ public class ButtonWidgetList extends EntryListWidget {
 
     public class OptionEntry extends Pair {
 
-        private final Option option;
+        private final Option<?> option;
         protected int renderX;
         private final int nameWidth;
 
-        public OptionEntry(ButtonWidget left, Option option, int width) {
+        public OptionEntry(ButtonWidget left, Option<?> option, int width) {
             super(left, null);
             this.option = option;
             if(left instanceof BooleanWidget) left.x = width / 2 + 5 + 57;

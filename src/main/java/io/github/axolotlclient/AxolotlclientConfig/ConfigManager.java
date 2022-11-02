@@ -2,6 +2,7 @@ package io.github.axolotlclient.AxolotlclientConfig;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import io.github.axolotlclient.AxolotlclientConfig.options.Identifiable;
 import io.github.axolotlclient.AxolotlclientConfig.options.Option;
 import io.github.axolotlclient.AxolotlclientConfig.options.OptionCategory;
 
@@ -15,15 +16,20 @@ public interface ConfigManager {
     void save();
 
     default JsonObject getConfig(JsonObject object, OptionCategory category){
-        for (Option option : category.getOptions()) {
+        for (Option<?> option : category.getOptions()) {
 
-            object.add(option.getName(), option.getJson());
+            object.add(getName(option), option.getJson());
         }
 
         if(!category.getSubCategories().isEmpty()){
             for(OptionCategory sub:category.getSubCategories()){
-                JsonObject subOption = new JsonObject();
-                object.add(sub.getName(), getConfig(subOption, sub));
+                JsonObject subOption;
+                if(object.has(getName(category)) && object.get(getName(category)).isJsonObject()) {
+                    subOption = object.get(getName(category)).getAsJsonObject();
+                } else {
+                    subOption = new JsonObject();
+                }
+                object.add(getName(sub), getConfig(subOption, sub));
             }
         }
         return object;
@@ -32,16 +38,16 @@ public interface ConfigManager {
     void load();
 
     default void setOptions(JsonObject config, OptionCategory category){
-        for (Option option : category.getOptions()) {
-            if (config.has(option.getName())) {
-                JsonElement part = config.get(option.getName());
+        for (Option<?> option : category.getOptions()) {
+            if (config.has(getName(option))) {
+                JsonElement part = config.get(getName(option));
                 option.setValueFromJsonElement(part);
             }
         }
         if(!category.getSubCategories().isEmpty()){
             for (OptionCategory sub: category.getSubCategories()) {
-                if (config.has(sub.getName())) {
-                    JsonObject subCat = config.get(sub.getName()).getAsJsonObject();
+                if (config.has(getName(sub))) {
+                    JsonObject subCat = config.get(getName(sub)).getAsJsonObject();
                     setOptions(subCat, sub);
                 }
             }
@@ -57,5 +63,9 @@ public interface ConfigManager {
                 setOptionDefaults(sub);
             }
         }
+    }
+
+    default String getName(Identifiable t){
+        return t.getName();
     }
 }

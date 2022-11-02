@@ -13,7 +13,7 @@ import java.util.List;
  * @param <T> The type of option this should be.
  */
 
-public abstract class OptionBase<T> implements Option {
+public abstract class OptionBase<T> implements Option<T> {
 
     /**
      * The current value of this option
@@ -28,12 +28,12 @@ public abstract class OptionBase<T> implements Option {
     /**
      * This option's translation key
      */
-    public String name;
+    protected final String name;
 
     /**
      * (If set) this option's tooltip key prefix
      */
-    public String tooltipKeyPrefix;
+    protected final String tooltipKeyPrefix;
 
     /**
      * This option's callback to be called on changes of the value.
@@ -54,7 +54,7 @@ public abstract class OptionBase<T> implements Option {
     }
 
     public OptionBase(String name, String tooltipKeyPrefix, ChangedListener<T> onChange, T def){
-        this.name=name;
+        this.name = name;
         this.def = def;
         this.option = def;
         changeCallback = onChange;
@@ -65,6 +65,7 @@ public abstract class OptionBase<T> implements Option {
         return option;
     }
 
+    @Override
     public void set(T value){
         option = value;
         changeCallback.onChanged(option);
@@ -72,10 +73,6 @@ public abstract class OptionBase<T> implements Option {
 
     public T getDefault(){
         return def;
-    }
-
-    public void setDefaults(){
-        set(getDefault());
     }
 
     @Override

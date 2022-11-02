@@ -3,6 +3,7 @@ package io.github.axolotlclient.AxolotlclientConfig.options;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 import io.github.axolotlclient.AxolotlclientConfig.util.clientCommands.CommandResponse;
+import net.minecraft.client.resource.language.I18n;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -13,7 +14,7 @@ import java.util.Locale;
 public class BooleanOption extends OptionBase<Boolean> {
 
     private boolean forceOff = false;
-    private DisableReason disableReason;
+    private String disableReason;
 
     public BooleanOption(String name, Boolean def) {
         super(name, def);
@@ -65,7 +66,7 @@ public class BooleanOption extends OptionBase<Boolean> {
         return forceOff;
     }
 
-    public void setForceOff(boolean forceOff, DisableReason reason){
+    public void setForceOff(boolean forceOff, String reason){
         this.forceOff=forceOff;
         disableReason=reason;
     }
@@ -73,7 +74,10 @@ public class BooleanOption extends OptionBase<Boolean> {
     @Override
     public @Nullable String getTooltip(String location) {
         if(getForceDisabled()){
-            return super.getTooltip("disableReason."+disableReason.toString().toLowerCase(Locale.ROOT));
+            if(!I18n.translate("disableReason."+disableReason).equals("disableReason."+disableReason)){
+                return I18n.translate("disableReason."+disableReason);
+            }
+            return disableReason;
         }
         return super.getTooltip(location);
     }
