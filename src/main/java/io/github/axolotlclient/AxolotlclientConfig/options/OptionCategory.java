@@ -45,7 +45,7 @@ public class OptionCategory implements Tooltippable {
         Collections.addAll(this.options, options);
     }
 
-    public void add(Collection<Option<?>> options){
+    public void add(Collection<? extends Option<?>> options){
         this.options.addAll(options);
     }
 

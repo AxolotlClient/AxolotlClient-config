@@ -26,7 +26,7 @@ public interface Tooltippable extends Identifiable {
     }
 
     default @Nullable String getTooltip(String location){
-        if(!I18n.hasTranslation(location + ".tooltip")) {
+        if(I18n.hasTranslation(location + ".tooltip")) {
             return I18n.translate(location+".tooltip");
         }
         return null;
