@@ -72,10 +72,10 @@ public class Color {
      * @return The current Chroma value, as a Color
      */
 
+    @SuppressWarnings("deprecation")
     public static Color getChroma(){
         if(chromaColors.isEmpty()){
             setupChroma();
-            //noinspection deprecation
             ClientTickEvents.END_CLIENT_TICK.register(client -> tickChroma());
         }
         return chromaColors.get(chromaColorIndex);

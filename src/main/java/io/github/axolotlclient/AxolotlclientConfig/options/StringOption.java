@@ -2,7 +2,9 @@ package io.github.axolotlclient.AxolotlclientConfig.options;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
+import io.github.axolotlclient.AxolotlclientConfig.screen.widgets.StringOptionWidget;
 import io.github.axolotlclient.AxolotlclientConfig.util.CommandResponse;
+import net.minecraft.client.gui.widget.ClickableWidget;
 import org.jetbrains.annotations.NotNull;
 
 public class StringOption extends OptionBase<String> {
@@ -41,5 +43,10 @@ public class StringOption extends OptionBase<String> {
             return new CommandResponse(true, "Successfully set "+getName()+" to "+arg+"!");
         }
         return new CommandResponse(true, getName() + " is currently set to '"+get()+"'.");
+    }
+
+    @Override
+    public ClickableWidget getWidget(int x, int y, int width, int height) {
+        return new StringOptionWidget(x, y, this);
     }
 }

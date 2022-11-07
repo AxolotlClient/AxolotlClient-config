@@ -2,7 +2,9 @@ package io.github.axolotlclient.AxolotlclientConfig.options;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
+import io.github.axolotlclient.AxolotlclientConfig.screen.widgets.EnumOptionWidget;
 import io.github.axolotlclient.AxolotlclientConfig.util.CommandResponse;
+import net.minecraft.client.gui.widget.ClickableWidget;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -142,5 +144,10 @@ public class EnumOption extends OptionBase<String> {
             }
         }
         return new CommandResponse(true, getName() + " is currently set to '"+get()+"'.");
+    }
+
+    @Override
+    public ClickableWidget getWidget(int x, int y, int width, int height) {
+        return new EnumOptionWidget(x, y, this);
     }
 }

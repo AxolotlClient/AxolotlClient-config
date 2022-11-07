@@ -2,7 +2,9 @@ package io.github.axolotlclient.AxolotlclientConfig.options;
 
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
+import io.github.axolotlclient.AxolotlclientConfig.screen.widgets.CategoryWidget;
 import io.github.axolotlclient.AxolotlclientConfig.util.ConfigUtils;
+import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import org.quiltmc.qsl.command.api.client.ClientCommandManager;
@@ -14,7 +16,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-public class OptionCategory implements Tooltippable {
+public class OptionCategory implements Tooltippable, WidgetSupplier {
 
     private final String name;
     private final List<Option<?>> options = new ArrayList<>();
@@ -96,5 +98,10 @@ public class OptionCategory implements Tooltippable {
             return Command.SINGLE_SUCCESS;
         });
         return builder;
+    }
+
+    @Override
+    public ClickableWidget getWidget(int x, int y, int width, int height) {
+        return new CategoryWidget(this, x, y, width, height);
     }
 }

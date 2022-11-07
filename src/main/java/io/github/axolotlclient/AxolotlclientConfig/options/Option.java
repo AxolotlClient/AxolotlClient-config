@@ -3,10 +3,11 @@ package io.github.axolotlclient.AxolotlclientConfig.options;
 import com.google.gson.JsonElement;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
+import net.minecraft.client.gui.widget.ClickableWidget;
 import org.quiltmc.qsl.command.api.client.ClientCommandManager;
 import org.quiltmc.qsl.command.api.client.QuiltClientCommandSource;
 
-public interface Option<T> extends Tooltippable {
+public interface Option<T> extends Tooltippable, WidgetSupplier {
 
     void setValueFromJsonElement(JsonElement element);
 

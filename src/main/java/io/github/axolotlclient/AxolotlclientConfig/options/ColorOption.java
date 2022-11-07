@@ -4,7 +4,9 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import io.github.axolotlclient.AxolotlclientConfig.Color;
+import io.github.axolotlclient.AxolotlclientConfig.screen.widgets.ColorOptionWidget;
 import io.github.axolotlclient.AxolotlclientConfig.util.CommandResponse;
+import net.minecraft.client.gui.widget.ClickableWidget;
 import org.jetbrains.annotations.NotNull;
 
 public class ColorOption extends OptionBase<Color> {
@@ -83,5 +85,10 @@ public class ColorOption extends OptionBase<Color> {
         }
 
         return new CommandResponse(true, getName() + " is currently set to '"+get()+"'.");
+    }
+
+    @Override
+    public ClickableWidget getWidget(int x, int y, int width, int height) {
+        return new ColorOptionWidget(x, y, this);
     }
 }
