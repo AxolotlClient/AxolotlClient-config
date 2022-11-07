@@ -32,7 +32,8 @@ public class ModMenuScreens implements ModMenuApi {
             OptionCategory sub = new OptionCategory("Example Sub Category", false);
             sub.add(new BooleanOption("Example Toggle", true),
                     new ColorOption("Example Color Option", Color.parse("#FF550055")),
-                    new StringOption("Example String Option", "Example §bString"));
+                    new StringOption("Example String Option", "Example §bString"),
+                    new BooleanOption("Very_Very_Very_Long_Snake_Case_Named_Option", false));
             example.addSubCategory(sub);
         }
     }

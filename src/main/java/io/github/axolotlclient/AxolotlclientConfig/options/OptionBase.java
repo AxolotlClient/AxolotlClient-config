@@ -35,6 +35,8 @@ public abstract class OptionBase<T> implements Option<T> {
      */
     protected final String tooltipKeyPrefix;
 
+    protected String tooltipPrefix = "";
+
     /**
      * This option's callback to be called on changes of the value.
      * Will not be called on initial load.
@@ -80,6 +82,14 @@ public abstract class OptionBase<T> implements Option<T> {
         if(tooltipKeyPrefix != null)
             return tooltipKeyPrefix +"."+ name;
         else return name;
+    }
+
+    public String getTooltipPrefix() {
+        return tooltipPrefix;
+    }
+
+    public void setTooltipPrefix(String s){
+        tooltipPrefix = s;
     }
 
     public String getName(){

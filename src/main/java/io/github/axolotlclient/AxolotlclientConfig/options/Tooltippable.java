@@ -19,6 +19,14 @@ public interface Tooltippable extends Identifiable {
         return getName();
     }
 
+    // If an option name needs to be cut, its full name will be put in its tooltip.
+    default void setTooltipPrefix(String prefix){
+
+    }
+    default String getTooltipPrefix(){
+        return "";
+    }
+
     default String getTooltip(){
         return this.getTooltip(getTooltipLocation());
     }
@@ -30,8 +38,12 @@ public interface Tooltippable extends Identifiable {
 
     default @Nullable String getTooltip(String location){
         String translation = I18n.translate(location + ".tooltip");
+        String tooltip = getTooltipPrefix();
+
         if(!Objects.equals(translation, location + ".tooltip")) {
-            return translation;
+            return tooltip + translation;
+        } else if(!tooltip.equals("")) {
+            return tooltip;
         }
         return null;
     }

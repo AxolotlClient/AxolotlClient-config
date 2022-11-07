@@ -1,6 +1,7 @@
 package io.github.axolotlclient.AxolotlclientConfig.options;
 
 import com.google.gson.JsonElement;
+import net.minecraft.client.gui.widget.ButtonWidget;
 
 import java.util.List;
 
@@ -10,7 +11,7 @@ import java.util.List;
  * If you want to not have to implement this basic stuff, extend {@link OptionBase}.
  */
 
-public interface Option<T> extends Tooltippable {
+public interface Option<T> extends Tooltippable, WidgetSupplier {
 
     void setValueFromJsonElement(JsonElement element);
 

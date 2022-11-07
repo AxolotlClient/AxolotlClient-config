@@ -1,10 +1,12 @@
 package io.github.axolotlclient.AxolotlclientConfig.screen;
 
-import com.google.common.collect.Lists;
 import com.mojang.blaze3d.platform.GlStateManager;
-import io.github.axolotlclient.AxolotlclientConfig.AxolotlClientConfigManager;
 import io.github.axolotlclient.AxolotlclientConfig.AxolotlClientConfigConfig;
-import io.github.axolotlclient.AxolotlclientConfig.options.*;
+import io.github.axolotlclient.AxolotlclientConfig.AxolotlClientConfigManager;
+import io.github.axolotlclient.AxolotlclientConfig.options.BooleanOption;
+import io.github.axolotlclient.AxolotlclientConfig.options.Option;
+import io.github.axolotlclient.AxolotlclientConfig.options.OptionCategory;
+import io.github.axolotlclient.AxolotlclientConfig.options.Tooltippable;
 import io.github.axolotlclient.AxolotlclientConfig.screen.widgets.*;
 import io.github.axolotlclient.AxolotlclientConfig.util.ConfigUtils;
 import io.github.axolotlclient.AxolotlclientConfig.util.DrawUtil;
@@ -27,7 +29,7 @@ import java.util.stream.Collectors;
 
 public class ButtonWidgetList extends EntryListWidget {
 
-    public List<Pair> entries = Lists.newArrayList();
+    public List<Pair> entries;
 
     private final OptionCategory category;
 
@@ -35,36 +37,14 @@ public class ButtonWidgetList extends EntryListWidget {
         super(minecraftClient, width, height, top, bottom, entryHeight);
         this.category=category;
 
-        if(!category.getSubCategories().isEmpty()) {
-            for (int i = 0; i < category.getSubCategories().size(); i += 2) {
-                OptionCategory subCat = category.getSubCategories().get(i);
-                ButtonWidget buttonWidget = this.createCategoryWidget(width / 2 - 155, subCat);
-
-                OptionCategory subCat2 = i < category.getSubCategories().size() - 1 ? category.getSubCategories().get(i + 1) : null;
-                ButtonWidget buttonWidget2 = this.createCategoryWidget(width / 2 - 155 + 160, subCat2);
-
-                this.entries.add(new CategoryPair(subCat, buttonWidget, subCat2, buttonWidget2));
-            }
-            if(!category.getOptions().isEmpty()) {
-                this.entries.add(new Spacer());
-            }
-        }
-
-        for (int i = 0; i < (category.getOptions().size()); i ++) {
-
-            Option<?> option = category.getOptions().get(i);
-            if(option.getName().equals("x")||option.getName().equals("y")) continue;
-            ButtonWidget buttonWidget = this.createWidget(width / 2 - 155, option);
-
-            this.entries.add(new OptionEntry(buttonWidget, option, width));
-        }
+        this.entries = constructEntries(category);
     }
 
     private ButtonWidget createCategoryWidget(int x, OptionCategory cat){
         if(cat==null) {
             return null;
         } else {
-            return OptionWidgetProvider.getCategoryWidget(x, 0,150, 20, cat);
+            return cat.getWidget(x, 0, 150, 20);
         }
     }
 
@@ -74,12 +54,7 @@ public class ButtonWidgetList extends EntryListWidget {
 
     private ButtonWidget createWidget(int x, Option<?> option) {
         if (option != null) {
-            if (option instanceof NumericOption) return OptionWidgetProvider.getSliderWidget(x, 0, (NumericOption<?>) option);
-            else if (option instanceof BooleanOption) return OptionWidgetProvider.getBooleanWidget(x, 0, 34, 20, (BooleanOption) option);
-            else if (option instanceof StringOption) return OptionWidgetProvider.getStringWidget(x, 0, (StringOption) option);
-            else if (option instanceof ColorOption) return OptionWidgetProvider.getColorWidget(x, 0, (ColorOption) option);
-            else if (option instanceof EnumOption) return OptionWidgetProvider.getEnumWidget(x, 0, (EnumOption) option);
-            else if (option instanceof GenericOption) return OptionWidgetProvider.getGenericWidget(x, 0, (GenericOption) option);
+            return option.getWidget(x, 0, 150, 20);
         }
         return null;
     }
@@ -245,7 +220,11 @@ public class ButtonWidgetList extends EntryListWidget {
         for (int i = 0; i < (category.getOptions().size()); i ++) {
 
             Option<?> option = category.getOptions().get(i);
-            if(option.getName().equals("x")||option.getName().equals("y")) continue;
+            if(AxolotlClientConfigManager.getIgnoredNames(
+                    ((OptionsScreenBuilder)MinecraftClient.getInstance().currentScreen)
+                            .modid).contains(option.getName())){
+                continue;
+            }
             ButtonWidget buttonWidget = this.createWidget(width / 2 - 155, option);
 
             entries.add(new OptionEntry(buttonWidget, option, width));
@@ -436,22 +415,41 @@ public class ButtonWidgetList extends EntryListWidget {
         protected int renderX;
         private final int nameWidth;
 
+        private final String name;
+
         public OptionEntry(ButtonWidget left, Option<?> option, int width) {
             super(left, null);
             this.option = option;
             if(left instanceof BooleanWidget) left.x = width / 2 + 5 + 57;
             else left.x = width / 2 + 5;
-            nameWidth = MinecraftClient.getInstance().textRenderer.getStringWidth(option.getTranslatedName());
+            String name = cutString(option.getTranslatedName());
+            if(!name.equals(option.getTranslatedName())){
+                name = "..."+name;
+                option.setTooltipPrefix(option.getTranslatedName()+"<br>");
+            }
+            this.name = name;
+            nameWidth = MinecraftClient.getInstance().textRenderer.getStringWidth(name);
+        }
+
+        private String cutString(String s){
+            if(MinecraftClient.getInstance().textRenderer.getStringWidth(s) + xStart + width / 2 - 125 >= width/2 - 10){
+                if(s.contains(" ")){
+                    return cutString(s.split(" ", 2)[1]);
+                } else {
+                    return cutString(s.substring(1));
+                }
+            }
+            return s;
         }
 
         @Override
         public void render(int index, int x, int y, int rowWidth, int rowHeight, int mouseX, int mouseY, boolean hovered) {
 
-            drawString(client.textRenderer, option.getTranslatedName(), x, y+5, -1, true);
+            drawString(client.textRenderer, name, ButtonWidgetList.this.width/2-125, y+5, -1, true);
             left.y = y;
             left.render(client, mouseX, mouseY);
 
-            renderX = x;
+            renderX = ButtonWidgetList.this.width/2-125;
         }
 
         public void renderTooltips(int mouseX, int mouseY){

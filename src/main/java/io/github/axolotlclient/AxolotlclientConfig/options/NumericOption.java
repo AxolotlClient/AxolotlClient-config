@@ -2,6 +2,8 @@ package io.github.axolotlclient.AxolotlclientConfig.options;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
+import io.github.axolotlclient.AxolotlclientConfig.screen.widgets.OptionSliderWidget;
+import net.minecraft.client.gui.widget.ButtonWidget;
 
 import java.util.Collections;
 import java.util.List;
@@ -50,5 +52,10 @@ public abstract class NumericOption<T extends Number> extends OptionBase<T>{
     @Override
     public JsonElement getJson() {
         return new JsonPrimitive(option);
+    }
+
+    @Override
+    public ButtonWidget getWidget(int x, int y, int width, int height) {
+        return new OptionSliderWidget<>(0, x, y, this);
     }
 }

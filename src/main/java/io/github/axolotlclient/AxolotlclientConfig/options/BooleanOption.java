@@ -2,7 +2,9 @@ package io.github.axolotlclient.AxolotlclientConfig.options;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
+import io.github.axolotlclient.AxolotlclientConfig.screen.widgets.BooleanWidget;
 import io.github.axolotlclient.AxolotlclientConfig.util.clientCommands.CommandResponse;
+import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.resource.language.I18n;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -75,9 +77,9 @@ public class BooleanOption extends OptionBase<Boolean> {
     public @Nullable String getTooltip(String location) {
         if(getForceDisabled()){
             if(!I18n.translate("disableReason."+disableReason).equals("disableReason."+disableReason)){
-                return I18n.translate("disableReason."+disableReason);
+                return getTooltipPrefix() + I18n.translate("disableReason."+disableReason);
             }
-            return disableReason;
+            return getTooltipPrefix() + disableReason;
         }
         return super.getTooltip(location);
     }
@@ -111,5 +113,10 @@ public class BooleanOption extends OptionBase<Boolean> {
 
     public List<String> getCommandSuggestions(){
         return Arrays.asList("true", "false");
+    }
+
+    @Override
+    public ButtonWidget getWidget(int x, int y, int width, int height) {
+        return new BooleanWidget(0, x, y, 34, height, this);
     }
 }

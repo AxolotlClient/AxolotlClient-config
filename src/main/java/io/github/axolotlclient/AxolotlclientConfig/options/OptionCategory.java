@@ -1,13 +1,15 @@
 package io.github.axolotlclient.AxolotlclientConfig.options;
 
 import io.github.axolotlclient.AxolotlclientConfig.AxolotlClientConfigManager;
+import io.github.axolotlclient.AxolotlclientConfig.screen.widgets.CategoryWidget;
 import io.github.axolotlclient.AxolotlclientConfig.util.ConfigUtils;
+import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.text.LiteralText;
 import net.minecraft.util.Formatting;
 
 import java.util.*;
 
-public class OptionCategory implements Tooltippable {
+public class OptionCategory implements Tooltippable, WidgetSupplier {
 
     private final String name;
     private final List<Option<?>> options = new ArrayList<>();
@@ -113,5 +115,9 @@ public class OptionCategory implements Tooltippable {
             }
         }
         return list;
+    }
+
+    public ButtonWidget getWidget(int x, int y, int width, int height){
+        return new CategoryWidget(this, x, y, width, height);
     }
 }

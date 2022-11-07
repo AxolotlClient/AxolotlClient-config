@@ -14,8 +14,15 @@ import java.util.List;
 public class AxolotlClientConfigManager {
     private static final HashMap<String, ConfigHolder> configs = new HashMap<>();
     private static final HashMap<String, ConfigManager> managers = new HashMap<>();
+    private static final HashMap<String, List<String>> ignoredNames = new HashMap<>();
 
     public static Logger LOGGER = LogManager.getLogger("AxolotlClient Config");
+
+    private static final String MODID = "axolotlclientconfig";
+
+    static {
+        ignoredNames.put(MODID, new ArrayList<>());
+    }
 
     /**
      * Call one of these two methods when registering a mod config.
@@ -26,6 +33,7 @@ public class AxolotlClientConfigManager {
     public static void registerConfig(String modid, ConfigHolder config, ConfigManager manager){
         configs.put(modid, config);
         managers.put(modid, manager);
+        ignoredNames.put(modid, new ArrayList<>());
 
         manager.load();
     }
@@ -55,13 +63,22 @@ public class AxolotlClientConfigManager {
         return configs.get(modid);
     }
 
+    public static void addIgnoredName(String modid, String id){
+        ignoredNames.get(modid).add(id);
+    }
+
+    @ApiStatus.Internal
+    public static List<String> getIgnoredNames(String modid){
+        return ignoredNames.computeIfAbsent(modid, k -> new ArrayList<>());
+    }
+
     /**
      * Save the config for the provided modid
      * @param modid The modid whichs config should be saved.
      */
 
     public static void save(String modid) {
-        if(modid.equals("axolotlclientconfig")){
+        if(modid.equals(MODID)){
             return;
         }
         managers.get(modid).save();

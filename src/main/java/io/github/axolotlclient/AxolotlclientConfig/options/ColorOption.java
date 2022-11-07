@@ -4,7 +4,9 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import io.github.axolotlclient.AxolotlclientConfig.Color;
+import io.github.axolotlclient.AxolotlclientConfig.screen.widgets.ColorOptionWidget;
 import io.github.axolotlclient.AxolotlclientConfig.util.clientCommands.CommandResponse;
+import net.minecraft.client.gui.widget.ButtonWidget;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
@@ -83,5 +85,10 @@ public class ColorOption extends OptionBase<Color> {
     @Override
     public List<String> getCommandSuggestions() {
         return Collections.singletonList("#FFFFFFFF");
+    }
+
+    @Override
+    public ButtonWidget getWidget(int x, int y, int width, int height) {
+        return new ColorOptionWidget(0, x, y, this);
     }
 }

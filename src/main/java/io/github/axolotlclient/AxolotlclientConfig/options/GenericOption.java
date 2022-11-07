@@ -2,7 +2,9 @@ package io.github.axolotlclient.AxolotlclientConfig.options;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
+import io.github.axolotlclient.AxolotlclientConfig.screen.widgets.GenericOptionWidget;
 import io.github.axolotlclient.AxolotlclientConfig.util.clientCommands.CommandResponse;
+import net.minecraft.client.gui.widget.ButtonWidget;
 import org.lwjgl.input.Mouse;
 
 import java.util.ArrayList;
@@ -50,5 +52,10 @@ public class GenericOption extends OptionBase<GenericOption.OnClick> {
 
     public interface OnClick {
          void onClick(int mouseX, int mouseY);
+    }
+
+    @Override
+    public ButtonWidget getWidget(int x, int y, int width, int height) {
+        return new GenericOptionWidget(x, y, width, height, this);
     }
 }
