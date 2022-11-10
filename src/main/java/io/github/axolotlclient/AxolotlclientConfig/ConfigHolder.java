@@ -2,6 +2,7 @@ package io.github.axolotlclient.AxolotlclientConfig;
 
 import io.github.axolotlclient.AxolotlclientConfig.options.OptionCategory;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -10,6 +11,13 @@ import java.util.List;
  */
 
 public abstract class ConfigHolder {
+
+    public static final ConfigHolder EMPTY = new ConfigHolder() {
+        @Override
+        public List<OptionCategory> getCategories() {
+            return new ArrayList<>();
+        }
+    };
 
     /**
      * Return a list of your categories here. These will be used to generate the main page for your config

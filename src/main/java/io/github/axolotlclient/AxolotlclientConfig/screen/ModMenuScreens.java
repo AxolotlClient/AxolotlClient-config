@@ -18,6 +18,8 @@ public class ModMenuScreens implements ModMenuApi {
 
     public ModMenuScreens(){
         if(example.getOptions().isEmpty()){
+            BooleanOption ignored = new BooleanOption("ignored_option", false);
+            AxolotlClientConfigManager.addIgnoredName(AxolotlClientConfigManager.MODID, ignored.getName());
             BooleanOption disabledExample = new BooleanOption("Disabled Example Toggle", true);
             disabledExample.setForceOff(true, "Example Reason");
             example.add(new BooleanOption("Example Toggle", false),
@@ -28,7 +30,8 @@ public class ModMenuScreens implements ModMenuApi {
                     new GenericOption("Example Generic Option", "Open Minecraft Options", (mouseX, mouseY)->{
                         MinecraftClient.getInstance().openScreen(new SettingsScreen(MinecraftClient.getInstance().currentScreen, MinecraftClient.getInstance().options));
                     }),
-                    disabledExample);
+                    disabledExample,
+                    ignored);
             OptionCategory sub = new OptionCategory("Example Sub Category", false);
             sub.add(new BooleanOption("Example Toggle", true),
                     new ColorOption("Example Color Option", Color.parse("#FF550055")),
