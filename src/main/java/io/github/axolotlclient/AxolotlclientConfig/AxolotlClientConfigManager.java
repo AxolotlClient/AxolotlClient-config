@@ -6,6 +6,7 @@ import net.minecraft.client.MinecraftClient;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.Nullable;
 import org.quiltmc.loader.api.QuiltLoader;
 
 import java.util.ArrayList;
@@ -19,20 +20,22 @@ public class AxolotlClientConfigManager {
 
     public static Logger LOGGER = LogManager.getLogger("AxolotlClient Config");
 
-    private static final String MODID = "axolotlclientconfig";
-
-    static {
-        ignoredNames.put(MODID, new ArrayList<>());
-    }
+    @ApiStatus.Internal
+    public static final String MODID = "axolotlclientconfig";
 
     /**
      * Call one of these two methods when registering a mod config.
      * @param modid your modid.
      * @param config an instance of your config class, extending ConfigHolder.
-     * @param manager Your config manager. Can be omitted when the {@see DefaultConfigManager} should be used.
+     * @param manager Your config manager. Can be omitted or null when the {@link DefaultConfigManager} should be used.
      */
-    public static void registerConfig(String modid, ConfigHolder config, ConfigManager manager){
+    public static void registerConfig(String modid, ConfigHolder config, @Nullable ConfigManager manager){
         configs.put(modid, config);
+
+        if(manager == null){
+            manager = new DefaultConfigManager(modid);
+        }
+
         managers.put(modid, manager);
 
         try {
@@ -45,7 +48,7 @@ public class AxolotlClientConfigManager {
     }
 
     public static void registerConfig(String modid, ConfigHolder config){
-        registerConfig(modid, config, new DefaultConfigManager(modid));
+        registerConfig(modid, config, null);
     }
 
     /**
@@ -58,13 +61,8 @@ public class AxolotlClientConfigManager {
 
     @ApiStatus.Internal
     public static ConfigHolder getModConfig(String modid){
-        if(modid.equals("axolotlclientconfig")){
-            return new ConfigHolder() {
-                @Override
-                public List<OptionCategory> getCategories() {
-                    return new ArrayList<>();
-                }
-            };
+        if(modid.equals(MODID)){
+            return ConfigHolder.EMPTY;
         }
         return configs.get(modid);
     }
@@ -75,7 +73,7 @@ public class AxolotlClientConfigManager {
      * @param id The option's (untranslated) name.
      */
     public static void addIgnoredName(String modid, String id){
-        ignoredNames.get(modid).add(id);
+        ignoredNames.computeIfAbsent(modid, k -> new ArrayList<>()).add(id);
     }
 
     @ApiStatus.Internal

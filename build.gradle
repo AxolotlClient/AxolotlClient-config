@@ -74,7 +74,8 @@ publishing {
 	repositories {
 		maven {
 			name = "owlMaven"
-			url = "https://moehreag.duckdns.org/maven/releases"
+			def repository = project.version.toString().contains("beta") || project.version.toString().contains("alpha") ? "snapshots" : "release"
+			url = "https://moehreag.duckdns.org/maven/"+repository
 			credentials(PasswordCredentials)
 			authentication {
 				basic(BasicAuthentication)
