@@ -435,7 +435,7 @@ public class ButtonWidgetList extends ElementListWidget<ButtonWidgetList.Pair> {
         }
 
         private String cutString(String s){
-            if(MinecraftClient.getInstance().textRenderer.getWidth(s) + ButtonWidgetList.this.left + (width/2) - 125 >= width/2 - 10){
+            if(MinecraftClient.getInstance().textRenderer.getWidth(s) + ButtonWidgetList.this.left + (width/2) - 135 >= width/2 - 10){
                 if(s.contains(" ")){
                     return cutString(s.split(" ", 2)[1]);
                 } else {

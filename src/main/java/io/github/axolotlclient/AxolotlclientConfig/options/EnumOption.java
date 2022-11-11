@@ -95,15 +95,28 @@ public class EnumOption extends OptionBase<String> {
         return values[i];
     }
 
+    @Override
+    public void set(String value) {
+        for(int i=0;i< values.length; i++){
+            String v = values[i];
+            if(Objects.equals(v, value)){
+                this.i=i;
+                break;
+            }
+        }
+    }
+
     public String next() {
         i++;
         if(i > values.length-1)i=0;
+        changeCallback.onChanged(get());
         return get();
     }
 
     public String last(){
         i--;
         if(i<0)i=values.length-1;
+        changeCallback.onChanged(get());
         return get();
     }
 
@@ -126,6 +139,7 @@ public class EnumOption extends OptionBase<String> {
             for (int i=0;i<values.length;i++){
                 if(arg.equalsIgnoreCase(values[i])){
                     this.i=i;
+                    changeCallback.onChanged(get());
                     return new CommandResponse(true, "Successfully set "+getName()+" to "+get()+" (Index: "+i+")!");
                 }
             }
@@ -136,6 +150,7 @@ public class EnumOption extends OptionBase<String> {
                     throw new IndexOutOfBoundsException();
                 }
                 i=value;
+                changeCallback.onChanged(get());
                 return new CommandResponse(true, "Successfully set "+getName()+" to "+get()+" (Index: "+i+")!");
             } catch (IndexOutOfBoundsException e){
                 return new CommandResponse(false, "Please specify an index within the bounds of 0<=i<"+values.length+"!");
