@@ -49,7 +49,9 @@ public class AxolotlClientConfigManager {
      * @param modid the modid the config screen should be opened for.
      */
     public static void openConfigScreen(String modid){
-       MinecraftClient.getInstance().openScreen(new OptionsScreenBuilder(MinecraftClient.getInstance().currentScreen, new OptionCategory(modid+"Config", false).addSubCategories(configs.get(modid).getCategories()), modid));
+       MinecraftClient.getInstance().openScreen(new OptionsScreenBuilder(MinecraftClient.getInstance().currentScreen,
+               configs.get(modid).getCategories().size() == 1 ? configs.get(modid).getCategories().get(0) :
+                       new OptionCategory(modid, false).addSubCategories(configs.get(modid).getCategories()), modid));
     }
 
     @ApiStatus.Internal
