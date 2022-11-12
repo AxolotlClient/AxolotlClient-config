@@ -1,7 +1,6 @@
 package io.github.axolotlclient.AxolotlclientConfig.options;
 
 import com.google.gson.JsonElement;
-import net.minecraft.client.gui.widget.ButtonWidget;
 
 import java.util.List;
 
