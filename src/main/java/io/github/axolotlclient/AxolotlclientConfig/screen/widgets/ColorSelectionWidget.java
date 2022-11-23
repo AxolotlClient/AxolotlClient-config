@@ -380,4 +380,8 @@ public class ColorSelectionWidget extends Screen {
             return Text.of(this.getOption().getTranslatedName()).copy().append(": ").append(super.getMessage());
         }
     }
+
+    public String getModId(){
+        return parent.modid;
+    }
 }

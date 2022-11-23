@@ -18,15 +18,11 @@ import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.gui.screen.narration.NarrationPart;
 import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.gui.widget.ElementListWidget;
-import net.minecraft.client.gui.widget.EntryListWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.opengl.GL11;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class ButtonWidgetList extends ElementListWidget<ButtonWidgetList.Pair> {
@@ -198,9 +194,21 @@ public class ButtonWidgetList extends ElementListWidget<ButtonWidgetList.Pair> {
 
             Option<?> option = category.getOptions().get(i);
             assert MinecraftClient.getInstance().currentScreen != null;
-            if(AxolotlClientConfigManager.getIgnoredNames(
-                    ((OptionsScreenBuilder)MinecraftClient.getInstance().currentScreen)
-                            .modid).contains(option.getName())){
+            List<String> names;
+
+            if(MinecraftClient.getInstance().currentScreen instanceof OptionsScreenBuilder){
+                names = AxolotlClientConfigManager.getIgnoredNames(
+                        ((OptionsScreenBuilder)MinecraftClient.getInstance().currentScreen)
+                                .modid);
+            } else if (MinecraftClient.getInstance().currentScreen instanceof ColorSelectionWidget){
+                names = AxolotlClientConfigManager.getIgnoredNames(
+                        ((ColorSelectionWidget)MinecraftClient.getInstance().currentScreen)
+                                .getModId());
+            } else {
+                names = Collections.emptyList();
+            }
+
+            if(names.contains(option.getName())){
                 continue;
             }
             ClickableWidget buttonWidget = this.createWidget(width / 2 - 155+160, option);
