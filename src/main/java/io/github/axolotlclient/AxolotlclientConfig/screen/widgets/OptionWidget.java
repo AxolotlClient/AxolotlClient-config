@@ -4,6 +4,12 @@ import io.github.axolotlclient.AxolotlclientConfig.screen.OptionsScreenBuilder;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.widget.ButtonWidget;
 
+/**
+ * ButtonWidget's in this Minecraft version do not usually handle interactions themselves.
+ * This class is here to change that.
+ * Therefore, all Widgets used in with this library should extend this class.
+ */
+
 public class OptionWidget extends ButtonWidget {
     public OptionWidget(int id, int x, int y, String message) {
         super(id, x, y, message);

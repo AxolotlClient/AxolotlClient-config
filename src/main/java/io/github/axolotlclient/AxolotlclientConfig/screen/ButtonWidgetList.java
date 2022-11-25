@@ -114,7 +114,6 @@ public class ButtonWidgetList extends EntryListWidget {
 
             GlStateManager.shadeModel(7424);
             GlStateManager.enableAlphaTest();
-            //GlStateManager.disableDepthTest();
             GlStateManager.popMatrix();
             GlStateManager.disableBlend();
         }
@@ -324,34 +323,6 @@ public class ButtonWidgetList extends EntryListWidget {
                 ((OptionWidget) button).mouseClicked(mouseX, mouseY, mB);
                 AxolotlClientConfigManager.saveCurrentConfig();
             }
-            /*if (button instanceof OptionSliderWidget){
-                button.isMouseOver(client, mouseX, mouseY);
-                AxolotlClientConfigManager.saveCurrentConfig();
-            } else if (button instanceof CategoryWidget) {
-                ((CategoryWidget) button).mouseClicked(mouseX, mouseY);
-
-            } else if (button instanceof EnumOptionWidget) {
-                button.playDownSound(client.getSoundManager());
-                ((EnumOptionWidget) button).mouseClicked(mB);
-                AxolotlClientConfigManager.saveCurrentConfig();
-
-            } else if (button instanceof StringOptionWidget) {
-                ((StringOptionWidget) button).textField.mouseClicked(mouseX, mouseY, 0);
-                AxolotlClientConfigManager.saveCurrentConfig();
-
-            } else if (button instanceof BooleanWidget) {
-                button.playDownSound(client.getSoundManager());
-                ((BooleanWidget) button).mouseClicked(mouseX, mouseY, mB);
-                AxolotlClientConfigManager.saveCurrentConfig();
-
-            } else if (button instanceof ColorOptionWidget) {
-                ((ColorOptionWidget) button).mouseClicked(mouseX, mouseY);
-                AxolotlClientConfigManager.saveCurrentConfig();
-
-            } else if (button instanceof GenericOptionWidget){
-                button.playDownSound(client.getSoundManager());
-                ((GenericOptionWidget) button).onClick(mouseX, mouseY);
-            }*/
         }
 
         public void mouseReleased(int index, int mouseX, int mouseY, int button, int x, int y) {
