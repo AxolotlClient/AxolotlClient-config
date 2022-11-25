@@ -3,14 +3,13 @@ package io.github.axolotlclient.AxolotlclientConfig.screen.widgets;
 import com.mojang.blaze3d.platform.GlStateManager;
 import io.github.axolotlclient.AxolotlclientConfig.AxolotlClientConfigConfig;
 import io.github.axolotlclient.AxolotlclientConfig.options.BooleanOption;
-import io.github.axolotlclient.AxolotlclientConfig.screen.OptionsScreenBuilder;
 import io.github.axolotlclient.AxolotlclientConfig.options.OptionCategory;
+import io.github.axolotlclient.AxolotlclientConfig.screen.OptionsScreenBuilder;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.gui.widget.ButtonWidget;
 import org.jetbrains.annotations.NotNull;
 
-public class CategoryWidget extends ButtonWidget {
+public class CategoryWidget extends OptionWidget {
 
     public OptionCategory category;
 
@@ -32,11 +31,6 @@ public class CategoryWidget extends ButtonWidget {
 
     @Override
     public boolean isMouseOver(MinecraftClient client, int mouseX, int mouseY) {
-        if(MinecraftClient.getInstance().currentScreen instanceof OptionsScreenBuilder &&
-                ((OptionsScreenBuilder) MinecraftClient.getInstance().currentScreen).isPickerOpen()){
-            this.hovered = false;
-            return false;
-        }
 
         if(enabledButton!=null && enabledButton.isMouseOver(client, mouseX, mouseY) ) {
             this.hovered = false;
@@ -75,8 +69,7 @@ public class CategoryWidget extends ButtonWidget {
         }
     }
 
-    public void mouseClicked(int mouseX, int mouseY){
-        playDownSound(MinecraftClient.getInstance().getSoundManager());
+    public void mouseClicked(int mouseX, int mouseY, int button){
         if(enabledButton!=null &&
                 enabledButton.isHovered()) {
             enabledButton.mouseClicked(mouseX, mouseY, 0);

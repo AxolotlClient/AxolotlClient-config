@@ -201,16 +201,18 @@ public class OptionsScreenBuilder extends Screen {
 
     @Override
     protected void keyPressed(char character, int code) {
-        super.keyPressed(character, code);
         if(!isPickerOpen()) {
             if(searchWidget.isFocused()){
                 searchWidget.keyPressed(character, code);
                 return;
             }
-            this.list.keyPressed(character, code);
+            if(this.list.keyPressed(character, code)){
+                return;
+            }
         } else {
             picker.keyPressed(character, code);
         }
+        super.keyPressed(character, code);
     }
 
     @Override

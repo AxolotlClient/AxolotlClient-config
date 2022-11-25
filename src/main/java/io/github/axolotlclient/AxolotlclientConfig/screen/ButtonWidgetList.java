@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
 public class ButtonWidgetList extends EntryListWidget {
@@ -242,34 +243,29 @@ public class ButtonWidgetList extends EntryListWidget {
         return entries.size();
     }
 
-    public void keyPressed(char c, int code){
+    public boolean keyPressed(char c, int code){
+        AtomicBoolean bl = new AtomicBoolean(false);
         entries.forEach(pair -> {
-            if(pair.left instanceof StringOptionWidget && ((StringOptionWidget) pair.left).textField.isFocused()){
-                ((StringOptionWidget) pair.left).keyPressed(c, code);
-            } else if(pair.right instanceof StringOptionWidget && ((StringOptionWidget) pair.right).textField.isFocused()){
-                ((StringOptionWidget) pair.right).keyPressed(c, code);
-            }
-
-            if(pair.left instanceof ColorOptionWidget) {
-                ((ColorOptionWidget) pair.left).keyPressed(c, code);
+            if(pair instanceof OptionEntry){
+                if(pair.left instanceof OptionWidget){
+                    bl.set(((OptionWidget) pair.left).keyPressed(c, code) || bl.get());
+                }
             }
         });
+        return bl.get();
     }
 
     @Override
     public boolean mouseClicked(int mouseX, int mouseY, int button) {
-        boolean bl = super.mouseClicked(mouseX, mouseY, button);
         entries.forEach(pair -> {
-            if(pair.left instanceof StringOptionWidget && ((StringOptionWidget) pair.left).textField.isFocused()){
-                ((StringOptionWidget) pair.left).textField.mouseClicked(mouseX, mouseY, button);
-            }
-            if(pair.left instanceof ColorOptionWidget){
-                if(((ColorOptionWidget) pair.left).textField.isFocused()) {
-                    ((ColorOptionWidget) pair.left).textField.mouseClicked(mouseX, mouseY, button);
+            if(pair instanceof OptionEntry){
+                if(pair.left instanceof OptionWidget){
+                    ((OptionWidget) pair.left).unfocus();
                 }
             }
         });
-        return bl;
+
+        return super.mouseClicked(mouseX, mouseY, button);
     }
 
     @Environment(EnvType.CLIENT)
@@ -323,7 +319,12 @@ public class ButtonWidgetList extends EntryListWidget {
         }
 
         protected void onClick(ButtonWidget button, int mouseX, int mouseY, int mB){
-            if (button instanceof OptionSliderWidget){
+            if(button instanceof OptionWidget){
+                button.playDownSound(client.getSoundManager());
+                ((OptionWidget) button).mouseClicked(mouseX, mouseY, mB);
+                AxolotlClientConfigManager.saveCurrentConfig();
+            }
+            /*if (button instanceof OptionSliderWidget){
                 button.isMouseOver(client, mouseX, mouseY);
                 AxolotlClientConfigManager.saveCurrentConfig();
             } else if (button instanceof CategoryWidget) {
@@ -350,7 +351,7 @@ public class ButtonWidgetList extends EntryListWidget {
             } else if (button instanceof GenericOptionWidget){
                 button.playDownSound(client.getSoundManager());
                 ((GenericOptionWidget) button).onClick(mouseX, mouseY);
-            }
+            }*/
         }
 
         public void mouseReleased(int index, int mouseX, int mouseY, int button, int x, int y) {

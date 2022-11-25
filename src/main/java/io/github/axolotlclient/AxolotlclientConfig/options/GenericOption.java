@@ -10,11 +10,26 @@ import org.lwjgl.input.Mouse;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GenericOption extends OptionBase<GenericOption.OnClick> {
+public class GenericOption extends NoSaveOption<GenericOption.OnClick> {
     private final String label;
 
-    public GenericOption(String name, String label, OnClick onClick) {
-        super(name, onClick);
+    public GenericOption(String name, String label, OnClick def) {
+        super(name, def);
+        this.label = label;
+    }
+
+    public GenericOption(String name, String label, ChangedListener<OnClick> onChange, OnClick def) {
+        super(name, onChange, def);
+        this.label = label;
+    }
+
+    public GenericOption(String name, String label, String tooltipKeyPrefix, OnClick def) {
+        super(name, tooltipKeyPrefix, def);
+        this.label = label;
+    }
+
+    public GenericOption(String name, String label, String tooltipKeyPrefix, ChangedListener<OnClick> onChange, OnClick def) {
+        super(name, tooltipKeyPrefix, onChange, def);
         this.label = label;
     }
 
@@ -25,16 +40,6 @@ public class GenericOption extends OptionBase<GenericOption.OnClick> {
     @Override
     public OnClick get() {
         return super.getDefault();
-    }
-
-    @Override
-    public void setValueFromJsonElement(JsonElement element) {
-
-    }
-
-    @Override
-    public JsonElement getJson() {
-        return new JsonPrimitive("");
     }
 
     @Override

@@ -1,17 +1,19 @@
 package io.github.axolotlclient.AxolotlclientConfig.screen.widgets;
 
-import io.github.axolotlclient.AxolotlclientConfig.options.EnumOption;
 import io.github.axolotlclient.AxolotlclientConfig.screen.OptionsScreenBuilder;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.resource.language.I18n;
+import net.minecraft.client.gui.widget.ButtonWidget;
 
-public class EnumOptionWidget extends OptionWidget {
-
-    private final EnumOption option;
-    public EnumOptionWidget(int id, int x, int y, EnumOption option) {
-        super(id, x, y, 150, 20, I18n.translate(option.get()));
-        this.option=option;
+public abstract class OptionWidget extends ButtonWidget {
+    public OptionWidget(int id, int x, int y, String message) {
+        super(id, x, y, message);
     }
+
+    public OptionWidget(int id, int x, int y, int width, int height, String message) {
+        super(id, x, y, width, height, message);
+    }
+
+    protected boolean focused;
 
     @Override
     public boolean isMouseOver(MinecraftClient client, int mouseX, int mouseY) {
@@ -30,19 +32,21 @@ public class EnumOptionWidget extends OptionWidget {
         return true;
     }
 
-    @Override
-    protected int getYImage(boolean isHovered) {
-        if(canHover()) {
-            return super.getYImage(isHovered);
-        }
-        return 1;
+    public abstract void mouseClicked(int mouseX, int mouseY, int button);
+
+    public boolean keyPressed(char character, int code){
+        return false;
     }
 
-    public void mouseClicked(int mouseX, int mouseY, int button){
-        if(button==1) {
-            this.message = I18n.translate(option.last());
-        } else {
-            this.message = I18n.translate(option.next());
-        }
+    public void setFocused(boolean focus){
+        focused = focus;
+    }
+
+    public boolean getFocused(){
+        return focused;
+    }
+
+    public void unfocus(){
+        setFocused(false);
     }
 }

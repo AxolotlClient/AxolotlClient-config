@@ -4,10 +4,9 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import io.github.axolotlclient.AxolotlclientConfig.options.StringOption;
 import io.github.axolotlclient.AxolotlclientConfig.screen.OptionsScreenBuilder;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 
-public class StringOptionWidget extends ButtonWidget {
+public class StringOptionWidget extends OptionWidget {
 
     public TextFieldWidget textField;
 
@@ -44,9 +43,13 @@ public class StringOptionWidget extends ButtonWidget {
         }
     }
     
-    public void keyPressed(char c, int code){
-        this.textField.keyPressed(c, code);
-        this.option.set(textField.getText());
+    public boolean keyPressed(char c, int code){
+        if(textField.isFocused()) {
+            this.textField.keyPressed(c, code);
+            this.option.set(textField.getText());
+            return true;
+        }
+        return false;
     }
 
     @Override
@@ -57,5 +60,15 @@ public class StringOptionWidget extends ButtonWidget {
             return false;
         }
         return super.isMouseOver(client, mouseX, mouseY);
+    }
+
+    @Override
+    public void mouseClicked(int mouseX, int mouseY, int button) {
+        textField.mouseClicked(mouseX, mouseY, button);
+    }
+
+    @Override
+    public void unfocus() {
+        textField.mouseClicked(0, 0, 0);
     }
 }

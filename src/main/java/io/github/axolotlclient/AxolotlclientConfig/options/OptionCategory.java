@@ -88,8 +88,6 @@ public class OptionCategory implements Tooltippable, WidgetSupplier {
                     } else {
                         o.onCommandExec(new String[]{});
                     }
-
-                    AxolotlClientConfigManager.saveCurrentConfig();
                 }
             }
         } else {

@@ -7,6 +7,8 @@ import io.github.prospector.modmenu.api.ModMenuApi;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.SettingsScreen;
+import net.minecraft.client.options.KeyBinding;
+import org.lwjgl.input.Keyboard;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -36,7 +38,9 @@ public class ModMenuScreens implements ModMenuApi {
             sub.add(new BooleanOption("Example Toggle", true),
                     new ColorOption("Example Color Option", Color.parse("#FF550055")),
                     new StringOption("Example String Option", "Example §bString"),
-                    new BooleanOption("Very_Very_Very_Long_Snake_Case_Named_Option", false));
+                    new BooleanOption("Very_Very_Very_Long_Snake_Case_Named_Option", false),
+                    new KeyBindOption("Example KeyBinding Option", new KeyBinding("exampleKey", Keyboard.KEY_SYSRQ, "example.category")),
+                    new KeyBindOption("Example Conflicting KeyBinding Option", new KeyBinding("exampleKey", Keyboard.KEY_SYSRQ, "example.category")));
             example.addSubCategory(sub);
         }
     }

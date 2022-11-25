@@ -7,13 +7,12 @@ import io.github.axolotlclient.AxolotlclientConfig.options.IntegerOption;
 import io.github.axolotlclient.AxolotlclientConfig.options.NumericOption;
 import io.github.axolotlclient.AxolotlclientConfig.screen.OptionsScreenBuilder;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.util.math.MathHelper;
 import org.jetbrains.annotations.NotNull;
 
 import java.text.DecimalFormat;
 
-public class OptionSliderWidget<T extends NumericOption<N>, N extends Number> extends ButtonWidget {
+public class OptionSliderWidget<T extends NumericOption<N>, N extends Number> extends OptionWidget {
     private final DecimalFormat format = new DecimalFormat("##.#");
     private final DecimalFormat intFormat = new DecimalFormat("##");
 
@@ -56,12 +55,6 @@ public class OptionSliderWidget<T extends NumericOption<N>, N extends Number> ex
     public int getSliderValueAsInt() {
         intFormat.applyLocalizedPattern("##");
         return Integer.parseInt(intFormat.format(this.min.doubleValue() + (this.max.doubleValue() - this.min.doubleValue()) * this.value));
-    }
-
-    public Double getValue(){
-        format.applyLocalizedPattern("###.##");
-        double value = this.min.doubleValue() + (this.max.doubleValue() - this.min.doubleValue()) * this.value;
-        return Double.parseDouble(format.format(value));
     }
 
     protected @NotNull String getMessage() {
@@ -108,6 +101,11 @@ public class OptionSliderWidget<T extends NumericOption<N>, N extends Number> ex
             return false;
         }
         return true;
+    }
+
+    @Override
+    public void mouseClicked(int mouseX, int mouseY, int button) {
+        isMouseOver(MinecraftClient.getInstance(), mouseX, mouseY);
     }
 
     @SuppressWarnings("unchecked")

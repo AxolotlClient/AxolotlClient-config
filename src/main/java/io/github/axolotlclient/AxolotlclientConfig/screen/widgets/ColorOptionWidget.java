@@ -12,7 +12,7 @@ import net.minecraft.util.Identifier;
 
 import java.util.Objects;
 
-public class ColorOptionWidget extends ButtonWidget {
+public class ColorOptionWidget extends OptionWidget {
 
     private final ColorOption option;
 
@@ -69,7 +69,7 @@ public class ColorOptionWidget extends ButtonWidget {
         return super.isMouseOver(client, mouseX, mouseY);
     }
 
-    public void mouseClicked(int mouseX, int mouseY){
+    public void mouseClicked(int mouseX, int mouseY, int button){
         if(openPicker.isMouseOver(MinecraftClient.getInstance(), mouseX, mouseY)){
 
             if(MinecraftClient.getInstance().currentScreen instanceof OptionsScreenBuilder){
@@ -95,10 +95,18 @@ public class ColorOptionWidget extends ButtonWidget {
         }
     }
 
-    public void keyPressed(char c, int code){
+    public boolean keyPressed(char c, int code){
         if(textField.isFocused()) {
             textField.keyPressed(c, code);
             option.set(Color.parse(textField.getText()));
+            return true;
         }
+        return false;
+    }
+
+    @Override
+    public void unfocus() {
+        super.unfocus();
+        textField.setFocused(false);
     }
 }
