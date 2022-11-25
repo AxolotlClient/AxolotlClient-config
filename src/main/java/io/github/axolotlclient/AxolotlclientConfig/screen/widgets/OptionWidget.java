@@ -5,9 +5,11 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.widget.ButtonWidget;
 
 /**
- * ButtonWidget's in this Minecraft version do not usually handle interactions themselves.
+ * ButtonWidgets in this Minecraft version do not usually handle interactions themselves.
  * This class is here to change that.
- * Therefore, all Widgets used in with this library should extend this class.
+ * Therefore, all Widgets used with this library should extend this class.
+ * <p>
+ *     Other Widgets will still work, but will have no way to interact with.
  */
 
 public class OptionWidget extends ButtonWidget {
