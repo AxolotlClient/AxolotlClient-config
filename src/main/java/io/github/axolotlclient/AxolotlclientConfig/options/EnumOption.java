@@ -21,16 +21,20 @@ public class EnumOption extends OptionBase<String> {
             l.add(v.toString());
         }
         values = l.toArray(new String[0]);
+
+        setDefaults();
     }
 
     public EnumOption(String name, String[] e, String def) {
         super(name, def);
         values = e;
+        setDefaults();
     }
 
     public EnumOption(String name, String[] e, ChangedListener<String> onChange, String def) {
         super(name, onChange, def);
         values = e;
+        setDefaults();
     }
 
     @Override
@@ -50,6 +54,7 @@ public class EnumOption extends OptionBase<String> {
             String v = values[i];
             if(Objects.equals(v, value)){
                 this.i=i;
+                changeCallback.onChanged(get());
                 break;
             }
         }

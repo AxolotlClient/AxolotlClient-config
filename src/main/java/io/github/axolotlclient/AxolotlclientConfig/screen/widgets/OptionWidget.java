@@ -4,7 +4,7 @@ import io.github.axolotlclient.AxolotlclientConfig.screen.OptionsScreenBuilder;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.widget.ButtonWidget;
 
-public abstract class OptionWidget extends ButtonWidget {
+public class OptionWidget extends ButtonWidget {
     public OptionWidget(int id, int x, int y, String message) {
         super(id, x, y, message);
     }
@@ -32,7 +32,9 @@ public abstract class OptionWidget extends ButtonWidget {
         return true;
     }
 
-    public abstract void mouseClicked(int mouseX, int mouseY, int button);
+    public void mouseClicked(int mouseX, int mouseY, int button){
+
+    }
 
     public boolean keyPressed(char character, int code){
         return false;

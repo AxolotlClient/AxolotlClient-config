@@ -9,16 +9,13 @@ public abstract class NoSaveOption<T> extends OptionBase<T> {
         super(name, def);
     }
 
-    public NoSaveOption(String name, ChangedListener<T> onChange, T def) {
-        super(name, onChange, def);
-    }
-
     public NoSaveOption(String name, String tooltipKeyPrefix, T def) {
         super(name, tooltipKeyPrefix, def);
     }
 
-    public NoSaveOption(String name, String tooltipKeyPrefix, ChangedListener<T> onChange, T def) {
-        super(name, tooltipKeyPrefix, onChange, def);
+    @Override
+    public T get() {
+        return super.getDefault();
     }
 
     @Override

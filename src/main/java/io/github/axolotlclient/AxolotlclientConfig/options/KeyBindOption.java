@@ -2,11 +2,18 @@ package io.github.axolotlclient.AxolotlclientConfig.options;
 
 import io.github.axolotlclient.AxolotlclientConfig.screen.widgets.KeyBindWidget;
 import io.github.axolotlclient.AxolotlclientConfig.util.clientCommands.CommandResponse;
+import net.legacyfabric.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.widget.ButtonWidget;
+import net.minecraft.client.options.GameOptions;
 import net.minecraft.client.options.KeyBinding;
+import net.minecraft.util.Formatting;
+import org.lwjgl.input.Keyboard;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 
 public class KeyBindOption extends NoSaveOption<KeyBinding> {
 
@@ -16,29 +23,47 @@ public class KeyBindOption extends NoSaveOption<KeyBinding> {
         return bindings;
     }
 
-    public KeyBindOption(String name, KeyBinding def) {
+    private final KeybindListener listener;
+
+    public KeyBindOption(String name,  KeyBinding def, KeybindListener onPress) {
         super(name, def);
-        bindings.add(def);
+        registerBinding();
+        listener = onPress;
     }
 
-    public KeyBindOption(String name, ChangedListener<KeyBinding> onChange, KeyBinding def) {
-        super(name, onChange, def);
-        bindings.add(def);
-    }
-
-    public KeyBindOption(String name, String tooltipKeyPrefix, KeyBinding def) {
+    public KeyBindOption(String name, String tooltipKeyPrefix, KeyBinding def, KeybindListener onPress) {
         super(name, tooltipKeyPrefix, def);
-        bindings.add(def);
+        registerBinding();
+        listener = onPress;
     }
 
-    public KeyBindOption(String name, String tooltipKeyPrefix, ChangedListener<KeyBinding> onChange, KeyBinding def) {
-        super(name, tooltipKeyPrefix, onChange, def);
-        bindings.add(def);
+    private void registerBinding(){
+        bindings.add(get());
+        ClientTickEvents.END_CLIENT_TICK.register((client)->{
+            if(get().wasPressed()){
+                listener.onPress(get());
+            }
+        });
     }
 
     @Override
     protected CommandResponse onCommandExecution(String[] args) {
-        return null;
+        System.out.println(Arrays.toString(args)+" Length: "+args.length);
+        if(args.length > 0){
+            String response = "";
+            if(args.length == 1){
+                int key = Keyboard.getKeyIndex(args[0].toUpperCase(Locale.ROOT));
+                if(key != Keyboard.KEY_NONE || args[0].equalsIgnoreCase("none")){
+                    MinecraftClient.getInstance().options.setKeyBindingCode(get(), key);
+                    KeyBinding.updateKeysByCode();
+                    return new CommandResponse(true, getTranslatedName() + " is now bound to "+ GameOptions.getFormattedNameForKeyCode(get().getCode()));
+                }
+                response += "§5Are you sure you entered a valid key?\n";
+            }
+            response += "Syntax: <option> <key name>\nThe Key names are used as defined by LWJGL.";
+            return new CommandResponse(false, response);
+        }
+        return new CommandResponse(true, getTranslatedName() + " is currently bound to "+ GameOptions.getFormattedNameForKeyCode(get().getCode()));
     }
 
     @Override
@@ -49,5 +74,9 @@ public class KeyBindOption extends NoSaveOption<KeyBinding> {
     @Override
     public ButtonWidget getWidget(int x, int y, int width, int height) {
         return new KeyBindWidget(x, y, width, height, this);
+    }
+
+    public interface KeybindListener {
+        void onPress(KeyBinding binding);
     }
 }

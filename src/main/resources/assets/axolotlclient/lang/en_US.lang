@@ -30,3 +30,20 @@ green=Green
 blue=Blue
 
 back=Back
+
+## Example Screen Translations
+example_config=Example Config
+example_toggle=Example Toggle
+example_toggle_disabled=Disabled Example Toggle
+example_reason=Example Reason
+example_slider=Example Slider
+example_enum_option=Example Enum Option
+example_enum_option_1=Option 1
+example_enum_option_2=Option 2
+example_enum_option_3=Option 3
+example_color=Example Color Option
+example_string=Example String Option
+example_generic=Example Generic Option
+example_sub=Example Sub Category
+example_keybind=Example KeyBinding Option
+example_keybind_conflict=Example Conflicting KeyBinding Option

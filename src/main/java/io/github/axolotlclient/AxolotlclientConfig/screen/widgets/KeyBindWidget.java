@@ -22,18 +22,8 @@ public class KeyBindWidget extends OptionWidget {
     public KeyBindWidget(int x, int y, int width, int height, KeyBindOption option) {
         super(0, x, y, width, height, "");
         this.option = option;
-        keyButton = new OptionWidget(0, x, y, width * 2 / 3, 20, GameOptions.getFormattedNameForKeyCode(option.get().getCode())) {
-            @Override
-            public void mouseClicked(int mouseX, int mouseY, int button) {
-
-            }
-        };
-        resetButton = new OptionWidget(0, x + width * 2 / 3, y, width / 3, 20, I18n.translate("controls.reset")) {
-            @Override
-            public void mouseClicked(int mouseX, int mouseY, int button) {
-
-            }
-        };
+        keyButton = new OptionWidget(0, x, y, width * 2 / 3, 20, GameOptions.getFormattedNameForKeyCode(option.get().getCode())) ;
+        resetButton = new OptionWidget(0, x + width * 2 / 3, y, width / 3, 20, I18n.translate("controls.reset"));
     }
 
     private void updateMessage(){

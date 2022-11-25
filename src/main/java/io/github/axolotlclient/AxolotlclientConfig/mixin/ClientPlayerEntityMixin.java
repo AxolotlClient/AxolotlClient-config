@@ -8,6 +8,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import java.util.Arrays;
+
 @Mixin(ClientPlayerEntity.class)
 public abstract class ClientPlayerEntityMixin {
 
@@ -15,11 +17,11 @@ public abstract class ClientPlayerEntityMixin {
     public void clientCommands(String string, CallbackInfo ci){
         if(string.startsWith("/")) {
             String commandName = string.substring(1);
-            ClientCommands.getInstance().getCommands().forEach((str, command) -> {
-
+            ClientCommands.getInstance().getCommands().values().forEach((command) -> {
                 if(command.getCommandName().equals(commandName.split(" ")[0])){
-                    String[] args = ConfigUtils.copyArrayWithoutFirstEntry(commandName.split(" "));
-                    command.execute(args.length > 1? args:new String[]{""});
+                    String[] args = commandName.replace(command.getCommandName()+" ", "").split(" ");
+                    System.out.println("String: "+ commandName +" Args: "+ Arrays.toString(args));
+                    command.execute(args);
                     ci.cancel();
                 }
             });

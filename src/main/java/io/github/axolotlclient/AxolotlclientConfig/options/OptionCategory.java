@@ -1,6 +1,5 @@
 package io.github.axolotlclient.AxolotlclientConfig.options;
 
-import io.github.axolotlclient.AxolotlclientConfig.AxolotlClientConfigManager;
 import io.github.axolotlclient.AxolotlclientConfig.screen.widgets.CategoryWidget;
 import io.github.axolotlclient.AxolotlclientConfig.util.ConfigUtils;
 import net.minecraft.client.gui.widget.ButtonWidget;
@@ -76,15 +75,11 @@ public class OptionCategory implements Tooltippable, WidgetSupplier {
     }
 
     private void onCommandExec(String[] args) {
-        if(args.length>0){
+        if(args.length>0 && !args[0].equals(getName())){
             for(Option<?> o:getOptions()){
                 if(o.getName().equals(args[0])){
-                    StringBuilder newArgs= new StringBuilder();
                     if(args.length>1) {
-                        for (int i = 1; i < args.length; i++) {
-                            newArgs.append(args[i]);
-                        }
-                        o.onCommandExec(new String[]{newArgs.toString()});
+                        o.onCommandExec(ConfigUtils.copyArrayWithoutFirstEntry(args));
                     } else {
                         o.onCommandExec(new String[]{});
                     }
