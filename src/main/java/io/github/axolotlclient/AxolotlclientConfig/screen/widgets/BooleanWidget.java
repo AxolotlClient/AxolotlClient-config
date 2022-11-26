@@ -12,7 +12,7 @@ import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 
-public class BooleanWidget extends ButtonWidget {
+public class BooleanWidget extends OptionWidget {
 
     public final BooleanOption option;
 
@@ -24,24 +24,6 @@ public class BooleanWidget extends ButtonWidget {
 
     public Text getMessage(){
         return option.get()? Text.translatable("options."+"on"): Text.translatable ("options."+"off");
-    }
-
-    @Override
-    public boolean isMouseOver(double mouseX, double mouseY) {
-        if(canHover()) {
-            return super.isMouseOver(mouseX, mouseY);
-        }
-        return false;
-    }
-
-    protected boolean canHover(){
-        if(MinecraftClient.getInstance().currentScreen instanceof OptionsScreenBuilder &&
-            ((OptionsScreenBuilder) MinecraftClient.getInstance().currentScreen).isPickerOpen()){
-            this.hovered = false;
-            this.setFocused(false);
-            return false;
-        }
-        return true;
     }
 
 	@Override

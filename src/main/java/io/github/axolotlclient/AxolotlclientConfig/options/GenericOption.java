@@ -7,7 +7,7 @@ import io.github.axolotlclient.AxolotlclientConfig.util.CommandResponse;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.widget.ClickableWidget;
 
-public class GenericOption extends OptionBase<GenericOption.OnClick> {
+public class GenericOption extends NoSaveOption<GenericOption.OnClick> {
     private final String label;
 
     public GenericOption(String name, String label, OnClick onClick) {
@@ -17,21 +17,6 @@ public class GenericOption extends OptionBase<GenericOption.OnClick> {
 
     public String getLabel(){
         return label;
-    }
-
-    @Override
-    public OnClick get() {
-        return super.getDefault();
-    }
-
-    @Override
-    public void setValueFromJsonElement(JsonElement element) {
-
-    }
-
-    @Override
-    public JsonElement getJson() {
-        return new JsonPrimitive("");
     }
 
     @Override

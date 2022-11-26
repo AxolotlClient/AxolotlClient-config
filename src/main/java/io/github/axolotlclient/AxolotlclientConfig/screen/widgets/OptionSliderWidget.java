@@ -6,9 +6,7 @@ import io.github.axolotlclient.AxolotlclientConfig.options.DoubleOption;
 import io.github.axolotlclient.AxolotlclientConfig.options.FloatOption;
 import io.github.axolotlclient.AxolotlclientConfig.options.IntegerOption;
 import io.github.axolotlclient.AxolotlclientConfig.options.NumericOption;
-import io.github.axolotlclient.AxolotlclientConfig.screen.OptionsScreenBuilder;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
@@ -16,7 +14,7 @@ import net.minecraft.util.math.MathHelper;
 
 import java.text.DecimalFormat;
 
-public class OptionSliderWidget<T extends NumericOption<N>, N extends Number> extends ButtonWidget {
+public class OptionSliderWidget<T extends NumericOption<N>, N extends Number> extends OptionWidget {
     private final DecimalFormat format = new DecimalFormat("##.#");
     private final DecimalFormat intFormat = new DecimalFormat("##");
 
@@ -113,16 +111,12 @@ public class OptionSliderWidget<T extends NumericOption<N>, N extends Number> ex
         }
     }
 
-    protected boolean canHover(){
-        if(MinecraftClient.getInstance().currentScreen instanceof OptionsScreenBuilder &&
-                ((OptionsScreenBuilder) MinecraftClient.getInstance().currentScreen).isPickerOpen()){
-            this.hovered = false;
-            this.setFocused(false);
-            return false;
-        }
-        return true;
+    @Override
+    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+        return isMouseOver(mouseX, mouseY);
     }
 
+    @Override
     @SuppressWarnings("unchecked")
     public boolean isMouseOver(double mouseX, double mouseY) {
         if(canHover()) {
@@ -147,6 +141,7 @@ public class OptionSliderWidget<T extends NumericOption<N>, N extends Number> ex
         return option;
     }
 
+    @Override
     public boolean mouseReleased(double mouseX, double mouseY, int button) {
         this.dragging = false;
         return super.mouseReleased(mouseX, mouseY, button);

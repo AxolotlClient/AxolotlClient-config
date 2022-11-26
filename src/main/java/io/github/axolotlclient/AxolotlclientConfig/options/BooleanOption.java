@@ -9,8 +9,6 @@ import net.minecraft.client.resource.language.I18n;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Locale;
-
 public class BooleanOption extends OptionBase<Boolean> {
 
     private boolean forceOff = false;
@@ -85,6 +83,9 @@ public class BooleanOption extends OptionBase<Boolean> {
     @Override
     protected CommandResponse onCommandExecution(String arg) {
         if(arg.length()>0){
+            if(getForceDisabled()){
+                return new CommandResponse(false, "Could not set "+getName()+" to "+arg+".\nReason: "+disableReason);
+            }
             switch (arg) {
                 case "toggle" -> {
                     toggle();

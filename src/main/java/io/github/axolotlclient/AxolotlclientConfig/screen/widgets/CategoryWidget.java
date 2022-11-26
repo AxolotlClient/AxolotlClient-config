@@ -11,7 +11,7 @@ import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 
-public class CategoryWidget extends ButtonWidget {
+public class CategoryWidget extends OptionWidget {
 
     public OptionCategory category;
 
@@ -34,11 +34,6 @@ public class CategoryWidget extends ButtonWidget {
 
 	@Override
 	public boolean isMouseOver(double mouseX, double mouseY) {
-        if(MinecraftClient.getInstance().currentScreen instanceof OptionsScreenBuilder &&
-            ((OptionsScreenBuilder) MinecraftClient.getInstance().currentScreen).isPickerOpen()){
-            this.hovered = false;
-            return false;
-        }
 
         if(enabledButton!=null && enabledButton.isMouseOver(mouseX, mouseY)) {
             this.hovered = false;

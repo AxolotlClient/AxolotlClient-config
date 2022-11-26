@@ -63,18 +63,14 @@ public class ButtonWidgetList extends ElementListWidget<ButtonWidgetList.Pair> {
 
 	@Override
 	public boolean mouseClicked(double mouseX, double mouseY, int button) {
-		boolean bl = super.mouseClicked(mouseX, mouseY, button);
         entries.forEach(pair -> {
-            if(pair.left instanceof StringOptionWidget && ((StringOptionWidget) pair.left).textField.isFocused()){
-                ((StringOptionWidget) pair.left).textField.mouseClicked(mouseX, mouseY, button);
-            }
-            if(pair.left instanceof ColorOptionWidget){
-                if(((ColorOptionWidget) pair.left).textField.isFocused()) {
-                    ((ColorOptionWidget) pair.left).textField.mouseClicked(mouseX, mouseY, button);
+            if(pair instanceof OptionEntry){
+                if(pair.left instanceof OptionWidget){
+                    ((OptionWidget) pair.left).unfocus();
                 }
             }
         });
-        return bl;
+		return super.mouseClicked(mouseX, mouseY, button);
 	}
 
     @Override
@@ -234,7 +230,7 @@ public class ButtonWidgetList extends ElementListWidget<ButtonWidgetList.Pair> {
             if(left != null){
                 setFocused(left);
             }
-			tickable = left instanceof StringOptionWidget || left instanceof ColorOptionWidget;
+			tickable = left instanceof OptionWidget;
         }
 
 	    @Override
@@ -291,35 +287,11 @@ public class ButtonWidgetList extends ElementListWidget<ButtonWidgetList.Pair> {
         }
 
         protected void onClick(ClickableWidget button, double mouseX, double mouseY, int mB){
-            if (button instanceof OptionSliderWidget){
-                button.isMouseOver(mouseX, mouseY);
-                AxolotlClientConfigManager.saveCurrentConfig();
-            } else if (button instanceof CategoryWidget) {
-                button.mouseClicked(mouseX, mouseY, mB);
 
-            } else if (button instanceof EnumOptionWidget) {
+            if(button.mouseClicked(mouseX, mouseY, mB)){
                 button.playDownSound(client.getSoundManager());
-                button.mouseClicked(mouseX, mouseY, mB);
-                AxolotlClientConfigManager.saveCurrentConfig();
-
-            } else if (button instanceof StringOptionWidget) {
-                ((StringOptionWidget) button).textField.mouseClicked(mouseX, mouseY, 0);
-                AxolotlClientConfigManager.saveCurrentConfig();
-
-            } else if (button instanceof BooleanWidget) {
-                button.playDownSound(client.getSoundManager());
-                ((BooleanWidget) button).option.toggle();
-                AxolotlClientConfigManager.saveCurrentConfig();
-
-            } else if (button instanceof ColorOptionWidget) {
-                button.mouseClicked(mouseX, mouseY, 0);
-                AxolotlClientConfigManager.saveCurrentConfig();
-
-            } else if (button instanceof GenericOptionWidget){
-                button.playDownSound(client.getSoundManager());
-                button.onClick(mouseX, mouseY);
             }
-
+            AxolotlClientConfigManager.saveCurrentConfig();
         }
 
 		@Override
@@ -470,7 +442,7 @@ public class ButtonWidgetList extends ElementListWidget<ButtonWidgetList.Pair> {
                     (option instanceof BooleanOption && ((BooleanOption) option).getForceDisabled() &&
                             mouseY>= left.y && mouseY<= left.y + 20 && mouseX>=renderX && mouseX<=left.x+left.getWidth())) {
                     renderTooltip(matrices, option, mouseX, mouseY);
-                } else if(left.isFocused()){
+                } else if (left.isFocused()) {
                     renderTooltip(matrices, option, left.x+left.getWidth()/2, left.y);
                 }
 		    }
@@ -478,6 +450,9 @@ public class ButtonWidgetList extends ElementListWidget<ButtonWidgetList.Pair> {
 
         @Override
         public List<? extends Element> children() {
+            if(left instanceof ParentElement){
+                return ((ParentElement) left).children();
+            }
             return List.of(left);
         }
 

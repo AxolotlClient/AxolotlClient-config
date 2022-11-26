@@ -74,6 +74,17 @@ public class ColorOption extends OptionBase<Color> {
     @Override
     protected CommandResponse onCommandExecution(String arg) {
         if(arg.length()>0){
+
+            if(arg.split(" ")[0].equals("chroma")){
+                String name = arg.split(" ")[1];
+                if(name.equals("true") || name.equals("on")){
+                    chroma = true;
+                } else if (name.equals("false") || name.equals("off")){
+                    chroma = false;
+                }
+                return new CommandResponse(true, "Successfully set Chroma for "+getName() + " to "+name);
+            }
+
             Color newColor = Color.parse(arg);
             if(newColor== Color.ERROR){
                 return new CommandResponse(false, "Please enter a valid Color in Hex format!");
@@ -84,7 +95,7 @@ public class ColorOption extends OptionBase<Color> {
 
         }
 
-        return new CommandResponse(true, getName() + " is currently set to '"+get()+"'.");
+        return new CommandResponse(true, getName() + " is currently set to '"+get()+"'. Chroma: "+chroma+".");
     }
 
     @Override

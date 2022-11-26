@@ -17,7 +17,7 @@ import net.minecraft.util.Identifier;
 
 import java.util.Objects;
 
-public class ColorOptionWidget extends ButtonWidget {
+public class ColorOptionWidget extends OptionWidget {
 
     private final ColorOption option;
 
@@ -27,7 +27,7 @@ public class ColorOptionWidget extends ButtonWidget {
     /** Pipette icon in KDE plasma icon theme 'BeautyLine' by Sajjad Abdollahzadeh <sajjad606@gmail.com>
      * <a href="https://store.kde.org/p/1425426">KDE Store Link</a>
      * @license GPL-3
-     **/
+     */
     protected Identifier pipette = new Identifier("axolotlclient", "textures/gui/pipette.png");
 
     public ColorOptionWidget(int x, int y, ColorOption option) {
@@ -80,23 +80,6 @@ public class ColorOptionWidget extends ButtonWidget {
 	        }
         }
 		return super.mouseClicked(mouseX, mouseY, button);
-    }
-
-    @Override
-    public boolean isMouseOver(double mouseX, double mouseY) {
-        if(canHover()) {
-            return super.isMouseOver(mouseX, mouseY);
-        }
-        return false;
-    }
-
-    protected boolean canHover(){
-        if(MinecraftClient.getInstance().currentScreen instanceof OptionsScreenBuilder &&
-            ((OptionsScreenBuilder) MinecraftClient.getInstance().currentScreen).isPickerOpen()){
-            this.hovered = false;
-            return false;
-        }
-        return true;
     }
 
     public void tick(){
@@ -154,5 +137,13 @@ public class ColorOptionWidget extends ButtonWidget {
     @Override
     protected void onFocusedChanged(boolean newFocused) {
         textField.setTextFieldFocused(newFocused);
+    }
+
+    @Override
+    public void unfocus() {
+        super.unfocus();
+        if(textField.isFocused()) {
+            textField.changeFocus(false);
+        }
     }
 }

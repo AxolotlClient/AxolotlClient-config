@@ -9,14 +9,14 @@ import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 
-public class StringOptionWidget extends TextFieldWidget {
+public class StringOptionWidget extends OptionWidget {
 
 	public final StringOption option;
 
     public TextFieldWidget textField;
 
     public StringOptionWidget(int x, int y, StringOption option){
-        super(MinecraftClient.getInstance().textRenderer, x, y, 150, 40, Text.literal(option.get()));
+        super(x, y, 150, 40, Text.literal(option.get()), buttonWidget -> {});
         textField = new TextFieldWidget(MinecraftClient.getInstance().textRenderer, x, y, 150, 20, Text.empty()){
 	        @Override
 	        public boolean mouseClicked(double mouseX, double mouseY, int button) {
@@ -62,7 +62,6 @@ public class StringOptionWidget extends TextFieldWidget {
         textField.render(matrices, mouseX, mouseY, delta);
     }
 
-	@Override
 	public void tick() {
 		if(textField.isFocused()) {
 			textField.tick();
@@ -70,9 +69,8 @@ public class StringOptionWidget extends TextFieldWidget {
 	}
 
 	@Override
-	public void setTextFieldFocused(boolean focused) {
+	public void setFocused(boolean focused) {
 		textField.setTextFieldFocused(focused);
-		super.setTextFieldFocused(focused);
 	}
 
     @Override
@@ -95,5 +93,10 @@ public class StringOptionWidget extends TextFieldWidget {
 	@Override
 	protected void onFocusedChanged(boolean newFocused) {
 		textField.setTextFieldFocused(newFocused);
+	}
+
+	@Override
+	public void unfocus() {
+		textField.mouseClicked(0, 0, 0);
 	}
 }
