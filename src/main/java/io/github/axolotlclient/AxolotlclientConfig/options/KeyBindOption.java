@@ -7,11 +7,9 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.options.GameOptions;
 import net.minecraft.client.options.KeyBinding;
-import net.minecraft.util.Formatting;
 import org.lwjgl.input.Keyboard;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
@@ -46,9 +44,11 @@ public class KeyBindOption extends NoSaveOption<KeyBinding> {
         });
     }
 
+    /*
+     * Basic command Functionality. Only Keyboard Keys are supported.
+     */
     @Override
     protected CommandResponse onCommandExecution(String[] args) {
-        System.out.println(Arrays.toString(args)+" Length: "+args.length);
         if(args.length > 0){
             String response = "";
             if(args.length == 1){

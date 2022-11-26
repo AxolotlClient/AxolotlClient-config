@@ -1,5 +1,6 @@
 package io.github.axolotlclient.AxolotlclientConfig.options;
 
+import com.google.common.collect.Lists;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
@@ -69,6 +70,17 @@ public class ColorOption extends OptionBase<Color> {
     @Override
     protected CommandResponse onCommandExecution(String[] args) {
         if(args.length>0){
+
+            if(args[0].equals("chroma")){
+                String name = args[1];
+                if(name.equals("true") || name.equals("on")){
+                    chroma = true;
+                } else if (name.equals("false") || name.equals("off")){
+                    chroma = false;
+                }
+                return new CommandResponse(true, "Successfully set Chroma for "+getName() + " to "+name);
+            }
+
             Color newColor = Color.parse(args[0]);
             if(newColor== Color.ERROR){
                 return new CommandResponse(false, "Please enter a valid Color in Hex format!");
@@ -79,12 +91,12 @@ public class ColorOption extends OptionBase<Color> {
 
         }
 
-        return new CommandResponse(true, getName() + " is currently set to '"+get()+"'.");
+        return new CommandResponse(true, getName() + " is currently set to '"+get()+"'. Chroma: "+chroma+".");
     }
 
     @Override
     public List<String> getCommandSuggestions() {
-        return Collections.singletonList("#FFFFFFFF");
+        return Lists.newArrayList("#FFFFFFFF", "chroma");
     }
 
     @Override
