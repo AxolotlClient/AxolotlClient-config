@@ -1,10 +1,9 @@
 package io.github.axolotlclient.AxolotlclientConfig.screen.widgets;
 
 import io.github.axolotlclient.AxolotlclientConfig.options.GenericOption;
-import io.github.axolotlclient.AxolotlclientConfig.screen.OptionsScreenBuilder;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 
 public class GenericOptionWidget extends OptionWidget {
@@ -33,7 +32,7 @@ public class GenericOptionWidget extends OptionWidget {
             return false;
         } else {
             this.playDownSound(MinecraftClient.getInstance().getSoundManager());
-            onClick(x+1, y+1);
+            onClick(getX() +1, getY() +1);
             return true;
         }
     }
@@ -41,4 +40,9 @@ public class GenericOptionWidget extends OptionWidget {
     public void onClick(double mouseX, double mouseY) {
         option.get().onClick((int) mouseX, (int) mouseY);
     }
+
+	@Override
+	protected MutableText getNarrationMessage() {
+		return Text.literal(option.getTranslatedName()).append(super.getNarrationMessage());
+	}
 }

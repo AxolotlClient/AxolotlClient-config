@@ -6,9 +6,9 @@ import io.github.axolotlclient.AxolotlclientConfig.options.BooleanOption;
 import io.github.axolotlclient.AxolotlclientConfig.options.OptionCategory;
 import io.github.axolotlclient.AxolotlclientConfig.screen.OptionsScreenBuilder;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 
 public class CategoryWidget extends OptionWidget {
@@ -46,10 +46,10 @@ public class CategoryWidget extends OptionWidget {
         if (this.visible) {
 	        RenderSystem.setShaderTexture(0, ClickableWidget.WIDGETS_TEXTURE);
             RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-            this.hovered = mouseX >= this.x && mouseY >= this.y && mouseX < this.x + this.width && mouseY < this.y + this.height && !(enabledButton!=null && enabledButton.isHoveredOrFocused()) || isFocused();
+            this.hovered = mouseX >= this.getX() && mouseY >= this.getY() && mouseX < this.getX() + this.width && mouseY < this.getY() + this.height && !(enabledButton!=null && enabledButton.isHoveredOrFocused()) || isFocused();
             int i = this.getYImage(this.hovered);
-            this.drawTexture(matrices, this.x, this.y, 0, 46 + i * 20, this.width / 2, this.height);
-            this.drawTexture(matrices,this.x + this.width / 2, this.y, 200 - this.width / 2, 46 + i * 20, this.width / 2, this.height);
+            this.drawTexture(matrices, this.getX(), this.getY(), 0, 46 + i * 20, this.width / 2, this.height);
+            this.drawTexture(matrices, this.getX() + this.width / 2, this.getY(), 200 - this.width / 2, 46 + i * 20, this.width / 2, this.height);
             this.renderBackground(matrices, MinecraftClient.getInstance(), mouseX, mouseY);
             int j = 14737632;
             if (!this.active) {
@@ -58,11 +58,11 @@ public class CategoryWidget extends OptionWidget {
                 j = 16777120;
             }
 
-            drawCenteredText(matrices, MinecraftClient.getInstance().textRenderer, this.getMessage(), this.x + this.width / 2 - (enabledButton!=null?enabledButton.getWidth()/2:0), this.y + (this.height - 8) / 2, j);
+            drawCenteredText(matrices, MinecraftClient.getInstance().textRenderer, this.getMessage(), this.getX() + this.width / 2 - (enabledButton!=null?enabledButton.getWidth()/2:0), this.getY() + (this.height - 8) / 2, j);
         }
 
         if(enabledButton != null){
-            enabledButton.y = y+2;
+            enabledButton.setY(getY() + 2);
             enabledButton.render(matrices, mouseX, mouseY, delta);
         }
     }
@@ -74,7 +74,7 @@ public class CategoryWidget extends OptionWidget {
                 enabledButton.isHoveredOrFocused()) {
 	        playDownSound(MinecraftClient.getInstance().getSoundManager());
             enabledButton.option.toggle();
-			return false;
+			return true;
         } else {
             if (MinecraftClient.getInstance().currentScreen != null) {
                 MinecraftClient.getInstance().setScreen(new OptionsScreenBuilder(MinecraftClient.getInstance().currentScreen, category,
@@ -97,4 +97,8 @@ public class CategoryWidget extends OptionWidget {
         }
     }
 
+	@Override
+	protected MutableText getNarrationMessage() {
+		return Text.literal(category.getTranslatedName()).append(super.getNarrationMessage());
+	}
 }

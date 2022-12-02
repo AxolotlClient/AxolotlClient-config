@@ -9,6 +9,7 @@ import io.github.axolotlclient.AxolotlclientConfig.options.NumericOption;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.MathHelper;
 
@@ -77,7 +78,7 @@ public class OptionSliderWidget<T extends NumericOption<N>, N extends Number> ex
     public void renderButton(MatrixStack matrices, int mouseX, int mouseY, float f) {
         if (this.visible) {
             if (this.dragging) {
-                this.value = (float)(mouseX - (this.x + 4)) / (float)(this.width - 8);
+                this.value = (float)(mouseX - (this.getX() + 4)) / (float)(this.width - 8);
 
                 if (this.value < 0.0F) {
                     this.value = 0.0F;
@@ -98,15 +99,15 @@ public class OptionSliderWidget<T extends NumericOption<N>, N extends Number> ex
             RenderSystem.setShaderTexture(0, ClickableWidget.WIDGETS_TEXTURE);
             RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 
-            this.drawTexture(matrices, this.x, this.y, 0, 46, this.width / 2, this.height);
-            this.drawTexture(matrices, this.x + this.width / 2, this.y, 200 - this.width / 2, 46, this.width / 2, this.height);
+            this.drawTexture(matrices, this.getX(), this.getY(), 0, 46, this.width / 2, this.height);
+            this.drawTexture(matrices, this.getX() + this.width / 2, this.getY(), 200 - this.width / 2, 46, this.width / 2, this.height);
 
-            this.drawTexture(matrices, this.x + (int)(this.value * (float)(this.width - 8)), this.y, 0, 66 + (isHoveredOrFocused() ? 20:0), 4, 20);
-            this.drawTexture(matrices, this.x + (int)(this.value * (float)(this.width - 8)) + 4, this.y, 196, 66 + (isHoveredOrFocused() ? 20:0), 4, 20);
+            this.drawTexture(matrices, this.getX() + (int)(this.value * (float)(this.width - 8)), this.getY(), 0, 66 + (isHoveredOrFocused() ? 20:0), 4, 20);
+            this.drawTexture(matrices, this.getX() + (int)(this.value * (float)(this.width - 8)) + 4, this.getY(), 196, 66 + (isHoveredOrFocused() ? 20:0), 4, 20);
 
             int j = this.active ? 16777215 : 10526880;
             drawCenteredText(
-                    matrices, MinecraftClient.getInstance().textRenderer, this.getMessage(), this.x + this.width / 2, this.y + (this.height - 8) / 2, j | MathHelper.ceil(this.alpha * 255.0F) << 24
+                    matrices, MinecraftClient.getInstance().textRenderer, this.getMessage(), this.getX() + this.width / 2, this.getY() + (this.height - 8) / 2, j | MathHelper.ceil(this.alpha * 255.0F) << 24
             );
         }
     }
@@ -122,7 +123,7 @@ public class OptionSliderWidget<T extends NumericOption<N>, N extends Number> ex
         if(canHover()) {
 
             if (super.isMouseOver(mouseX, mouseY) || dragging) {
-                this.value = (float) (mouseX - (this.x + 4)) / (float) (this.width - 8);
+                this.value = (float) (mouseX - (this.getX() + 4)) / (float) (this.width - 8);
                 this.value = MathHelper.clamp(this.value, 0.0F, 1.0F);
                 if (option instanceof FloatOption) option.set((N) (Float) getSliderValue().floatValue());
                 else if (option instanceof DoubleOption) ((DoubleOption) option).set(getSliderValue());
@@ -164,4 +165,9 @@ public class OptionSliderWidget<T extends NumericOption<N>, N extends Number> ex
             return true;
         } else return keyCode == 257 || keyCode == 32 || keyCode == 335;
     }
+
+	@Override
+	protected MutableText getNarrationMessage() {
+		return Text.literal(option.getTranslatedName()).append(super.getNarrationMessage());
+	}
 }

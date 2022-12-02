@@ -3,6 +3,7 @@ package io.github.axolotlclient.AxolotlclientConfig.screen.widgets;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.Selectable;
 import net.minecraft.client.gui.widget.ButtonWidget;
+import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 
 /**
@@ -11,18 +12,14 @@ import net.minecraft.text.Text;
 
 public class OptionWidget extends ButtonWidget implements Selectable {
 
-    public OptionWidget(int x, int y, int width, int height, Text text, PressAction pressAction) {
-        super(x, y, width, height, text, pressAction);
-    }
+	protected OptionWidget(int x, int y, int width, int height, Text message, PressAction onPress) {
+		super(x, y, width, height, message, onPress, ButtonWidget.DEFAULT_NARRATION);
+	}
 
-    public OptionWidget(int i, int j, int k, int l, Text text, PressAction pressAction, TooltipSupplier tooltipSupplier) {
-        super(i, j, k, l, text, pressAction, tooltipSupplier);
-    }
-
-    @Override
+	@Override
     public boolean isMouseOver(double mouseX, double mouseY) {
         if(canHover()) {
-            return mouseX >= this.x && mouseY >= this.y && mouseX < this.x + this.width && mouseY < this.y + this.height;
+            return mouseX >= this.getX() && mouseY >= this.getY() && mouseX < this.getX() + this.width && mouseY < this.getY() + this.height;
         }
         return false;
     }
@@ -54,4 +51,9 @@ public class OptionWidget extends ButtonWidget implements Selectable {
     public void tick(){
 
     }
+
+	@Override
+	protected MutableText getNarrationMessage() {
+		return super.getNarrationMessage();
+	}
 }

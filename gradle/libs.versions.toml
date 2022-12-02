@@ -1,0 +1,26 @@
+[versions]
+# The latest versions are available at https://lambdaurora.dev/tools/import_quilt.html
+minecraft = "1.19.3-rc1"
+quilt_mappings = "1.19.3-rc1+build.1"
+quilt_loader = "0.17.6"
+
+qsl_module = "4.0.0-alpha.4+1.19.3-rc1"
+
+modmenu = "5.0.0"
+
+[libraries]
+minecraft = { module = "com.mojang:minecraft", version.ref = "minecraft" }
+quilt_mappings = { module = "org.quiltmc:quilt-mappings", version.ref = "quilt_mappings" }
+quilt_loader = { module = "org.quiltmc:quilt-loader", version.ref = "quilt_loader" }
+
+qsl_lifecycle = { module = "org.quiltmc.qsl.core:lifecycle_events", version.ref = "qsl_module" }
+qsl_clientcommands = { module = "org.quiltmc.qsl.management:client_command", version.ref = "qsl_module" }
+
+modmenu = { module = "com.terraformersmc:modmenu", version.ref = "modmenu" }
+
+# If you have multiple similar dependencies, you can declare a dependency bundle and reference it on the build script with "libs.bundles.example".
+[bundles]
+qsl_modules = ["qsl_lifecycle", "qsl_clientcommands"]
+
+[plugins]
+quilt_loom = { id = "org.quiltmc.loom", version = "1.0.+" }

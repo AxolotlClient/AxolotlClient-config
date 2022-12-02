@@ -56,14 +56,14 @@ public class KeyBindOption extends NoSaveOption<KeyBind> {
     private void registerBinding(){
         bindings.add(get());
         ClientTickEvents.END.register((client)->{
-            if(get().wasPressed()){
+            if(get() != null && get().wasPressed()){
                 listener.onPress(get());
             }
         });
     }
 
     /*
-     * Basic command Functionality. Only Keyboard Keys are supported.
+     * Basic command Functionality. Only Keyboard Keys are supported to be set this way.
      */
 
     @Override

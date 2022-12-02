@@ -7,6 +7,7 @@ import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.gui.screen.narration.NarrationPart;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 
 public class StringOptionWidget extends OptionWidget {
@@ -57,8 +58,8 @@ public class StringOptionWidget extends OptionWidget {
 
 	@Override
 	public void renderButton(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-        textField.y = y;
-        textField.x = x;
+        textField.setY(getY());
+        textField.setX(getX());
         textField.render(matrices, mouseX, mouseY, delta);
     }
 
@@ -73,7 +74,12 @@ public class StringOptionWidget extends OptionWidget {
 		textField.setTextFieldFocused(focused);
 	}
 
-    @Override
+	@Override
+	public boolean mouseClicked(double mouseX, double mouseY, int button) {
+		return textField.mouseClicked(mouseX, mouseY, button);
+	}
+
+	@Override
     public boolean isMouseOver(double mouseX, double mouseY) {
         if(MinecraftClient.getInstance().currentScreen instanceof OptionsScreenBuilder &&
             ((OptionsScreenBuilder) MinecraftClient.getInstance().currentScreen).isPickerOpen()){
@@ -85,8 +91,13 @@ public class StringOptionWidget extends OptionWidget {
     }
 
 	@Override
-	public void appendNarrations(NarrationMessageBuilder builder) {
-		super.appendNarrations(builder);
+	protected MutableText getNarrationMessage() {
+		return Text.literal(option.getTranslatedName()).append(super.getNarrationMessage());
+	}
+
+	@Override
+	public void updateNarration(NarrationMessageBuilder builder) {
+		super.updateNarration(builder);
 		builder.put(NarrationPart.TITLE, Text.translatable("narration.value").getString()+option.get());
 	}
 

@@ -12,6 +12,7 @@ import net.minecraft.client.gui.screen.narration.NarrationPart;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
@@ -36,14 +37,14 @@ public class ColorOptionWidget extends OptionWidget {
         textField = new TextFieldWidget(MinecraftClient.getInstance().textRenderer, x, y, 128, 19, getMessage());
         textField.write(option.get().toString());
 
-        openPicker = new ButtonWidget(x+128, y, 21, 21, Text.of(""), buttonWidget -> {}){
+        openPicker = new ButtonWidget(x+128, y, 21, 21, Text.of(""), buttonWidget -> {}, DEFAULT_NARRATION){
 	        @Override
 	        public void renderButton(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-                DrawUtil.fill(matrices, x, y, x+width, y+height, option.get().getAsInt());
-                DrawUtil.outlineRect(matrices, x, y, width, height, ColorOptionWidget.this.isFocused() ? -1 :-6250336 );
+                DrawUtil.fill(matrices, getX(), getY(), getX()+getWidth(), getY()+getHeight(), option.get().getAsInt());
+                DrawUtil.outlineRect(matrices, getX(), getY(), getWidth(), getHeight(), ColorOptionWidget.this.isFocused() ? -1 :-6250336 );
 
                 RenderSystem.setShaderTexture(0, pipette);
-                drawTexture(matrices, x, y, 0, 0, 20, 20, 21, 21);
+                drawTexture(matrices, getX(), getY(), 0, 0, 20, 20, 21, 21);
             }
         };
     }
@@ -51,12 +52,12 @@ public class ColorOptionWidget extends OptionWidget {
 	@Override
 	public void renderButton(MatrixStack matrices, int mouseX, int mouseY, float delta) {
 
-        textField.y = y;
-        textField.x = x;
+        textField.setY(getY());
+        textField.setX(getX());
         textField.render(matrices, mouseX, mouseY, delta);
 
-        openPicker.y = y-1;
-        openPicker.x = x+128;
+        openPicker.setY(getY() - 1);
+        openPicker.setX(getX() + 128);
         openPicker.render(matrices, mouseX, mouseY, delta);
 
     }
@@ -67,6 +68,7 @@ public class ColorOptionWidget extends OptionWidget {
             if(MinecraftClient.getInstance().currentScreen instanceof OptionsScreenBuilder){
                 ((OptionsScreenBuilder) MinecraftClient.getInstance().currentScreen).openColorPicker(option);
             }
+			playDownSound(MinecraftClient.getInstance().getSoundManager());
             return true;
         } else if(textField.isMouseOver(mouseX, mouseY)) {
             textField.setTextFieldFocused(true);
@@ -127,9 +129,14 @@ public class ColorOptionWidget extends OptionWidget {
 		return false;
 	}
 
-    @Override
-    public void appendNarrations(NarrationMessageBuilder builder) {
-        super.appendNarrations(builder);
+	@Override
+	protected MutableText getNarrationMessage() {
+		return Text.literal(option.getTranslatedName()).append(super.getNarrationMessage());
+	}
+
+	@Override
+    public void updateNarration(NarrationMessageBuilder builder) {
+        super.updateNarration(builder);
         builder.put(NarrationPart.TITLE, Text.translatable("narration.value").append(option.get().toString()));
         builder.put(NarrationPart.HINT, "Press Enter to open color picker.");
     }

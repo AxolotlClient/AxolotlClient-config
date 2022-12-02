@@ -1,6 +1,6 @@
 package io.github.axolotlclient.AxolotlclientConfig;
 
-import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
+import org.quiltmc.qsl.lifecycle.api.client.event.ClientTickEvents;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * This implementation of Hud modules is based on KronHUD.
  * <a href="https://github.com/DarkKronicle/KronHUD">Github Link.</a>
- * @license GPL-3.0
+ * <p>License: GPL-3.0
  */
 
 public class Color {
@@ -58,6 +58,11 @@ public class Color {
         this.green = green;
         this.blue = blue;
         this.alpha = alpha;
+		int color = alpha;
+		color = (color << 8) + red;
+		color = (color << 8) + green;
+		color = (color << 8) + blue;
+		this.color = color;
         return this;
     }
 
@@ -76,7 +81,7 @@ public class Color {
     public static Color getChroma(){
         if(chromaColors.isEmpty()){
             setupChroma();
-            ClientTickEvents.END_CLIENT_TICK.register(client -> tickChroma());
+            ClientTickEvents.END.register(client -> tickChroma());
         }
         return chromaColors.get(chromaColorIndex);
     }
@@ -135,14 +140,41 @@ public class Color {
         return String.format("#%08X", color);
     }
 
+	/**
+	 * Default Color: White
+	 */
     public static Color WHITE = new Color(255, 255, 255);
+	/**
+	 * Default Color: Black
+	 */
     public static Color BLACK = new Color(0, 0, 0);
+	/**
+	 * Default Color: Gray
+	 */
     public static Color GRAY = new Color(128, 128, 128);
+	/**
+	 * Default Color: Dark Gray, usually used in Backgrounds
+	 */
     public static Color DARK_GRAY = new Color(49, 51, 53, 50);
+	/**
+	 * Default Color: Red (when an Element is selected)
+	 */
     public static Color SELECTOR_RED = new Color(191, 34, 34);
+	/**
+	 * Default Color: Gold
+	 */
     public static Color GOLD = Color.parse("#b8860b");
+	/**
+	 * Default Color: Green (when an Element is selected)
+	 */
     public static Color SELECTOR_GREEN = new Color(53, 219, 103);
+	/**
+	 * Default Color: Blue (when an Element is selected)
+	 */
     public static Color SELECTOR_BLUE = new Color(51, 153, 255, 255);
+	/**
+	 * Default Color: Error: to be used to indicate when something went wrong.
+	 */
     public static Color ERROR = new Color(255, 0, 255);
 
     /**

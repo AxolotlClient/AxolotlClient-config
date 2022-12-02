@@ -84,6 +84,8 @@ public class ColorSelectionWidget extends Screen {
             green.set(option.get().getGreen());
             blue.set(option.get().getBlue());
         }
+
+		addSelectableChild(parent.backButton);
     }
 
     private void initLarge(){

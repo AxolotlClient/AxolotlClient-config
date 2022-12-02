@@ -15,6 +15,7 @@ import net.minecraft.client.gui.screen.narration.NarrationPart;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.text.ScreenTexts;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 
@@ -125,15 +126,15 @@ public class OptionsScreenBuilder extends Screen {
         }
             this.addSelectableChild(list);
 
-            this.addDrawableChild(backButton = new ButtonWidget(this.width / 2 - 100, this.height - 40, 200, 20, Text.translatable("back"), buttonWidget -> {
-                if (isPickerOpen()) {
-                    closeColorPicker();
-                } else {
-                    MinecraftClient.getInstance().setScreen(parent);
-                }
+            this.addDrawableChild(backButton = ButtonWidget.builder(ScreenTexts.BACK, buttonWidget -> {
+				if (isPickerOpen()) {
+					closeColorPicker();
+				} else {
+					MinecraftClient.getInstance().setScreen(parent);
+				}
 
-                AxolotlClientConfigManager.saveCurrentConfig();
-            }));
+				AxolotlClientConfigManager.saveCurrentConfig();
+			}).positionAndSize(this.width / 2 - 100, this.height - 40, 200, 20).build());
 
             this.addDrawableChild(searchWidget = new TextFieldWidget(MinecraftClient.getInstance().textRenderer, width - 120, 20, 100, 20, Text.translatable("search")) {
 
@@ -165,12 +166,12 @@ public class OptionsScreenBuilder extends Screen {
                 public void renderButton(MatrixStack matrices, int mouseX, int mouseY, float delta) {
                     super.renderButton(matrices, mouseX, mouseY, delta);
 
-                    drawHorizontalLine(matrices, x - 5, x + width, y + 11, -1);
+                    drawHorizontalLine(matrices, getX() - 5, getX() + width, getY() + 11, -1);
                 }
 
                 @Override
-                public void appendNarrations(NarrationMessageBuilder builder) {
-                    super.appendNarrations(builder);
+                public void updateNarration(NarrationMessageBuilder builder) {
+                    super.updateNarration(builder);
                     builder.put(NarrationPart.USAGE, Text.translatable("narration.type_to_search"));
                 }
             });

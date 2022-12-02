@@ -1,8 +1,6 @@
 package io.github.axolotlclient.AxolotlclientConfig.options;
 
 import com.mojang.brigadier.Command;
-import com.mojang.brigadier.arguments.StringArgumentType;
-import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import io.github.axolotlclient.AxolotlclientConfig.util.CommandResponse;
 import io.github.axolotlclient.AxolotlclientConfig.util.ConfigUtils;
 import net.minecraft.text.Style;
@@ -10,8 +8,6 @@ import net.minecraft.text.Text;
 import net.minecraft.text.TextColor;
 import net.minecraft.util.Formatting;
 import org.jetbrains.annotations.Nullable;
-import org.quiltmc.qsl.command.api.client.ClientCommandManager;
-import org.quiltmc.qsl.command.api.client.QuiltClientCommandSource;
 
 /**
  * A basic option

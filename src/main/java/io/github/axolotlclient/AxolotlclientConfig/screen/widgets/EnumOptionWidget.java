@@ -5,6 +5,7 @@ import io.github.axolotlclient.AxolotlclientConfig.screen.OptionsScreenBuilder;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 
 public class EnumOptionWidget extends OptionWidget {
@@ -31,6 +32,12 @@ public class EnumOptionWidget extends OptionWidget {
         } else {
             setMessage(Text.translatable(option.next()));
         }
+		playDownSound(MinecraftClient.getInstance().getSoundManager());
         return true;
     }
+
+	@Override
+	protected MutableText getNarrationMessage() {
+		return Text.literal(option.getTranslatedName()).append(super.getNarrationMessage());
+	}
 }

@@ -1,29 +1,34 @@
-# gradle
+# Gradle
 .gradle/
 build/
 out/
 classes/
 
-# eclipse
+# Quilt Loom
+remappedSrc/
+run/
+
+# Eclipse
 *.launch
 
-# idea
+# IntelliJ Idea
 .idea/
 *.iml
 *.ipr
 *.iws
 
-# vscode
+# Fleet
+.fleet/
+
+# Visual Studio Code
 .settings/
 .vscode/
 bin/
 .classpath
 .project
 
-# fabric
-run/
+# Eclipse JDT LS
+workspace/
 
-# macos
+# macOS
 *.DS_Store
-src/main/resources/assets/minecraft/textures/entity/alex.png
-src/main/resources/assets/minecraft/textures/entity/steve.png

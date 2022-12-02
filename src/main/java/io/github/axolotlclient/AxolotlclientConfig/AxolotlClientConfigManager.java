@@ -38,12 +38,6 @@ public class AxolotlClientConfigManager {
 
         managers.put(modid, manager);
 
-        try {
-            QuiltLoader.getModContainer("");
-        } catch (NoClassDefFoundError e){
-            AxolotlClientConfigManager.LOGGER.warn("Running under Fabric, Commands for mod {} will not work!", modid);
-        }
-
         manager.load();
     }
 

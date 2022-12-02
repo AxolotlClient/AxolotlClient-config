@@ -62,12 +62,12 @@ public class KeyBindWidget extends OptionWidget {
             resetButton.unfocus();
         }
 
-        this.resetButton.x = x + 100;
-        this.resetButton.y = y;
+        this.resetButton.setX(getX() + 100);
+        this.resetButton.setY(getY());
         this.resetButton.active = !option.get().isDefault();
         this.resetButton.render(matrices, mouseX, mouseY, tickDelta);
-        this.bindButton.x = x;
-        this.bindButton.y = y;
+        this.bindButton.setX(getX());
+        this.bindButton.setY(getY());
         this.bindButton.setMessage(this.key.getKeyName());
         boolean bl2 = false;
         if (!this.key.isUnbound()) {
@@ -95,7 +95,12 @@ public class KeyBindWidget extends OptionWidget {
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if (this.bindButton.mouseClicked(mouseX, mouseY, button)) {
+		if(edit){
+			MinecraftClient.getInstance().options.setKeyCode(key, InputUtil.Type.MOUSE.createFromKeyCode(button));
+			edit = false;
+			KeyBind.updateBoundKeys();
+			return true;
+		} else if (this.bindButton.mouseClicked(mouseX, mouseY, button)) {
             return true;
         } else {
             return this.resetButton.mouseClicked(mouseX, mouseY, button);
@@ -155,4 +160,9 @@ public class KeyBindWidget extends OptionWidget {
     public boolean isFocused() {
         return bindButton.isFocused() || resetButton.isFocused();
     }
+
+	@Override
+	protected MutableText getNarrationMessage() {
+		return Text.literal(option.getTranslatedName()).append(super.getNarrationMessage());
+	}
 }
