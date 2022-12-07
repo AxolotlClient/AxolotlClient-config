@@ -1,10 +1,10 @@
 [versions]
 # The latest versions are available at https://lambdaurora.dev/tools/import_quilt.html
-minecraft = "1.19.3-rc1"
-quilt_mappings = "1.19.3-rc1+build.1"
-quilt_loader = "0.17.6"
+minecraft = "1.19.3"
+quilt_mappings = "1.19.3+build.1"
+quilt_loader = "0.17.7"
 
-qsl_module = "4.0.0-alpha.6+1.19.3-rc1"
+qsl_module = "4.0.0-beta.1+1.19.3"
 
 modmenu = "5.0.0"
 
