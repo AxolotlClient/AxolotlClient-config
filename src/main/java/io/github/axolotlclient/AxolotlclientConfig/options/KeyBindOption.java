@@ -1,5 +1,7 @@
 package io.github.axolotlclient.AxolotlclientConfig.options;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonPrimitive;
 import com.mojang.blaze3d.platform.InputUtil;
 import io.github.axolotlclient.AxolotlclientConfig.screen.widgets.KeyBindWidget;
 import io.github.axolotlclient.AxolotlclientConfig.util.CommandResponse;
@@ -15,7 +17,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.*;
 
-public class KeyBindOption extends NoSaveOption<KeyBind> {
+public class KeyBindOption extends OptionBase<KeyBind> {
 
     private static final HashMap<String, Integer> keys = Util.make(() -> {
        HashMap<String, Integer> map = new HashMap<>();
@@ -24,7 +26,7 @@ public class KeyBindOption extends NoSaveOption<KeyBind> {
                         && Modifier.isPublic(field.getModifiers())
                         && Modifier.isFinal(field.getModifiers())
                         && field.getType().equals(int.class)
-                        && field.getName().startsWith("KEY_")
+                        && (field.getName().startsWith("KEY_") || field.getName().startsWith("MOUSE_"))
                         && field.getName().endsWith("_CODE")).toList()) {
             try {
                 map.put(field.getName().substring(4, field.getName().length() - 5), field.getInt(null));
@@ -92,7 +94,17 @@ public class KeyBindOption extends NoSaveOption<KeyBind> {
         return new KeyBindWidget(x, y, width, height, this);
     }
 
-    public interface KeybindListener {
+	@Override
+	public void setValueFromJsonElement(JsonElement element) {
+		get().setBoundKey(InputUtil.fromTranslationKey(element.getAsString()));
+	}
+
+	@Override
+	public JsonElement getJson() {
+		return new JsonPrimitive(get().getKeyTranslationKey());
+	}
+
+	public interface KeybindListener {
         void onPress(KeyBind binding);
     }
 }
