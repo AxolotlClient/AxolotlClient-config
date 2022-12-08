@@ -1,5 +1,7 @@
 package io.github.axolotlclient.AxolotlclientConfig.options;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonPrimitive;
 import io.github.axolotlclient.AxolotlclientConfig.screen.widgets.KeyBindWidget;
 import io.github.axolotlclient.AxolotlclientConfig.util.clientCommands.CommandResponse;
 import net.legacyfabric.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
@@ -13,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-public class KeyBindOption extends NoSaveOption<KeyBinding> {
+public class KeyBindOption extends OptionBase<KeyBinding> {
 
     private static final List<KeyBinding> bindings = new ArrayList<>();
 
@@ -64,6 +66,16 @@ public class KeyBindOption extends NoSaveOption<KeyBinding> {
             return new CommandResponse(false, response);
         }
         return new CommandResponse(true, getTranslatedName() + " is currently bound to "+ GameOptions.getFormattedNameForKeyCode(get().getCode()));
+    }
+
+    @Override
+    public void setValueFromJsonElement(JsonElement element) {
+        get().setCode(Keyboard.getKeyIndex(element.getAsString()));
+    }
+
+    @Override
+    public JsonElement getJson() {
+        return new JsonPrimitive(Keyboard.getKeyName(get().getCode()));
     }
 
     @Override
