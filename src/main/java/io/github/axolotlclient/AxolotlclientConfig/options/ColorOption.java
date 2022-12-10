@@ -54,7 +54,7 @@ public class ColorOption extends OptionBase<Color> {
     public void setValueFromJsonElement(@NotNull JsonElement element) {
         try {
             chroma = element.getAsJsonObject().get("chroma").getAsBoolean();
-            set(Color.parse(element.getAsJsonObject().get("color").getAsString()));
+            option = Color.parse(element.getAsJsonObject().get("color").getAsString());
         } catch (Exception ignored){
         }
     }
