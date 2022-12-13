@@ -60,12 +60,6 @@ public class OptionSliderWidget<T extends NumericOption<N>, N extends Number> ex
         return Integer.parseInt(intFormat.format(this.min.doubleValue() + (this.max.doubleValue() - this.min.doubleValue()) * this.value));
     }
 
-    public Double getValue(){
-        format.applyLocalizedPattern("###.##");
-        double value = this.min.doubleValue() + (this.max.doubleValue() - this.min.doubleValue()) * this.value;
-        return Double.parseDouble(format.format(value));
-    }
-
     public Text getMessage() {
         return Text.of(""+ (option instanceof IntegerOption ? getSliderValueAsInt()+"".split("\\.")[0]: this.getSliderValue()));
     }
