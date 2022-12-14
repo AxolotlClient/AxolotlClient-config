@@ -122,7 +122,7 @@ public class EnumOption extends OptionBase<String> {
 
     @Override
     public JsonElement getJson() {
-        return new JsonPrimitive(get());
+        return new JsonPrimitive(option);
     }
 
     @Override
