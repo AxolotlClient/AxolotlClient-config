@@ -58,7 +58,7 @@ public class ColorOption extends OptionBase<Color> {
     @Override
     public JsonElement getJson() {
         JsonObject object = new JsonObject();
-        object.add("color",new JsonPrimitive(get().toString()));
+        object.add("color",new JsonPrimitive(option.toString()));
         object.add("chroma", new JsonPrimitive(chroma));
         return object;
     }
