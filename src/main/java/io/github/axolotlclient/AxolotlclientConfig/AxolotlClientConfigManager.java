@@ -3,6 +3,7 @@ package io.github.axolotlclient.AxolotlclientConfig;
 import io.github.axolotlclient.AxolotlclientConfig.options.OptionCategory;
 import io.github.axolotlclient.AxolotlclientConfig.screen.OptionsScreenBuilder;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.screen.Screen;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.ApiStatus;
@@ -50,10 +51,20 @@ public class AxolotlClientConfigManager {
      * @param modid the modid the config screen should be opened for.
      */
     public static void openConfigScreen(String modid){
-       MinecraftClient.getInstance().setScreen(new OptionsScreenBuilder(MinecraftClient.getInstance().currentScreen,
-               configs.get(modid).getCategories().size() == 1 ? configs.get(modid).getCategories().get(0) :
-               new OptionCategory(modid, false).addSubCategories(configs.get(modid).getCategories()), modid));
+       MinecraftClient.getInstance().setScreen(getConfigScreen(modid, MinecraftClient.getInstance().currentScreen));
     }
+
+	/**
+	 * Gets the built config screen for a mod.
+	 * @param modid the mod of which the config screen should be built
+	 * @param parent the parent screen
+	 * @return the built screen
+	 */
+	public static Screen getConfigScreen(String modid, Screen parent){
+		return new OptionsScreenBuilder(parent,
+				configs.get(modid).getCategories().size() == 1 ? configs.get(modid).getCategories().get(0) :
+						new OptionCategory(modid, false).addSubCategories(configs.get(modid).getCategories()), modid);
+	}
 
     @ApiStatus.Internal
     public static ConfigHolder getModConfig(String modid){
