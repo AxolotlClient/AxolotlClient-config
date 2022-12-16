@@ -65,8 +65,7 @@ public class ModMenuScreens implements ModMenuApi {
         HashMap<String, ConfigScreenFactory<?>> factories = new HashMap<>();
         AxolotlClientConfigManager.getConfigs().forEach((s, configHolder) ->
                 factories.put(s, (parent) ->
-                        new OptionsScreenBuilder(parent, new OptionCategory(s +" Config", false)
-                                .addSubCategories(AxolotlClientConfigManager.getModConfig(s).getCategories()), s)));
+                        AxolotlClient.getConfigScreen(s, parent));
         return factories;
     }*/
 }
