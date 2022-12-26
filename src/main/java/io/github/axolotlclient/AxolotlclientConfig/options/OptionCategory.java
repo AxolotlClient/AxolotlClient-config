@@ -2,6 +2,7 @@ package io.github.axolotlclient.AxolotlclientConfig.options;
 
 import io.github.axolotlclient.AxolotlclientConfig.screen.widgets.CategoryWidget;
 import io.github.axolotlclient.AxolotlclientConfig.util.ConfigUtils;
+import io.github.moehreag.clientcommands.ClientCommandRegistry;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.text.LiteralText;
 import net.minecraft.util.Formatting;
@@ -21,7 +22,7 @@ public class OptionCategory implements Tooltippable, WidgetSupplier {
     public OptionCategory(String key, boolean registerCommand){
         this.name = key;
         if(registerCommand) {
-            ConfigUtils.registerCommand(name.toLowerCase(Locale.ENGLISH), this::getCommandSuggestions, this::onCommandExec);
+            ClientCommandRegistry.getInstance().registerCommand(name.toLowerCase(Locale.ENGLISH), this::getCommandSuggestions, this::onCommandExec);
         }
     }
 
@@ -88,18 +89,20 @@ public class OptionCategory implements Tooltippable, WidgetSupplier {
         } else {
             StringBuilder builder = new StringBuilder();
             for (Option<?> o : getOptions()) {
-                builder.append("    ").append(Formatting.AQUA).append(o.getName()).append(": ").append(o.get()).append("\n");
+                builder.append("    ").append(Formatting.AQUA).append(o.getName()).append(": ").append(Formatting.RESET).append(o.get()).append("\n");
             }
             ConfigUtils.sendChatMessage(new LiteralText(Formatting.BLUE + "Values in this category are: \n" + builder));
         }
     }
 
     protected List<String> getCommandSuggestions(String[] args){
+        System.out.println(Arrays.toString(args));
+        System.out.println(args.length);
         List<String> list = new ArrayList<>();
-        if(args.length>=1){
+        if(args.length>1){
             for(Option<?> o:getOptions()){
                 if(o.getName().equals(args[0])){
-                    list.addAll(o.getCommandSuggestions());
+                    list.addAll(o.getCommandSuggestions(ConfigUtils.copyArrayWithoutFirstEntry(ConfigUtils.copyArrayWithoutFirstEntry(args))));
                 }
             }
         } else {

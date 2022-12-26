@@ -6,7 +6,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import io.github.axolotlclient.AxolotlclientConfig.Color;
 import io.github.axolotlclient.AxolotlclientConfig.screen.widgets.ColorOptionWidget;
-import io.github.axolotlclient.AxolotlclientConfig.util.clientCommands.CommandResponse;
+import io.github.axolotlclient.AxolotlclientConfig.commands.CommandResponse;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import org.jetbrains.annotations.NotNull;
 
@@ -95,8 +95,13 @@ public class ColorOption extends OptionBase<Color> {
     }
 
     @Override
-    public List<String> getCommandSuggestions() {
-        return Lists.newArrayList("#FFFFFFFF", "chroma");
+    public List<String> getCommandSuggestions(String[] args) {
+        if(args.length == 0) {
+            return Lists.newArrayList("#FFFFFFFF", "chroma");
+        } else if(args[0].equals("chroma")){
+            return Lists.newArrayList("true", "false", "on", "off");
+        }
+        return Collections.emptyList();
     }
 
     @Override

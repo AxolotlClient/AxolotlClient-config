@@ -28,5 +28,5 @@ public interface Option<T> extends Tooltippable, WidgetSupplier {
 
     void onCommandExec(String[] args);
 
-    List<String> getCommandSuggestions();
+    List<String> getCommandSuggestions(String[] args);
 }

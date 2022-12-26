@@ -6,6 +6,7 @@ import io.github.axolotlclient.AxolotlclientConfig.options.*;
 import io.github.prospector.modmenu.api.ModMenuApi;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.screen.GameMenuScreen;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.SettingsScreen;
 import net.minecraft.client.options.KeyBinding;
@@ -31,8 +32,13 @@ public class ModMenuScreens implements ModMenuApi {
                     new EnumOption("example_enum_option", new String[]{"example_enum_option_1", "example_enum_option_2", "example_enum_option_3"}, "example_enum_option_2"),
                     new ColorOption("example_color", -162555),
                     new StringOption("example_string", "Example §2String"),
-                    new GenericOption("example_generic", "Open Minecraft Options", (mouseX, mouseY)->
-                            MinecraftClient.getInstance().openScreen(new SettingsScreen(MinecraftClient.getInstance().currentScreen, MinecraftClient.getInstance().options))),
+                    new GenericOption("example_generic", "Open Minecraft Options", (mouseX, mouseY)-> {
+                            MinecraftClient.getInstance().player.addMessage(new LiteralText("Opening Settings screen..."));
+                            MinecraftClient.getInstance().openScreen(new SettingsScreen(new GameMenuScreen(), MinecraftClient.getInstance().options));
+                            if(MinecraftClient.getInstance().currentScreen == null){
+                                MinecraftClient.getInstance().openScreen(getConfigScreenFactory().apply(null));
+                            }
+                    }),
                     disabledExample,
                     ignored);
             OptionCategory sub = new OptionCategory("example_sub", FabricLoader.getInstance().isDevelopmentEnvironment());

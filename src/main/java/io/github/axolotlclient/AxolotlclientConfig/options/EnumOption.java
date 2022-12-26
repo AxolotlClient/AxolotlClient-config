@@ -3,7 +3,7 @@ package io.github.axolotlclient.AxolotlclientConfig.options;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 import io.github.axolotlclient.AxolotlclientConfig.screen.widgets.EnumOptionWidget;
-import io.github.axolotlclient.AxolotlclientConfig.util.clientCommands.CommandResponse;
+import io.github.axolotlclient.AxolotlclientConfig.commands.CommandResponse;
 import net.minecraft.client.gui.widget.ButtonWidget;
 
 import java.util.*;
@@ -136,8 +136,11 @@ public class EnumOption extends OptionBase<String> {
     }
 
     @Override
-    public List<String> getCommandSuggestions() {
-        return Arrays.asList(values);
+    public List<String> getCommandSuggestions(String[] args) {
+        if(args.length == 0) {
+            return Arrays.asList(values);
+        }
+        return Collections.emptyList();
     }
 
     @Override

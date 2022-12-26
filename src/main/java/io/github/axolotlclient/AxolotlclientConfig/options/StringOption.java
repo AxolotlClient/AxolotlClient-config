@@ -3,7 +3,7 @@ package io.github.axolotlclient.AxolotlclientConfig.options;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 import io.github.axolotlclient.AxolotlclientConfig.screen.widgets.StringOptionWidget;
-import io.github.axolotlclient.AxolotlclientConfig.util.clientCommands.CommandResponse;
+import io.github.axolotlclient.AxolotlclientConfig.commands.CommandResponse;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import org.jetbrains.annotations.NotNull;
 
@@ -53,8 +53,11 @@ public class StringOption extends OptionBase<String> {
     }
 
     @Override
-    public List<String> getCommandSuggestions() {
-        return Collections.singletonList(String.valueOf(def));
+    public List<String> getCommandSuggestions(String[] args) {
+        if(args.length == 0) {
+            return Collections.singletonList(String.valueOf(def));
+        }
+        return Collections.emptyList();
     }
 
     @Override

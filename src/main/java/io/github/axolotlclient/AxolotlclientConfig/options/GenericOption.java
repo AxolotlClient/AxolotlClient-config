@@ -1,11 +1,12 @@
 package io.github.axolotlclient.AxolotlclientConfig.options;
 
 import io.github.axolotlclient.AxolotlclientConfig.screen.widgets.GenericOptionWidget;
-import io.github.axolotlclient.AxolotlclientConfig.util.clientCommands.CommandResponse;
+import io.github.axolotlclient.AxolotlclientConfig.commands.CommandResponse;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import org.lwjgl.input.Mouse;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class GenericOption extends NoSaveOption<GenericOption.OnClick> {
@@ -27,13 +28,13 @@ public class GenericOption extends NoSaveOption<GenericOption.OnClick> {
 
     @Override
     protected CommandResponse onCommandExecution(String[] args) {
-        get().onClick(Mouse.getX(), Mouse.getY());
+        get().onClick(0, 0);
         return new CommandResponse(false, "");
     }
 
     @Override
-    public List<String> getCommandSuggestions() {
-        return new ArrayList<>();
+    public List<String> getCommandSuggestions(String[] args) {
+        return Collections.emptyList();
     }
 
 

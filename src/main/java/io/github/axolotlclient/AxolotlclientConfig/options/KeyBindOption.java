@@ -3,7 +3,7 @@ package io.github.axolotlclient.AxolotlclientConfig.options;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 import io.github.axolotlclient.AxolotlclientConfig.screen.widgets.KeyBindWidget;
-import io.github.axolotlclient.AxolotlclientConfig.util.clientCommands.CommandResponse;
+import io.github.axolotlclient.AxolotlclientConfig.commands.CommandResponse;
 import net.legacyfabric.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.widget.ButtonWidget;
@@ -11,9 +11,7 @@ import net.minecraft.client.options.GameOptions;
 import net.minecraft.client.options.KeyBinding;
 import org.lwjgl.input.Keyboard;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 
 public class KeyBindOption extends OptionBase<KeyBinding> {
 
@@ -79,8 +77,11 @@ public class KeyBindOption extends OptionBase<KeyBinding> {
     }
 
     @Override
-    public List<String> getCommandSuggestions() {
-        return new ArrayList<>();
+    public List<String> getCommandSuggestions(String[] args) {
+        if(args.length == 0) {
+            return Collections.singletonList("none");
+        }
+        return Collections.emptyList();
     }
 
     @Override

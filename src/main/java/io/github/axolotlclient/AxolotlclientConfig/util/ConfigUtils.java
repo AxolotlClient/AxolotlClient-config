@@ -1,7 +1,5 @@
 package io.github.axolotlclient.AxolotlclientConfig.util;
 
-import io.github.axolotlclient.AxolotlclientConfig.util.clientCommands.ClientCommands;
-import io.github.axolotlclient.AxolotlclientConfig.util.clientCommands.Command;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.util.Window;
 import net.minecraft.text.Text;
@@ -29,10 +27,6 @@ public class ConfigUtils {
 
     public static void sendChatMessage(Text msg){
         MinecraftClient.getInstance().inGameHud.getChatHud().addMessage(msg);
-    }
-
-    public static void registerCommand(String command, Command.CommandSuggestionCallback suggestions, Command.CommandExecutionCallback onExecution){
-        ClientCommands.getInstance().registerCommand(command, suggestions, onExecution);
     }
 
     public static void applyScissor(int x, int y, int width, int height){

@@ -1,7 +1,7 @@
 package io.github.axolotlclient.AxolotlclientConfig.options;
 
 import io.github.axolotlclient.AxolotlclientConfig.util.ConfigUtils;
-import io.github.axolotlclient.AxolotlclientConfig.util.clientCommands.CommandResponse;
+import io.github.axolotlclient.AxolotlclientConfig.commands.CommandResponse;
 import net.minecraft.text.LiteralText;
 import net.minecraft.util.Formatting;
 import org.jetbrains.annotations.Nullable;
@@ -111,7 +111,7 @@ public abstract class OptionBase<T> implements Option<T> {
 
     protected abstract CommandResponse onCommandExecution(String[] args);
 
-    public abstract List<String> getCommandSuggestions();
+    public abstract List<String> getCommandSuggestions(String[] args);
 
     public interface ChangedListener<T> {
         void onChanged(T value);

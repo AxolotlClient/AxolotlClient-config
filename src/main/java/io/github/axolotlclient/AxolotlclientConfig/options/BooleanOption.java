@@ -3,15 +3,15 @@ package io.github.axolotlclient.AxolotlclientConfig.options;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 import io.github.axolotlclient.AxolotlclientConfig.screen.widgets.BooleanWidget;
-import io.github.axolotlclient.AxolotlclientConfig.util.clientCommands.CommandResponse;
+import io.github.axolotlclient.AxolotlclientConfig.commands.CommandResponse;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.resource.language.I18n;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
-import java.util.Locale;
 
 public class BooleanOption extends OptionBase<Boolean> {
 
@@ -111,8 +111,11 @@ public class BooleanOption extends OptionBase<Boolean> {
         return new CommandResponse(true, getName() + " is currently set to '"+get()+"'.");
     }
 
-    public List<String> getCommandSuggestions(){
-        return Arrays.asList("true", "false");
+    public List<String> getCommandSuggestions(String[] args){
+        if(args.length == 0) {
+            return Arrays.asList("true", "false");
+        }
+        return Collections.emptyList();
     }
 
     @Override

@@ -1,7 +1,7 @@
 package io.github.axolotlclient.AxolotlclientConfig.options;
 
 import com.google.gson.JsonElement;
-import io.github.axolotlclient.AxolotlclientConfig.util.clientCommands.CommandResponse;
+import io.github.axolotlclient.AxolotlclientConfig.commands.CommandResponse;
 import org.jetbrains.annotations.NotNull;
 
 public class IntegerOption extends NumericOption<Integer> {

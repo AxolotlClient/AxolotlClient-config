@@ -52,7 +52,7 @@ public class CategoryWidget extends OptionWidget {
             GlStateManager.blendFunc(770, 771);
             this.drawTexture(this.x, this.y, 0, 46 + i * 20, this.width / 2, this.height);
             this.drawTexture(this.x + this.width / 2, this.y, 200 - this.width / 2, 46 + i * 20, this.width / 2, this.height);
-            this.renderBg(client, mouseX, mouseY);
+            //this.renderBg(client, mouseX, mouseY); // Someone didn't know how to name methods properly and renamed this to mouseDragged(...) for whatever reason
             int j = 14737632;
             if (!this.active) {
                 j = 10526880;

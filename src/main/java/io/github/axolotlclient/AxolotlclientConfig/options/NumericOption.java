@@ -45,8 +45,11 @@ public abstract class NumericOption<T extends Number> extends OptionBase<T>{
     }
 
     @Override
-    public List<String> getCommandSuggestions() {
-        return Collections.singletonList(String.valueOf(def));
+    public List<String> getCommandSuggestions(String[] args) {
+        if(args.length==0) {
+            return Collections.singletonList(String.valueOf(def));
+        }
+        return Collections.emptyList();
     }
 
     @Override

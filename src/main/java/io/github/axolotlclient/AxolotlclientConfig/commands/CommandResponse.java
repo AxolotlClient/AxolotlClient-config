@@ -1,4 +1,4 @@
-package io.github.axolotlclient.AxolotlclientConfig.util.clientCommands;
+package io.github.axolotlclient.AxolotlclientConfig.commands;
 
 /**
  * A class storing a basic command response and its states.
