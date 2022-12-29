@@ -28,7 +28,7 @@ public class ModMenuScreens implements ModMenuApi {
             BooleanOption disabledExample = new BooleanOption("example_toggle_disabled", true);
             disabledExample.setForceOff(true, "example_reason");
             example.add(new BooleanOption("example_toggle", false),
-                    new DoubleOption("example_slider", 5D, 0, 10),
+                    new DoubleOption("example_slider", 5D, 0D, 10D),
                     new EnumOption("example_enum_option", new String[]{"example_enum_option_1", "example_enum_option_2", "example_enum_option_3"}, "example_enum_option_2"),
                     new ColorOption("example_color", -162555),
                     new StringOption("example_string", "Example §2String"),
