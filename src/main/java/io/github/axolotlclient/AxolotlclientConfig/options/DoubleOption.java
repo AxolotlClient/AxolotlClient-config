@@ -6,18 +6,21 @@ import org.jetbrains.annotations.NotNull;
 
 public class DoubleOption extends NumericOption<Double> {
 
-    public DoubleOption(String name, String tooltipLocation, double Default, double min, double max) {
-        super(name, tooltipLocation, (value)->{}, Default, min, max);
+    public DoubleOption(String name, Double def, Double min, Double max) {
+        super(name, def, min, max);
     }
 
-    public DoubleOption(String name, ChangedListener<Double> onChange, double Default, double min, double max) {
-        super(name, onChange, Default, min, max);
+    public DoubleOption(String name, ChangedListener<Double> onChange, Double def, Double min, Double max) {
+        super(name, onChange, def, min, max);
     }
 
-    public DoubleOption(String name, double Default, double min, double max) {
-        this(name, (String) null, Default, min, max);
+    public DoubleOption(String name, String tooltipKeyPrefix, Double def, Double min, Double max) {
+        super(name, tooltipKeyPrefix, def, min, max);
     }
 
+    public DoubleOption(String name, String tooltipKeyPrefix, ChangedListener<Double> onChange, Double def, Double min, Double max) {
+        super(name, tooltipKeyPrefix, onChange, def, min, max);
+    }
 
     @Override
     public void setValueFromJsonElement(@NotNull JsonElement element) {

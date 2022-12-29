@@ -35,6 +35,17 @@ public class KeyBindOption extends OptionBase<KeyBinding> {
         listener = onPress;
     }
 
+    public KeyBindOption(String name, ChangedListener<KeyBinding> onChange, KeyBinding def, KeybindListener onPress) {
+        super(name, onChange, def);
+        registerBinding();
+        listener = onPress;
+    }
+
+    public KeyBindOption(String name, String tooltipKeyPrefix, ChangedListener<KeyBinding> onChange, KeyBinding def, KeybindListener onPress) {
+        super(name, tooltipKeyPrefix, onChange, def);
+        listener = onPress;
+    }
+
     private void registerBinding(){
         bindings.add(get());
         ClientTickEvents.END_CLIENT_TICK.register((client)->{

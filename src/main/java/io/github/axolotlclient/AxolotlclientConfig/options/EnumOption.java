@@ -31,7 +31,19 @@ public class EnumOption extends OptionBase<String> {
         setDefaults();
     }
 
-    public EnumOption(String name, String[] e, ChangedListener<String> onChange, String def) {
+    public EnumOption(String name, String tooltipKeyPrefix, String[] e, String def) {
+        super(name, tooltipKeyPrefix, def);
+        values = e;
+        setDefaults();
+    }
+
+    public EnumOption(String name, String tooltipKeyPrefix, ChangedListener<String> onChange, String[] e, String def) {
+        super(name, tooltipKeyPrefix, onChange, def);
+        values = e;
+        setDefaults();
+    }
+
+    public EnumOption(String name, ChangedListener<String> onChange, String[] e, String def) {
         super(name, onChange, def);
         values = e;
         setDefaults();
