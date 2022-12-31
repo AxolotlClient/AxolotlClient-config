@@ -1,0 +1,78 @@
+plugins {
+    id 'java'
+	id "fabric-loom" version "1.0-SNAPSHOT"
+}
+
+group = maven_group
+version = "${project.version}+${project.minecraft_18}"
+archivesBaseName = "AxolotlClient-config"
+
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_8
+
+repositories {
+	maven {
+		url = "https://moehreag.duckdns.org/maven/releases"
+	}
+	maven {
+		name = "legacy-fabric"
+		url = "https://repo.legacyfabric.net/repository/legacyfabric/"
+	}
+	mavenCentral()
+}
+
+dependencies {
+	minecraft "com.mojang:minecraft:${project.minecraft_18}"
+	mappings "net.legacyfabric:yarn:${project.mappings_18}"
+
+	modImplementation "net.fabricmc:fabric-loader:${project.fabric_loader}"
+	//modImplementation "org.quiltmc:quilt-loader:${project.quilt_loader}"
+
+	modImplementation include("io.github.moehreag:LegacyClientCommands:1.0.0")
+
+	annotationProcessor "org.ow2.asm:asm:${project.asmVersion}"
+	annotationProcessor "org.ow2.asm:asm-analysis:${project.asmVersion}"
+	annotationProcessor "org.ow2.asm:asm-commons:${project.asmVersion}"
+	annotationProcessor "org.ow2.asm:asm-tree:${project.asmVersion}"
+	annotationProcessor "org.ow2.asm:asm-util:${project.asmVersion}"
+
+	modImplementation "net.legacyfabric.legacy-fabric-api:legacy-fabric-api:${project.lfapi}+${project.minecraft_18}"
+
+	modCompileOnlyApi(files("libs/legacy-modmenu-1.2.0+1.8.9-dev.jar"))
+
+	implementation include(project(":common"))
+}
+
+processResources {
+	inputs.property 'version', version
+
+	filesMatching('fabric.mod.json') {
+		expand "version": version
+	}
+}
+
+runClient {
+	classpath(sourceSets.test.runtimeClasspath)
+}
+
+// Configure the maven publication
+publishing {
+	publications {
+		mavenJava(MavenPublication) {
+			artifactId = archivesBaseName
+			from components.java
+		}
+	}
+
+	repositories {
+		maven {
+			name = "owlMaven"
+			def repository = project.version.toString().contains("beta") || project.version.toString().contains("alpha") ? "snapshots" : "releases"
+			url = "https://moehreag.duckdns.org/maven/"+repository
+			credentials(PasswordCredentials)
+			authentication {
+				basic(BasicAuthentication)
+			}
+		}
+	}
+}

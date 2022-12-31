@@ -1,121 +1,40 @@
 plugins {
-	id 'fabric-loom' version "1.0-SNAPSHOT"
-	id "io.github.juuxel.loom-quiltflower" version "1.8.0"
 	id 'maven-publish'
-	id 'signing'
+	id 'java'
 }
 
-version = project.mod_version
+archivesBaseName = project.archives_base_name
+version = "${project.version}"
 group = project.maven_group
 
 repositories {
+	mavenLocal()
 	maven {
-		name = "legacy-fabric"
-		url = "https://repo.legacyfabric.net/repository/legacyfabric"
-	}
-	maven {
-		url "https://moehreag.duckdns.org/maven/releases"
-	}
-	maven { url 'https://jitpack.io' }
-	maven {
-		url 'https://repo.hypixel.net/repository/Hypixel/'
+		url = "https://moehreag.duckdns.org/maven/releases"
 	}
 	mavenCentral()
 }
 
-loom {
-	setIntermediaryUrl('https://maven.legacyfabric.net/net/fabricmc/intermediary/%1$s/intermediary-%1$s-v2.jar')
-}
+subprojects {
+	apply plugin: "maven-publish"
 
-dependencies {
-	minecraft "com.mojang:minecraft:${project.minecraft_version}"
-	mappings "net.legacyfabric:yarn:${project.yarn_mappings}:v2"
-	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+	java {
 
-	modImplementation ("net.legacyfabric.legacy-fabric-api:legacy-fabric-api:${fabric_version}") {
-		exclude module: "legacy-fabric-entity-events-v1"
+		withSourcesJar()
 	}
 
-	// Hacks that make mac os work
-	if (System.getProperty("os.name").toLowerCase().contains("mac")) {
-		implementation 'org.lwjgl.lwjgl:lwjgl_util:2.9.4-nightly-20150209'
-		implementation 'org.lwjgl.lwjgl:lwjgl:2.9.4-nightly-20150209'
-		implementation 'org.lwjgl.lwjgl:lwjgl-platform:2.9.4-nightly-20150209'
-	}
-
-	modImplementation(include("io.github.moehreag:LegacyClientCommands:1.0.0"))
-	modImplementation files("libs/legacy-modmenu-1.1.1-dev.jar")
-}
-
-// More hacks that make mac os work
-if (System.getProperty("os.name").toLowerCase().contains("mac")) {
-	configurations.all {
-		resolutionStrategy {
-			dependencySubstitution {
-				substitute module('org.lwjgl.lwjgl:lwjgl_util:2.9.2-nightly-201408222') using module('org.lwjgl.lwjgl:lwjgl_util:2.9.4-nightly-20150209')
-				substitute module('org.lwjgl.lwjgl:lwjgl:2.9.2-nightly-201408222') using module('org.lwjgl.lwjgl:lwjgl:2.9.4-nightly-20150209')
-			}
-			force 'org.lwjgl.lwjgl:lwjgl-platform:2.9.4-nightly-20150209'
+	jar {
+		filesMatching('LICENSE') {
+			rename '^(LICENSE.*?)(\\..*)?$', "\$1_${archivesBaseName}\$2"
 		}
 	}
+
+
 }
 
-// Fix netty with Java 17+ (be happy if it didn't break for you)
-configurations.all {
-	resolutionStrategy {
-		dependencySubstitution {
-			substitute module('io.netty:netty-all:4.0.23.Final') using module('io.netty:netty-all:4.0.25.Final')
-		}
-		force 'io.netty:netty-all:4.0.25.Final'
-	}
-}
-
-processResources {
-	inputs.property "version", project.version
-
-	filesMatching("fabric.mod.json") {
-		expand "version": project.version
-	}
-}
-
-// ensure that the encoding is set to UTF-8, no matter what the system default is
-// this fixes some edge cases with special characters not displaying correctly
-// see http://yodaconditions.net/blog/fix-for-java-file-encoding-problems-with-gradle.html
 tasks.withType(JavaCompile).configureEach {
-	it.options.encoding = "UTF-8"
-	if (JavaVersion.current().isJava9Compatible()) it.options.release = 8
+	it.options.encoding = 'UTF-8'
 }
 
-java {
-	// Loom will automatically attach sourcesJar to a RemapSourcesJar task and to the "build" task
-	// if it is present.
-	// If you remove this line, sources will not be generated.
-	withSourcesJar()
-}
 
-jar {
-	from("LICENSE") {
-		rename { "${it}_${project.archivesBaseName}"}
-	}
-}
 
-// configure the maven publication
-publishing {
-	publications {
-		mavenJava(MavenPublication) {
-			from components.java
-		}
-	}
-
-	repositories {
-		maven {
-			name = "owlMaven"
-			def repository = project.version.toString().contains("beta") || project.version.toString().contains("alpha") ? "snapshots" : "releases"
-			url = "https://moehreag.duckdns.org/maven/"+repository
-			credentials(PasswordCredentials)
-			authentication {
-				basic(BasicAuthentication)
-			}
-		}
-	}
-}
