@@ -1,7 +1,7 @@
 package io.github.axolotlclient.AxolotlClientConfig.screen.widgets;
 
+import io.github.axolotlclient.AxolotlClientConfig.options.ConfigPart;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.Selectable;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
@@ -10,7 +10,7 @@ import net.minecraft.text.Text;
  * Class outlining some common methods for widgets in this config library.
  */
 
-public class OptionWidget extends ButtonWidget implements Selectable {
+public class OptionWidget extends ButtonWidget implements ConfigPart {
 
 	protected OptionWidget(int x, int y, int width, int height, Text message, PressAction onPress) {
 		super(x, y, width, height, message, onPress, ButtonWidget.DEFAULT_NARRATION);

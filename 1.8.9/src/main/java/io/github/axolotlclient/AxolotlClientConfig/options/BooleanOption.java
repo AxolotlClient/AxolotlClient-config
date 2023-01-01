@@ -76,10 +76,7 @@ public class BooleanOption extends OptionBase<Boolean> {
     @Override
     public @Nullable String getTooltip(String location) {
         if(getForceDisabled()){
-            if(!I18n.translate("disableReason."+disableReason).equals("disableReason."+disableReason)){
-                return getTooltipPrefix() + I18n.translate("disableReason."+disableReason);
-            }
-            return getTooltipPrefix() + disableReason;
+            return getTooltipPrefix() + translate(disableReason);
         }
         return super.getTooltip(location);
     }

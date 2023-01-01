@@ -27,7 +27,7 @@ public class Example implements ClientModInitializer {
         BooleanOption ignored = new BooleanOption("ignored_option", false);
         AxolotlClientConfigManager.getInstance().addIgnoredName(modid, ignored.getName());
         BooleanOption disabledExample = new BooleanOption("example_toggle_disabled", true);
-        disabledExample.setForceOff(true, I18n.translate("example_reason"));
+        disabledExample.setForceOff(true, "example_reason");
         example.add(new BooleanOption("example_toggle", false),
                 new DoubleOption("example_slider", 5D, 0D, 10D),
                 new EnumOption("example_enum_option", new String[]{"example_enum_option_1", "example_enum_option_2", "example_enum_option_3"}, "example_enum_option_2"),

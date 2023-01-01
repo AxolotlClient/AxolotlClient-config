@@ -2,12 +2,11 @@ package io.github.axolotlclient.AxolotlClientConfig.options;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
-import io.github.axolotlclient.AxolotlClientConfig.screen.widgets.EnumOptionWidget;
 import io.github.axolotlclient.AxolotlClientConfig.common.commands.CommandResponse;
+import io.github.axolotlclient.AxolotlClientConfig.screen.widgets.EnumOptionWidget;
 import net.minecraft.client.gui.widget.ClickableWidget;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Arrays;
 import java.util.Objects;
 
 public class EnumOption extends OptionBase<String> {
@@ -57,11 +56,7 @@ public class EnumOption extends OptionBase<String> {
     }
 
     private String[] convertToStringArray(Object[] arr){
-        List<String> l = new ArrayList<>();
-        for(Object v:arr){
-            l.add(v.toString());
-        }
-        return l.toArray(new String[0]);
+        return Arrays.stream(arr).map(Objects::toString).toArray(String[]::new);
     }
 
     @Override

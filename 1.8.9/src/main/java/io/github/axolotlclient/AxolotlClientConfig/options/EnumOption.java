@@ -6,7 +6,10 @@ import io.github.axolotlclient.AxolotlClientConfig.common.commands.CommandRespon
 import io.github.axolotlclient.AxolotlClientConfig.screen.widgets.EnumOptionWidget;
 import net.minecraft.client.gui.widget.ButtonWidget;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
 
 public class EnumOption extends OptionBase<String> {
 
@@ -16,37 +19,46 @@ public class EnumOption extends OptionBase<String> {
 
     public EnumOption(String name, Object[] e, String def) {
         super(name, def);
-        List<String> l = new ArrayList<>();
-        for(Object v:e){
-            l.add(v.toString());
-        }
-        values = l.toArray(new String[0]);
+        values = convertToStringArray(e);
+    }
 
-        setDefaults();
+    public EnumOption(String name, String tooltipLocation, Object[] e, String def) {
+        super(name, tooltipLocation, def);
+        values = convertToStringArray(e);
+    }
+
+    public EnumOption(String name, ChangedListener<String> onChange, Object[] e, String def) {
+        super(name, onChange, def);
+        values = convertToStringArray(e);
+    }
+
+    public EnumOption(String name, String tooltipLocation, ChangedListener<String> onChange, Object[] e, String def) {
+        super(name, tooltipLocation, onChange, def);
+        values = convertToStringArray(e);
     }
 
     public EnumOption(String name, String[] e, String def) {
         super(name, def);
         values = e;
-        setDefaults();
     }
 
-    public EnumOption(String name, String tooltipKeyPrefix, String[] e, String def) {
-        super(name, tooltipKeyPrefix, def);
+    public EnumOption(String name, String tooltipLocation, String[] e, String def) {
+        super(name, tooltipLocation, def);
         values = e;
-        setDefaults();
-    }
-
-    public EnumOption(String name, String tooltipKeyPrefix, ChangedListener<String> onChange, String[] e, String def) {
-        super(name, tooltipKeyPrefix, onChange, def);
-        values = e;
-        setDefaults();
     }
 
     public EnumOption(String name, ChangedListener<String> onChange, String[] e, String def) {
         super(name, onChange, def);
         values = e;
-        setDefaults();
+    }
+
+    public EnumOption(String name, String tooltipLocation, ChangedListener<String> onChange, String[] e, String def) {
+        super(name, tooltipLocation, onChange, def);
+        values = e;
+    }
+
+    private String[] convertToStringArray(Object[] arr){
+        return Arrays.stream(arr).map(Objects::toString).toArray(String[]::new);
     }
 
     @Override

@@ -8,20 +8,20 @@ import java.util.Collections;
 import java.util.List;
 
 public class GenericOption extends NoSaveOption<GenericOption.OnClick> {
-    private final String label;
+    private final String labelKey;
 
-    public GenericOption(String name, String label, OnClick def) {
+    public GenericOption(String name, String labelKey, OnClick def) {
         super(name, def);
-        this.label = label;
+        this.labelKey = labelKey;
     }
 
-    public GenericOption(String name, String label, String tooltipKeyPrefix, OnClick def) {
+    public GenericOption(String name, String labelKey, String tooltipKeyPrefix, OnClick def) {
         super(name, tooltipKeyPrefix, def);
-        this.label = label;
+        this.labelKey = labelKey;
     }
 
     public String getLabel(){
-        return label;
+        return translate(labelKey);
     }
 
     @Override

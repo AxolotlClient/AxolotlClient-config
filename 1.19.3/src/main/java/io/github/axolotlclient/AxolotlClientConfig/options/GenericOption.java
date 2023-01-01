@@ -6,15 +6,20 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.widget.ClickableWidget;
 
 public class GenericOption extends NoSaveOption<GenericOption.OnClick> {
-    private final String label;
+    private final String labelKey;
 
-    public GenericOption(String name, String label, OnClick onClick) {
+    public GenericOption(String name, String labelKey, OnClick onClick) {
         super(name, onClick);
-        this.label = label;
+        this.labelKey = labelKey;
+    }
+
+    public GenericOption(String name, String labelKey, String tooltipKeyPrefix, OnClick def) {
+        super(name, tooltipKeyPrefix, def);
+        this.labelKey = labelKey;
     }
 
     public String getLabel(){
-        return label;
+        return translate(labelKey);
     }
 
     @Override

@@ -1,5 +1,6 @@
 package io.github.axolotlclient.AxolotlClientConfig.screen.widgets;
 
+import io.github.axolotlclient.AxolotlClientConfig.options.ConfigPart;
 import io.github.axolotlclient.AxolotlClientConfig.screen.OptionsScreenBuilder;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.widget.ButtonWidget;
@@ -12,7 +13,7 @@ import net.minecraft.client.gui.widget.ButtonWidget;
  *     Other Widgets will still work, but will have no way to interact with.
  */
 
-public class OptionWidget extends ButtonWidget {
+public class OptionWidget extends ButtonWidget implements ConfigPart {
     public OptionWidget(int id, int x, int y, String message) {
         super(id, x, y, message);
     }
