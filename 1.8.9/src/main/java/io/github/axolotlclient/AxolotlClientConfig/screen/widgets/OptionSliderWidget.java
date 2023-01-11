@@ -96,7 +96,7 @@ public class OptionSliderWidget<T extends NumericOption<N>, N extends Number> ex
 
     protected boolean canHover(){
         if(MinecraftClient.getInstance().currentScreen instanceof OptionsScreenBuilder &&
-                ((OptionsScreenBuilder) MinecraftClient.getInstance().currentScreen).isPickerOpen()){
+                ((OptionsScreenBuilder) MinecraftClient.getInstance().currentScreen).isOverlayOpen()){
             this.hovered = false;
             return false;
         }

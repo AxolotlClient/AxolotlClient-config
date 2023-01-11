@@ -29,6 +29,10 @@ red=Red
 green=Green
 blue=Blue
 
+openEditor=Open Editor
+drawGraphic=Draw Graphics
+clearGraphics=[Clear]
+
 back=Back
 
 ## Example Screen Translations
@@ -47,3 +51,4 @@ example_generic=Example Generic Option
 example_sub=Example Sub Category
 example_keybind=Example KeyBinding Option
 example_keybind_conflict=Example Conflicting KeyBinding Option
+example_graphic=Example Graphics Option

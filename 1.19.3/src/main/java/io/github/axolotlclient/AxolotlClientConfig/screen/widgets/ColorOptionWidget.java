@@ -5,6 +5,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import io.github.axolotlclient.AxolotlClientConfig.Color;
 import io.github.axolotlclient.AxolotlClientConfig.options.ColorOption;
 import io.github.axolotlclient.AxolotlClientConfig.screen.OptionsScreenBuilder;
+import io.github.axolotlclient.AxolotlClientConfig.screen.overlay.ColorSelectionWidget;
 import io.github.axolotlclient.AxolotlClientConfig.util.DrawUtil;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
@@ -66,7 +67,8 @@ public class ColorOptionWidget extends OptionWidget {
 	public boolean mouseClicked(double mouseX, double mouseY, int button) {
         if(openPicker.isMouseOver(mouseX, mouseY)){
             if(MinecraftClient.getInstance().currentScreen instanceof OptionsScreenBuilder){
-                ((OptionsScreenBuilder) MinecraftClient.getInstance().currentScreen).openColorPicker(option);
+                ((OptionsScreenBuilder) MinecraftClient.getInstance().currentScreen).setOverlay(
+                        new ColorSelectionWidget(option, (OptionsScreenBuilder) MinecraftClient.getInstance().currentScreen));
             }
 			playDownSound(MinecraftClient.getInstance().getSoundManager());
             return true;
@@ -78,7 +80,7 @@ public class ColorOptionWidget extends OptionWidget {
         } else {
 			textField.setTextFieldFocused(false);
 	        if(MinecraftClient.getInstance().currentScreen instanceof OptionsScreenBuilder){
-		        ((OptionsScreenBuilder) MinecraftClient.getInstance().currentScreen).closeColorPicker();
+		        ((OptionsScreenBuilder) MinecraftClient.getInstance().currentScreen).closeOverlay();
 	        }
         }
 		return super.mouseClicked(mouseX, mouseY, button);
@@ -98,7 +100,8 @@ public class ColorOptionWidget extends OptionWidget {
     public boolean keyPressed(int keyCode, int scanCode, int modifiers){
         if (keyCode == InputUtil.KEY_ENTER_CODE) {
             if(MinecraftClient.getInstance().currentScreen instanceof OptionsScreenBuilder){
-                ((OptionsScreenBuilder) MinecraftClient.getInstance().currentScreen).openColorPicker(option);
+                ((OptionsScreenBuilder) MinecraftClient.getInstance().currentScreen).setOverlay(
+                        new ColorSelectionWidget(option, (OptionsScreenBuilder) MinecraftClient.getInstance().currentScreen));
             }
             return true;
         }

@@ -6,7 +6,8 @@ import io.github.axolotlclient.AxolotlClientConfig.AxolotlClientConfigConfig;
 import io.github.axolotlclient.AxolotlClientConfig.options.ColorOption;
 import io.github.axolotlclient.AxolotlClientConfig.common.types.Tooltippable;
 import io.github.axolotlclient.AxolotlClientConfig.options.OptionCategory;
-import io.github.axolotlclient.AxolotlClientConfig.screen.widgets.ColorSelectionWidget;
+import io.github.axolotlclient.AxolotlClientConfig.screen.overlay.Overlay;
+import io.github.axolotlclient.AxolotlClientConfig.screen.overlay.ColorSelectionWidget;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
@@ -26,7 +27,7 @@ public class OptionsScreenBuilder extends Screen {
     private final Screen parent;
     protected OptionCategory cat;
 
-    protected ColorSelectionWidget picker;
+    protected Overlay overlay;
 
     private ButtonWidgetList list;
     protected TextFieldWidget searchWidget;
@@ -54,30 +55,31 @@ public class OptionsScreenBuilder extends Screen {
 
         searchWidget.render();
 
-        if(picker!=null){
+        if(overlay !=null){
             GlStateManager.disableDepthTest();
-            picker.render(MinecraftClient.getInstance(), mouseX, mouseY);
+            overlay.render(MinecraftClient.getInstance(), mouseX, mouseY);
             GlStateManager.enableDepthTest();
         } else {
             list.renderTooltips(mouseX, mouseY);
         }
     }
 
-    public void openColorPicker(ColorOption option){
-        picker = new ColorSelectionWidget(option);
+    public void setOverlay(Overlay overlay) {
+        this.overlay = overlay;
+        overlay.init();
     }
 
-    public void closeColorPicker() {
+    public void closeOverlay() {
         AxolotlClientConfigManager.getInstance().saveCurrentConfig();
-        picker=null;
+        overlay = null;
     }
 
-    public boolean isPickerOpen(){
-        return picker!=null;
+    public boolean isOverlayOpen(){
+        return overlay !=null;
     }
     @Override
     protected void mouseDragged(int i, int j, int k, long l) {
-        if(!isPickerOpen()) {
+        if(!isOverlayOpen()) {
             super.mouseDragged(i, j, k, l);
         }
     }
@@ -86,13 +88,13 @@ public class OptionsScreenBuilder extends Screen {
     protected void mouseClicked(int mouseX, int mouseY, int button) {
         super.mouseClicked(mouseX, mouseY, button);
 
-        if(isPickerOpen()){
-            if(!picker.isMouseOver(MinecraftClient.getInstance(), mouseX, mouseY)) {
-                closeColorPicker();
+        if(isOverlayOpen()){
+            if(!overlay.isMouseOver(MinecraftClient.getInstance(), mouseX, mouseY)) {
+                closeOverlay();
                 this.list.mouseClicked(mouseX, mouseY, button);
 
             } else {
-                picker.onClick(mouseX, mouseY);
+                overlay.onClick(mouseX, mouseY);
             }
         } else {
             this.list.mouseClicked(mouseX, mouseY, button);
@@ -106,14 +108,14 @@ public class OptionsScreenBuilder extends Screen {
         if(list != null) {
             this.list.mouseReleased(mouseX, mouseY, button);
         }
-        if(isPickerOpen()) picker.mouseReleased(mouseX, mouseY);
+        if(isOverlayOpen()) overlay.mouseReleased(mouseX, mouseY);
     }
 
     @Override
     protected void buttonClicked(ButtonWidget button) {
         if(button.id==0){
-            if(isPickerOpen()){
-                closeColorPicker();
+            if(isOverlayOpen()){
+                closeOverlay();
             }
             AxolotlClientConfigManager.getInstance().saveCurrentConfig();
             MinecraftClient.getInstance().openScreen(parent);
@@ -124,8 +126,8 @@ public class OptionsScreenBuilder extends Screen {
     public void tick() {
         this.list.tick();
         searchWidget.tick();
-        if(isPickerOpen()){
-            picker.tick();
+        if(isOverlayOpen()){
+            overlay.tick();
         }
     }
 
@@ -189,7 +191,7 @@ public class OptionsScreenBuilder extends Screen {
     @Override
     public void handleMouse() {
         super.handleMouse();
-        if(!isPickerOpen()) {
+        if(!isOverlayOpen()) {
             this.list.handleMouse();
         }
     }
@@ -201,7 +203,7 @@ public class OptionsScreenBuilder extends Screen {
 
     @Override
     protected void keyPressed(char character, int code) {
-        if(!isPickerOpen()) {
+        if(!isOverlayOpen()) {
             if(searchWidget.isFocused()){
                 searchWidget.keyPressed(character, code);
                 return;
@@ -210,7 +212,7 @@ public class OptionsScreenBuilder extends Screen {
                 return;
             }
         } else {
-            picker.keyPressed(character, code);
+            overlay.keyPressed(character, code);
         }
         super.keyPressed(character, code);
     }
@@ -222,8 +224,8 @@ public class OptionsScreenBuilder extends Screen {
 
     @Override
     public void resize(MinecraftClient client, int width, int height) {
-        if(picker!=null){
-            picker.init();
+        if(overlay !=null){
+            overlay.init();
         }
         super.resize(client, width, height);
     }

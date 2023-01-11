@@ -74,6 +74,11 @@ public abstract class OptionBase<T> implements Option<T> {
     }
 
     @Override
+    public void setDefaults() {
+        option = getDefault();
+    }
+
+    @Override
     public @Nullable String getTooltipLocation() {
         if (tooltipKeyPrefix != null)
             return tooltipKeyPrefix + "." + name;

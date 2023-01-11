@@ -20,9 +20,7 @@ public interface Option<T> extends io.github.axolotlclient.AxolotlClientConfig.c
 
     T getDefault();
 
-    default void setDefaults(){
-        set(getDefault());
-    }
+    void setDefaults();
 
     int onCommandExec(String arg);
 

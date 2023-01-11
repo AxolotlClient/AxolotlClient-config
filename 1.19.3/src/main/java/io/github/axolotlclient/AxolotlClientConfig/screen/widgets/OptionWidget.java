@@ -1,6 +1,8 @@
 package io.github.axolotlclient.AxolotlClientConfig.screen.widgets;
 
 import io.github.axolotlclient.AxolotlClientConfig.options.ConfigPart;
+import io.github.axolotlclient.AxolotlClientConfig.screen.overlay.ColorSelectionWidget;
+import io.github.axolotlclient.AxolotlClientConfig.screen.overlay.Overlay;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.text.MutableText;
@@ -33,7 +35,7 @@ public class OptionWidget extends ButtonWidget implements ConfigPart {
     }
 
     protected boolean canHover(){
-        if(MinecraftClient.getInstance().currentScreen instanceof ColorSelectionWidget){
+        if(MinecraftClient.getInstance().currentScreen instanceof Overlay){
             this.hovered = false;
             return false;
         }

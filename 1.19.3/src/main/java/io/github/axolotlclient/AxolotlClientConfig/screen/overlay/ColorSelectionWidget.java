@@ -1,33 +1,30 @@
-package io.github.axolotlclient.AxolotlClientConfig.screen.widgets;
+package io.github.axolotlclient.AxolotlClientConfig.screen.overlay;
 
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import io.github.axolotlclient.AxolotlClientConfig.Color;
 import io.github.axolotlclient.AxolotlClientConfig.common.util.Rectangle;
 import io.github.axolotlclient.AxolotlClientConfig.options.BooleanOption;
 import io.github.axolotlclient.AxolotlClientConfig.options.ColorOption;
 import io.github.axolotlclient.AxolotlClientConfig.options.IntegerOption;
+import io.github.axolotlclient.AxolotlClientConfig.screen.OptionsScreenBuilder;
+import io.github.axolotlclient.AxolotlClientConfig.screen.widgets.BooleanWidget;
+import io.github.axolotlclient.AxolotlClientConfig.screen.widgets.OptionSliderWidget;
 import io.github.axolotlclient.AxolotlClientConfig.util.ConfigUtils;
 import io.github.axolotlclient.AxolotlClientConfig.util.DrawUtil;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawableHelper;
-import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.client.gui.widget.PagedEntryListWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
-import net.minecraft.client.resource.language.I18n;
-import net.minecraft.client.util.Window;
+import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
-import org.jetbrains.annotations.NotNull;
 import org.lwjgl.opengl.GL11;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.Objects;
 
-public class ColorSelectionWidget extends ButtonWidget {
+public class ColorSelectionWidget extends Overlay {
     private final ColorOption option;
-    private Window window;
-
-    protected Rectangle picker;
 
     // Texture based on https://github.com/MartinThoma/LaTeX-examples/blob/master/documents/printer-testpage/printer-testpage.tex
     protected Identifier wheel = new Identifier("axolotlclient", "textures/gui/colorwheel.png");
@@ -54,18 +51,14 @@ public class ColorSelectionWidget extends ButtonWidget {
 
     protected TextFieldWidget textInput;
 
-    public ColorSelectionWidget(ColorOption option) {
-        super(0, 100, 50, "");
+    public ColorSelectionWidget(ColorOption option, OptionsScreenBuilder parent) {
+        super("pickColor", parent);
         this.option=option;
-        init();
     }
 
     public void init(){
-        window = new Window(MinecraftClient.getInstance());
-        width=window.getWidth()-200;
-        height=window.getHeight()-100;
 
-        picker = new Rectangle(100, 50, width, height);
+        super.init();
 
         chroma.set(option.getChroma());
 
@@ -82,6 +75,7 @@ public class ColorSelectionWidget extends ButtonWidget {
             green.set(option.get().getGreen());
             blue.set(option.get().getBlue());
         }
+
     }
 
     private void initLarge(){
@@ -91,40 +85,31 @@ public class ColorSelectionWidget extends ButtonWidget {
 
         slidersVisible = true;
 
-        textInput = new TextFieldWidget(0, MinecraftClient.getInstance().textRenderer,
-                currentRect.x, currentRect.y + currentRect.height + 10, currentRect.width, 20);
+        addDrawableChild(textInput = new TextFieldWidget(MinecraftClient.getInstance().textRenderer,
+                currentRect.x, currentRect.y + currentRect.height + 10, currentRect.width, 20, Text.empty()));
 
-        chromaWidget = new BooleanWidget(0, currentRect.x, currentRect.y + currentRect.height + 40, currentRect.width, 20, chroma){
+        addDrawableChild(chromaWidget = new BooleanWidget(currentRect.x, currentRect.y + currentRect.height + 40, currentRect.width, 20, chroma){
             @Override
             protected boolean canHover() {
                 return true;
             }
 
             @Override
-            public void updateMessage() {
-                this.message = option.getTranslatedName() + ": " + (option.get()? I18n.translate ("options."+"on"): I18n.translate ("options."+"off"));
+            public Text getMessage() {
+                return Text.of(this.option.getTranslatedName()).copy().append(": ").append(super.getMessage());
             }
-        };
+        });
 
-        redSlider = new ColorSliderWidget(currentRect.x, currentRect.y + currentRect.height + 65, currentRect.width, 20, red);
-        greenSlider = new ColorSliderWidget(currentRect.x, currentRect.y + currentRect.height + 90, currentRect.width, 20, green);
-        blueSlider = new ColorSliderWidget(currentRect.x, currentRect.y + currentRect.height + 115, currentRect.width, 20, blue);
-        alphaSlider = new ColorSliderWidget(currentRect.x, currentRect.y+ currentRect.height + 140, currentRect.width, 20, alpha);
+        addDrawableChild(redSlider = new ColorSliderWidget(currentRect.x, currentRect.y + currentRect.height + 65, currentRect.width, 20, red));
+        addDrawableChild(greenSlider = new ColorSliderWidget(currentRect.x, currentRect.y + currentRect.height + 90, currentRect.width, 20, green));
+        addDrawableChild(blueSlider = new ColorSliderWidget(currentRect.x, currentRect.y + currentRect.height + 115, currentRect.width, 20, blue));
+        addDrawableChild(alphaSlider = new ColorSliderWidget(currentRect.x, currentRect.y+ currentRect.height + 140, currentRect.width, 20, alpha));
 
-        textInput.setListener(new PagedEntryListWidget.Listener() {
-            @Override
-            public void setBooleanValue(int id, boolean value) {}
-
-            @Override
-            public void setFloatValue(int id, float value) {}
-
-            @Override
-            public void setStringValue(int id, String text) {
-                alphaSlider.update();
-                redSlider.update();
-                greenSlider.update();
-                blueSlider.update();
-            }
+        textInput.setChangedListener(s -> {
+            alphaSlider.update();
+            redSlider.update();
+            greenSlider.update();
+            blueSlider.update();
         });
     }
 
@@ -141,100 +126,70 @@ public class ColorSelectionWidget extends ButtonWidget {
             blue.set(option.get().getBlue());
         }
 
-        textInput = new TextFieldWidget(0, MinecraftClient.getInstance().textRenderer,
-                currentRect.x, currentRect.y + currentRect.height + 10, currentRect.width, 20);
+        addDrawableChild(textInput = new TextFieldWidget(MinecraftClient.getInstance().textRenderer,
+                currentRect.x, currentRect.y + currentRect.height + 10, currentRect.width, 20, Text.empty()));
 
-        chromaWidget = new BooleanWidget(0, currentRect.x, currentRect.y + currentRect.height + 40, currentRect.width, 20, chroma){
+        addDrawableChild(chromaWidget = new BooleanWidget(currentRect.x, currentRect.y + currentRect.height + 40, currentRect.width, 20, chroma){
             @Override
             protected boolean canHover() {
                 return true;
             }
 
             @Override
-            public void updateMessage() {
-                this.message = option.getTranslatedName() + ": " + (option.get()? I18n.translate ("options."+"on"): I18n.translate ("options."+"off"));
+            public Text getMessage() {
+                return Text.of(this.option.getTranslatedName()).copy().append(": ").append(super.getMessage());
             }
-        };
+        });
 
-        alphaSlider = new ColorSliderWidget(pickerImage.x, pickerImage.y + pickerImage.height + 20, pickerImage.width, 20, alpha);
+        addDrawableChild(alphaSlider = new ColorSliderWidget(pickerImage.x, pickerImage.y + pickerImage.height + 20, pickerImage.width, 20, alpha));
 
         if(slidersVisible) {
 
-            redSlider = new ColorSliderWidget(currentRect.x, currentRect.y + currentRect.height + 65, currentRect.width, 20, red);
-            greenSlider = new ColorSliderWidget(currentRect.x, currentRect.y + currentRect.height + 90, currentRect.width, 20, green);
-            blueSlider = new ColorSliderWidget(currentRect.x, currentRect.y + currentRect.height + 115, currentRect.width, 20, blue);
+            addDrawableChild(redSlider = new ColorSliderWidget(currentRect.x, currentRect.y + currentRect.height + 65, currentRect.width, 20, red));
+            addDrawableChild(greenSlider = new ColorSliderWidget(currentRect.x, currentRect.y + currentRect.height + 90, currentRect.width, 20, green));
+            addDrawableChild(blueSlider = new ColorSliderWidget(currentRect.x, currentRect.y + currentRect.height + 115, currentRect.width, 20, blue));
         }
 
-        textInput.setListener(new PagedEntryListWidget.Listener() {
-            @Override
-            public void setBooleanValue(int id, boolean value) {
+        textInput.setChangedListener(s -> {
+            alphaSlider.update();
 
-            }
-
-            @Override
-            public void setFloatValue(int id, float value) {
-
-            }
-
-            @Override
-            public void setStringValue(int id, String text) {
-                alphaSlider.update();
-
-                if (slidersVisible) {
-                    redSlider.update();
-                    greenSlider.update();
-                    blueSlider.update();
-                }
+            if(slidersVisible) {
+                redSlider.update();
+                greenSlider.update();
+                blueSlider.update();
             }
         });
     }
 
     @Override
-    public void render(MinecraftClient client, int mouseX, int mouseY) {
+    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+        super.render(matrices, mouseX, mouseY, delta);
 
-        DrawUtil.fillRect(new Rectangle(100, 50, width, height), Color.DARK_GRAY.withAlpha(127));
-        DrawUtil.outlineRect(new Rectangle(100, 50, width, height), Color.BLACK);
+        DrawUtil.drawTextWithShadow(matrices, MinecraftClient.getInstance().textRenderer, Text.translatable("currentColor").append(":") ,currentRect.x, currentRect.y - 10, -1);
 
-        drawCenteredString(MinecraftClient.getInstance().textRenderer, I18n.translate("pickColor"), window.getWidth()/2, 54, -1);
+        DrawUtil.fillRect(matrices, currentRect, option.get());
+        DrawUtil.outlineRect(matrices, currentRect, Color.DARK_GRAY.withAlpha(127));
 
-        DrawUtil.drawString(MinecraftClient.getInstance().textRenderer, I18n.translate("currentColor") + ":" ,currentRect.x, currentRect.y - 10, -1, true);
+        RenderSystem.setShaderColor(1, 1, 1, 1);
 
-        DrawUtil.fillRect(currentRect, option.get());
-        DrawUtil.outlineRect(currentRect, Color.DARK_GRAY.withAlpha(127));
-
-        GlStateManager.color3f(1, 1, 1);
-
-        MinecraftClient.getInstance().getTextureManager().bindTexture(wheel);
-        DrawableHelper.drawTexture(pickerImage.x, pickerImage.y, 0, 0, pickerImage.width, pickerImage.height, pickerImage.width, pickerImage.height);
-        DrawUtil.outlineRect(pickerOutline, Color.DARK_GRAY);
-
-        chromaWidget.render(client, mouseX, mouseY);
-
-        alphaSlider.render(client, mouseX, mouseY);
-
-        if(slidersVisible) {
-            redSlider.render(client, mouseX, mouseY);
-            greenSlider.render(client, mouseX, mouseY);
-            blueSlider.render(client, mouseX, mouseY);
-        }
-
-        textInput.render();
-
+        RenderSystem.setShaderTexture(0, wheel);
+        DrawableHelper.drawTexture(matrices, pickerImage.x, pickerImage.y, 0, 0, pickerImage.width, pickerImage.height, pickerImage.width, pickerImage.height);
+        DrawUtil.outlineRect(matrices, pickerOutline, Color.DARK_GRAY);
     }
 
     public void tick(){
         textInput.tick();
 
         if(!Objects.equals(textInput.getText(), option.get().toString())){
-               if(textInput.isFocused()){
-                   option.set(Color.parse(textInput.getText()));
-               } else {
-                   textInput.setText(option.get().toString());
-               }
+            if(textInput.isFocused()){
+                option.set(Color.parse(textInput.getText()));
+            } else {
+                textInput.setText(option.get().toString());
+            }
         }
 
         if(option.get().getAlpha() != alphaSlider.getSliderValueAsInt()){
-            if(alphaSlider.isHovered() || alphaSlider.dragging){
+            if(alphaSlider.isHoveredOrFocused() || alphaSlider.dragging){
                 option.set(new Color(option.get().getRed(), option.get().getGreen(), option.get().getBlue(), alpha.get()));
             } else {
                 alpha.set(option.get().getAlpha());
@@ -244,7 +199,7 @@ public class ColorSelectionWidget extends ButtonWidget {
 
         if(slidersVisible) {
             if (option.get().getRed() != redSlider.getSliderValueAsInt()) {
-                if (redSlider.isHovered() || redSlider.dragging) {
+                if (redSlider.isHoveredOrFocused() || redSlider.dragging) {
                     option.set(new Color(red.get(), option.get().getGreen(), option.get().getBlue(), option.get().getAlpha()));
                 } else {
                     red.set(option.get().getRed());
@@ -253,7 +208,7 @@ public class ColorSelectionWidget extends ButtonWidget {
             }
 
             if (option.get().getGreen() != greenSlider.getSliderValueAsInt()) {
-                if (greenSlider.isHovered() || greenSlider.dragging) {
+                if (greenSlider.isHoveredOrFocused() || greenSlider.dragging) {
                     option.set(new Color(option.get().getRed(), green.get(), option.get().getBlue(), option.get().getAlpha()));
                 } else {
                     green.set(option.get().getGreen());
@@ -262,7 +217,7 @@ public class ColorSelectionWidget extends ButtonWidget {
             }
 
             if (option.get().getBlue() != blueSlider.getSliderValueAsInt()) {
-                if (blueSlider.isHovered() || blueSlider.dragging) {
+                if (blueSlider.isHoveredOrFocused() || blueSlider.dragging) {
                     option.set(new Color(option.get().getRed(), option.get().getGreen(), blue.get(), option.get().getAlpha()));
                 } else {
                     blue.set(option.get().getBlue());
@@ -272,16 +227,16 @@ public class ColorSelectionWidget extends ButtonWidget {
         }
     }
 
-    public void onClick(int mouseX, int mouseY){
-
+    public boolean onClick(double mouseX, double mouseY){
+        boolean bl = false;
         if(pickerImage.isMouseOver(mouseX, mouseY)){
             final ByteBuffer pixelBuffer = ByteBuffer.allocateDirect(4);
             pixelBuffer.order(ByteOrder.nativeOrder());
 
             // Helped in the complete confusion:
             // https://github.com/MrCrayfish/MrCrayfishDeviceMod/blob/2a06b20ad8873855885285f3cee6a682e161e24c/src/main/java/com/mrcrayfish/device/util/GLHelper.java#L71
-            GL11.glReadPixels(ConfigUtils.toGlCoordsX(mouseX),
-                    ConfigUtils.toGlCoordsY(mouseY),
+
+            GL11.glReadPixels(ConfigUtils.toGlCoordsX((int) mouseX), ConfigUtils.toGlCoordsY((int) mouseY),
                     1, 1, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, pixelBuffer);
 
             final int r = pixelBuffer.get(0) & 0xff;
@@ -298,40 +253,60 @@ public class ColorSelectionWidget extends ButtonWidget {
                 greenSlider.update();
                 blueSlider.update();
             }
-
-        } else if (chromaWidget.isMouseOver(MinecraftClient.getInstance(), mouseX, mouseY)) {
+            bl=true;
+        } else if (chromaWidget.isMouseOver(mouseX, mouseY)) {
             chromaWidget.mouseClicked(mouseX, mouseY, 0);
             option.setChroma(chroma.get());
-
-        } else if (alphaSlider.isMouseOver(MinecraftClient.getInstance(), mouseX, mouseY)) {
+            bl=true;
+        } else if (alphaSlider.isMouseOver(mouseX, mouseY)) {
             option.set(new Color(option.get().getRed(), option.get().getGreen(), option.get().getBlue(), alpha.get()));
+            bl=true;
         }
         if(slidersVisible) {
-            if (redSlider.isMouseOver(MinecraftClient.getInstance(), mouseX, mouseY)) {
+            if (redSlider.isMouseOver(mouseX, mouseY)) {
                 option.set(new Color(red.get(), option.get().getGreen(), option.get().getBlue(), option.get().getAlpha()));
-            } else if (greenSlider.isMouseOver(MinecraftClient.getInstance(), mouseX, mouseY)) {
+                bl=true;
+            } else if (greenSlider.isMouseOver(mouseX, mouseY)) {
                 option.set(new Color(option.get().getRed(), green.get(), option.get().getBlue(), option.get().getAlpha()));
-            } else if (blueSlider.isMouseOver(MinecraftClient.getInstance(), mouseX, mouseY)) {
+                bl=true;
+            } else if (blueSlider.isMouseOver(mouseX, mouseY)) {
                 option.set(new Color(option.get().getRed(), option.get().getGreen(), blue.get(), option.get().getAlpha()));
+                bl=true;
             }
         }
-        textInput.mouseClicked(mouseX, mouseY, 0);
+        return bl || textInput.mouseClicked(mouseX, mouseY, 0);
     }
 
     @Override
-    public void mouseReleased(int mouseX, int mouseY) {
-        alphaSlider.mouseReleased(mouseX, mouseY);
-
+    public boolean mouseReleased(double mouseX, double mouseY, int button) {
         if(slidersVisible) {
-            redSlider.mouseReleased(mouseX, mouseY);
-            greenSlider.mouseReleased(mouseX, mouseY);
-            blueSlider.mouseReleased(mouseX, mouseY);
+            redSlider.mouseReleased(mouseX, mouseY, button);
+            greenSlider.mouseReleased(mouseX, mouseY, button);
+            blueSlider.mouseReleased(mouseX, mouseY, button);
         }
+        return alphaSlider.mouseReleased(mouseX, mouseY, button);
     }
 
-    public void keyPressed(char c, int code){
+    @Override
+    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+        boolean bl = super.keyPressed(keyCode, scanCode, modifiers);
         if(textInput.isFocused()){
-            textInput.keyPressed(c, code);
+            bl = bl || textInput.keyPressed(keyCode, scanCode, modifiers);
+        }
+        alphaSlider.update();
+
+        if(slidersVisible) {
+            redSlider.update();
+            greenSlider.update();
+            blueSlider.update();
+        }
+        return bl;
+    }
+
+    @Override
+    public boolean charTyped(char chr, int modifiers) {
+        if(textInput.isFocused()){
+            boolean b = textInput.charTyped(chr, modifiers);
             alphaSlider.update();
 
             if(slidersVisible) {
@@ -339,13 +314,15 @@ public class ColorSelectionWidget extends ButtonWidget {
                 greenSlider.update();
                 blueSlider.update();
             }
+            return  b;
         }
+        return false;
     }
 
-    private class ColorSliderWidget extends OptionSliderWidget<IntegerOption, Integer> {
+    private static class ColorSliderWidget extends OptionSliderWidget<IntegerOption, Integer> {
 
         public ColorSliderWidget(int x, int y, int width, int height, IntegerOption option) {
-            super(0, x, y, width, height, option);
+            super(x, y, width, height, option);
         }
 
         @Override
@@ -354,8 +331,8 @@ public class ColorSelectionWidget extends ButtonWidget {
         }
 
         @Override
-        protected @NotNull String getMessage() {
-            return getOption().getTranslatedName() + ": " + super.getMessage();
+        public Text getMessage() {
+            return Text.of(this.getOption().getTranslatedName()).copy().append(": ").append(super.getMessage());
         }
     }
 }

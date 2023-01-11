@@ -4,9 +4,9 @@ import com.mojang.blaze3d.platform.InputUtil;
 import io.github.axolotlclient.AxolotlClientConfig.common.types.Tooltippable;
 import io.github.axolotlclient.AxolotlClientConfig.AxolotlClientConfigConfig;
 import io.github.axolotlclient.AxolotlClientConfig.AxolotlClientConfigManager;
-import io.github.axolotlclient.AxolotlClientConfig.options.ColorOption;
 import io.github.axolotlclient.AxolotlClientConfig.options.OptionCategory;
-import io.github.axolotlclient.AxolotlClientConfig.screen.widgets.ColorSelectionWidget;
+import io.github.axolotlclient.AxolotlClientConfig.screen.overlay.Overlay;
+import io.github.axolotlclient.AxolotlClientConfig.screen.overlay.ColorSelectionWidget;
 import io.github.axolotlclient.AxolotlClientConfig.util.DrawUtil;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
@@ -30,7 +30,7 @@ public class OptionsScreenBuilder extends Screen {
     public String modid;
     protected OptionCategory cat;
 
-    protected ColorSelectionWidget picker;
+    protected Overlay overlay;
     protected TextFieldWidget searchWidget;
 
     private ButtonWidgetList list;
@@ -55,26 +55,26 @@ public class OptionsScreenBuilder extends Screen {
         this.list.render(matrices, mouseX, mouseY, delta);
         drawCenteredText(matrices, textRenderer, cat.getTranslatedName(), width/2, 25, -1);
 
-        if(picker==null) {
+        if(overlay ==null) {
             list.renderTooltips(matrices, mouseX, mouseY);
         }
 
         super.render(matrices, mouseX, mouseY, delta);
     }
 
-    public void openColorPicker(ColorOption option){
-        MinecraftClient.getInstance().setScreen(picker = new ColorSelectionWidget(option,this));
+    public void setOverlay(Overlay overlay){
+        MinecraftClient.getInstance().setScreen(this.overlay = overlay);
     }
 
-    public void closeColorPicker(){
+    public void closeOverlay(){
         AxolotlClientConfigManager.getInstance().saveCurrentConfig();
         pickerWasOpened = true;
         MinecraftClient.getInstance().setScreen(this);
-        picker=null;
+        overlay =null;
     }
 
     public boolean isPickerOpen(){
-        return picker!=null;
+        return overlay !=null;
     }
 
     @Override
@@ -128,7 +128,7 @@ public class OptionsScreenBuilder extends Screen {
 
             this.addDrawableChild(backButton = ButtonWidget.builder(ScreenTexts.BACK, buttonWidget -> {
 				if (isPickerOpen()) {
-					closeColorPicker();
+					closeOverlay();
 				} else {
 					MinecraftClient.getInstance().setScreen(parent);
 				}

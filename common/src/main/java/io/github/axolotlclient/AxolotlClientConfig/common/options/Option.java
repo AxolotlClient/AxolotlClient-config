@@ -16,8 +16,6 @@ public interface Option<T> extends Tooltippable {
     void setValueFromJsonElement(JsonElement element);
 
     T getDefault();
-    default void setDefaults(){
-        set(getDefault());
-    }
+    void setDefaults();
 
 }

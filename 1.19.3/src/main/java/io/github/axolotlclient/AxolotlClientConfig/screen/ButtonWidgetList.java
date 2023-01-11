@@ -6,6 +6,7 @@ import io.github.axolotlclient.AxolotlClientConfig.AxolotlClientConfigManager;
 import io.github.axolotlclient.AxolotlClientConfig.options.BooleanOption;
 import io.github.axolotlclient.AxolotlClientConfig.options.Option;
 import io.github.axolotlclient.AxolotlClientConfig.options.OptionCategory;
+import io.github.axolotlclient.AxolotlClientConfig.screen.overlay.ColorSelectionWidget;
 import io.github.axolotlclient.AxolotlClientConfig.screen.widgets.*;
 import io.github.axolotlclient.AxolotlClientConfig.util.ConfigUtils;
 import net.minecraft.client.MinecraftClient;

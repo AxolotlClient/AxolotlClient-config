@@ -26,5 +26,6 @@
         "versions": "*"
       }
 		]
-	}
+	},
+  "mixin": "axolotlclientconfigtest.mixins.json"
 }

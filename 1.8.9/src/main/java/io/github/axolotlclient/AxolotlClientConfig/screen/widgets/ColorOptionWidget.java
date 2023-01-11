@@ -4,6 +4,7 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import io.github.axolotlclient.AxolotlClientConfig.Color;
 import io.github.axolotlclient.AxolotlClientConfig.options.ColorOption;
 import io.github.axolotlclient.AxolotlClientConfig.screen.OptionsScreenBuilder;
+import io.github.axolotlclient.AxolotlClientConfig.screen.overlay.ColorSelectionWidget;
 import io.github.axolotlclient.AxolotlClientConfig.util.DrawUtil;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.widget.ButtonWidget;
@@ -65,7 +66,7 @@ public class ColorOptionWidget extends OptionWidget {
     @Override
     public boolean isMouseOver(MinecraftClient client, int mouseX, int mouseY) {
         if(MinecraftClient.getInstance().currentScreen instanceof OptionsScreenBuilder &&
-                ((OptionsScreenBuilder) MinecraftClient.getInstance().currentScreen).isPickerOpen()) return false;
+                ((OptionsScreenBuilder) MinecraftClient.getInstance().currentScreen).isOverlayOpen()) return false;
         return super.isMouseOver(client, mouseX, mouseY);
     }
 
@@ -73,12 +74,12 @@ public class ColorOptionWidget extends OptionWidget {
         if(openPicker.isMouseOver(MinecraftClient.getInstance(), mouseX, mouseY)){
 
             if(MinecraftClient.getInstance().currentScreen instanceof OptionsScreenBuilder){
-                ((OptionsScreenBuilder) MinecraftClient.getInstance().currentScreen).openColorPicker(option);
+                ((OptionsScreenBuilder) MinecraftClient.getInstance().currentScreen).setOverlay(new ColorSelectionWidget(option));
             }
         } else {
             textField.mouseClicked(mouseX, mouseY, 0);
             if(MinecraftClient.getInstance().currentScreen instanceof OptionsScreenBuilder){
-                ((OptionsScreenBuilder) MinecraftClient.getInstance().currentScreen).closeColorPicker();
+                ((OptionsScreenBuilder) MinecraftClient.getInstance().currentScreen).closeOverlay();
             }
         }
     }
@@ -88,7 +89,7 @@ public class ColorOptionWidget extends OptionWidget {
             textField.tick();
         } else {
             if((MinecraftClient.getInstance().currentScreen instanceof OptionsScreenBuilder &&
-                    ((OptionsScreenBuilder) MinecraftClient.getInstance().currentScreen).isPickerOpen() || option.getChroma()) &&
+                    ((OptionsScreenBuilder) MinecraftClient.getInstance().currentScreen).isOverlayOpen() || option.getChroma()) &&
                     !Objects.equals(textField.getText(), option.get().toString())){
                 textField.setText(option.get().toString());
             }
