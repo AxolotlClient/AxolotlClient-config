@@ -25,6 +25,7 @@ public class GraphicsOption extends OptionBase<int[][]> {
     private int width;
     private int height;
     private Identifier textureId;
+    private boolean drawHint;
 
     public GraphicsOption(String name, int[][] def) {
         super(name, def);
@@ -42,15 +43,56 @@ public class GraphicsOption extends OptionBase<int[][]> {
         super(name, tooltipKeyPrefix, onChange, def);
     }
 
+    public GraphicsOption(String name, int[][] def, boolean drawHint) {
+        super(name, def);
+    }
+
+    public GraphicsOption(String name, ChangedListener<int[][]> onChange, int[][] def, boolean drawHint) {
+        super(name, onChange, def);
+    }
+
+    public GraphicsOption(String name, String tooltipKeyPrefix, int[][] def, boolean drawHint) {
+        super(name, tooltipKeyPrefix, def);
+    }
+
+    public GraphicsOption(String name, String tooltipKeyPrefix, ChangedListener<int[][]> onChange, int[][] def, boolean drawHint) {
+        super(name, tooltipKeyPrefix, onChange, def);
+    }
+
+    public boolean isDrawHint() {
+        return drawHint;
+    }
+
+    @Override
+    public void setDefaults() {
+        option = deepCopy(getDefault());
+    }
+
+    private int[][] deepCopy(int[][] in) {
+        AtomicInteger width = new AtomicInteger();
+        Arrays.stream(in).forEach(arr -> width.set(Math.max(width.get(), arr.length)));
+        int height = in.length;
+
+        int[][] out = new int[width.get()][height];
+
+        for (int i = 0; i < height; i++) {
+            out[i] = new int[in[i].length];
+
+            System.arraycopy(in[i], 0, out[i], 0, in[i].length);
+        }
+
+        return out;
+    }
+
     @Override
     protected CommandResponse onCommandExecution(String arg) {
 
         if (arg.length() > 0) {
             try {
                 setValueFromJsonElement(JsonParser.parseString(arg));
-                return new CommandResponse(true, "Successfully set "+getName()+" to its new value!");
-            } catch (Exception e){
-                return new CommandResponse(false, "Failed to parse input "+arg+"!");
+                return new CommandResponse(true, "Successfully set " + getName() + " to its new value!");
+            } catch (Exception e) {
+                return new CommandResponse(false, "Failed to parse input " + arg + "!");
             }
         }
 

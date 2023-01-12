@@ -12,6 +12,7 @@ import java.util.Arrays;
 public class GraphicsEditorWidget extends Overlay {
 
     private final GraphicsOption option;
+    private final int[] lastChangedPixel = new int[2];
     private int[][] pixels;
     private int maxGridWidth;
     private int maxGridHeight;
@@ -20,9 +21,7 @@ public class GraphicsEditorWidget extends Overlay {
     private int pixelSize;
     private int gridX;
     private int gridY;
-
     private boolean mouseDown;
-    private final int[] lastChangedPixel = new int[2];
     private long lastChangeTime;
 
     private ButtonWidget clear;
@@ -49,9 +48,9 @@ public class GraphicsEditorWidget extends Overlay {
 
         pixelSize = Math.min(maxGridHeight / gridRows, maxGridWidth / gridCollumns);
 
-        gridX = window.getWidth()/2 - (gridCollumns*pixelSize)/2;
-        maxGridWidth = Math.min(maxGridWidth, gridCollumns*pixelSize);
-        maxGridHeight = Math.min(maxGridHeight, gridRows*pixelSize);
+        gridX = window.getWidth() / 2 - (gridCollumns * pixelSize) / 2;
+        maxGridWidth = Math.min(maxGridWidth, gridCollumns * pixelSize);
+        maxGridHeight = Math.min(maxGridHeight, gridRows * pixelSize);
 
         clear = new ButtonWidget(0, gridX + maxGridWidth + 10, gridY, 50, 20, I18n.translate("clearGraphics"));
     }
@@ -64,19 +63,36 @@ public class GraphicsEditorWidget extends Overlay {
         for (int x = 0; x < gridCollumns; x++) {
             for (int y = 0; y < gridRows; y++) {
                 if (pixels[x][y] != 0) {
-                    fill(gridX + x*pixelSize, gridY + y*pixelSize, gridX +x*pixelSize + pixelSize, gridY + y*pixelSize + pixelSize, pixels[x][y]);
+                    fill(gridX + x * pixelSize, gridY + y * pixelSize, gridX + x * pixelSize + pixelSize, gridY + y * pixelSize + pixelSize, pixels[x][y]);
+                } else {
+                    if (x % 2 == 0 && y % 2 == 0 || (x % 2 != 0 && y % 2 != 0)) {
+                        fill(gridX + x * pixelSize, gridY + y * pixelSize, gridX + x * pixelSize + pixelSize, gridY + y * pixelSize + pixelSize, 0xFF242424);
+                    } else {
+                        fill(gridX + x * pixelSize, gridY + y * pixelSize, gridX + x * pixelSize + pixelSize, gridY + y * pixelSize + pixelSize, 0xFF383838);
+                    }
                 }
             }
         }
 
         // Draw Grid
         for (int i = gridX; i <= (gridX + maxGridWidth); i += pixelSize) {
-            fill(i, gridY, i+1, gridY + maxGridHeight+1, -1);
+            fill(i, gridY, i + 1, gridY + maxGridHeight + 1, -1);
 
         }
 
         for (int i = gridY; i <= (gridY + maxGridHeight); i += pixelSize) {
-            fill(gridX, i, gridX + maxGridWidth, i+1, -1);
+            fill(gridX, i, gridX + maxGridWidth, i + 1, -1);
+        }
+
+        // Draw Hint (default, but in black and outlined)
+        if (option.isDrawHint()) {
+            for (int x = 0; x < gridCollumns; x++) {
+                for (int y = 0; y < gridRows; y++) {
+                    if (option.getDefault()[x][y] != 0) {
+                        DrawUtil.outlineRect(gridX + x * pixelSize, gridY + y * pixelSize, pixelSize + 1, pixelSize + 1, 0xFF000000);
+                    }
+                }
+            }
         }
 
         // Mouse Interaction
@@ -84,7 +100,7 @@ public class GraphicsEditorWidget extends Overlay {
         int mouseGridY = (mouseY - gridY) / pixelSize;
 
         if (mouseGridX >= 0 && mouseGridY >= 0 && mouseGridX < gridCollumns && mouseGridY < gridRows) {
-            DrawUtil.outlineRect(gridX + mouseGridX * pixelSize + 1, gridY + mouseGridY * pixelSize + 1, pixelSize-1, pixelSize-1, Color.SELECTOR_GREEN.getAsInt());
+            DrawUtil.outlineRect(gridX + mouseGridX * pixelSize + 1, gridY + mouseGridY * pixelSize + 1, pixelSize - 1, pixelSize - 1, Color.SELECTOR_GREEN.getAsInt());
 
             if (mouseDown) {
                 if (mouseGridX != lastChangedPixel[0] || mouseGridY != lastChangedPixel[1] || MinecraftClient.getTime() - lastChangeTime >= 300) {
@@ -108,13 +124,13 @@ public class GraphicsEditorWidget extends Overlay {
     public void onClick(int mouseX, int mouseY) {
         mouseDown = true;
 
-        if(clear.isHovered()){
+        if (clear.isHovered()) {
             clear.playDownSound(MinecraftClient.getInstance().getSoundManager());
             clearGraphics();
         }
     }
 
-    private void clearGraphics(){
+    private void clearGraphics() {
         for (int[] a : pixels) {
             Arrays.fill(a, 0);
         }

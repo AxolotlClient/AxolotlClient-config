@@ -25,6 +25,7 @@ public class GraphicsOption extends OptionBase<int[][]> {
     private Identifier imageId;
     private int height;
     private int width;
+    private boolean drawHint;
 
     public GraphicsOption(String name, int[][] def) {
         super(name, def);
@@ -42,15 +43,60 @@ public class GraphicsOption extends OptionBase<int[][]> {
         super(name, tooltipKeyPrefix, onChange, def);
     }
 
+    public GraphicsOption(String name, int[][] def, boolean drawHint) {
+        super(name, def);
+        this.drawHint = drawHint;
+    }
+
+    public GraphicsOption(String name, ChangedListener<int[][]> onChange, int[][] def, boolean drawHint) {
+        super(name, onChange, def);
+        this.drawHint = drawHint;
+    }
+
+    public GraphicsOption(String name, String tooltipKeyPrefix, int[][] def, boolean drawHint) {
+        super(name, tooltipKeyPrefix, def);
+        this.drawHint = drawHint;
+    }
+
+    public GraphicsOption(String name, String tooltipKeyPrefix, ChangedListener<int[][]> onChange, int[][] def, boolean drawHint) {
+        super(name, tooltipKeyPrefix, onChange, def);
+        this.drawHint = drawHint;
+    }
+
+    public boolean isDrawHint() {
+        return drawHint;
+    }
+
+    @Override
+    public void setDefaults() {
+        option = deepCopy(getDefault());
+    }
+
+    private int[][] deepCopy(int[][] in) {
+        AtomicInteger width = new AtomicInteger();
+        Arrays.stream(in).forEach(arr -> width.set(Math.max(width.get(), arr.length)));
+        int height = in.length;
+
+        int[][] out = new int[width.get()][height];
+
+        for (int i = 0; i < height; i++) {
+            out[i] = new int[in[i].length];
+
+            System.arraycopy(in[i], 0, out[i], 0, in[i].length);
+        }
+
+        return out;
+    }
+
     @Override
     protected CommandResponse onCommandExecution(String[] arg) {
 
         if (arg.length > 0) {
             try {
                 setValueFromJsonElement(new JsonParser().parse(arg[0]));
-                return new CommandResponse(true, "Successfully set "+getName()+" to its new value!");
-            } catch (Exception e){
-                return new CommandResponse(false, "Failed to parse input "+arg[0]+"!");
+                return new CommandResponse(true, "Successfully set " + getName() + " to its new value!");
+            } catch (Exception e) {
+                return new CommandResponse(false, "Failed to parse input " + arg[0] + "!");
             }
         }
 
@@ -60,14 +106,6 @@ public class GraphicsOption extends OptionBase<int[][]> {
     @Override
     public List<String> getCommandSuggestions(String[] args) {
         return new ArrayList<>();
-    }
-
-    @Override
-    public ButtonWidget getWidget(int x, int y, int width, int height) {
-        return new GenericOptionWidget(x, y, width, height,
-                new GenericOption(getName(), "openEditor", (mouseX, mouseY) ->
-                        ((OptionsScreenBuilder) MinecraftClient.getInstance().currentScreen).setOverlay(
-                                new GraphicsEditorWidget(this))));
     }
 
     @Override
@@ -102,14 +140,22 @@ public class GraphicsOption extends OptionBase<int[][]> {
         }
     }
 
+    @Override
+    public ButtonWidget getWidget(int x, int y, int width, int height) {
+        return new GenericOptionWidget(x, y, width, height,
+                new GenericOption(getName(), "openEditor", (mouseX, mouseY) ->
+                        ((OptionsScreenBuilder) MinecraftClient.getInstance().currentScreen).setOverlay(
+                                new GraphicsEditorWidget(this))));
+    }
+
     public void bindTexture() {
-        if(texture == null){
+        if (texture == null) {
             int[][] data = get();
             AtomicInteger width = new AtomicInteger();
             Arrays.stream(data).forEach(arr -> width.set(Math.max(width.get(), arr.length)));
             height = data.length;
             this.width = width.get();
-            imageId = new Identifier("graphicsoption", getName().toLowerCase(Locale.ROOT)+java.util.UUID.randomUUID().toString().replace('-', '_'));
+            imageId = new Identifier("graphicsoption", getName().toLowerCase(Locale.ROOT) + java.util.UUID.randomUUID().toString().replace('-', '_'));
             texture = new NativeImageBackedTexture(this.width, height);
 
             MinecraftClient.getInstance().getTextureManager().loadTexture(imageId, texture);
@@ -118,7 +164,7 @@ public class GraphicsOption extends OptionBase<int[][]> {
         int[] pix = texture.getPixels();
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
-                int rows = (y)*width + x;
+                int rows = (y) * width + x;
                 pix[rows] = get()[x][y];
             }
         }

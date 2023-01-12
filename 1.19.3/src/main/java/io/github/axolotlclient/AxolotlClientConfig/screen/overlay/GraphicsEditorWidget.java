@@ -67,6 +67,14 @@ public class GraphicsEditorWidget extends Overlay {
             for (int y = 0; y < gridRows; y++) {
                 if (pixels[x][y] != 0) {
                     fill(matrices, gridX + x * pixelSize, gridY + y * pixelSize, gridX + x * pixelSize + pixelSize, gridY + y * pixelSize + pixelSize, pixels[x][y]);
+                } else {
+                    if (x % 2 == 0 && y % 2 == 0 || (x % 2 != 0 && y % 2 != 0)) {
+                        int checkerboardColor1 = 0xFF242424;
+                        fill(matrices, gridX + x * pixelSize, gridY + y * pixelSize, gridX + x * pixelSize + pixelSize, gridY + y * pixelSize + pixelSize, checkerboardColor1);
+                    } else {
+                        int checkerboardColor2 = 0xFF383838;
+                        fill(matrices, gridX + x * pixelSize, gridY + y * pixelSize, gridX + x * pixelSize + pixelSize, gridY + y * pixelSize + pixelSize, checkerboardColor2);
+                    }
                 }
             }
         }
@@ -80,6 +88,16 @@ public class GraphicsEditorWidget extends Overlay {
             fill(matrices, gridX, i, gridX + maxGridWidth, i + 1, -1);
         }
 
+        // Draw Hint (default, but in black and outlined)
+        if(option.isDrawHint()){
+            for (int x = 0; x < gridCollumns; x++) {
+                for (int y = 0; y < gridRows; y++) {
+                    if (option.getDefault()[x][y] != 0) {
+                        DrawUtil.outlineRect(matrices, gridX + x * pixelSize, gridY + y * pixelSize, pixelSize+1, pixelSize+1, 0xFF000000);
+                    }
+                }
+            }
+        }
 
         // Mouse interaction
         int mouseGridX = (mouseX - gridX) / pixelSize;
