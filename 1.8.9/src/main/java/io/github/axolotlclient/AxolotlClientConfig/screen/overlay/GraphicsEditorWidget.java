@@ -60,6 +60,16 @@ public class GraphicsEditorWidget extends Overlay {
     public void render(MinecraftClient client, int mouseX, int mouseY) {
         super.render(client, mouseX, mouseY);
 
+        // Draw Pixels
+        for (int x = 0; x < gridCollumns; x++) {
+            for (int y = 0; y < gridRows; y++) {
+                if (pixels[x][y] != 0) {
+                    fill(gridX + x*pixelSize, gridY + y*pixelSize, gridX +x*pixelSize + pixelSize, gridY + y*pixelSize + pixelSize, pixels[x][y]);
+                }
+            }
+        }
+
+        // Draw Grid
         for (int i = gridX; i <= (gridX + maxGridWidth); i += pixelSize) {
             fill(i, gridY, i+1, gridY + maxGridHeight+1, -1);
 
@@ -69,14 +79,7 @@ public class GraphicsEditorWidget extends Overlay {
             fill(gridX, i, gridX + maxGridWidth, i+1, -1);
         }
 
-        for (int x = 0; x < gridCollumns; x++) {
-            for (int y = 0; y < gridRows; y++) {
-                if (pixels[x][y] != 0) {
-                    fill(gridX + x*pixelSize, gridY + y*pixelSize, gridX +x*pixelSize + pixelSize, gridY + y*pixelSize + pixelSize, pixels[x][y]);
-                }
-            }
-        }
-
+        // Mouse Interaction
         int mouseGridX = (mouseX - gridX) / pixelSize;
         int mouseGridY = (mouseY - gridY) / pixelSize;
 
