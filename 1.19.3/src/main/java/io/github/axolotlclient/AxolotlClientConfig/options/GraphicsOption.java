@@ -45,18 +45,22 @@ public class GraphicsOption extends OptionBase<int[][]> {
 
     public GraphicsOption(String name, int[][] def, boolean drawHint) {
         super(name, def);
+        this.drawHint = drawHint;
     }
 
     public GraphicsOption(String name, ChangedListener<int[][]> onChange, int[][] def, boolean drawHint) {
         super(name, onChange, def);
+        this.drawHint = drawHint;
     }
 
     public GraphicsOption(String name, String tooltipKeyPrefix, int[][] def, boolean drawHint) {
         super(name, tooltipKeyPrefix, def);
+        this.drawHint = drawHint;
     }
 
     public GraphicsOption(String name, String tooltipKeyPrefix, ChangedListener<int[][]> onChange, int[][] def, boolean drawHint) {
         super(name, tooltipKeyPrefix, onChange, def);
+        this.drawHint = drawHint;
     }
 
     public boolean isDrawHint() {
