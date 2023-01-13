@@ -1,7 +1,9 @@
 package io.github.axolotlclient.AxolotlClientConfig.screen.overlay;
 
 import io.github.axolotlclient.AxolotlClientConfig.Color;
+import io.github.axolotlclient.AxolotlClientConfig.options.BooleanOption;
 import io.github.axolotlclient.AxolotlClientConfig.options.GraphicsOption;
+import io.github.axolotlclient.AxolotlClientConfig.screen.widgets.BooleanWidget;
 import io.github.axolotlclient.AxolotlClientConfig.util.DrawUtil;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.widget.ButtonWidget;
@@ -25,6 +27,7 @@ public class GraphicsEditorWidget extends Overlay {
     private long lastChangeTime;
 
     private ButtonWidget clear;
+    private BooleanWidget hint;
 
     public GraphicsEditorWidget(GraphicsOption option) {
         super("drawGraphic");
@@ -53,6 +56,21 @@ public class GraphicsEditorWidget extends Overlay {
         maxGridHeight = Math.min(maxGridHeight, gridRows * pixelSize);
 
         clear = new ButtonWidget(0, gridX + maxGridWidth + 10, gridY, 50, 20, I18n.translate("clearGraphics"));
+
+        if (option.mayDrawHint()) {
+            hint = new BooleanWidget(0, gridX + maxGridWidth+10, gridY+25, 50, 20,
+                    new BooleanOption("showHint", option::setDrawHint, option.isDrawHint())){
+                @Override
+                protected boolean canHover() {
+                    return true;
+                }
+
+                @Override
+                public void updateMessage() {
+                    this.message = option.getTranslatedName() + ": " + (option.get()? I18n.translate ("options."+"on"): I18n.translate ("options."+"off"));
+                }
+            };
+        }
     }
 
     @Override
@@ -74,22 +92,14 @@ public class GraphicsEditorWidget extends Overlay {
             }
         }
 
-        // Draw Grid
-        for (int i = gridX; i <= (gridX + maxGridWidth); i += pixelSize) {
-            fill(i, gridY, i + 1, gridY + maxGridHeight + 1, -1);
-
-        }
-
-        for (int i = gridY; i <= (gridY + maxGridHeight); i += pixelSize) {
-            fill(gridX, i, gridX + maxGridWidth, i + 1, -1);
-        }
+        DrawUtil.outlineRect(gridX - 1, gridY - 1, maxGridWidth + 2, maxGridHeight + 2, -1);
 
         // Draw Hint (default, but in black and outlined)
         if (option.isDrawHint()) {
             for (int x = 0; x < gridCollumns; x++) {
                 for (int y = 0; y < gridRows; y++) {
                     if (option.getDefault()[x][y] != 0) {
-                        DrawUtil.outlineRect(gridX + x * pixelSize, gridY + y * pixelSize, pixelSize + 1, pixelSize + 1, 0xFF000000);
+                        DrawUtil.outlineRect(gridX + x * pixelSize, gridY + y * pixelSize, pixelSize, pixelSize, 0xFF000000);
                     }
                 }
             }
@@ -100,7 +110,7 @@ public class GraphicsEditorWidget extends Overlay {
         int mouseGridY = (mouseY - gridY) / pixelSize;
 
         if (mouseGridX >= 0 && mouseGridY >= 0 && mouseGridX < gridCollumns && mouseGridY < gridRows) {
-            DrawUtil.outlineRect(gridX + mouseGridX * pixelSize + 1, gridY + mouseGridY * pixelSize + 1, pixelSize - 1, pixelSize - 1, Color.SELECTOR_GREEN.getAsInt());
+            DrawUtil.outlineRect(gridX + mouseGridX * pixelSize, gridY + mouseGridY * pixelSize, pixelSize, pixelSize, Color.SELECTOR_GREEN.getAsInt());
 
             if (mouseDown) {
                 if (mouseGridX != lastChangedPixel[0] || mouseGridY != lastChangedPixel[1] || MinecraftClient.getTime() - lastChangeTime >= 300) {
@@ -113,6 +123,9 @@ public class GraphicsEditorWidget extends Overlay {
         }
 
         clear.render(client, mouseX, mouseY);
+        if(option.mayDrawHint()) {
+            hint.render(client, mouseX, mouseY);
+        }
     }
 
     @Override
@@ -127,6 +140,9 @@ public class GraphicsEditorWidget extends Overlay {
         if (clear.isHovered()) {
             clear.playDownSound(MinecraftClient.getInstance().getSoundManager());
             clearGraphics();
+        } else if (option.mayDrawHint() && hint.isHovered()) {
+            hint.playDownSound(MinecraftClient.getInstance().getSoundManager());
+            hint.mouseClicked(mouseX, mouseY, 0);
         }
     }
 

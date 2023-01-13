@@ -1,8 +1,10 @@
 package io.github.axolotlclient.AxolotlClientConfig.screen.overlay;
 
 import io.github.axolotlclient.AxolotlClientConfig.Color;
+import io.github.axolotlclient.AxolotlClientConfig.options.BooleanOption;
 import io.github.axolotlclient.AxolotlClientConfig.options.GraphicsOption;
 import io.github.axolotlclient.AxolotlClientConfig.screen.OptionsScreenBuilder;
+import io.github.axolotlclient.AxolotlClientConfig.screen.widgets.BooleanWidget;
 import io.github.axolotlclient.AxolotlClientConfig.util.DrawUtil;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.widget.ButtonWidget;
@@ -56,6 +58,22 @@ public class GraphicsEditorWidget extends Overlay {
         addDrawableChild(ButtonWidget.builder(Text.translatable("clearGraphics"),
                         buttonWidget -> clearGraphics())
                 .width(50).position(gridX + maxGridWidth + 10, gridY).build());
+
+        if (option.mayDrawHint()) {
+            addDrawableChild(
+                    new BooleanWidget(gridX + maxGridWidth + 10, gridY + 25, 50, 20,
+                            new BooleanOption("showHint", option::setDrawHint, option.isDrawHint())){
+                        @Override
+                        protected boolean canHover() {
+                            return true;
+                        }
+
+                        @Override
+                        public Text getMessage() {
+                            return Text.of(this.option.getTranslatedName()).copy().append(": ").append(super.getMessage());
+                        }
+                    });
+        }
     }
 
     @Override
@@ -79,14 +97,7 @@ public class GraphicsEditorWidget extends Overlay {
             }
         }
 
-        // Draw grid
-        for (int i = gridX; i <= (gridX + maxGridWidth); i += pixelSize) {
-            fill(matrices, i, gridY, i + 1, gridY + maxGridHeight + 1, -1);
-        }
-
-        for (int i = gridY; i <= (gridY + maxGridHeight); i += pixelSize) {
-            fill(matrices, gridX, i, gridX + maxGridWidth, i + 1, -1);
-        }
+        DrawUtil.outlineRect(matrices, gridX - 1, gridY - 1, maxGridWidth + 2, maxGridHeight + 2, -1);
 
         // Draw Hint (default, but in black and outlined)
         if(option.isDrawHint()){
@@ -104,7 +115,7 @@ public class GraphicsEditorWidget extends Overlay {
         int mouseGridY = (mouseY - gridY) / pixelSize;
 
         if (mouseGridX >= 0 && mouseGridY >= 0 && mouseGridX < gridCollumns && mouseGridY < gridRows) {
-            DrawUtil.outlineRect(matrices, gridX + mouseGridX * pixelSize + 1, gridY + mouseGridY * pixelSize + 1, pixelSize - 1, pixelSize - 1, Color.SELECTOR_GREEN.getAsInt());
+            DrawUtil.outlineRect(matrices, gridX + mouseGridX * pixelSize, gridY + mouseGridY * pixelSize, pixelSize, pixelSize, Color.SELECTOR_GREEN.getAsInt());
 
             if (mouseDown) {
                 if (mouseGridX != lastChangedPixel[0] || mouseGridY != lastChangedPixel[1] || Util.getMeasuringTimeMs() - lastChangeTime >= 300) {

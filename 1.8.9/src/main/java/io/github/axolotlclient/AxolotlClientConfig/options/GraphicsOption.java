@@ -1,9 +1,6 @@
 package io.github.axolotlclient.AxolotlClientConfig.options;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParser;
-import com.google.gson.JsonPrimitive;
+import com.google.gson.*;
 import io.github.axolotlclient.AxolotlClientConfig.common.commands.CommandResponse;
 import io.github.axolotlclient.AxolotlClientConfig.screen.OptionsScreenBuilder;
 import io.github.axolotlclient.AxolotlClientConfig.screen.overlay.GraphicsEditorWidget;
@@ -25,6 +22,7 @@ public class GraphicsOption extends OptionBase<int[][]> {
     private Identifier imageId;
     private int height;
     private int width;
+    private boolean mayDrawHint;
     private boolean drawHint;
 
     public GraphicsOption(String name, int[][] def) {
@@ -43,28 +41,36 @@ public class GraphicsOption extends OptionBase<int[][]> {
         super(name, tooltipKeyPrefix, onChange, def);
     }
 
-    public GraphicsOption(String name, int[][] def, boolean drawHint) {
+    public GraphicsOption(String name, int[][] def, boolean mayDrawHint) {
         super(name, def);
-        this.drawHint = drawHint;
+        this.mayDrawHint = mayDrawHint;
     }
 
-    public GraphicsOption(String name, ChangedListener<int[][]> onChange, int[][] def, boolean drawHint) {
+    public GraphicsOption(String name, ChangedListener<int[][]> onChange, int[][] def, boolean mayDrawHint) {
         super(name, onChange, def);
-        this.drawHint = drawHint;
+        this.mayDrawHint = mayDrawHint;
     }
 
-    public GraphicsOption(String name, String tooltipKeyPrefix, int[][] def, boolean drawHint) {
+    public GraphicsOption(String name, String tooltipKeyPrefix, int[][] def, boolean mayDrawHint) {
         super(name, tooltipKeyPrefix, def);
-        this.drawHint = drawHint;
+        this.mayDrawHint = mayDrawHint;
     }
 
-    public GraphicsOption(String name, String tooltipKeyPrefix, ChangedListener<int[][]> onChange, int[][] def, boolean drawHint) {
+    public GraphicsOption(String name, String tooltipKeyPrefix, ChangedListener<int[][]> onChange, int[][] def, boolean mayDrawHint) {
         super(name, tooltipKeyPrefix, onChange, def);
-        this.drawHint = drawHint;
+        this.mayDrawHint = mayDrawHint;
     }
 
     public boolean isDrawHint() {
         return drawHint;
+    }
+
+    public void setDrawHint(boolean drawHint) {
+        this.drawHint = drawHint;
+    }
+
+    public boolean mayDrawHint() {
+        return mayDrawHint;
     }
 
     @Override
@@ -110,6 +116,7 @@ public class GraphicsOption extends OptionBase<int[][]> {
 
     @Override
     public JsonElement getJson() {
+        JsonObject object = new JsonObject();
         JsonArray data = new JsonArray();
 
         for (int[] a : get()) {
@@ -120,23 +127,43 @@ public class GraphicsOption extends OptionBase<int[][]> {
             data.add(j);
         }
 
-        return data;
+        object.add("data", data);
+        object.add("hint", new JsonPrimitive(drawHint));
+
+        return object;
     }
 
     @Override
     public void setValueFromJsonElement(JsonElement element) {
 
-        JsonArray data = element.getAsJsonArray();
+        if (element.isJsonArray()) { // to remove for next commit, just so noone's config for this resets
 
-        int i = 0;
-        for (int[] a : option) {
-            JsonArray r = data.get(i).getAsJsonArray();
+            JsonArray data = element.getAsJsonArray();
 
-            for (int it = 0; it < a.length; it++) {
-                a[it] = r.get(it).getAsInt();
+            int i = 0;
+            for (int[] a : option) {
+                JsonArray r = data.get(i).getAsJsonArray();
+
+                for (int it = 0; it < a.length; it++) {
+                    a[it] = r.get(it).getAsInt();
+                }
+
+                i++;
             }
+        } else {
+            drawHint = element.getAsJsonObject().get("hint").getAsBoolean();
+            JsonArray data = element.getAsJsonObject().get("data").getAsJsonArray();
 
-            i++;
+            int i = 0;
+            for (int[] a : option) {
+                JsonArray r = data.get(i).getAsJsonArray();
+
+                for (int it = 0; it < a.length; it++) {
+                    a[it] = r.get(it).getAsInt();
+                }
+
+                i++;
+            }
         }
     }
 
