@@ -1,13 +1,11 @@
 package io.github.axolotlclient.AxolotlClientConfig.screen;
 
 import com.mojang.blaze3d.platform.GlStateManager;
-import io.github.axolotlclient.AxolotlClientConfig.AxolotlClientConfigManager;
 import io.github.axolotlclient.AxolotlClientConfig.AxolotlClientConfigConfig;
-import io.github.axolotlclient.AxolotlClientConfig.options.ColorOption;
+import io.github.axolotlclient.AxolotlClientConfig.AxolotlClientConfigManager;
 import io.github.axolotlclient.AxolotlClientConfig.common.types.Tooltippable;
 import io.github.axolotlclient.AxolotlClientConfig.options.OptionCategory;
 import io.github.axolotlclient.AxolotlClientConfig.screen.overlay.Overlay;
-import io.github.axolotlclient.AxolotlClientConfig.screen.overlay.ColorSelectionWidget;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
@@ -114,11 +112,12 @@ public class OptionsScreenBuilder extends Screen {
     @Override
     protected void buttonClicked(ButtonWidget button) {
         if(button.id==0){
+            AxolotlClientConfigManager.getInstance().saveCurrentConfig();
             if(isOverlayOpen()){
                 closeOverlay();
+            } else {
+                MinecraftClient.getInstance().openScreen(parent);
             }
-            AxolotlClientConfigManager.getInstance().saveCurrentConfig();
-            MinecraftClient.getInstance().openScreen(parent);
         }
     }
 

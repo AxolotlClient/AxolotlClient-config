@@ -104,7 +104,7 @@ public class GraphicsEditorWidget extends Overlay {
             for (int x = 0; x < gridCollumns; x++) {
                 for (int y = 0; y < gridRows; y++) {
                     if (option.getDefault()[x][y] != 0) {
-                        DrawUtil.outlineRect(matrices, gridX + x * pixelSize, gridY + y * pixelSize, pixelSize+1, pixelSize+1, 0xFF000000);
+                        DrawUtil.outlineRect(matrices, gridX + x * pixelSize, gridY + y * pixelSize, pixelSize, pixelSize, 0xFF000000);
                     }
                 }
             }
