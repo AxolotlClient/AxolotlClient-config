@@ -131,35 +131,20 @@ public class GraphicsOption extends OptionBase<int[][]> {
     @Override
     public void setValueFromJsonElement(JsonElement element) {
 
-        if (element.isJsonArray()) { // to remove for next commit, just so noone's config for this resets
+        mayDrawHint = element.getAsJsonObject().get("hint").getAsBoolean();
+        JsonArray data = element.getAsJsonObject().get("data").getAsJsonArray();
 
-            JsonArray data = element.getAsJsonArray();
+        int i = 0;
+        for (int[] a : option) {
+            JsonArray r = data.get(i).getAsJsonArray();
 
-            int i = 0;
-            for (int[] a : option) {
-                JsonArray r = data.get(i).getAsJsonArray();
-
-                for (int it = 0; it < a.length; it++) {
-                    a[it] = r.get(it).getAsInt();
-                }
-
-                i++;
+            for (int it = 0; it < a.length; it++) {
+                a[it] = r.get(it).getAsInt();
             }
-        } else {
-            mayDrawHint = element.getAsJsonObject().get("hint").getAsBoolean();
-            JsonArray data = element.getAsJsonObject().get("data").getAsJsonArray();
 
-            int i = 0;
-            for (int[] a : option) {
-                JsonArray r = data.get(i).getAsJsonArray();
-
-                for (int it = 0; it < a.length; it++) {
-                    a[it] = r.get(it).getAsInt();
-                }
-
-                i++;
-            }
+            i++;
         }
+
     }
 
     @Override
