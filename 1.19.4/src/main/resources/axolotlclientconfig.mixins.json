@@ -1,0 +1,13 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "io.github.axolotlclient.AxolotlClientConfig.mixin",
+  "compatibilityLevel": "JAVA_8",
+  "mixins": [],
+  "client": [
+    "SharedConstantsMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

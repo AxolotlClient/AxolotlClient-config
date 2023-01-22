@@ -40,10 +40,7 @@ public class OptionsScreenBuilder extends Screen {
 
     @Override
     public void render(int mouseX, int mouseY, float tickDelta) {
-
-        if(this.client.world!=null)fill(0,0, width, height, 0xB0100E0E);
-        else renderDirtBackground(0);
-
+        renderBackground();
 
         drawCenteredString(textRenderer, cat.getTranslatedName(), width/2, 25, -1);
 

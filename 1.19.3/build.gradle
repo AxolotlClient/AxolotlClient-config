@@ -4,7 +4,7 @@ plugins {
 }
 
 group = maven_group
-version = "${project.version}+${project.minecraft_119}"
+version = "${project.version}+${project.minecraft_1193}"
 archivesBaseName = "AxolotlClient-config"
 
 sourceCompatibility = JavaVersion.VERSION_17
@@ -20,13 +20,13 @@ repositories {
 }
 
 dependencies {
-	minecraft "com.mojang:minecraft:${project.minecraft_119}"
-	mappings "org.quiltmc:quilt-mappings:${project.mappings_119}:intermediary-v2"
+	minecraft "com.mojang:minecraft:${project.minecraft_1193}"
+	mappings "org.quiltmc:quilt-mappings:${project.mappings_1193}:intermediary-v2"
 
 	modImplementation "org.quiltmc:quilt-loader:${project.quilt_loader}"
 
-	modApi include("org.quiltmc.qsl.core:lifecycle_events:${project.qsl}")
-	modApi include("org.quiltmc.qsl.management:client_command:${project.qsl}")
+	modApi include("org.quiltmc.qsl.core:lifecycle_events:${project.qsl_1193}+${project.minecraft_1193}")
+	modApi include("org.quiltmc.qsl.management:client_command:${project.qsl_1193}+${project.minecraft_1193}")
 
 	modApi("com.terraformersmc:modmenu:5.0.2")
 

@@ -1,0 +1,76 @@
+plugins {
+    id 'java'
+	id 'io.github.juuxel.loom-quiltflower' version '1.8.+'
+	id "fabric-loom" version "1.0.+"
+}
+
+group = maven_group
+version = "${project.version}+${project.minecraft_cts8}"
+archivesBaseName = "AxolotlClient-config"
+
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_8
+
+repositories {
+	maven {
+		url = "https://moehreag.duckdns.org/maven/releases"
+	}
+	maven {
+		url = "https://maven.terraformersmc.com/releases"
+	}
+	maven {
+		name = 'CombatReforged'
+		url = 'https://maven.fabric.rizecookey.net/'
+	}
+}
+
+loom {
+	setIntermediaryUrl('https://maven.fabric.rizecookey.net/net/fabricmc/intermediary/1.16_combat-6/intermediary-1.16_combat-6-v2.jar')
+}
+
+dependencies {
+	minecraft "com.mojang:minecraft:${project.minecraft_cts8}"
+	mappings "net.fabricmc:yarn:${project.mappings_cts8}:v2"
+
+	modImplementation "net.fabricmc:fabric-loader:${fabric_loader}"
+
+	modApi "net.fabricmc.fabric-api:fabric-api:${fabric_cts8}"
+
+	modCompileOnlyApi("com.terraformersmc:modmenu:1.15.0") // there is no working modmenu release for this version, but we still provide support for it just in case.
+
+	implementation include(project(":common"))
+}
+
+processResources {
+	inputs.property 'version', version
+
+	filesMatching('quilt.mod.json') {
+		expand "version": version
+	}
+}
+
+runClient {
+	classpath(sourceSets.test.runtimeClasspath)
+}
+
+// Configure the maven publication
+publishing {
+	publications {
+		mavenJava(MavenPublication) {
+			artifactId = archivesBaseName
+			from components.java
+		}
+	}
+
+	repositories {
+		maven {
+			name = "owlMaven"
+			def repository = project.version.toString().contains("beta") || project.version.toString().contains("alpha") ? "snapshots" : "releases"
+			url = "https://moehreag.duckdns.org/maven/"+repository
+			credentials(PasswordCredentials)
+			authentication {
+				basic(BasicAuthentication)
+			}
+		}
+	}
+}
