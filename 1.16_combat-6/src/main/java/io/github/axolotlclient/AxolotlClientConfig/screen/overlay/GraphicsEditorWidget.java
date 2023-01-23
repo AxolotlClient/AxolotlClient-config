@@ -111,8 +111,8 @@ public class GraphicsEditorWidget extends Overlay {
         }
 
         // Mouse interaction
-        int mouseGridX = (mouseX - gridX) / pixelSize;
-        int mouseGridY = (mouseY - gridY) / pixelSize;
+        int mouseGridX = (int) Math.floor((mouseX - gridX) / (float) pixelSize);
+        int mouseGridY = (int) Math.floor((mouseY - gridY) / (float) pixelSize);
 
         if (mouseGridX >= 0 && mouseGridY >= 0 && mouseGridX < gridCollumns && mouseGridY < gridRows) {
             DrawUtil.outlineRect(matrices, gridX + mouseGridX * pixelSize, gridY + mouseGridY * pixelSize, pixelSize, pixelSize, Color.SELECTOR_GREEN.getAsInt());
