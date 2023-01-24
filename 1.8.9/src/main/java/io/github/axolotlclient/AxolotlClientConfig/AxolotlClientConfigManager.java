@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+@SuppressWarnings("unused")
 public class AxolotlClientConfigManager extends io.github.axolotlclient.AxolotlClientConfig.common.AxolotlClientConfigManager {
     private static final HashMap<String, ConfigHolder> configs = new HashMap<>();
     private static final HashMap<String, ConfigManager> managers = new HashMap<>();
@@ -24,7 +25,7 @@ public class AxolotlClientConfigManager extends io.github.axolotlclient.AxolotlC
     public static Logger LOGGER = LogManager.getLogger("AxolotlClient Config");
 
     private static final AxolotlClientConfigManager Instance = new AxolotlClientConfigManager();
-    private AxolotlClientConfigManager(){}
+    protected AxolotlClientConfigManager(){}
 
     public static AxolotlClientConfigManager getInstance() {
         return Instance;
@@ -113,7 +114,6 @@ public class AxolotlClientConfigManager extends io.github.axolotlclient.AxolotlC
      * Load a config into their options.
      * @param modid The modid whichs config should be loaded.
      */
-
     public void load(String modid) {
         managers.get(modid).load();
     }

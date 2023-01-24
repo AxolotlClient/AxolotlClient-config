@@ -5,7 +5,7 @@ plugins {
 }
 
 group = maven_group
-version = "${project.version}+${project.minecraft_cts8}"
+version = "${project.version}+1.16"
 archivesBaseName = "AxolotlClient-config"
 
 sourceCompatibility = JavaVersion.VERSION_1_8
