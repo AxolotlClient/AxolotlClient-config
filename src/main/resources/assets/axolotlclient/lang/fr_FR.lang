@@ -12,7 +12,6 @@ searchSortOrder=Ordre des filtres
 ASCENDING=Croissant
 DESCENDING=Décroissant
 
-
 showQuickToggles=Bascules Rapides
 showQuickToggles.tooltip=Indique s'il faut afficher de petites bascules<br>sur les catégories ayant une option 'activé'.
 showOptionTooltips=Montrer les Info-bulles pour les Options
@@ -30,4 +29,21 @@ red=Rouge
 green=Vert
 blue=Bleu
 
-back=RevenirshowQuickToggles=Quick Toggles
+back=Revenir
+
+## Example Screen Translations
+example_config=Exemple de Config
+example_toggle=Exemple de Bascule
+example_toggle_disabled=Désactivé Exemple de Bascule
+example_reason=Exemple de Raison
+example_slider=Exemple de Slider
+example_enum_option=Exemple d'Option Enum
+example_enum_option_1=Option 1
+example_enum_option_2=Option 2
+example_enum_option_3=Option 3
+example_color=Exemple d'Option de Couleur
+example_string=Exemple d'Option de Chaîne de caractères
+example_generic=Exemple d'Option Générique
+example_sub=Exemple de Sous-Catégorie
+example_keybind=Exemple d'Option de Keybinding
+example_keybind_conflict=Exemple d'Option de Keybinding en Conflit
