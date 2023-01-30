@@ -14,6 +14,7 @@ import org.lwjgl.glfw.GLFW;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class KeyBindWidget extends OptionWidget {
 
@@ -75,7 +76,7 @@ public class KeyBindWidget extends OptionWidget {
         boolean bl2 = false;
         if (!this.key.isUnbound()) {
             List<KeyBinding> binds = KeyBindOption.getBindings();
-            binds.addAll(Arrays.stream(MinecraftClient.getInstance().options.keysAll).toList());
+            binds.addAll(Arrays.stream(MinecraftClient.getInstance().options.keysAll).collect(Collectors.toList()));
             for(KeyBinding keyBind : binds) {
                 if (keyBind != this.key && this.key.equals(keyBind)) {
                     bl2 = true;

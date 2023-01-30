@@ -10,7 +10,6 @@ import net.fabricmc.loader.api.FabricLoader;
 
 import java.io.FileReader;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collections;
@@ -59,7 +58,7 @@ public class DefaultConfigManager implements ConfigManager {
 
         JsonObject config;
         try {
-            config = new JsonParser().parse(new FileReader(confPath.toString(), StandardCharsets.UTF_8)).getAsJsonObject();
+            config = new JsonParser().parse(new FileReader(confPath.toString())).getAsJsonObject();
         } catch (Exception e){
             config = new JsonObject();
         }

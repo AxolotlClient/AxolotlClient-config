@@ -1,5 +1,6 @@
 package io.github.axolotlclient.AxolotlClientConfig.screen;
 
+import com.google.common.collect.Lists;
 import com.mojang.blaze3d.systems.RenderSystem;
 import io.github.axolotlclient.AxolotlClientConfig.AxolotlClientConfigConfig;
 import io.github.axolotlclient.AxolotlClientConfig.AxolotlClientConfigManager;
@@ -13,7 +14,6 @@ import io.github.axolotlclient.AxolotlClientConfig.util.ConfigUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.gui.Element;
 import net.minecraft.client.gui.ParentElement;
 import net.minecraft.client.gui.widget.AbstractButtonWidget;
@@ -313,9 +313,9 @@ public class ButtonWidgetList extends ElementListWidget<ButtonWidgetList.Pair> {
         public List<? extends Element> children() {
             if(left != null) {
                 if (right != null) {
-                    return List.of(left, right);
+                    return Lists.newArrayList(left, right);
                 }
-                return List.of(left);
+                return Lists.newArrayList(left);
             }
             return new ArrayList<>();
         }
@@ -490,7 +490,7 @@ public class ButtonWidgetList extends ElementListWidget<ButtonWidgetList.Pair> {
             if(left instanceof ParentElement){
                 return ((ParentElement) left).children();
             }
-            return List.of(left);
+            return Lists.newArrayList(left);
         }
     }
 
@@ -521,7 +521,7 @@ public class ButtonWidgetList extends ElementListWidget<ButtonWidgetList.Pair> {
 
         @Override
         public List<? extends Element> children() {
-            return List.of();
+            return Collections.emptyList();
         }
     }
 }

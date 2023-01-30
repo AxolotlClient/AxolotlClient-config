@@ -17,6 +17,7 @@ import org.lwjgl.glfw.GLFW;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class KeyBindOption extends OptionBase<KeyBinding> {
 
@@ -28,7 +29,7 @@ public class KeyBindOption extends OptionBase<KeyBinding> {
                         && Modifier.isFinal(field.getModifiers())
                         && field.getType().equals(int.class)
                         && (field.getName().startsWith("KEY_") || field.getName().startsWith("MOUSE_"))
-                        && field.getName().endsWith("_CODE")).toList()) {
+                        && field.getName().endsWith("_CODE")).collect(Collectors.toList())) {
             try {
                 map.put(field.getName().substring(4, field.getName().length() - 5), field.getInt(null));
             } catch (Exception ignored){}
