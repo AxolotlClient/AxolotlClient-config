@@ -15,7 +15,7 @@ public class InGameHudMixin {
     @Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/network/ClientPlayerInteractionManager;hasStatusBars()Z"))
     private void onHudRender(float tickDelta, CallbackInfo ci) {
         DrawableHelper.fill(50, 50, 100, 100, -162555);
-        GlStateManager.color3f(1, 1, 1);
+        GlStateManager.color(1, 1, 1);
         Example.getInstance().graphicsOption.bindTexture();
         DrawableHelper.drawTexture(50, 50, 0, 0, 50, 50, 50, 50);
     }

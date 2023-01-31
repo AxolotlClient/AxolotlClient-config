@@ -38,7 +38,7 @@ public class ColorOptionWidget extends OptionWidget {
                 DrawUtil.fill(x, y, x+width, y+height, option.get().getAsInt());
                 DrawUtil.outlineRect(x, y, width, height, -6250336);
 
-                GlStateManager.color3f(1, 1,1);
+                GlStateManager.color(1, 1,1);
                 MinecraftClient.getInstance().getTextureManager().bindTexture(pipette);
                 drawTexture(x, y, 0, 0, 20, 20, 21, 21);
             }

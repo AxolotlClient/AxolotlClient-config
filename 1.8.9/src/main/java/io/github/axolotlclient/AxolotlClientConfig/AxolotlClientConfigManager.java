@@ -61,7 +61,7 @@ public class AxolotlClientConfigManager extends io.github.axolotlclient.AxolotlC
      * @param modid the modid the config screen should be opened for.
      */
     public void openConfigScreen(String modid){
-       MinecraftClient.getInstance().openScreen(getConfigScreen(modid, MinecraftClient.getInstance().currentScreen));
+       MinecraftClient.getInstance().setScreen(getConfigScreen(modid, MinecraftClient.getInstance().currentScreen));
     }
 
     /**

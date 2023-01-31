@@ -3,8 +3,8 @@ package io.github.axolotlclient.AxolotlClientConfig.screen.widgets;
 import io.github.axolotlclient.AxolotlClientConfig.options.KeyBindOption;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.client.options.GameOptions;
-import net.minecraft.client.options.KeyBinding;
+import net.minecraft.client.option.GameOptions;
+import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.util.Formatting;
 
@@ -38,7 +38,7 @@ public class KeyBindWidget extends OptionWidget {
 
     private boolean isConflict(){
         if (this.option.get().getCode() != 0) {
-            final List<KeyBinding> binds = Arrays.stream(MinecraftClient.getInstance().options.keysAll.clone()).collect(Collectors.toList());
+            final List<KeyBinding> binds = Arrays.stream(MinecraftClient.getInstance().options.allKeys.clone()).collect(Collectors.toList());
             binds.addAll(KeyBindOption.getBindings());
             for(KeyBinding keyBinding : binds) {
                 if (keyBinding != this.option.get() && keyBinding.getCode() == this.option.get().getCode()) {

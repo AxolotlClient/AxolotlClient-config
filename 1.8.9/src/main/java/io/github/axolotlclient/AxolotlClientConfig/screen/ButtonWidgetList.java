@@ -65,7 +65,7 @@ public class ButtonWidgetList extends EntryListWidget {
         if (this.visible) {
             GlStateManager.enableDepthTest();
             GlStateManager.pushMatrix();
-            GlStateManager.translatef(0, 0, 1F);
+            GlStateManager.translate(0, 0, 1F);
             this.lastMouseX = mouseX;
             this.lastMouseY = mouseY;
             int i = this.getScrollbarPosition();

@@ -31,7 +31,7 @@ public class BooleanWidget extends OptionWidget {
 
         TextRenderer textRenderer = client.textRenderer;
         client.getTextureManager().bindTexture(WIDGETS_LOCATION);
-        GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
         this.hovered = isMouseOver(client, mouseX, mouseY);
 
         renderBg();

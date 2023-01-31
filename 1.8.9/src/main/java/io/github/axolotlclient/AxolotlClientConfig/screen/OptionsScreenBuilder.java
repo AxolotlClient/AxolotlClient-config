@@ -113,7 +113,7 @@ public class OptionsScreenBuilder extends Screen {
             if(isOverlayOpen()){
                 closeOverlay();
             } else {
-                MinecraftClient.getInstance().openScreen(parent);
+                MinecraftClient.getInstance().setScreen(parent);
             }
         }
     }
@@ -138,7 +138,7 @@ public class OptionsScreenBuilder extends Screen {
             public void mouseClicked(int mouseX, int mouseY, int button) {
                 if(isHovered(mouseX, mouseY)) {
                     if(!isFocused() && cat.toString().toLowerCase(Locale.ROOT).contains(modid.toLowerCase(Locale.ROOT))){
-                        MinecraftClient.getInstance().openScreen(new OptionsScreenBuilder(OptionsScreenBuilder.this, getAllOptions(), modid));
+                        MinecraftClient.getInstance().setScreen(new OptionsScreenBuilder(OptionsScreenBuilder.this, getAllOptions(), modid));
                         return;
                     }
                     super.mouseClicked(mouseX, mouseY, button);

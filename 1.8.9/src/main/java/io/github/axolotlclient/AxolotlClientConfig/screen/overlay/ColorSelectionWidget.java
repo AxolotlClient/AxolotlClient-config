@@ -108,7 +108,7 @@ public class ColorSelectionWidget extends Overlay {
         redSlider = new ColorSliderWidget(currentRect.x, currentRect.y + currentRect.height + 65, currentRect.width, 20, red);
         greenSlider = new ColorSliderWidget(currentRect.x, currentRect.y + currentRect.height + 90, currentRect.width, 20, green);
         blueSlider = new ColorSliderWidget(currentRect.x, currentRect.y + currentRect.height + 115, currentRect.width, 20, blue);
-        alphaSlider = new ColorSliderWidget(currentRect.x, currentRect.y+ currentRect.height + 140, currentRect.width, 20, alpha);
+        alphaSlider = new ColorSliderWidget(currentRect.x, currentRect.y + currentRect.height + 140, currentRect.width, 20, alpha);
 
         textInput.setListener(new PagedEntryListWidget.Listener() {
             @Override
@@ -197,7 +197,7 @@ public class ColorSelectionWidget extends Overlay {
         DrawUtil.fillRect(currentRect, option.get());
         DrawUtil.outlineRect(currentRect, Color.DARK_GRAY.withAlpha(127));
 
-        GlStateManager.color3f(1, 1, 1);
+        GlStateManager.color(1, 1, 1);
 
         MinecraftClient.getInstance().getTextureManager().bindTexture(wheel);
         DrawableHelper.drawTexture(pickerImage.x, pickerImage.y, 0, 0, pickerImage.width, pickerImage.height, pickerImage.width, pickerImage.height);
@@ -337,7 +337,7 @@ public class ColorSelectionWidget extends Overlay {
         }
     }
 
-    private class ColorSliderWidget extends OptionSliderWidget<IntegerOption, Integer> {
+    private static class ColorSliderWidget extends OptionSliderWidget<IntegerOption, Integer> {
 
         public ColorSliderWidget(int x, int y, int width, int height, IntegerOption option) {
             super(0, x, y, width, height, option);

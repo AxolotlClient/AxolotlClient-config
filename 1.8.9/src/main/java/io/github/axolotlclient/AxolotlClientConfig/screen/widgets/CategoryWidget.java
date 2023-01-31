@@ -44,7 +44,7 @@ public class CategoryWidget extends OptionWidget {
         if (this.visible) {
             TextRenderer textRenderer = client.textRenderer;
             client.getTextureManager().bindTexture(WIDGETS_LOCATION);
-            GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+            GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
             this.hovered = super.isMouseOver(client, mouseX, mouseY)&& (enabledButton == null || !enabledButton.isMouseOver(client, mouseX, mouseY));
             int i = this.getYImage(this.hovered);
             GlStateManager.enableBlend();
@@ -75,7 +75,7 @@ public class CategoryWidget extends OptionWidget {
             enabledButton.mouseClicked(mouseX, mouseY, 0);
         } else {
             if(MinecraftClient.getInstance().currentScreen instanceof OptionsScreenBuilder) {
-                MinecraftClient.getInstance().openScreen(
+                MinecraftClient.getInstance().setScreen(
                         new OptionsScreenBuilder(MinecraftClient.getInstance().currentScreen, category,
                                 ((OptionsScreenBuilder) MinecraftClient.getInstance().currentScreen).modid));
             }

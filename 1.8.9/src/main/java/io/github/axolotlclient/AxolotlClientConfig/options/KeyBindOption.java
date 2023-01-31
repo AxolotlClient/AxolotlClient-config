@@ -7,8 +7,8 @@ import io.github.axolotlclient.AxolotlClientConfig.screen.widgets.KeyBindWidget;
 import net.legacyfabric.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.client.options.GameOptions;
-import net.minecraft.client.options.KeyBinding;
+import net.minecraft.client.option.GameOptions;
+import net.minecraft.client.option.KeyBinding;
 import org.lwjgl.input.Keyboard;
 
 import java.util.*;

@@ -8,7 +8,7 @@ import net.fabricmc.api.ClientModInitializer;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.GameMenuScreen;
 import net.minecraft.client.gui.screen.SettingsScreen;
-import net.minecraft.client.options.KeyBinding;
+import net.minecraft.client.option.KeyBinding;
 import net.minecraft.text.LiteralText;
 import org.lwjgl.input.Keyboard;
 
@@ -60,7 +60,7 @@ public class Example implements ClientModInitializer {
                 new StringOption("example_string", "Example §2String"),
                 new GenericOption("example_generic", "Open Minecraft Options", (mouseX, mouseY) -> {
                     MinecraftClient.getInstance().player.addMessage(new LiteralText("Opening Settings screen..."));
-                    MinecraftClient.getInstance().openScreen(new SettingsScreen(new GameMenuScreen(), MinecraftClient.getInstance().options));
+                    MinecraftClient.getInstance().setScreen(new SettingsScreen(new GameMenuScreen(), MinecraftClient.getInstance().options));
                 }),
                 disabledExample,
                 ignored,
