@@ -22,6 +22,9 @@
   "icon": "assets/axolotlclient/icon.png",
   "environment": "client",
   "entrypoints": {
+    "modmenu": [
+      "io.github.axolotlclient.AxolotlClientConfig.screen.ModMenuConfigScreens"
+    ]
   },
   "mixins": [
     "axolotlclientconfig.mixins.json"
@@ -29,6 +32,6 @@
   "depends": {
     "fabricloader": ">=0.14.0",
     "minecraft": "1.16.x",
-    "fabric": "0.42.0+1.16"
+    "fabric-lifecycle-events-v1": "*"
   }
 }
