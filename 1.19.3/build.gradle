@@ -25,6 +25,7 @@ dependencies {
 
 	modImplementation "org.quiltmc:quilt-loader:${project.quilt_loader}"
 
+	modApi include("org.quiltmc.qsl.core:qsl_base:${project.qsl_1193}+${project.minecraft_1193}")
 	modApi include("org.quiltmc.qsl.core:lifecycle_events:${project.qsl_1193}+${project.minecraft_1193}")
 	modApi include("org.quiltmc.qsl.management:client_command:${project.qsl_1193}+${project.minecraft_1193}")
 
