@@ -66,12 +66,13 @@ public class Example implements ClientModInitializer {
                 new ColorOption("example_color", Color.parse("#FF550055")),
                 new StringOption("example_string", "Example §bString"),
                 new BooleanOption("Very_Very_Very_Long_Snake_Case_Named_Option", false),
-                new KeyBindOption("example_keybind", new KeyBind("exampleKey", InputUtil.KEY_PRINT_SCREEN_CODE, "example.category"), (binding) -> {
+                new KeyBindOption("example_keybind", new KeyBind("exampleKey", InputUtil.KEY_P_CODE, "example.category"), (binding) -> {
                     if (!binding.isDefault()) {
                         MinecraftClient.getInstance().inGameHud.getChatHud().addMessage(Text.literal("You pressed the example keybind. Congrats!"));
                     }
                 }),
-                new KeyBindOption("example_keybind_conflict", new KeyBind("exampleKey", InputUtil.KEY_PRINT_SCREEN_CODE, "example.category"), (binding) -> {
+                new KeyBindOption("example_keybind_conflict", new KeyBind("exampleKey", InputUtil.KEY_O_CODE, "example.category"), (binding) -> {
+                    MinecraftClient.getInstance().setScreen(AxolotlClientConfigManager.getInstance().getConfigScreen(modid, MinecraftClient.getInstance().currentScreen));
                 }), new BooleanOption("enabled", false));
         example.add(sub);
 
