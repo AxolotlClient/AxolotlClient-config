@@ -21,7 +21,7 @@ repositories {
 
 dependencies {
 	minecraft "com.mojang:minecraft:${project.minecraft_1194}"
-	mappings "org.quiltmc:quilt-mappings:${project.mappings_1194}:intermediary-v2"
+	mappings "org.quiltmc:quilt-mappings:${project.mappings_1194}"
 
 	modImplementation "org.quiltmc:quilt-loader:${project.quilt_loader}"
 

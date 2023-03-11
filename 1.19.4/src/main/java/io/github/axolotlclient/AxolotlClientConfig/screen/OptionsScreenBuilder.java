@@ -46,7 +46,7 @@ public class OptionsScreenBuilder extends Screen {
 
 	@Override
 	public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-        m_qfxudleh(matrices);
+        method_25420(matrices);
         /*if(MinecraftClient.getInstance().world!=null) DrawUtil.fill(matrices,0,0, width, height, 0xB0100E0E);
         else renderBackgroundTexture(0);*/
 
@@ -163,8 +163,8 @@ public class OptionsScreenBuilder extends Screen {
 
 
                 @Override
-                public void m_mxhoikgj(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-                    super.m_mxhoikgj(matrices, mouseX, mouseY, delta);
+                public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+                    super.render(matrices, mouseX, mouseY, delta);
 
                     drawHorizontalLine(matrices, getX() - 5, getX() + width, getY() + 11, -1);
                 }

@@ -28,7 +28,7 @@ public class BooleanWidget extends ButtonWidget implements OptionWidget {
     }
 
 	@Override
-	public void m_mxhoikgj(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+	public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
 
         RenderSystem.setShaderTexture(0, ClickableWidget.WIDGETS_TEXTURE);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);

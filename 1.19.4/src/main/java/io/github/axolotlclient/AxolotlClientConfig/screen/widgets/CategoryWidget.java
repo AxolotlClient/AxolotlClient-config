@@ -41,8 +41,8 @@ public class CategoryWidget extends ButtonWidget implements OptionWidget {
     }
 
 	@Override
-	public void m_mxhoikgj(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-        super.m_mxhoikgj(matrices, mouseX, mouseY, delta);
+	public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+        super.render(matrices, mouseX, mouseY, delta);
 
         if(enabledButton != null){
             enabledButton.setY(getY() + 2);
@@ -51,13 +51,13 @@ public class CategoryWidget extends ButtonWidget implements OptionWidget {
     }
 
     @Override
-    protected void m_bqqbliac(MatrixStack matrices, TextRenderer textRenderer, int i, int j) {
+    protected void method_49604(MatrixStack matrices, TextRenderer textRenderer, int i, int j) {
         int k = this.getX() + i;
         int l = this.getX() + this.getWidth() - i;
         if(enabledButton != null){
             l-=enabledButton.getWidth()+4;
         }
-        m_yqoezvpo(matrices, textRenderer, this.getMessage(), k, this.getY(), l, this.getY() + this.getHeight(), j);
+        method_49605(matrices, textRenderer, this.getMessage(), k, this.getY(), l, this.getY() + this.getHeight(), j);
     }
 
 	@Override

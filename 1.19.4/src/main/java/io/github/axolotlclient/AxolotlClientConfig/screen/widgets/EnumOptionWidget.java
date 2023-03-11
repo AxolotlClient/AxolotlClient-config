@@ -20,7 +20,7 @@ public class EnumOptionWidget extends ButtonWidget implements OptionWidget {
     public void render(MatrixStack stack, int mouseX, int mouseY, float delta) {
         hovered = isMouseOver(mouseX, mouseY) || isFocused();
         if(visible){
-            m_mxhoikgj(stack, mouseX, mouseY, delta);
+            render(stack, mouseX, mouseY, delta);
         }
     }
 

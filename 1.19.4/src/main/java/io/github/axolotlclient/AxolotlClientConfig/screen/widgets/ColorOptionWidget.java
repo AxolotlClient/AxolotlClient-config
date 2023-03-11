@@ -50,7 +50,7 @@ public class ColorOptionWidget extends ButtonWidget implements OptionWidget, Par
             }
         }, DEFAULT_NARRATION){
 	        @Override
-	        public void m_mxhoikgj(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+	        public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
                 DrawUtil.fill(matrices, getX(), getY(), getX()+getWidth(), getY()+getHeight(), option.get().getAsInt());
                 DrawUtil.outlineRect(matrices, getX(), getY(), getWidth(), getHeight(), ColorOptionWidget.this.isFocused() ? -1 :-6250336 );
 
@@ -63,7 +63,7 @@ public class ColorOptionWidget extends ButtonWidget implements OptionWidget, Par
     }
 
 	@Override
-	public void m_mxhoikgj(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+	public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
 
         textField.setY(getY());
         textField.setX(getX());
