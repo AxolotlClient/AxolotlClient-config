@@ -295,10 +295,10 @@ public class ColorSelectionWidget extends Overlay {
         }
 
         @Override
-        public void m_mxhoikgj(MatrixStack matrices, int i, int j, float f) {
+        public void render(MatrixStack matrices, int i, int j, float f) {
             matrices.push();
             matrices.translate(0, 0, 5);
-            super.m_mxhoikgj(matrices, i, j, f);
+            super.render(matrices, i, j, f);
             matrices.pop();
         }
     }

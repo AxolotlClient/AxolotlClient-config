@@ -1,14 +1,19 @@
 package io.github.axolotlclient.AxolotlClientConfig.screen.widgets;
 
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.platform.InputUtil;
 import io.github.axolotlclient.AxolotlClientConfig.options.KeyBindOption;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.gui.Element;
 import net.minecraft.client.gui.ParentElement;
+import net.minecraft.client.gui.Selectable;
+import net.minecraft.client.gui.tooltip.Tooltip;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.option.KeyBind;
 import net.minecraft.client.util.math.MatrixStack;
@@ -29,6 +34,7 @@ public class KeyBindWidget extends ButtonWidget implements OptionWidget, ParentE
     private final KeyBind key;
 
     private boolean edit;
+    private boolean conflicting;
 
     public KeyBindWidget(int x, int y, int width, int height, KeyBindOption option) {
         super(x, y, width, height, Text.empty(), (button) -> {}, DEFAULT_NARRATION);
@@ -42,24 +48,90 @@ public class KeyBindWidget extends ButtonWidget implements OptionWidget, ParentE
                         ? Text.translatable("narrator.controls.unbound", text)
                         : Text.translatable("narrator.controls.bound", text, super.getNarrationMessage());
             }
+
+            @Override
+            public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+                if (edit) {
+                    System.out.println("Receiving input " + keyCode);
+                    if (keyCode == 256) {
+                        MinecraftClient.getInstance().options.setKeyCode(key, InputUtil.UNKNOWN_KEY);
+                    } else {
+                        MinecraftClient.getInstance().options.setKeyCode(key, InputUtil.fromKeyCode(keyCode, scanCode));
+                    }
+
+                    edit = false;
+                    KeyBind.updateBoundKeys();
+                    update();
+                    unfocus();
+                    return true;
+                }
+                boolean bl = super.keyPressed(keyCode, scanCode, modifiers);
+                update();
+                return bl;
+            }
+
+            @Override
+            public boolean mouseClicked(double mouseX, double mouseY, int button) {
+                if(edit) {
+                    MinecraftClient.getInstance().options.setKeyCode(key, InputUtil.Type.MOUSE.createFromKeyCode(button));
+                    edit = false;
+                    KeyBind.updateBoundKeys();
+                    update();
+                    unfocus();
+                    return true;
+                }
+                boolean bl = super.mouseClicked(mouseX, mouseY, button);
+                update();
+                return bl;
+            }
         };
         this.resetButton = new ButtonWidget(0, 0, 50, 20, Text.translatable("controls.reset"), button -> {
             MinecraftClient.getInstance().options.setKeyCode(option.get(), option.get().getDefaultKey());
             KeyBind.updateBoundKeys();
-            keyPressed(InputUtil.KEY_LEFT_CODE, 0, 0);
+            update();
         }, DEFAULT_NARRATION) {
             protected MutableText getNarrationMessage() {
                 return Text.translatable("narrator.controls.reset", text);
             }
         };
+
+        update();
     }
 
-    @Override
-    public void onPress() {
-        if(resetButton.isHoveredOrFocused()){
-            resetButton.onPress();
-        } else if (bindButton.isHoveredOrFocused()) {
-            bindButton.onPress();
+    private void update(){
+        this.bindButton.setMessage(this.key.getKeyName());
+        this.resetButton.active = !this.key.isDefault();
+        this.conflicting = false;
+        MutableText text = Text.empty();
+        Set<KeyBind> conflicts = new HashSet<>();
+        if (!this.key.isUnbound()) {
+            List<KeyBind> binds = KeyBindOption.getBindings();
+            binds.addAll(Arrays.stream(MinecraftClient.getInstance().options.allKeys).toList());
+            for(KeyBind keyBind : binds) {
+                if (keyBind != this.key && this.key.keyEquals(keyBind)) {
+                    boolean alreadyConflicting = conflicts.contains(keyBind);
+                    if (this.conflicting && !alreadyConflicting) {
+                        text.append(", ");
+                    }
+
+                    this.conflicting = true;
+                    if(!alreadyConflicting) {
+                        text.append(Text.translatable(keyBind.getTranslationKey()));
+                        conflicts.add(keyBind);
+                    }
+                }
+            }
+        }
+
+        if (this.conflicting) {
+            this.bindButton.setMessage(Text.literal("[ ").append(this.bindButton.getMessage().copy().formatted(Formatting.WHITE)).append(" ]").formatted(Formatting.RED));
+            this.bindButton.setTooltip(Tooltip.create(Text.translatable("controls.keybinds.duplicateKeybinds", text)));
+        } else {
+            this.bindButton.setTooltip(null);
+        }
+
+        if (edit) {
+            this.bindButton.setMessage(Text.literal("> ").append(this.bindButton.getMessage().copy().formatted(Formatting.WHITE, Formatting.UNDERLINE)).append(" <").formatted(Formatting.YELLOW));
         }
     }
 
@@ -71,30 +143,12 @@ public class KeyBindWidget extends ButtonWidget implements OptionWidget, ParentE
 
         this.resetButton.setX(getX() + 100);
         this.resetButton.setY(getY());
-        this.resetButton.active = !option.get().isDefault();
         this.resetButton.render(matrices, mouseX, mouseY, tickDelta);
         this.bindButton.setX(getX());
         this.bindButton.setY(getY());
-        this.bindButton.setMessage(this.key.getKeyName());
-        boolean bl2 = false;
-        if (!this.key.isUnbound()) {
-            List<KeyBind> binds = KeyBindOption.getBindings();
-            binds.addAll(Arrays.stream(MinecraftClient.getInstance().options.allKeys).toList());
-            for(KeyBind keyBind : binds) {
-                if (keyBind != this.key && this.key.keyEquals(keyBind)) {
-                    bl2 = true;
-                    break;
-                }
-            }
-        }
-
-        if (edit) {
-            this.bindButton
-                    .setMessage(
-                            Text.literal("> ").append(this.bindButton.getMessage().copy().formatted(Formatting.YELLOW)).append(" <").formatted(Formatting.YELLOW)
-                    );
-        } else if (bl2) {
-            this.bindButton.setMessage(this.bindButton.getMessage().copy().formatted(Formatting.RED));
+        if (this.conflicting) {
+            int x = this.bindButton.getX() - 6;
+            DrawableHelper.fill(matrices, x, getY()+ 2, x + 3, getY() + getHeight() - 3, Formatting.RED.getColorValue() | -16777216);
         }
 
         this.bindButton.render(matrices, mouseX, mouseY, tickDelta);
@@ -106,22 +160,8 @@ public class KeyBindWidget extends ButtonWidget implements OptionWidget, ParentE
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
-		if(edit){
-			MinecraftClient.getInstance().options.setKeyCode(key, InputUtil.Type.MOUSE.createFromKeyCode(button));
-			edit = false;
-			KeyBind.updateBoundKeys();
-			return true;
-		} else if (this.bindButton.mouseClicked(mouseX, mouseY, button)) {
-            return true;
-        } else {
-            return this.resetButton.mouseClicked(mouseX, mouseY, button);
-        }
-    }
-
-    @Override
     public boolean mouseReleased(double mouseX, double mouseY, int button) {
-        return this.bindButton.mouseReleased(mouseX, mouseY, button) || this.resetButton.mouseReleased(mouseX, mouseY, button);
+        return ParentElement.super.mouseReleased(mouseX, mouseY, button);
     }
 
     @Override
@@ -132,33 +172,6 @@ public class KeyBindWidget extends ButtonWidget implements OptionWidget, ParentE
     @Override
     public void setDragging(boolean dragging) {
 
-    }
-
-    @Override
-    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-        if (edit) {
-            if (keyCode == 256) {
-                MinecraftClient.getInstance().options.setKeyCode(key, InputUtil.UNKNOWN_KEY);
-            } else {
-                MinecraftClient.getInstance().options.setKeyCode(key, InputUtil.fromKeyCode(keyCode, scanCode));
-            }
-
-            edit = false;
-            KeyBind.updateBoundKeys();
-            return true;
-        } else {
-            if(keyCode == InputUtil.KEY_RIGHT_CODE && bindButton.isFocused()){
-                resetButton.setFocused(true);
-                bindButton.setFocused(false);
-            } else if (keyCode == InputUtil.KEY_LEFT_CODE && resetButton.isFocused()){
-                bindButton.setFocused(true);
-                resetButton.setFocused(false);
-            }
-            if(keyCode == InputUtil.KEY_TAB_CODE){
-                resetButton.setFocused(false);
-            }
-            return super.keyPressed(keyCode, scanCode, modifiers);
-        }
     }
 
     @Nullable
@@ -180,8 +193,7 @@ public class KeyBindWidget extends ButtonWidget implements OptionWidget, ParentE
 
     @Override
     public void unfocus() {
-        bindButton.setFocused(false);
-        resetButton.setFocused(false);
+        children().forEach(e -> e.setFocused(false));
         setFocused(false);
     }
 
@@ -192,11 +204,16 @@ public class KeyBindWidget extends ButtonWidget implements OptionWidget, ParentE
 
     @Override
     public boolean isFocused() {
-        return bindButton.isFocused() || resetButton.isFocused();
+        return ParentElement.super.isFocused();
     }
 
 	@Override
 	protected MutableText getNarrationMessage() {
 		return Text.literal(option.getTranslatedName()).append(super.getNarrationMessage());
 	}
+
+    @Override
+    public List<? extends Selectable> selectableChildren() {
+        return ImmutableList.of(bindButton, resetButton);
+    }
 }

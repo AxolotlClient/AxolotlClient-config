@@ -18,13 +18,8 @@ public class StringOptionWidget extends TextFieldWidget implements OptionWidget 
         setMaxLength(512);
         setText(option.get());
         this.option = option;
+        setChangedListener(option::set);
     }
-
-	@Override
-	public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-		this.option.set(getText());
-		return super.keyPressed(keyCode, scanCode, modifiers);
-	}
 
 	@Override
     public boolean isMouseOver(double mouseX, double mouseY) {

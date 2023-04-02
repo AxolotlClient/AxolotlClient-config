@@ -1,5 +1,8 @@
 package io.github.axolotlclient.AxolotlClientConfig.example;
 
+import java.util.Collections;
+import java.util.List;
+
 import io.github.axolotlclient.AxolotlClientConfig.AxolotlClientConfigManager;
 import io.github.axolotlclient.AxolotlClientConfig.Color;
 import io.github.axolotlclient.AxolotlClientConfig.common.ConfigHolder;
@@ -8,12 +11,8 @@ import net.fabricmc.api.ClientModInitializer;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.GameMenuScreen;
 import net.minecraft.client.gui.screen.SettingsScreen;
-import net.minecraft.client.option.KeyBinding;
 import net.minecraft.text.LiteralText;
 import org.lwjgl.input.Keyboard;
-
-import java.util.Collections;
-import java.util.List;
 
 public class Example implements ClientModInitializer {
 
@@ -70,12 +69,12 @@ public class Example implements ClientModInitializer {
                 new ColorOption("example_color", Color.parse("#FF550055")),
                 new StringOption("example_string", "Example §bString"),
                 new BooleanOption("Very_Very_Very_Long_Snake_Case_Named_Option", false),
-                new KeyBindOption("example_keybind", new KeyBinding("exampleKey", Keyboard.KEY_SYSRQ, "example.category"), (binding) -> {
+                new KeyBindOption("example_keybind", Keyboard.KEY_SYSRQ, (binding) -> {
                     if (binding.getCode() != binding.getDefaultCode()) {
                         MinecraftClient.getInstance().inGameHud.getChatHud().addMessage(new LiteralText("You pressed the example keybind. Congrats!"));
                     }
                 }),
-                new KeyBindOption("example_keybind_conflict", new KeyBinding("exampleKey", Keyboard.KEY_SYSRQ, "example.category"), (binding) -> {
+                new KeyBindOption("example_keybind_conflict", Keyboard.KEY_SYSRQ, (binding) -> {
                 }));
         example.add(sub);
 

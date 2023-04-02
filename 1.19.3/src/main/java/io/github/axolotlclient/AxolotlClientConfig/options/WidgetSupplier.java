@@ -10,9 +10,9 @@ public interface WidgetSupplier extends io.github.axolotlclient.AxolotlClientCon
     /**
      * Create this Identifiable's Widget.
      *
-     * @param x horizontal position
-     * @param y vertical position
-     * @param width Width of the Widget
+     * @param x      horizontal position
+     * @param y      vertical position
+     * @param width  Width of the Widget
      * @param height Height of the widget
      * @return the Widget
      */

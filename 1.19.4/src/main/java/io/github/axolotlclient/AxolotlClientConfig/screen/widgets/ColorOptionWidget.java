@@ -2,7 +2,10 @@ package io.github.axolotlclient.AxolotlClientConfig.screen.widgets;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
+import com.google.common.collect.ImmutableList;
+import com.mojang.blaze3d.platform.InputUtil;
 import com.mojang.blaze3d.systems.RenderSystem;
 import io.github.axolotlclient.AxolotlClientConfig.Color;
 import io.github.axolotlclient.AxolotlClientConfig.options.ColorOption;
@@ -11,7 +14,10 @@ import io.github.axolotlclient.AxolotlClientConfig.screen.overlay.ColorSelection
 import io.github.axolotlclient.AxolotlClientConfig.util.DrawUtil;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.Element;
+import net.minecraft.client.gui.ElementPath;
 import net.minecraft.client.gui.ParentElement;
+import net.minecraft.client.gui.Selectable;
+import net.minecraft.client.gui.screen.ScreenArea;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.gui.screen.narration.NarrationPart;
 import net.minecraft.client.gui.widget.ButtonWidget;
@@ -40,8 +46,17 @@ public class ColorOptionWidget extends ButtonWidget implements OptionWidget, Par
     public ColorOptionWidget(int x, int y, ColorOption option) {
         super(x, y, 150, 20, Text.of(""), buttonWidget -> {}, DEFAULT_NARRATION);
         this.option=option;
-        textField = new TextFieldWidget(MinecraftClient.getInstance().textRenderer, x, y, 128, 19, getMessage());
-        textField.write(option.get().toString());
+        textField = new TextFieldWidget(MinecraftClient.getInstance().textRenderer, x, y, 128, 19, getMessage()){
+            @Override
+            public void moveCursor(int offset) {
+                if(getCursor() == getText().length() && offset >= 1){
+                    MinecraftClient.getInstance().currentScreen.keyPressed(InputUtil.KEY_TAB_CODE, 0, 0);
+                    return;
+                }
+                super.moveCursor(offset);
+            }
+        };
+        textField.setText(option.get().toString());
 
         openPicker = new ButtonWidget(x+128, y, 21, 21, Text.of(""), buttonWidget -> {
             if(MinecraftClient.getInstance().currentScreen instanceof OptionsScreenBuilder){
@@ -52,7 +67,7 @@ public class ColorOptionWidget extends ButtonWidget implements OptionWidget, Par
 	        @Override
 	        public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
                 DrawUtil.fill(matrices, getX(), getY(), getX()+getWidth(), getY()+getHeight(), option.get().getAsInt());
-                DrawUtil.outlineRect(matrices, getX(), getY(), getWidth(), getHeight(), ColorOptionWidget.this.isFocused() ? -1 :-6250336 );
+                DrawUtil.outlineRect(matrices, getX(), getY(), getWidth(), getHeight(), isFocused() ? -1 :-6250336 );
 
                 RenderSystem.setShaderTexture(0, pipette);
                 drawTexture(matrices, getX(), getY(), 0, 0, 20, 20, 21, 21);
@@ -73,7 +88,7 @@ public class ColorOptionWidget extends ButtonWidget implements OptionWidget, Par
         openPicker.setX(getX() + 128);
         openPicker.render(matrices, mouseX, mouseY, delta);
 
-        if(MinecraftClient.getInstance().currentScreen instanceof ColorSelectionWidget &&
+        if(!textField.isFocused() &&
                 !Objects.equals(textField.getText(), option.get().toString())){
             textField.setText(option.get().toString());
         }
@@ -92,6 +107,21 @@ public class ColorOptionWidget extends ButtonWidget implements OptionWidget, Par
     @Override
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
         return ParentElement.super.keyPressed(keyCode, scanCode, modifiers);
+    }
+
+    @Override
+    public boolean mouseScrolled(double mouseX, double mouseY, double amount) {
+        return ParentElement.super.mouseScrolled(mouseX, mouseY, amount);
+    }
+
+    @Override
+    public boolean keyReleased(int keyCode, int scanCode, int modifiers) {
+        return ParentElement.super.keyReleased(keyCode, scanCode, modifiers);
+    }
+
+    @Override
+    public boolean charTyped(char chr, int modifiers) {
+        return ParentElement.super.charTyped(chr, modifiers);
     }
 
     @Override
@@ -145,5 +175,39 @@ public class ColorOptionWidget extends ButtonWidget implements OptionWidget, Par
     @Override
     public boolean isHoveredOrFocused() {
         return canHover() && super.isHoveredOrFocused();
+    }
+
+    @Override
+    public void setFocused(boolean focused) {
+        if(!focused){
+            unfocus();
+        }
+        super.setFocused(focused);
+    }
+
+    @Override
+    public List<? extends Selectable> selectableChildren() {
+        return ImmutableList.of(textField, openPicker);
+    }
+
+    @Override
+    public ScreenArea getArea() {
+        return ScreenArea.empty();
+    }
+
+    @Override
+    public Optional<Element> hoveredElement(double mouseX, double mouseY) {
+        return ParentElement.super.hoveredElement(mouseX, mouseY);
+    }
+
+    @Nullable
+    @Override
+    public ElementPath getCurrentFocusPath() {
+        return ParentElement.super.getCurrentFocusPath();
+    }
+
+    @Override
+    public void focusOn(@Nullable Element element) {
+        ParentElement.super.focusOn(element);
     }
 }

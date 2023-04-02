@@ -10,7 +10,9 @@ import io.github.axolotlclient.AxolotlClientConfig.options.BooleanOption;
 import io.github.axolotlclient.AxolotlClientConfig.options.Option;
 import io.github.axolotlclient.AxolotlClientConfig.options.OptionCategory;
 import io.github.axolotlclient.AxolotlClientConfig.screen.overlay.ColorSelectionWidget;
-import io.github.axolotlclient.AxolotlClientConfig.screen.widgets.*;
+import io.github.axolotlclient.AxolotlClientConfig.screen.widgets.BooleanWidget;
+import io.github.axolotlclient.AxolotlClientConfig.screen.widgets.CategoryWidget;
+import io.github.axolotlclient.AxolotlClientConfig.screen.widgets.OptionWidget;
 import io.github.axolotlclient.AxolotlClientConfig.util.ConfigUtils;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.Element;
@@ -21,7 +23,6 @@ import net.minecraft.client.gui.widget.ElementListWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.MathHelper;
-import org.jetbrains.annotations.Nullable;
 import org.lwjgl.opengl.GL11;
 import org.quiltmc.loader.api.minecraft.ClientOnly;
 
@@ -61,22 +62,6 @@ public class ButtonWidgetList extends ElementListWidget<ButtonWidgetList.Pair> {
         return null;
     }
 
-	@Override
-	public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        entries.forEach(pair -> {
-            if(pair instanceof OptionEntry){
-                if(pair.left instanceof OptionWidget){
-                    ((OptionWidget) pair.left).unfocus();
-                }
-            }
-        });
-        Object p = getFocused();
-        if(p instanceof OptionWidget){
-            ((OptionWidget) p).unfocus();
-        }
-		return super.mouseClicked(mouseX, mouseY, button);
-	}
-
     @Override
     public int getRowWidth() {
         return 400;
@@ -99,6 +84,21 @@ public class ButtonWidgetList extends ElementListWidget<ButtonWidgetList.Pair> {
 		super.renderList(matrices, x, y, delta);
 		GL11.glDisable(GL11.GL_SCISSOR_TEST);
 	}
+
+    @Override
+    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+        /*entries.stream().filter(pair -> pair instanceof OptionEntry).map(pair -> pair.left)
+                .forEach(w -> {
+                    if
+                });*/
+        Pair f = getFocused();
+        if(f != null){
+            if (f instanceof OptionEntry && f.left instanceof OptionWidget){
+                ((OptionWidget)f.left).unfocus();
+            }
+        }
+        return super.mouseClicked(mouseX, mouseY, button);
+    }
 
     @Override
     protected int getScrollbarPositionX() {
@@ -212,7 +212,7 @@ public class ButtonWidgetList extends ElementListWidget<ButtonWidgetList.Pair> {
     }
 
     @ClientOnly
-    public class Pair extends ElementListWidget.Entry<Pair> implements ParentElement {
+    public class Pair extends ElementListWidget.Entry<Pair> {
         protected final MinecraftClient client = MinecraftClient.getInstance();
         protected final ClickableWidget left;
         protected final ClickableWidget right;
@@ -223,10 +223,6 @@ public class ButtonWidgetList extends ElementListWidget<ButtonWidgetList.Pair> {
 			super();
 	        this.left = left;
             this.right = right;
-
-            if(left != null){
-                setFocusedChild(left);
-            }
 			tickable = left instanceof OptionWidget;
         }
 
@@ -271,75 +267,29 @@ public class ButtonWidgetList extends ElementListWidget<ButtonWidgetList.Pair> {
 
         @Override
 	    public boolean mouseClicked(double mouseX, double mouseY, int button) {
-            if (this.left.isMouseOver(mouseX, mouseY)) {
-                onClick(this.left, mouseX, mouseY, button);
-
-                return true;
-            } else if (this.right != null && this.right.isMouseOver(mouseX, mouseY)) {
-                onClick(this.right, mouseX, mouseY, button);
-
-                return true;
+            boolean bl = super.mouseClicked(mouseX, mouseY, button);
+            if(bl){
+                AxolotlClientConfigManager.getInstance().saveCurrentConfig();
             }
-            return false;
-        }
-
-        protected void onClick(ClickableWidget button, double mouseX, double mouseY, int mB){
-            if(button.mouseClicked(mouseX, mouseY, mB)){
-				AxolotlClientConfigManager.getInstance().saveCurrentConfig();
-            }
-        }
-
-		@Override
-		public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-			if(left!=null) {
-                return left.keyPressed(keyCode, scanCode, modifiers);
-            }
-			return super.keyPressed(keyCode, scanCode, modifiers);
-		}
-
-		@Override
-		public boolean charTyped(char c, int modifiers) {
-			return this.left != null && left.charTyped(c, modifiers);
-		}
-
-		@Override
-	    public boolean mouseReleased(double mouseX, double mouseY, int button) {
-            if (this.left != null) {
-                return this.left.mouseReleased(mouseX, mouseY, button);
-            }
-
-            if (this.right != null) {
-                return this.right.mouseReleased(mouseX, mouseY, button);
-            }
-
-		    return super.mouseReleased(mouseX, mouseY, button);
-
+            return bl;
         }
 
 		public void tick(){
-			if(left instanceof StringOptionWidget) ((StringOptionWidget) left).tick();
-			else if (left instanceof ColorOptionWidget) ((ColorOptionWidget) left).tick();
-
+			if(tickable) ((OptionWidget)left).tick();
 		}
 
         @Override
         public List<? extends Selectable> selectableChildren() {
+            if(left instanceof OptionWidget){
+                return ((OptionWidget) left).selectableChildren();
+            }
             if(left != null) {
                 if (right != null) {
                     return List.of(left, right);
                 }
                 return List.of(left);
             }
-            return new ArrayList<>();
-        }
-
-        @Nullable
-        @Override
-        public Element getFocused() {
-            if(super.getFocused() == null && left != null){
-                setFocusedChild(left);
-            }
-            return super.getFocused();
+            return Collections.emptyList();
         }
     }
 
@@ -451,11 +401,6 @@ public class ButtonWidgetList extends ElementListWidget<ButtonWidgetList.Pair> {
         }
 
         @Override
-        public boolean mouseDragged(double mouseX, double mouseY, int button, double deltaX, double deltaY) {
-            return left.mouseDragged(mouseX, mouseY, button, deltaX, deltaY);
-        }
-
-        @Override
         public List<? extends Element> children() {
             if(left instanceof ParentElement){
                 return ((ParentElement) left).children();
@@ -465,7 +410,7 @@ public class ButtonWidgetList extends ElementListWidget<ButtonWidgetList.Pair> {
 
         @Override
         public List<? extends Selectable> selectableChildren() {
-            return List.of(left);
+            return left instanceof OptionWidget ? ((OptionWidget) left).selectableChildren() : List.of(left);
         }
     }
 
@@ -478,25 +423,5 @@ public class ButtonWidgetList extends ElementListWidget<ButtonWidgetList.Pair> {
 	    @Override
 	    public void render(MatrixStack matrices, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float tickDelta) {
 	    }
-
-	    @Override
-	    public boolean mouseClicked(double mouseX, double mouseY, int button) {
-			return false;
-	    }
-
-	    @Override
-	    public boolean mouseReleased(double mouseX, double mouseY, int button) {
-		    return false;
-	    }
-
-        @Override
-        public List<? extends Element> children() {
-            return List.of();
-        }
-
-        @Override
-        public List<? extends Selectable> selectableChildren() {
-            return List.of();
-        }
     }
 }

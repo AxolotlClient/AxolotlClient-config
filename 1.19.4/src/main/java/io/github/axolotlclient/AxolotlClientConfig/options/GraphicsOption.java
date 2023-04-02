@@ -8,7 +8,7 @@ import io.github.axolotlclient.AxolotlClientConfig.screen.OptionsScreenBuilder;
 import io.github.axolotlclient.AxolotlClientConfig.screen.overlay.GraphicsEditorWidget;
 import io.github.axolotlclient.AxolotlClientConfig.screen.widgets.GenericOptionWidget;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.widget.ButtonWidget;
+import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.texture.NativeImageBackedTexture;
 import net.minecraft.client.util.ColorUtil;
 import net.minecraft.util.Identifier;
@@ -149,7 +149,7 @@ public class GraphicsOption extends OptionBase<int[][]> {
     }
 
     @Override
-    public ButtonWidget getWidget(int x, int y, int width, int height) {
+    public ClickableWidget getWidget(int x, int y, int width, int height) {
         return new GenericOptionWidget(x, y, width, height,
                 new GenericOption(getName(), "openEditor", (mouseX, mouseY) ->
                         ((OptionsScreenBuilder) MinecraftClient.getInstance().currentScreen).setOverlay(

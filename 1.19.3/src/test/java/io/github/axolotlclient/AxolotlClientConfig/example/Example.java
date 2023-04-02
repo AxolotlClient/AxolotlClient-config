@@ -1,9 +1,17 @@
 package io.github.axolotlclient.AxolotlClientConfig.example;
 
+import java.io.FileReader;
+import java.util.Collections;
+import java.util.List;
+
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.mojang.blaze3d.platform.InputUtil;
 import io.github.axolotlclient.AxolotlClientConfig.AxolotlClientConfigManager;
 import io.github.axolotlclient.AxolotlClientConfig.Color;
+import io.github.axolotlclient.AxolotlClientConfig.DefaultConfigManager;
 import io.github.axolotlclient.AxolotlClientConfig.common.ConfigHolder;
+import io.github.axolotlclient.AxolotlClientConfig.common.options.OptionCategory;
 import io.github.axolotlclient.AxolotlClientConfig.options.*;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.option.OptionsScreen;
@@ -11,9 +19,6 @@ import net.minecraft.client.option.KeyBind;
 import net.minecraft.text.Text;
 import org.quiltmc.loader.api.ModContainer;
 import org.quiltmc.qsl.base.api.entrypoint.client.ClientModInitializer;
-
-import java.util.Collections;
-import java.util.List;
 
 public class Example implements ClientModInitializer {
 
@@ -30,7 +35,7 @@ public class Example implements ClientModInitializer {
         Instance = this;
         final String modid = "axolotlclientconfig-test";
 
-        OptionCategory example = new OptionCategory(modid);
+        /*OptionCategory example = new OptionCategory(modid);
         BooleanOption ignored = new BooleanOption("ignored_option", false);
         AxolotlClientConfigManager.getInstance().addIgnoredName(modid, ignored.getName());
         BooleanOption disabledExample = new BooleanOption("example_toggle_disabled", true);
@@ -73,14 +78,16 @@ public class Example implements ClientModInitializer {
                 }),
                 new KeyBindOption("example_keybind_conflict", new KeyBind("exampleKey", InputUtil.KEY_PRINT_SCREEN_CODE, "example.category"), (binding) -> {
                 }), new BooleanOption("enabled", false));
-        example.add(sub);
+        example.add(sub);*/
 
-        AxolotlClientConfigManager.getInstance().registerConfig(modid, new ConfigHolder() {
+        new FireflasherOptions().register(modid);
+
+        /*AxolotlClientConfigManager.getInstance().registerConfig(modid, new ConfigHolder() {
             @Override
             public List<io.github.axolotlclient.AxolotlClientConfig.common.options.OptionCategory> getCategories() {
                 return Collections.singletonList(example);
             }
-        });
+        });*/
 
     }
 

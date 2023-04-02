@@ -5,7 +5,6 @@ import com.google.gson.JsonPrimitive;
 import io.github.axolotlclient.AxolotlClientConfig.screen.widgets.BooleanWidget;
 import io.github.axolotlclient.AxolotlClientConfig.common.commands.CommandResponse;
 import net.minecraft.client.gui.widget.ClickableWidget;
-import net.minecraft.client.resource.language.I18n;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

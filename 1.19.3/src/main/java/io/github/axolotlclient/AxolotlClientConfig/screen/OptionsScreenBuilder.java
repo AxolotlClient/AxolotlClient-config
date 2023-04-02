@@ -149,7 +149,9 @@ public class OptionsScreenBuilder extends Screen {
                         return super.mouseClicked(mouseX, mouseY, button);
                     }
                     setFocused(false);
-                    setSuggestion(Formatting.ITALIC + Text.translatable("search").append("...").getString());
+                    if(getText().isEmpty()) {
+                        setSuggestion(Formatting.ITALIC + Text.translatable("search").append("...").getString());
+                    }
                     return false;
                 }
 

@@ -1,5 +1,8 @@
 package io.github.axolotlclient.AxolotlClientConfig.example;
 
+import java.util.Collections;
+import java.util.List;
+
 import io.github.axolotlclient.AxolotlClientConfig.AxolotlClientConfigManager;
 import io.github.axolotlclient.AxolotlClientConfig.Color;
 import io.github.axolotlclient.AxolotlClientConfig.common.ConfigHolder;
@@ -7,12 +10,8 @@ import io.github.axolotlclient.AxolotlClientConfig.options.*;
 import net.fabricmc.api.ClientModInitializer;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.options.OptionsScreen;
-import net.minecraft.client.options.KeyBinding;
 import net.minecraft.text.LiteralText;
 import org.lwjgl.glfw.GLFW;
-
-import java.util.Collections;
-import java.util.List;
 
 public class Example implements ClientModInitializer {
 
@@ -65,12 +64,12 @@ public class Example implements ClientModInitializer {
                 new ColorOption("example_color", Color.parse("#FF550055")),
                 new StringOption("example_string", "Example §bString"),
                 new BooleanOption("Very_Very_Very_Long_Snake_Case_Named_Option", false),
-                new KeyBindOption("example_keybind", new KeyBinding("exampleKey", GLFW.GLFW_KEY_PRINT_SCREEN, "example.category"), (binding) -> {
+                new KeyBindOption("example_keybind", GLFW.GLFW_KEY_PRINT_SCREEN, (binding) -> {
                     if (!binding.isDefault()) {
                         MinecraftClient.getInstance().inGameHud.getChatHud().addMessage(new LiteralText("You pressed the example keybind. Congrats!"));
                     }
                 }),
-                new KeyBindOption("example_keybind_conflict", new KeyBinding("exampleKey", GLFW.GLFW_KEY_P, "example.category"), (binding) -> {
+                new KeyBindOption("example_keybind_conflict", GLFW.GLFW_KEY_P, (binding) -> {
                     AxolotlClientConfigManager.getInstance().openConfigScreen(modid);
                 }));
         example.add(sub);

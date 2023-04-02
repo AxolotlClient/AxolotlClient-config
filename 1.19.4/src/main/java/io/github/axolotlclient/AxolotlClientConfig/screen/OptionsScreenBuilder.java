@@ -46,10 +46,7 @@ public class OptionsScreenBuilder extends Screen {
 
 	@Override
 	public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-        method_25420(matrices);
-        /*if(MinecraftClient.getInstance().world!=null) DrawUtil.fill(matrices,0,0, width, height, 0xB0100E0E);
-        else renderBackgroundTexture(0);*/
-
+        renderBackground(matrices);
 
         this.list.render(matrices, mouseX, mouseY, delta);
         drawCenteredText(matrices, textRenderer, cat.getTranslatedName(), width/2, 25, -1);
@@ -148,7 +145,7 @@ public class OptionsScreenBuilder extends Screen {
                         return super.mouseClicked(mouseX, mouseY, button);
                     }
                     setFocused(false);
-                    setSuggestion(Formatting.ITALIC + Text.translatable("search").append("...").getString());
+                    setSuggestion(Formatting.byName("ITALIC") + Text.translatable("search").append("...").getString());
                     return false;
                 }
 

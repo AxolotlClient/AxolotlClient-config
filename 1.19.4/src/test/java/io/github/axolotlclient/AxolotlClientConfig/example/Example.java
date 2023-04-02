@@ -1,5 +1,8 @@
 package io.github.axolotlclient.AxolotlClientConfig.example;
 
+import java.util.Collections;
+import java.util.List;
+
 import com.mojang.blaze3d.platform.InputUtil;
 import io.github.axolotlclient.AxolotlClientConfig.AxolotlClientConfigManager;
 import io.github.axolotlclient.AxolotlClientConfig.Color;
@@ -7,13 +10,9 @@ import io.github.axolotlclient.AxolotlClientConfig.common.ConfigHolder;
 import io.github.axolotlclient.AxolotlClientConfig.options.*;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.option.OptionsScreen;
-import net.minecraft.client.option.KeyBind;
 import net.minecraft.text.Text;
 import org.quiltmc.loader.api.ModContainer;
 import org.quiltmc.qsl.base.api.entrypoint.client.ClientModInitializer;
-
-import java.util.Collections;
-import java.util.List;
 
 public class Example implements ClientModInitializer {
 
@@ -66,12 +65,12 @@ public class Example implements ClientModInitializer {
                 new ColorOption("example_color", Color.parse("#FF550055")),
                 new StringOption("example_string", "Example §bString"),
                 new BooleanOption("Very_Very_Very_Long_Snake_Case_Named_Option", false),
-                new KeyBindOption("example_keybind", new KeyBind("exampleKey", InputUtil.KEY_P_CODE, "example.category"), (binding) -> {
+                new KeyBindOption("example_keybind", InputUtil.KEY_P_CODE, (binding) -> {
                     if (!binding.isDefault()) {
                         MinecraftClient.getInstance().inGameHud.getChatHud().addMessage(Text.literal("You pressed the example keybind. Congrats!"));
                     }
                 }),
-                new KeyBindOption("example_keybind_conflict", new KeyBind("exampleKey", InputUtil.KEY_O_CODE, "example.category"), (binding) -> {
+                new KeyBindOption("example_keybind_conflict", InputUtil.KEY_O_CODE, (binding) -> {
                     MinecraftClient.getInstance().setScreen(AxolotlClientConfigManager.getInstance().getConfigScreen(modid, MinecraftClient.getInstance().currentScreen));
                 }), new BooleanOption("enabled", false));
         example.add(sub);

@@ -6,6 +6,7 @@ import io.github.axolotlclient.AxolotlClientConfig.options.OptionCategory;
 import io.github.axolotlclient.AxolotlClientConfig.screen.OptionsScreenBuilder;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
+import net.minecraft.client.gui.ParentElement;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.MutableText;
@@ -51,13 +52,13 @@ public class CategoryWidget extends ButtonWidget implements OptionWidget {
     }
 
     @Override
-    protected void method_49604(MatrixStack matrices, TextRenderer textRenderer, int i, int j) {
+    protected void drawScrollableText(MatrixStack matrices, TextRenderer textRenderer, int i, int j) {
         int k = this.getX() + i;
         int l = this.getX() + this.getWidth() - i;
         if(enabledButton != null){
             l-=enabledButton.getWidth()+4;
         }
-        method_49605(matrices, textRenderer, this.getMessage(), k, this.getY(), l, this.getY() + this.getHeight(), j);
+        drawScrollableText(matrices, textRenderer, this.getMessage(), k, this.getY(), l, this.getY() + this.getHeight(), j);
     }
 
 	@Override
