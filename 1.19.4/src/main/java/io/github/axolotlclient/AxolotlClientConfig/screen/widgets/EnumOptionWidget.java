@@ -26,13 +26,16 @@ public class EnumOptionWidget extends ButtonWidget implements OptionWidget {
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if(button==1) {
-            setMessage(Text.translatable(option.last()));
-        } else {
-            setMessage(Text.translatable(option.next()));
-        }
-		playDownSound(MinecraftClient.getInstance().getSoundManager());
-        return true;
+		if(isHovered()) {
+			if (button == 1) {
+				setMessage(Text.translatable(option.last()));
+			} else {
+				setMessage(Text.translatable(option.next()));
+			}
+			playDownSound(MinecraftClient.getInstance().getSoundManager());
+			return true;
+		}
+		return false;
     }
 
 	@Override

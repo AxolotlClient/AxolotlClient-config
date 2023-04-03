@@ -87,10 +87,6 @@ public class ButtonWidgetList extends ElementListWidget<ButtonWidgetList.Pair> {
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        /*entries.stream().filter(pair -> pair instanceof OptionEntry).map(pair -> pair.left)
-                .forEach(w -> {
-                    if
-                });*/
         Pair f = getFocused();
         if(f != null){
             if (f instanceof OptionEntry && f.left instanceof OptionWidget){

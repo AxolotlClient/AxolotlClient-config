@@ -1,12 +1,14 @@
 package io.github.axolotlclient.AxolotlClientConfig.screen.widgets;
 
 import io.github.axolotlclient.AxolotlClientConfig.AxolotlClientConfigConfig;
+import io.github.axolotlclient.AxolotlClientConfig.Color;
 import io.github.axolotlclient.AxolotlClientConfig.options.BooleanOption;
 import io.github.axolotlclient.AxolotlClientConfig.options.OptionCategory;
 import io.github.axolotlclient.AxolotlClientConfig.screen.OptionsScreenBuilder;
+import io.github.axolotlclient.AxolotlClientConfig.util.ConfigUtils;
+import io.github.axolotlclient.AxolotlClientConfig.util.DrawUtil;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.gui.ParentElement;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.MutableText;
@@ -20,7 +22,7 @@ public class CategoryWidget extends ButtonWidget implements OptionWidget {
 
     public CategoryWidget(OptionCategory category, int x, int y, int width, int height) {
         super(x, y, width, 20, Text.of(category.getTranslatedName()).copy().append("..."),
-	        buttonWidget -> {}, DEFAULT_NARRATION);
+                buttonWidget -> {}, DEFAULT_NARRATION);
         this.category=category;
 
         if (AxolotlClientConfigConfig.showQuickToggles.get()) {
@@ -32,17 +34,18 @@ public class CategoryWidget extends ButtonWidget implements OptionWidget {
 
     }
 
-	@Override
-	public boolean isMouseOver(double mouseX, double mouseY) {
+    @Override
+    public boolean isMouseOver(double mouseX, double mouseY) {
 
         if(enabledButton!=null && enabledButton.isMouseOver(mouseX, mouseY)) {
             this.hovered = false;
+            return true;
         }
-        return super.isMouseOver(mouseX, mouseY);
+        return canHover() && super.isMouseOver(mouseX, mouseY);
     }
 
-	@Override
-	public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+    @Override
+    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         super.render(matrices, mouseX, mouseY, delta);
 
         if(enabledButton != null){
@@ -61,21 +64,23 @@ public class CategoryWidget extends ButtonWidget implements OptionWidget {
         drawScrollableText(matrices, textRenderer, this.getMessage(), k, this.getY(), l, this.getY() + this.getHeight(), j);
     }
 
-	@Override
-	public boolean mouseClicked(double mouseX, double mouseY, int button) {
+    @Override
+    public boolean mouseClicked(double mouseX, double mouseY, int button) {
 
         if(enabledButton!=null &&
                 enabledButton.isHoveredOrFocused()) {
-	        playDownSound(MinecraftClient.getInstance().getSoundManager());
+            playDownSound(MinecraftClient.getInstance().getSoundManager());
             enabledButton.option.toggle();
-			return true;
-        } else {
+            return true;
+        } else if (isHoveredOrFocused()) {
             if (MinecraftClient.getInstance().currentScreen != null) {
-                MinecraftClient.getInstance().setScreen(new OptionsScreenBuilder(MinecraftClient.getInstance().currentScreen, category,
-                        ((OptionsScreenBuilder) MinecraftClient.getInstance().currentScreen).modid));
+                if(!((OptionsScreenBuilder) MinecraftClient.getInstance().currentScreen).getCategory().equals(category)) {
+                    MinecraftClient.getInstance().setScreen(new OptionsScreenBuilder(MinecraftClient.getInstance().currentScreen, category,
+                            ((OptionsScreenBuilder) MinecraftClient.getInstance().currentScreen).modid));
+                }
             }
         }
-		return super.mouseClicked(mouseX, mouseY, button);
+        return this.hovered && super.mouseClicked(mouseX, mouseY, button);
     }
 
     @Override
@@ -91,10 +96,10 @@ public class CategoryWidget extends ButtonWidget implements OptionWidget {
         }
     }
 
-	@Override
-	protected MutableText getNarrationMessage() {
-		return Text.literal(category.getTranslatedName()).append(super.getNarrationMessage());
-	}
+    @Override
+    protected MutableText getNarrationMessage() {
+        return Text.literal(category.getTranslatedName()).append(super.getNarrationMessage());
+    }
 
     @Override
     public boolean isHoveredOrFocused() {
