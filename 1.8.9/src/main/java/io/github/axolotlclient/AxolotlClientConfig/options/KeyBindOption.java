@@ -23,52 +23,40 @@ public class KeyBindOption extends OptionBase<KeyBinding> {
 
     private final KeybindListener listener;
 
-    public KeyBindOption(String name, int defaultKeyCode, KeybindListener onPress) {
-        super(name, new KeyBinding(name, defaultKeyCode, "category."+name));
-        registerBinding();
-        listener = onPress;
-    }
+	public KeyBindOption(String name, int defaultKeyCode, KeybindListener onPress) {
+		this(name, new KeyBinding(name, defaultKeyCode, "category."+name), onPress);
+	}
 
-    public KeyBindOption(String name, String tooltipKeyPrefix, int defaultKeyCode, KeybindListener onPress) {
-        super(name, tooltipKeyPrefix, new KeyBinding(name, defaultKeyCode, "category."+name));
-        registerBinding();
-        listener = onPress;
-    }
+	public KeyBindOption(String name, String tooltipKeyPrefix, int defaultKeyCode, KeybindListener onPress) {
+		this(name, tooltipKeyPrefix, new KeyBinding(name, defaultKeyCode, "category."+name), onPress);
+	}
 
-    public KeyBindOption(String name, ChangedListener<KeyBinding> onChange, int defaultKeyCode, KeybindListener onPress) {
-        super(name, onChange, new KeyBinding(name, defaultKeyCode, "category."+name));
-        registerBinding();
-        listener = onPress;
-    }
+	public KeyBindOption(String name, ChangedListener<KeyBinding> onChange, int defaultKeyCode, KeybindListener onPress) {
+		this(name, onChange, new KeyBinding(name, defaultKeyCode, "category."+name), onPress);
+	}
 
-    public KeyBindOption(String name, String tooltipKeyPrefix, ChangedListener<KeyBinding> onChange, int defaultKeyCode, KeybindListener onPress) {
-        super(name, tooltipKeyPrefix, onChange, new KeyBinding(name, defaultKeyCode, "category."+name));
-        registerBinding();
-        listener = onPress;
-    }
+	public KeyBindOption(String name, String tooltipKeyPrefix, ChangedListener<KeyBinding> onChange, int defaultKeyCode, KeybindListener onPress) {
+		this(name, tooltipKeyPrefix, onChange, new KeyBinding(name, defaultKeyCode, "category."+name), onPress);
+	}
 
-    @Deprecated
     public KeyBindOption(String name,  KeyBinding def, KeybindListener onPress) {
         super(name, def);
         registerBinding();
         listener = onPress;
     }
 
-    @Deprecated
     public KeyBindOption(String name, String tooltipKeyPrefix, KeyBinding def, KeybindListener onPress) {
         super(name, tooltipKeyPrefix, def);
         registerBinding();
         listener = onPress;
     }
 
-    @Deprecated
     public KeyBindOption(String name, ChangedListener<KeyBinding> onChange, KeyBinding def, KeybindListener onPress) {
         super(name, onChange, def);
         registerBinding();
         listener = onPress;
     }
 
-    @Deprecated
     public KeyBindOption(String name, String tooltipKeyPrefix, ChangedListener<KeyBinding> onChange, KeyBinding def, KeybindListener onPress) {
         super(name, tooltipKeyPrefix, onChange, def);
         registerBinding();
