@@ -1,12 +1,12 @@
 package io.github.axolotlclient.AxolotlClientConfig.screen;
 
-import io.github.axolotlclient.AxolotlClientConfig.common.types.Tooltippable;
 import io.github.axolotlclient.AxolotlClientConfig.AxolotlClientConfigConfig;
 import io.github.axolotlclient.AxolotlClientConfig.AxolotlClientConfigManager;
+import io.github.axolotlclient.AxolotlClientConfig.common.types.Tooltippable;
 import io.github.axolotlclient.AxolotlClientConfig.options.BooleanOption;
 import io.github.axolotlclient.AxolotlClientConfig.options.Option;
 import io.github.axolotlclient.AxolotlClientConfig.options.OptionCategory;
-import io.github.axolotlclient.AxolotlClientConfig.screen.overlay.ColorSelectionWidget;
+import io.github.axolotlclient.AxolotlClientConfig.screen.overlay.Overlay;
 import io.github.axolotlclient.AxolotlClientConfig.screen.widgets.*;
 import io.github.axolotlclient.AxolotlClientConfig.util.ConfigUtils;
 import net.minecraft.client.MinecraftClient;
@@ -194,9 +194,9 @@ public class ButtonWidgetList extends ElementListWidget<ButtonWidgetList.Pair> {
                 names = AxolotlClientConfigManager.getInstance().getIgnoredNames(
                         ((OptionsScreenBuilder)MinecraftClient.getInstance().currentScreen)
                                 .modid);
-            } else if (MinecraftClient.getInstance().currentScreen instanceof ColorSelectionWidget){
+            } else if (MinecraftClient.getInstance().currentScreen instanceof Overlay){
                 names = AxolotlClientConfigManager.getInstance().getIgnoredNames(
-                        ((ColorSelectionWidget)MinecraftClient.getInstance().currentScreen)
+                        ((Overlay)MinecraftClient.getInstance().currentScreen)
                                 .getModId());
             } else {
                 names = Collections.emptyList();

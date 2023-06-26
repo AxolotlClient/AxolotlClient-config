@@ -1,8 +1,5 @@
 package io.github.axolotlclient.AxolotlClientConfig.example;
 
-import java.util.Collections;
-import java.util.List;
-
 import io.github.axolotlclient.AxolotlClientConfig.AxolotlClientConfigManager;
 import io.github.axolotlclient.AxolotlClientConfig.Color;
 import io.github.axolotlclient.AxolotlClientConfig.common.ConfigHolder;
@@ -13,6 +10,9 @@ import net.minecraft.client.gui.screen.GameMenuScreen;
 import net.minecraft.client.gui.screen.SettingsScreen;
 import net.minecraft.text.LiteralText;
 import org.lwjgl.input.Keyboard;
+
+import java.util.Collections;
+import java.util.List;
 
 public class Example implements ClientModInitializer {
 
@@ -75,6 +75,7 @@ public class Example implements ClientModInitializer {
                     }
                 }),
                 new KeyBindOption("example_keybind_conflict", Keyboard.KEY_SYSRQ, (binding) -> {
+					AxolotlClientConfigManager.getInstance().openConfigScreen(modid);
                 }));
         example.add(sub);
 

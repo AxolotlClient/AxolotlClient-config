@@ -11,7 +11,10 @@ import net.minecraft.client.option.GameOptions;
 import net.minecraft.client.option.KeyBinding;
 import org.lwjgl.input.Keyboard;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Locale;
 
 public class KeyBindOption extends OptionBase<KeyBinding> {
 
@@ -65,6 +68,7 @@ public class KeyBindOption extends OptionBase<KeyBinding> {
 
     private void registerBinding(){
         bindings.add(get());
+		KeyBinding.getCategories().remove(get().getCategory());
         ClientTickEvents.END_CLIENT_TICK.register((client)->{
             if(get().wasPressed()){
                 listener.onPress(get());
@@ -96,12 +100,12 @@ public class KeyBindOption extends OptionBase<KeyBinding> {
 
     @Override
     public void setValueFromJsonElement(JsonElement element) {
-        get().setCode(Keyboard.getKeyIndex(element.getAsString()));
+        get().setCode(element.getAsInt());
     }
 
     @Override
     public JsonElement getJson() {
-        return new JsonPrimitive(Keyboard.getKeyName(get().getCode()));
+        return new JsonPrimitive(get().getCode());
     }
 
     @Override
