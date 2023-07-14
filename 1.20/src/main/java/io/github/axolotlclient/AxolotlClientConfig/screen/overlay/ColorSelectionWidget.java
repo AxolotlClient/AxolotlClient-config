@@ -97,6 +97,12 @@ public class ColorSelectionWidget extends Overlay {
 			public Text getMessage() {
 				return Text.of(this.option.getTranslatedName()).copy().append(": ").append(super.getMessage());
 			}
+
+			@Override
+			public void onPress() {
+				super.onPress();
+				ColorSelectionWidget.this.option.setChroma(option.get());
+			}
 		});
 
 		addDrawableChild(redSlider = new ColorSliderWidget(currentRect.x, currentRect.y + currentRect.height + 65, currentRect.width, 20, red));
