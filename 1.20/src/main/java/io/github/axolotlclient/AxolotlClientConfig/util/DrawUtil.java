@@ -198,15 +198,6 @@ public class DrawUtil implements DrawUtility {
 	}
 
 	@Override
-	public void drawRect(Rectangle rect, int color, int cornerRadiusIfRounded) {
-		if(AxolotlClientConfigConfig.roundedRects.get()){
-			drawRoundedRect(rect, color, cornerRadiusIfRounded);
-		} else {
-			drawRect(rect, color);
-		}
-	}
-
-	@Override
 	public void fill(float x1, float y1, float x2, float y2, int color) {
 
 		Matrix4f matrix = getGraphics().getMatrices().peek().getModel();
@@ -241,11 +232,36 @@ public class DrawUtil implements DrawUtility {
 	}
 
 	@Override
-	public void outlineRect(Rectangle rect, int color, int cornerRadiusIfRounded) {
-		if(AxolotlClientConfigConfig.roundedRects.get()){
-			outlineRoundedRect(rect, color, cornerRadiusIfRounded);
+	public void drawRect(int x, int y, int width, int height, int color, int cornerRadiusIfRounded) {
+		if (AxolotlClientConfigConfig.roundedRects.get()) {
+			drawRoundedRect(x, y, width, height, color, cornerRadiusIfRounded);
 		} else {
-			outlineRect(getGraphics(), rect.x, rect.y, rect.width, rect.height, color);
+			drawRect(x, y, width, height, color);
 		}
+	}
+
+	@Override
+	public void outlineRect(int x, int y, int width, int height, int color, int cornerRadiusIfRounded) {
+		if (AxolotlClientConfigConfig.roundedRects.get()) {
+			outlineRoundedRect(x, y, width, height, color, cornerRadiusIfRounded);
+		} else {
+			outlineRect(getGraphics(), x, y, width, height, color);
+		}
+	}
+
+	public void drawRect(Rectangle rect, Color color, int cornerRadiusIfRounded) {
+		drawRect(rect, color.getAsInt(), cornerRadiusIfRounded);
+	}
+
+	public void outlineRect(Rectangle rectangle, Color color, int cornerRadiusIfRounded) {
+		outlineRect(rectangle, color.getAsInt(), cornerRadiusIfRounded);
+	}
+
+	public void drawRect(int x, int y, int width, int height, Color color, int cornerRadiusIfRounded) {
+		drawRect(x, y, width, height, color.getAsInt(), cornerRadiusIfRounded);
+	}
+
+	public void outlineRect(int x, int y, int width, int height, Color color, int cornerRadiusIfRounded) {
+		outlineRect(x, y, width, height, color.getAsInt(), cornerRadiusIfRounded);
 	}
 }

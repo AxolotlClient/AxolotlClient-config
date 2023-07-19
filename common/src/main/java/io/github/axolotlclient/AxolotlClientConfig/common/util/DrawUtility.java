@@ -30,6 +30,8 @@ public interface DrawUtility {
 
 	default void drawRoundedRect(int x, int y, int width, int height, int color, int cornerRadius) {
 
+		cornerRadius = Math.min(cornerRadius, Math.min(height, width) / 2);
+
 		drawCircle(x + cornerRadius, y + cornerRadius, color, cornerRadius, 90, 180);
 		drawCircle(x + width - cornerRadius, y + cornerRadius, color, cornerRadius, 0, 90);
 		drawCircle(x + width - cornerRadius, y + height - cornerRadius, color, cornerRadius, 270, 360);
@@ -46,16 +48,19 @@ public interface DrawUtility {
 	}
 
 	default void outlineRoundedRect(int x, int y, int width, int height, int color, int cornerRadius) {
+
+		cornerRadius = Math.min(cornerRadius, Math.min(height, width) / 2);
+
 		outlineCircle(x + cornerRadius, y + cornerRadius, color, cornerRadius, 90, 180);
 		outlineCircle(x + width - cornerRadius, y + cornerRadius, color, cornerRadius, 0, 90);
 		outlineCircle(x + width - cornerRadius, y + height - cornerRadius, color, cornerRadius, 270, 360);
 		outlineCircle(x + cornerRadius, y + height - cornerRadius, color, cornerRadius, 180, 270);
 
 		float lineWidth = 0.5F;
-		fill(x + cornerRadius, y, x + width - (cornerRadius), y+lineWidth, color);
-		fill(x, y + cornerRadius, x+lineWidth, y + height - (cornerRadius), color);
-		fill(x + cornerRadius, y + height, x + width - (cornerRadius), y+height-lineWidth, color);
-		fill(x + width, y + cornerRadius, x+width-lineWidth, y + height - cornerRadius, color);
+		fill(x + cornerRadius, y, x + width - (cornerRadius), y + lineWidth, color);
+		fill(x, y + cornerRadius, x + lineWidth, y + height - (cornerRadius), color);
+		fill(x + cornerRadius, y + height, x + width - (cornerRadius), y + height - lineWidth, color);
+		fill(x + width, y + cornerRadius, x + width - lineWidth, y + height - cornerRadius, color);
 	}
 
 	default void outlineCircle(int centerX, int centerY, int color, int radius) {
@@ -64,7 +69,15 @@ public interface DrawUtility {
 
 	void outlineCircle(int centerX, int centerY, int color, int radius, int startDeg, int endDeg);
 
-	void drawRect(Rectangle rect, int color, int cornerRadiusIfRounded);
+	void drawRect(int x, int y, int width, int height, int color, int cornerRadiusIfRounded);
 
-	void outlineRect(Rectangle rect, int color, int cornerRadiusIfRounded);
+	void outlineRect(int x, int y, int width, int height, int color, int cornerRadiusIfRounded);
+
+	default void drawRect(Rectangle rect, int color, int cornerRadiusIfRounded) {
+		drawRect(rect.x, rect.y, rect.width, rect.height, color, cornerRadiusIfRounded);
+	}
+
+	default void outlineRect(Rectangle rect, int color, int cornerRadiusIfRounded) {
+		outlineRect(rect.x, rect.y, rect.width, rect.height, color, cornerRadiusIfRounded);
+	}
 }

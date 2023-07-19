@@ -246,20 +246,36 @@ public class DrawUtil extends DrawableHelper implements DrawUtility {
 	}
 
 	@Override
-	public void drawRect(Rectangle rect, int color, int cornerRadiusIfRounded) {
-		if(AxolotlClientConfigConfig.roundedRects.get()){
-			drawRoundedRect(rect, color, cornerRadiusIfRounded);
+	public void drawRect(int x, int y, int width, int height, int color, int cornerRadiusIfRounded) {
+		if (AxolotlClientConfigConfig.roundedRects.get()) {
+			drawRoundedRect(x, y, width, height, color, cornerRadiusIfRounded);
 		} else {
-			drawRect(rect, color);
+			drawRect(x, y, width, height, color);
 		}
 	}
 
 	@Override
-	public void outlineRect(Rectangle rect, int color, int cornerRadiusIfRounded) {
-		if(AxolotlClientConfigConfig.roundedRects.get()){
-			outlineRoundedRect(rect, color, cornerRadiusIfRounded);
+	public void outlineRect(int x, int y, int width, int height, int color, int cornerRadiusIfRounded) {
+		if (AxolotlClientConfigConfig.roundedRects.get()) {
+			outlineRoundedRect(x, y, width, height, color, cornerRadiusIfRounded);
 		} else {
-			outlineRect(stack, rect.x, rect.y, rect.width, rect.height, color);
+			outlineRect(stack, x, y, width, height, color);
 		}
+	}
+
+	public void drawRect(Rectangle rect, Color color, int cornerRadiusIfRounded) {
+		drawRect(rect, color.getAsInt(), cornerRadiusIfRounded);
+	}
+
+	public void outlineRect(Rectangle rectangle, Color color, int cornerRadiusIfRounded) {
+		outlineRect(rectangle, color.getAsInt(), cornerRadiusIfRounded);
+	}
+
+	public void drawRect(int x, int y, int width, int height, Color color, int cornerRadiusIfRounded) {
+		drawRect(x, y, width, height, color.getAsInt(), cornerRadiusIfRounded);
+	}
+
+	public void outlineRect(int x, int y, int width, int height, Color color, int cornerRadiusIfRounded) {
+		outlineRect(x, y, width, height, color.getAsInt(), cornerRadiusIfRounded);
 	}
 }
