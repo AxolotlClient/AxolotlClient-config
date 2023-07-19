@@ -42,8 +42,8 @@ public class Overlay extends Screen {
 		graphics.getMatrices().push();
 		graphics.getMatrices().translate(0, 0, 200);
 
-		DrawUtil.fillRect(graphics, overlay, Color.DARK_GRAY.withAlpha(127));
-		DrawUtil.outlineRect(graphics, overlay, Color.BLACK);
+		DrawUtil.getInstance().drawRoundedRect(overlay, Color.DARK_GRAY.withAlpha(127).getAsInt(), 12);
+		DrawUtil.getInstance().outlineRoundedRect(overlay, Color.WHITE.getAsInt(), 12);
 
 		graphics.drawCenteredShadowedText(MinecraftClient.getInstance().textRenderer, title, MinecraftClient.getInstance().getWindow().getScaledWidth() / 2, 54, -1);
 

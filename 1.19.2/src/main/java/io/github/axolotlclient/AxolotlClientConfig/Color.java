@@ -1,9 +1,9 @@
 package io.github.axolotlclient.AxolotlClientConfig;
 
-import org.quiltmc.qsl.lifecycle.api.client.event.ClientTickEvents;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import org.quiltmc.qsl.lifecycle.api.client.event.ClientTickEvents;
 
 /**
  * This implementation of Hud modules is based on KronHUD.
@@ -77,7 +77,6 @@ public class Color {
      * @return The current Chroma value, as a Color
      */
 
-    @SuppressWarnings("deprecation")
     public static Color getChroma(){
         if(chromaColors.isEmpty()){
             setupChroma();

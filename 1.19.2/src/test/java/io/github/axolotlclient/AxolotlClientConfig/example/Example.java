@@ -62,16 +62,17 @@ public class Example implements ClientModInitializer {
                 graphicsOption);
         OptionCategory sub = new OptionCategory("example_sub");
         sub.add(new BooleanOption("example_toggle", true),
-                new ColorOption("example_color", Color.parse("#FF550055")),
-                new StringOption("example_string", "Example §bString"),
-                new BooleanOption("Very_Very_Very_Long_Snake_Case_Named_Option", false),
-                new KeyBindOption("example_keybind", InputUtil.KEY_PRINT_SCREEN_CODE, (binding) -> {
-                    if (!binding.isDefault()) {
-                        MinecraftClient.getInstance().inGameHud.getChatHud().addMessage(Text.literal("You pressed the example keybind. Congrats!"));
-                    }
-                }),
-                new KeyBindOption("example_keybind_conflict", InputUtil.KEY_PRINT_SCREEN_CODE, (binding) -> {
-                }));
+			new ColorOption("example_color", Color.parse("#FF550055")),
+			new StringOption("example_string", "Example §bString"),
+			new BooleanOption("Very_Very_Very_Long_Snake_Case_Named_Option", false),
+			new KeyBindOption("example_keybind", InputUtil.KEY_PRINT_SCREEN_CODE, (binding) -> {
+				if (!binding.isDefault()) {
+					MinecraftClient.getInstance().inGameHud.getChatHud().addMessage(Text.literal("You pressed the example keybind. Congrats!"));
+				}
+			}),
+			new KeyBindOption("example_keybind_conflict", InputUtil.KEY_O_CODE, (binding) -> {
+				AxolotlClientConfigManager.getInstance().openConfigScreen(modid);
+			}));
         example.add(sub);
 
         AxolotlClientConfigManager.getInstance().registerConfig(modid, new ConfigHolder() {
