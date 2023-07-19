@@ -7,6 +7,7 @@ import java.util.List;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.mojang.blaze3d.platform.InputUtil;
+import io.github.axolotlclient.AxolotlClientConfig.AxolotlClientConfigConfig;
 import io.github.axolotlclient.AxolotlClientConfig.AxolotlClientConfigManager;
 import io.github.axolotlclient.AxolotlClientConfig.Color;
 import io.github.axolotlclient.AxolotlClientConfig.DefaultConfigManager;
@@ -35,7 +36,7 @@ public class Example implements ClientModInitializer {
         Instance = this;
         final String modid = "axolotlclientconfig-test";
 
-        /*OptionCategory example = new OptionCategory(modid);
+        OptionCategory example = new io.github.axolotlclient.AxolotlClientConfig.options.OptionCategory(modid);
         BooleanOption ignored = new BooleanOption("ignored_option", false);
         AxolotlClientConfigManager.getInstance().addIgnoredName(modid, ignored.getName());
         BooleanOption disabledExample = new BooleanOption("example_toggle_disabled", true);
@@ -66,7 +67,7 @@ public class Example implements ClientModInitializer {
                 disabledExample,
                 ignored,
                 graphicsOption);
-        OptionCategory sub = new OptionCategory("example_sub");
+        OptionCategory sub = new io.github.axolotlclient.AxolotlClientConfig.options.OptionCategory("example_sub");
         sub.add(new BooleanOption("example_toggle", true),
                 new ColorOption("example_color", Color.parse("#FF550055")),
                 new StringOption("example_string", "Example §bString"),
@@ -76,18 +77,17 @@ public class Example implements ClientModInitializer {
                         MinecraftClient.getInstance().inGameHud.getChatHud().addMessage(Text.literal("You pressed the example keybind. Congrats!"));
                     }
                 }),
-                new KeyBindOption("example_keybind_conflict", new KeyBind("exampleKey", InputUtil.KEY_PRINT_SCREEN_CODE, "example.category"), (binding) -> {
+                new KeyBindOption("example_keybind_conflict", InputUtil.KEY_O_CODE, (binding) -> {
+					AxolotlClientConfigManager.getInstance().openConfigScreen(modid);
                 }), new BooleanOption("enabled", false));
-        example.add(sub);*/
+        example.add(sub);
 
-        new FireflasherOptions().register(modid);
-
-        /*AxolotlClientConfigManager.getInstance().registerConfig(modid, new ConfigHolder() {
+        AxolotlClientConfigManager.getInstance().registerConfig(modid, new ConfigHolder() {
             @Override
             public List<io.github.axolotlclient.AxolotlClientConfig.common.options.OptionCategory> getCategories() {
                 return Collections.singletonList(example);
             }
-        });*/
+        });
 
     }
 
