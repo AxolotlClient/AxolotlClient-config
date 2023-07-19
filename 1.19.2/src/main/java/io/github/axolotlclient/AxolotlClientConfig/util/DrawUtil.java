@@ -3,16 +3,16 @@ package io.github.axolotlclient.AxolotlClientConfig.util;
 import java.util.Stack;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.BufferBuilder;
-import com.mojang.blaze3d.vertex.Tessellator;
-import com.mojang.blaze3d.vertex.VertexFormat;
-import com.mojang.blaze3d.vertex.VertexFormats;
+import com.mojang.blaze3d.vertex.*;
+import io.github.axolotlclient.AxolotlClientConfig.AxolotlClientConfigConfig;
 import io.github.axolotlclient.AxolotlClientConfig.Color;
 import io.github.axolotlclient.AxolotlClientConfig.common.util.DrawUtility;
 import io.github.axolotlclient.AxolotlClientConfig.common.util.Rectangle;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawableHelper;
+import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.util.math.Matrix4f;
 import org.lwjgl.opengl.GL11;
 
 /**
@@ -112,6 +112,8 @@ public class DrawUtil extends DrawableHelper implements DrawUtility {
 		BufferBuilder bb = tess.getBufferBuilder();
 
 		bb.begin(VertexFormat.DrawMode.TRIANGLE_FAN, VertexFormats.POSITION_COLOR);
+		Matrix4f matrix = stack.peek().getModel();
+
 
 		float r = ((color >> 16) & 0xFF) / 255f;
 		float g = ((color >> 8) & 0xFF) / 255f;
@@ -143,13 +145,11 @@ public class DrawUtil extends DrawableHelper implements DrawUtility {
 		startDeg += 90;
 		endDeg += 90;
 
-		bb.vertex(centerX, centerY, 0).color(r, g, b, a).next();
-		for (double i = startDeg; i <= endDeg; i++) {
-			double t = i / 360;
+		bb.vertex(matrix, centerX, centerY, 0).color(r, g, b, a).next();
+		for (int i = startDeg; i <= endDeg; i++) {
+			float t = (i / 360F);
 			final float TAU = (float) (Math.PI * 2);
-			float x = (float) (centerX + (Math.sin(t * TAU) * radius));
-			float y = (float) (centerY + (Math.cos(t * TAU) * radius));
-			bb.vertex(x, y, 0).color(r, g, b, a).next();
+			bb.vertex(matrix, (float) (centerX + (Math.sin(t * TAU) * radius)), (float) (centerY + (Math.cos(t * TAU) * radius)), 0).color(r, g, b, a).next();
 		}
 
 		tess.draw();
@@ -166,9 +166,9 @@ public class DrawUtil extends DrawableHelper implements DrawUtility {
 		Tessellator tess = Tessellator.getInstance();
 		BufferBuilder bb = tess.getBufferBuilder();
 
-		bb.begin(VertexFormat.DrawMode.LINE_STRIP, VertexFormats.POSITION_COLOR);
+		bb.begin(VertexFormat.DrawMode.DEBUG_LINE_STRIP, VertexFormats.POSITION_COLOR);
 
-		GL11.glLineWidth(2);
+		Matrix4f matrix4f = stack.peek().getModel();
 
 		float r = ((color >> 16) & 0xFF) / 255f;
 		float g = ((color >> 8) & 0xFF) / 255f;
@@ -205,14 +205,67 @@ public class DrawUtil extends DrawableHelper implements DrawUtility {
 			final float TAU = (float) (Math.PI * 2);
 			float x = (float) (centerX + (Math.sin(t * TAU) * radius));
 			float y = (float) (centerY + (Math.cos(t * TAU) * radius));
-			bb.vertex(x, y, 0).color(r, g, b, a).next();
+			bb.vertex(matrix4f, x, y, 0).color(r, g, b, a).next();
 		}
 
 		tess.draw();
 		RenderSystem.enableCull();
 		RenderSystem.enableTexture();
 		RenderSystem.disableBlend();
-		GL11.glLineWidth(1);
 		popMatrices();
+	}
+
+	@Override
+	public void fill(float x1, float y1, float x2, float y2, int color) {
+
+		Matrix4f matrix = stack.peek().getModel();
+
+		if (x1 < x2) {
+			float i = x1;
+			x1 = x2;
+			x2 = i;
+		}
+
+		if (y1 < y2) {
+			float i = y1;
+			y1 = y2;
+			y2 = i;
+		}
+
+		float f = (float)(color >> 24 & 0xFF) / 255.0F;
+		float g = (float)(color >> 16 & 0xFF) / 255.0F;
+		float h = (float)(color >> 8 & 0xFF) / 255.0F;
+		float j = (float)(color & 0xFF) / 255.0F;
+		BufferBuilder bufferBuilder = Tessellator.getInstance().getBufferBuilder();
+		RenderSystem.enableBlend();
+		RenderSystem.disableTexture();
+		RenderSystem.defaultBlendFunc();
+		RenderSystem.setShader(GameRenderer::getPositionColorShader);
+		bufferBuilder.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_COLOR);
+		bufferBuilder.vertex(matrix, x1, y2, 0.0F).color(g, h, j, f).next();
+		bufferBuilder.vertex(matrix, x2, y2, 0.0F).color(g, h, j, f).next();
+		bufferBuilder.vertex(matrix, x2, y1, 0.0F).color(g, h, j, f).next();
+		bufferBuilder.vertex(matrix, x1, y1, 0.0F).color(g, h, j, f).next();
+		BufferRenderer.drawWithShader(bufferBuilder.end());
+		RenderSystem.enableTexture();
+		RenderSystem.disableBlend();
+	}
+
+	@Override
+	public void drawRect(Rectangle rect, int color, int cornerRadiusIfRounded) {
+		if(AxolotlClientConfigConfig.roundedRects.get()){
+			drawRoundedRect(rect, color, cornerRadiusIfRounded);
+		} else {
+			drawRect(rect, color);
+		}
+	}
+
+	@Override
+	public void outlineRect(Rectangle rect, int color, int cornerRadiusIfRounded) {
+		if(AxolotlClientConfigConfig.roundedRects.get()){
+			outlineRoundedRect(rect, color, cornerRadiusIfRounded);
+		} else {
+			outlineRect(stack, rect.x, rect.y, rect.width, rect.height, color);
+		}
 	}
 }

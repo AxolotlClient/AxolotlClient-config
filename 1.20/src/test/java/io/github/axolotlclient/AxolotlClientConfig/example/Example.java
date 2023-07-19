@@ -1,6 +1,7 @@
 package io.github.axolotlclient.AxolotlClientConfig.example;
 
 import com.mojang.blaze3d.platform.InputUtil;
+import io.github.axolotlclient.AxolotlClientConfig.AxolotlClientConfigConfig;
 import io.github.axolotlclient.AxolotlClientConfig.AxolotlClientConfigManager;
 import io.github.axolotlclient.AxolotlClientConfig.Color;
 import io.github.axolotlclient.AxolotlClientConfig.common.ConfigHolder;
@@ -74,6 +75,7 @@ public class Example implements ClientModInitializer {
 				MinecraftClient.getInstance().setScreen(AxolotlClientConfigManager.getInstance().getConfigScreen(modid, MinecraftClient.getInstance().currentScreen));
 			}), new BooleanOption("enabled", false));
 		example.add(sub);
+		example.add(AxolotlClientConfigConfig.roundedRects);
 
 		AxolotlClientConfigManager.getInstance().registerConfig(modid, new ConfigHolder() {
 			@Override

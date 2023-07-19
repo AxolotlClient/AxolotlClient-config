@@ -3,6 +3,7 @@ package io.github.axolotlclient.AxolotlClientConfig.example;
 import java.util.Collections;
 import java.util.List;
 
+import io.github.axolotlclient.AxolotlClientConfig.AxolotlClientConfigConfig;
 import io.github.axolotlclient.AxolotlClientConfig.AxolotlClientConfigManager;
 import io.github.axolotlclient.AxolotlClientConfig.Color;
 import io.github.axolotlclient.AxolotlClientConfig.common.ConfigHolder;
@@ -73,6 +74,7 @@ public class Example implements ClientModInitializer {
                     AxolotlClientConfigManager.getInstance().openConfigScreen(modid);
                 }));
         example.add(sub);
+		example.add(AxolotlClientConfigConfig.roundedRects);
 
         AxolotlClientConfigManager.getInstance().registerConfig(modid, new ConfigHolder() {
             @Override

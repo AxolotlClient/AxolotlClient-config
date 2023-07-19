@@ -1,24 +1,22 @@
 package io.github.axolotlclient.AxolotlClientConfig.util;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.BufferBuilder;
-import com.mojang.blaze3d.vertex.Tessellator;
-import com.mojang.blaze3d.vertex.VertexFormat;
-import com.mojang.blaze3d.vertex.VertexFormats;
+import com.mojang.blaze3d.vertex.*;
+import io.github.axolotlclient.AxolotlClientConfig.AxolotlClientConfigConfig;
 import io.github.axolotlclient.AxolotlClientConfig.Color;
 import io.github.axolotlclient.AxolotlClientConfig.common.util.DrawUtility;
 import io.github.axolotlclient.AxolotlClientConfig.common.util.Rectangle;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.render.GameRenderer;
 import org.joml.Matrix4f;
-import org.lwjgl.opengl.GL11;
 
 /**
  * This implementation of Hud modules is based on KronHUD.
  * <a href="https://github.com/DarkKronicle/KronHUD">Github Link.</a>
- * <p>
- * License: GPL-3.0
+ *
+ * @license GPL-3.0
  */
 
 public class DrawUtil implements DrawUtility {
@@ -88,10 +86,9 @@ public class DrawUtil implements DrawUtility {
 		getGraphics().getMatrices().pop();
 	}
 
+	@Override
 	public void drawRect(int x, int y, int width, int height, int color) {
-		pushMatrices();
-		fillRect(graphics, x, y, width, height, color);
-		popMatrices();
+		fillRect(getGraphics(), x, y, width, height, color);
 	}
 
 	@Override
@@ -101,6 +98,8 @@ public class DrawUtil implements DrawUtility {
 		BufferBuilder bb = tess.getBufferBuilder();
 
 		bb.begin(VertexFormat.DrawMode.TRIANGLE_FAN, VertexFormats.POSITION_COLOR);
+		Matrix4f matrix = getGraphics().getMatrices().peek().getModel();
+
 
 		float r = ((color >> 16) & 0xFF) / 255f;
 		float g = ((color >> 8) & 0xFF) / 255f;
@@ -131,13 +130,11 @@ public class DrawUtil implements DrawUtility {
 		startDeg += 90;
 		endDeg += 90;
 
-		bb.vertex(centerX, centerY, 0).color(r, g, b, a).next();
-		for (double i = startDeg; i <= endDeg; i++) {
-			double t = i / 360;
+		bb.vertex(matrix, centerX, centerY, 0).color(r, g, b, a).next();
+		for (int i = startDeg; i <= endDeg; i++) {
+			float t = (i / 360F);
 			final float TAU = (float) (Math.PI * 2);
-			float x = (float) (centerX + (Math.sin(t * TAU) * radius));
-			float y = (float) (centerY + (Math.cos(t * TAU) * radius));
-			bb.vertex(x, y, 0).color(r, g, b, a).next();
+			bb.vertex(matrix, (float) (centerX + (Math.sin(t * TAU) * radius)), (float) (centerY + (Math.cos(t * TAU) * radius)), 0).color(r, g, b, a).next();
 		}
 
 		tess.draw();
@@ -150,9 +147,12 @@ public class DrawUtil implements DrawUtility {
 	public void outlineCircle(int centerX, int centerY, int color, int radius, int startDeg, int endDeg) {
 		pushMatrices();
 
+		Tessellator tess = Tessellator.getInstance();
+		BufferBuilder bb = tess.getBufferBuilder();
+
+		bb.begin(VertexFormat.DrawMode.DEBUG_LINE_STRIP, VertexFormats.POSITION_COLOR);
+
 		Matrix4f matrix4f = getGraphics().getMatrices().peek().getModel();
-		GL11.glLineWidth(2);
-		GL11.glBegin(GL11.GL_LINE_STRIP);
 
 		float r = ((color >> 16) & 0xFF) / 255f;
 		float g = ((color >> 8) & 0xFF) / 255f;
@@ -188,50 +188,64 @@ public class DrawUtil implements DrawUtility {
 			final float TAU = (float) (Math.PI * 2);
 			float x = (float) (centerX + (Math.sin(t * TAU) * radius));
 			float y = (float) (centerY + (Math.cos(t * TAU) * radius));
-			GL11.glColor4f(r, g, b, a);
-			GL11.glVertex2d(x, y);
+			bb.vertex(matrix4f, x, y, 0).color(r, g, b, a).next();
 		}
 
-		GL11.glEnd();
+		tess.draw();
 		RenderSystem.enableCull();
 		RenderSystem.disableBlend();
 		popMatrices();
 	}
 
-	public void drawRoundedRect(Rectangle rect, int color, int cornerRadius) {
-		drawRoundedRect(rect.x, rect.y, rect.width, rect.height, color, cornerRadius);
+	@Override
+	public void drawRect(Rectangle rect, int color, int cornerRadiusIfRounded) {
+		if(AxolotlClientConfigConfig.roundedRects.get()){
+			drawRoundedRect(rect, color, cornerRadiusIfRounded);
+		} else {
+			drawRect(rect, color);
+		}
 	}
 
-	public void drawRoundedRect(int x, int y, int width, int height, int color, int cornerRadius) {
+	@Override
+	public void fill(float x1, float y1, float x2, float y2, int color) {
 
-		drawCircle(x + cornerRadius, y + cornerRadius, color, cornerRadius, 90, 180);
-		drawCircle(x + width - cornerRadius, y + cornerRadius, color, cornerRadius, 0, 90);
-		drawCircle(x + width - cornerRadius, y + height - cornerRadius, color, cornerRadius, 270, 360);
-		drawCircle(x + cornerRadius, y + height - cornerRadius, color, cornerRadius, 180, 270);
+		Matrix4f matrix = getGraphics().getMatrices().peek().getModel();
 
-		drawRect(x + cornerRadius, y, width - (cornerRadius * 2), cornerRadius, color);
-		drawRect(x, y + cornerRadius, width, height - (cornerRadius * 2), color);
-		drawRect(x + cornerRadius, y + height - cornerRadius, width - (cornerRadius * 2), cornerRadius, color);
+		if (x1 < x2) {
+			float i = x1;
+			x1 = x2;
+			x2 = i;
+		}
 
+		if (y1 < y2) {
+			float i = y1;
+			y1 = y2;
+			y2 = i;
+		}
+
+		float f = (float)(color >> 24 & 0xFF) / 255.0F;
+		float g = (float)(color >> 16 & 0xFF) / 255.0F;
+		float h = (float)(color >> 8 & 0xFF) / 255.0F;
+		float j = (float)(color & 0xFF) / 255.0F;
+		BufferBuilder bufferBuilder = Tessellator.getInstance().getBufferBuilder();
+		RenderSystem.enableBlend();
+		RenderSystem.defaultBlendFunc();
+		RenderSystem.setShader(GameRenderer::getPositionColorShader);
+		bufferBuilder.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_COLOR);
+		bufferBuilder.vertex(matrix, x1, y2, 0.0F).color(g, h, j, f).next();
+		bufferBuilder.vertex(matrix, x2, y2, 0.0F).color(g, h, j, f).next();
+		bufferBuilder.vertex(matrix, x2, y1, 0.0F).color(g, h, j, f).next();
+		bufferBuilder.vertex(matrix, x1, y1, 0.0F).color(g, h, j, f).next();
+		BufferRenderer.drawWithShader(bufferBuilder.end());
+		RenderSystem.disableBlend();
 	}
 
-	public void outlineRoundedRect(Rectangle rect, int color, int cornerRadius) {
-		outlineRoundedRect(rect.x, rect.y, rect.width, rect.height, color, cornerRadius);
-	}
-
-	public void outlineRoundedRect(int x, int y, int width, int height, int color, int cornerRadius) {
-		outlineCircle(x + cornerRadius, y + cornerRadius, color, cornerRadius, 90, 180);
-		outlineCircle(x + width - cornerRadius, y + cornerRadius, color, cornerRadius, 0, 90);
-		outlineCircle(x + width - cornerRadius, y + height - cornerRadius, color, cornerRadius, 270, 360);
-		outlineCircle(x + cornerRadius, y + height - cornerRadius, color, cornerRadius, 180, 270);
-
-		drawRect(x + cornerRadius, y - 1, width - (cornerRadius * 2), 1, color);
-		drawRect(x - 1, y + cornerRadius, 1, height - (cornerRadius * 2), color);
-		drawRect(x + cornerRadius, y + height, width - (cornerRadius * 2), 1, color);
-		drawRect(x + width, y + cornerRadius, 1, height - cornerRadius * 2, color);
-	}
-
-	public void outlineCircle(int centerX, int centerY, int color, int radius) {
-		outlineCircle(centerX, centerY, color, radius, 0, 360);
+	@Override
+	public void outlineRect(Rectangle rect, int color, int cornerRadiusIfRounded) {
+		if(AxolotlClientConfigConfig.roundedRects.get()){
+			outlineRoundedRect(rect, color, cornerRadiusIfRounded);
+		} else {
+			outlineRect(getGraphics(), rect.x, rect.y, rect.width, rect.height, color);
+		}
 	}
 }

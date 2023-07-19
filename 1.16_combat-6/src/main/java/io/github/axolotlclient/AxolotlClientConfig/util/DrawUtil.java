@@ -3,6 +3,7 @@ package io.github.axolotlclient.AxolotlClientConfig.util;
 import java.util.Stack;
 
 import com.mojang.blaze3d.platform.GlStateManager;
+import io.github.axolotlclient.AxolotlClientConfig.AxolotlClientConfigConfig;
 import io.github.axolotlclient.AxolotlClientConfig.Color;
 import io.github.axolotlclient.AxolotlClientConfig.common.util.DrawUtility;
 import io.github.axolotlclient.AxolotlClientConfig.common.util.Rectangle;
@@ -100,6 +101,44 @@ public class DrawUtil extends DrawableHelper implements DrawUtility {
 	}
 
 	@Override
+	public void fill(float x, float y, float x2, float y2, int color) {
+		pushMatrices();
+
+		if (x < x2) {
+			float n = x;
+			x = x2;
+			x2 = n;
+		}
+
+		if (y < y2) {
+			float n = y;
+			y = y2;
+			y2 = n;
+		}
+
+		float f = (float)(color >> 24 & 0xFF) / 255.0F;
+		float g = (float)(color >> 16 & 0xFF) / 255.0F;
+		float h = (float)(color >> 8 & 0xFF) / 255.0F;
+		float o = (float)(color & 0xFF) / 255.0F;
+		Tessellator tessellator = Tessellator.getInstance();
+		BufferBuilder bufferBuilder = tessellator.getBuffer();
+		GlStateManager.enableBlend();
+		GlStateManager.disableTexture();
+		GlStateManager.blendFuncSeparate(770, 771, 1, 0);
+		GlStateManager.color4f(g, h, o, f);
+		bufferBuilder.begin(7, VertexFormats.POSITION);
+		bufferBuilder.vertex(x, y2, 0.0).next();
+		bufferBuilder.vertex(x2, y2, 0.0).next();
+		bufferBuilder.vertex(x2, y, 0.0).next();
+		bufferBuilder.vertex(x, y, 0.0).next();
+		tessellator.draw();
+		GlStateManager.enableTexture();
+		GlStateManager.disableBlend();
+
+		popMatrices();
+	}
+
+	@Override
 	public void drawRect(int x, int y, int width, int height, int color) {
 		fillRect(stack, x, y, width, height, color);
 	}
@@ -167,8 +206,6 @@ public class DrawUtil extends DrawableHelper implements DrawUtility {
 
 		bb.begin(GL11.GL_LINE_STRIP, VertexFormats.POSITION_COLOR);
 
-		GL11.glLineWidth(2);
-
 		float r = ((color >> 16) & 0xFF) / 255f;
 		float g = ((color >> 8) & 0xFF) / 255f;
 		float b = ((color) & 0xFF) / 255f;
@@ -211,7 +248,24 @@ public class DrawUtil extends DrawableHelper implements DrawUtility {
 		GlStateManager.enableCull();
 		GlStateManager.enableTexture();
 		GlStateManager.disableBlend();
-		GL11.glLineWidth(1);
 		popMatrices();
+	}
+
+	@Override
+	public void drawRect(Rectangle rect, int color, int cornerRadiusIfRounded) {
+		if(AxolotlClientConfigConfig.roundedRects.get()){
+			drawRoundedRect(rect, color, cornerRadiusIfRounded);
+		} else {
+			drawRect(rect, color);
+		}
+	}
+
+	@Override
+	public void outlineRect(Rectangle rect, int color, int cornerRadiusIfRounded) {
+		if(AxolotlClientConfigConfig.roundedRects.get()){
+			outlineRoundedRect(rect, color, cornerRadiusIfRounded);
+		} else {
+			outlineRect(stack, rect.x, rect.y, rect.width, rect.height, color);
+		}
 	}
 }

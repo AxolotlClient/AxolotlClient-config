@@ -26,6 +26,7 @@ public class AxolotlClientConfigConfig extends ConfigHolder {
 	public static final EnumOption searchSortOrder = new EnumOption("searchSortOrder", new String[]{"ASCENDING", "DESCENDING"}, "ASCENDING");
 	public static final BooleanOption searchForOptions = new BooleanOption("searchForOptions", false);
 	public static final IntegerOption chromaSpeed = new IntegerOption("chromaSpeed", 5, 1, 20);
+	public static final BooleanOption roundedRects = new BooleanOption("roundedRects", false);
 
 	@Override
 	public List<OptionCategory> getCategories() {

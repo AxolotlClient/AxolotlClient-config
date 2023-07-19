@@ -10,6 +10,8 @@ public interface DrawUtility {
 
 	void popMatrices();
 
+	void fill(float x, float y, float x2, float y2, int color);
+
 	default void drawRect(Rectangle rect, int color) {
 		drawRect(rect.x, rect.y, rect.width, rect.height, color);
 	}
@@ -49,10 +51,11 @@ public interface DrawUtility {
 		outlineCircle(x + width - cornerRadius, y + height - cornerRadius, color, cornerRadius, 270, 360);
 		outlineCircle(x + cornerRadius, y + height - cornerRadius, color, cornerRadius, 180, 270);
 
-		drawRect(x + cornerRadius, y - 1, width - (cornerRadius * 2), 1, color);
-		drawRect(x - 1, y + cornerRadius, 1, height - (cornerRadius * 2), color);
-		drawRect(x + cornerRadius, y + height, width - (cornerRadius * 2), 1, color);
-		drawRect(x + width, y + cornerRadius, 1, height - cornerRadius * 2, color);
+		float lineWidth = 0.5F;
+		fill(x + cornerRadius, y, x + width - (cornerRadius), y+lineWidth, color);
+		fill(x, y + cornerRadius, x+lineWidth, y + height - (cornerRadius), color);
+		fill(x + cornerRadius, y + height, x + width - (cornerRadius), y+height-lineWidth, color);
+		fill(x + width, y + cornerRadius, x+width-lineWidth, y + height - cornerRadius, color);
 	}
 
 	default void outlineCircle(int centerX, int centerY, int color, int radius) {
@@ -60,4 +63,8 @@ public interface DrawUtility {
 	}
 
 	void outlineCircle(int centerX, int centerY, int color, int radius, int startDeg, int endDeg);
+
+	void drawRect(Rectangle rect, int color, int cornerRadiusIfRounded);
+
+	void outlineRect(Rectangle rect, int color, int cornerRadiusIfRounded);
 }

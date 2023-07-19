@@ -4,23 +4,31 @@ import java.util.Stack;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
+import io.github.axolotlclient.AxolotlClientConfig.AxolotlClientConfigConfig;
 import io.github.axolotlclient.AxolotlClientConfig.Color;
 import io.github.axolotlclient.AxolotlClientConfig.common.util.DrawUtility;
 import io.github.axolotlclient.AxolotlClientConfig.common.util.Rectangle;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawableHelper;
+import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.util.math.MatrixStack;
+import org.joml.Matrix4f;
+import org.lwjgl.opengl.GL11;
 
 /**
  * This implementation of Hud modules is based on KronHUD.
  * <a href="https://github.com/DarkKronicle/KronHUD">Github Link.</a>
- * <p>
- * License: GPL-3.0
+ *
+ * @license GPL-3.0
  */
 
 public class DrawUtil extends DrawableHelper implements DrawUtility {
 
 	private static final DrawUtil instance = new DrawUtil();
+
+	public static DrawUtil getInstance() {
+		return instance;
+	}
 
 	private final Stack<Rectangle> scissorStack = new Stack<>();
 
@@ -53,7 +61,7 @@ public class DrawUtil extends DrawableHelper implements DrawUtility {
         drawString(stack, renderer, text, centerX - renderer.getWidth(text) / 2,
                 y,
                 color, shadow);
-    }
+	}
 
 	public static void drawString(MatrixStack stack, TextRenderer renderer, String text, int x, int y,
 								  int color, boolean shadow) {
@@ -67,7 +75,8 @@ public class DrawUtil extends DrawableHelper implements DrawUtility {
 	@Override
 	public void pushScissor(Rectangle rect) {
 		scissorStack.push(rect);
-		enableScissor(rect.x, rect.y, rect.x + rect.width, rect.y + rect.height);
+		GL11.glEnable(GL11.GL_SCISSOR_TEST);
+		GL11.glScissor(ConfigUtils.toGlCoordsX(rect.x), ConfigUtils.toGlCoordsY(rect.y), rect.width, rect.height);
 	}
 
 	@Override
@@ -75,9 +84,9 @@ public class DrawUtil extends DrawableHelper implements DrawUtility {
 		scissorStack.pop();
 		if (!scissorStack.empty()) {
 			Rectangle rect = scissorStack.peek();
-			enableScissor(rect.x, rect.y, rect.x + rect.width, rect.y + rect.height);
+			GL11.glScissor(rect.x, rect.y, rect.width, rect.height);
 		} else {
-			disableScissor();
+			GL11.glDisable(GL11.GL_SCISSOR_TEST);
 		}
 	}
 
@@ -99,17 +108,164 @@ public class DrawUtil extends DrawableHelper implements DrawUtility {
 	@Override
 	public void drawCircle(int centerX, int centerY, int color, int radius, int startDeg, int endDeg) {
 		pushMatrices();
+		Tessellator tess = Tessellator.getInstance();
+		BufferBuilder bb = tess.getBufferBuilder();
+
+		bb.begin(VertexFormat.DrawMode.TRIANGLE_FAN, VertexFormats.POSITION_COLOR);
+		Matrix4f matrix = stack.peek().getModel();
+
+
+		float r = ((color >> 16) & 0xFF) / 255f;
+		float g = ((color >> 8) & 0xFF) / 255f;
+		float b = ((color) & 0xFF) / 255f;
+		float a = ((color >> 24) & 0xFF) / 255f;
+
 		RenderSystem.enableBlend();
-		Tessellator tessellator = Tessellator.getInstance();
-		BufferBuilder builder = tessellator.getBufferBuilder();
-		builder.begin(VertexFormat.DrawMode.TRIANGLE_FAN, VertexFormats.POSITION_COLOR);
+		RenderSystem.disableCull();
+		RenderSystem.disableTexture();
 
-		builder.vertex(centerX, centerY, 0).color(color);
-
-		for (float pos = startDeg; pos <= endDeg; pos++) {
-			builder.vertex(radius * Math.cos(Math.PI * pos / 180) + centerX,
-				radius * Math.sin(Math.PI * pos / 180) + centerY, 0).color(color);
+		if (startDeg < 0) {
+			startDeg += 360;
+		} else if (startDeg > 360) {
+			startDeg -= 360;
 		}
-		BufferRenderer.draw(builder.end());
+
+		if (endDeg < 0) {
+			endDeg += 360;
+		} else if (endDeg > 360) {
+			endDeg -= 360;
+		}
+
+		if (startDeg > endDeg) {
+			int d = startDeg;
+			startDeg = endDeg;
+			endDeg = d;
+		}
+
+		startDeg += 90;
+		endDeg += 90;
+
+		bb.vertex(matrix, centerX, centerY, 0).color(r, g, b, a).next();
+		for (int i = startDeg; i <= endDeg; i++) {
+			float t = (i / 360F);
+			final float TAU = (float) (Math.PI * 2);
+			bb.vertex(matrix, (float) (centerX + (Math.sin(t * TAU) * radius)), (float) (centerY + (Math.cos(t * TAU) * radius)), 0).color(r, g, b, a).next();
+		}
+
+		tess.draw();
+		RenderSystem.enableCull();
+		RenderSystem.enableTexture();
+		RenderSystem.disableBlend();
+		popMatrices();
+	}
+
+	@Override
+	public void outlineCircle(int centerX, int centerY, int color, int radius, int startDeg, int endDeg) {
+		pushMatrices();
+
+		Tessellator tess = Tessellator.getInstance();
+		BufferBuilder bb = tess.getBufferBuilder();
+
+		bb.begin(VertexFormat.DrawMode.DEBUG_LINE_STRIP, VertexFormats.POSITION_COLOR);
+
+		Matrix4f matrix4f = stack.peek().getModel();
+
+		float r = ((color >> 16) & 0xFF) / 255f;
+		float g = ((color >> 8) & 0xFF) / 255f;
+		float b = ((color) & 0xFF) / 255f;
+		float a = ((color >> 24) & 0xFF) / 255f;
+
+		RenderSystem.enableBlend();
+		RenderSystem.disableCull();
+		RenderSystem.disableTexture();
+
+		if (startDeg < 0) {
+			startDeg += 360;
+		} else if (startDeg > 360) {
+			startDeg -= 360;
+		}
+
+		if (endDeg < 0) {
+			endDeg += 360;
+		} else if (endDeg > 360) {
+			endDeg -= 360;
+		}
+
+		if (startDeg > endDeg) {
+			int d = startDeg;
+			startDeg = endDeg;
+			endDeg = d;
+		}
+
+		startDeg += 90;
+		endDeg += 90;
+
+		for (double i = startDeg; i <= endDeg; i++) {
+			double t = i / 360;
+			final float TAU = (float) (Math.PI * 2);
+			float x = (float) (centerX + (Math.sin(t * TAU) * radius));
+			float y = (float) (centerY + (Math.cos(t * TAU) * radius));
+			bb.vertex(matrix4f, x, y, 0).color(r, g, b, a).next();
+		}
+
+		tess.draw();
+		RenderSystem.enableCull();
+		RenderSystem.enableTexture();
+		RenderSystem.disableBlend();
+		popMatrices();
+	}
+
+	@Override
+	public void fill(float x1, float y1, float x2, float y2, int color) {
+
+		Matrix4f matrix = stack.peek().getModel();
+
+		if (x1 < x2) {
+			float i = x1;
+			x1 = x2;
+			x2 = i;
+		}
+
+		if (y1 < y2) {
+			float i = y1;
+			y1 = y2;
+			y2 = i;
+		}
+
+		float f = (float)(color >> 24 & 0xFF) / 255.0F;
+		float g = (float)(color >> 16 & 0xFF) / 255.0F;
+		float h = (float)(color >> 8 & 0xFF) / 255.0F;
+		float j = (float)(color & 0xFF) / 255.0F;
+		BufferBuilder bufferBuilder = Tessellator.getInstance().getBufferBuilder();
+		RenderSystem.enableBlend();
+		RenderSystem.disableTexture();
+		RenderSystem.defaultBlendFunc();
+		RenderSystem.setShader(GameRenderer::getPositionColorShader);
+		bufferBuilder.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_COLOR);
+		bufferBuilder.vertex(matrix, x1, y2, 0.0F).color(g, h, j, f).next();
+		bufferBuilder.vertex(matrix, x2, y2, 0.0F).color(g, h, j, f).next();
+		bufferBuilder.vertex(matrix, x2, y1, 0.0F).color(g, h, j, f).next();
+		bufferBuilder.vertex(matrix, x1, y1, 0.0F).color(g, h, j, f).next();
+		BufferRenderer.drawWithShader(bufferBuilder.end());
+		RenderSystem.enableTexture();
+		RenderSystem.disableBlend();
+	}
+
+	@Override
+	public void drawRect(Rectangle rect, int color, int cornerRadiusIfRounded) {
+		if(AxolotlClientConfigConfig.roundedRects.get()){
+			drawRoundedRect(rect, color, cornerRadiusIfRounded);
+		} else {
+			drawRect(rect, color);
+		}
+	}
+
+	@Override
+	public void outlineRect(Rectangle rect, int color, int cornerRadiusIfRounded) {
+		if(AxolotlClientConfigConfig.roundedRects.get()){
+			outlineRoundedRect(rect, color, cornerRadiusIfRounded);
+		} else {
+			outlineRect(stack, rect.x, rect.y, rect.width, rect.height, color);
+		}
 	}
 }
