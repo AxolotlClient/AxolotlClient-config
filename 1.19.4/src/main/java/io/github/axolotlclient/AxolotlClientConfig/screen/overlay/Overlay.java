@@ -38,8 +38,8 @@ public class Overlay extends Screen {
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         parent.render(matrices, mouseX, mouseY, delta);
 
-		DrawUtil.getInstance().drawRect(overlay, Color.DARK_GRAY.withAlpha(127).getAsInt(), 12);
-		DrawUtil.getInstance().outlineRect(overlay, Color.WHITE.getAsInt(), 12);
+		DrawUtil.getInstance().drawRect(matrices, overlay, Color.DARK_GRAY.withAlpha(127).getAsInt(), 12);
+		DrawUtil.getInstance().outlineRect(matrices, overlay, Color.WHITE.getAsInt(), 12);
 
         drawCenteredText(matrices, MinecraftClient.getInstance().textRenderer, title, MinecraftClient.getInstance().getWindow().getScaledWidth()/2, 54, -1);
 

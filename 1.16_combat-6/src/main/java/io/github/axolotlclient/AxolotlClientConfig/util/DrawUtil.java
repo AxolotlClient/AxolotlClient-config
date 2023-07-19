@@ -5,13 +5,14 @@ import java.util.Stack;
 import com.mojang.blaze3d.platform.GlStateManager;
 import io.github.axolotlclient.AxolotlClientConfig.AxolotlClientConfigConfig;
 import io.github.axolotlclient.AxolotlClientConfig.Color;
-import io.github.axolotlclient.AxolotlClientConfig.common.util.DrawUtility;
 import io.github.axolotlclient.AxolotlClientConfig.common.util.Rectangle;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.render.BufferBuilder;
 import net.minecraft.client.render.Tessellator;
 import net.minecraft.client.render.VertexFormats;
+import net.minecraft.client.util.Window;
 import net.minecraft.client.util.math.MatrixStack;
 import org.lwjgl.opengl.GL11;
 
@@ -22,7 +23,7 @@ import org.lwjgl.opengl.GL11;
  * @license GPL-3.0
  */
 
-public class DrawUtil extends DrawableHelper implements DrawUtility {
+public class DrawUtil extends DrawableHelper {
 
 	private static final DrawUtil instance = new DrawUtil();
 
@@ -31,8 +32,6 @@ public class DrawUtil extends DrawableHelper implements DrawUtility {
 	}
 
 	private final Stack<Rectangle> scissorStack = new Stack<>();
-
-	private final MatrixStack stack = new MatrixStack();
 
 	public static void fillRect(MatrixStack stack, Rectangle rectangle, Color color) {
 		fillRect(stack, rectangle.x, rectangle.y, rectangle.width,
@@ -72,38 +71,26 @@ public class DrawUtil extends DrawableHelper implements DrawUtility {
 		}
 	}
 
-	@Override
 	public void pushScissor(Rectangle rect) {
 		scissorStack.push(rect);
 		GL11.glEnable(GL11.GL_SCISSOR_TEST);
-		GL11.glScissor(ConfigUtils.toGlCoordsX(rect.x), ConfigUtils.toGlCoordsY(rect.y), rect.width, rect.height);
+		Window window = MinecraftClient.getInstance().getWindow();
+		double scale = window.getScaleFactor();
+		GL11.glScissor((int) (rect.x * scale), (int) ((window.getScaledHeight() - rect.height - rect.y) * scale), (int) (rect.width * scale), (int) (rect.height * scale));
 	}
 
-	@Override
 	public void popScissor() {
 		scissorStack.pop();
 		if (!scissorStack.empty()) {
 			Rectangle rect = scissorStack.peek();
-			GL11.glScissor(rect.x, rect.y, rect.width, rect.height);
+			Window window = MinecraftClient.getInstance().getWindow();
+			double scale = window.getScaleFactor();
+			GL11.glScissor((int) (rect.x * scale), (int) ((window.getScaledHeight() - rect.height - rect.y) * scale), (int) (rect.width * scale), (int) (rect.height * scale));
 		} else {
 			GL11.glDisable(GL11.GL_SCISSOR_TEST);
 		}
 	}
-
-	@Override
-	public void pushMatrices() {
-		stack.push();
-	}
-
-	@Override
-	public void popMatrices() {
-		stack.pop();
-	}
-
-	@Override
-	public void fill(float x, float y, float x2, float y2, int color) {
-		pushMatrices();
-
+	public void fill(MatrixStack stack, float x, float y, float x2, float y2, int color) {
 		if (x < x2) {
 			float n = x;
 			x = x2;
@@ -134,18 +121,13 @@ public class DrawUtil extends DrawableHelper implements DrawUtility {
 		tessellator.draw();
 		GlStateManager.enableTexture();
 		GlStateManager.disableBlend();
-
-		popMatrices();
 	}
 
-	@Override
-	public void drawRect(int x, int y, int width, int height, int color) {
+	public void drawRect(MatrixStack stack, int x, int y, int width, int height, int color) {
 		fillRect(stack, x, y, width, height, color);
 	}
 
-	@Override
-	public void drawCircle(int centerX, int centerY, int color, int radius, int startDeg, int endDeg) {
-		pushMatrices();
+	public void drawCircle(MatrixStack stack, int centerX, int centerY, int color, int radius, int startDeg, int endDeg) {
 		Tessellator tess = Tessellator.getInstance();
 		BufferBuilder bb = tess.getBuffer();
 
@@ -194,12 +176,9 @@ public class DrawUtil extends DrawableHelper implements DrawUtility {
 		GlStateManager.enableCull();
 		GlStateManager.enableTexture();
 		GlStateManager.disableBlend();
-		popMatrices();
 	}
 
-	@Override
-	public void outlineCircle(int centerX, int centerY, int color, int radius, int startDeg, int endDeg) {
-		pushMatrices();
+	public void outlineCircle(MatrixStack stack, int centerX, int centerY, int color, int radius, int startDeg, int endDeg) {
 
 		Tessellator tess = Tessellator.getInstance();
 		BufferBuilder bb = tess.getBuffer();
@@ -248,40 +227,120 @@ public class DrawUtil extends DrawableHelper implements DrawUtility {
 		GlStateManager.enableCull();
 		GlStateManager.enableTexture();
 		GlStateManager.disableBlend();
-		popMatrices();
 	}
 
-	@Override
-	public void drawRect(int x, int y, int width, int height, int color, int cornerRadiusIfRounded) {
+	public void drawRect(MatrixStack stack, int x, int y, int width, int height, int color, int cornerRadiusIfRounded) {
 		if (AxolotlClientConfigConfig.roundedRects.get()) {
-			drawRoundedRect(x, y, width, height, color, cornerRadiusIfRounded);
+			drawRoundedRect(stack, x, y, width, height, color, cornerRadiusIfRounded);
 		} else {
-			drawRect(x, y, width, height, color);
+			drawRect(stack, x, y, width, height, color);
 		}
 	}
 
-	@Override
-	public void outlineRect(int x, int y, int width, int height, int color, int cornerRadiusIfRounded) {
+	public void outlineRect(MatrixStack stack, int x, int y, int width, int height, int color, int cornerRadiusIfRounded) {
 		if (AxolotlClientConfigConfig.roundedRects.get()) {
-			outlineRoundedRect(x, y, width, height, color, cornerRadiusIfRounded);
+			outlineRoundedRect(stack, x, y, width, height, color, cornerRadiusIfRounded);
 		} else {
 			outlineRect(stack, x, y, width, height, color);
 		}
 	}
 
-	public void drawRect(Rectangle rect, Color color, int cornerRadiusIfRounded) {
-		drawRect(rect, color.getAsInt(), cornerRadiusIfRounded);
+	public void drawRect(MatrixStack stack, Rectangle rect, Color color, int cornerRadiusIfRounded) {
+		drawRect(stack, rect, color.getAsInt(), cornerRadiusIfRounded);
 	}
 
-	public void outlineRect(Rectangle rectangle, Color color, int cornerRadiusIfRounded) {
-		outlineRect(rectangle, color.getAsInt(), cornerRadiusIfRounded);
+	public void outlineRect(MatrixStack stack, Rectangle rectangle, Color color, int cornerRadiusIfRounded) {
+		outlineRect(stack, rectangle, color.getAsInt(), cornerRadiusIfRounded);
 	}
 
-	public void drawRect(int x, int y, int width, int height, Color color, int cornerRadiusIfRounded) {
-		drawRect(x, y, width, height, color.getAsInt(), cornerRadiusIfRounded);
+	public void drawRect(MatrixStack stack, int x, int y, int width, int height, Color color, int cornerRadiusIfRounded) {
+		drawRect(stack, x, y, width, height, color.getAsInt(), cornerRadiusIfRounded);
 	}
 
-	public void outlineRect(int x, int y, int width, int height, Color color, int cornerRadiusIfRounded) {
-		outlineRect(x, y, width, height, color.getAsInt(), cornerRadiusIfRounded);
+	public void outlineRect(MatrixStack stack, int x, int y, int width, int height, Color color, int cornerRadiusIfRounded) {
+		outlineRect(stack, x, y, width, height, color.getAsInt(), cornerRadiusIfRounded);
+	}
+
+	public void drawRect(MatrixStack stack, Rectangle rect, int color) {
+		drawRect(stack, rect.x, rect.y, rect.width, rect.height, color);
+	}
+
+	public void drawCircle(MatrixStack stack, int centerX, int centerY, int color, int radius) {
+		drawCircle(stack, centerX, centerY, color, radius, 0, 360);
+	}
+
+	public void drawRoundedRect(MatrixStack stack, Rectangle rect, int color, int cornerRadius) {
+		drawRoundedRect(stack, rect.x, rect.y, rect.width, rect.height, color, cornerRadius);
+	}
+
+	public void drawRoundedRect(MatrixStack stack, int x, int y, int width, int height, int color, int cornerRadius) {
+
+		cornerRadius = Math.min(cornerRadius, Math.min(height, width) / 2);
+
+		drawCircle(stack, x + cornerRadius, y + cornerRadius, color, cornerRadius, 90, 180);
+		drawCircle(stack, x + width - cornerRadius, y + cornerRadius, color, cornerRadius, 0, 90);
+		drawCircle(stack, x + width - cornerRadius, y + height - cornerRadius, color, cornerRadius, 270, 360);
+		drawCircle(stack, x + cornerRadius, y + height - cornerRadius, color, cornerRadius, 180, 270);
+
+		drawRect(stack, x + cornerRadius, y, width - (cornerRadius * 2), cornerRadius, color);
+		drawRect(stack, x, y + cornerRadius, width, height - (cornerRadius * 2), color);
+		drawRect(stack, x + cornerRadius, y + height - cornerRadius, width - (cornerRadius * 2), cornerRadius, color);
+
+	}
+
+	public void outlineRoundedRect(MatrixStack stack, Rectangle rect, int color, int cornerRadius) {
+		outlineRoundedRect(stack, rect.x, rect.y, rect.width, rect.height, color, cornerRadius);
+	}
+
+	public void outlineRoundedRect(MatrixStack stack, int x, int y, int width, int height, int color, int cornerRadius) {
+
+		cornerRadius = Math.min(cornerRadius, Math.min(height, width) / 2);
+
+		outlineCircle(stack, x + cornerRadius, y + cornerRadius, color, cornerRadius, 90, 180);
+		outlineCircle(stack, x + width - cornerRadius, y + cornerRadius, color, cornerRadius, 0, 90);
+		outlineCircle(stack, x + width - cornerRadius, y + height - cornerRadius, color, cornerRadius, 270, 360);
+		outlineCircle(stack, x + cornerRadius, y + height - cornerRadius, color, cornerRadius, 180, 270);
+
+		drawLine(stack, x + cornerRadius, y, x + width - (cornerRadius), y, color);
+		drawLine(stack, x, y + cornerRadius, x, y + height - (cornerRadius), color);
+		drawLine(stack, x + cornerRadius, y + height, x + width - (cornerRadius), y + height, color);
+		drawLine(stack, x + width, y + cornerRadius, x + width, y + height - cornerRadius, color);
+	}
+
+	public void drawLine(MatrixStack stack, int x, int y, int x2, int y2, int color){
+		Tessellator tess = Tessellator.getInstance();
+		BufferBuilder bb = tess.getBuffer();
+
+		bb.begin(GL11.GL_LINE_STRIP, VertexFormats.POSITION_COLOR);
+
+		float r = ((color >> 16) & 0xFF) / 255f;
+		float g = ((color >> 8) & 0xFF) / 255f;
+		float b = ((color) & 0xFF) / 255f;
+		float a = ((color >> 24) & 0xFF) / 255f;
+
+		GlStateManager.enableBlend();
+		GlStateManager.disableCull();
+		GlStateManager.disableTexture();
+
+		bb.vertex(x, y, 0).color(r, g, b, a).next();
+		bb.vertex(x2, y2, 0).color(r, g, b, a).next();
+
+		tess.draw();
+
+		GlStateManager.disableBlend();
+		GlStateManager.enableCull();
+		GlStateManager.enableTexture();
+	}
+
+	public void outlineCircle(MatrixStack stack, int centerX, int centerY, int color, int radius) {
+		outlineCircle(stack, centerX, centerY, color, radius, 0, 360);
+	}
+
+	public void drawRect(MatrixStack stack, Rectangle rect, int color, int cornerRadiusIfRounded) {
+		drawRect(stack, rect.x, rect.y, rect.width, rect.height, color, cornerRadiusIfRounded);
+	}
+
+	public void outlineRect(MatrixStack stack, Rectangle rect, int color, int cornerRadiusIfRounded) {
+		outlineRect(stack, rect.x, rect.y, rect.width, rect.height, color, cornerRadiusIfRounded);
 	}
 }
