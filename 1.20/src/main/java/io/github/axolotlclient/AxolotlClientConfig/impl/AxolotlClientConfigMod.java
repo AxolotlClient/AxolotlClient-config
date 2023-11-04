@@ -47,7 +47,7 @@ public class AxolotlClientConfigMod implements ClientModInitializer {
 
 			@Override
 			public void reload(ResourceManager resourceManager) {
-				ConfigUI.getInstance().clearStyles();
+				ConfigUI.getInstance().preReload();
 				MinecraftClient.getInstance().getResourceManager()
 					.getAllResources(new Identifier(ConfigUI.getInstance().getUiJsonPath())).forEach(resource -> {
 						try {
@@ -55,6 +55,7 @@ public class AxolotlClientConfigMod implements ClientModInitializer {
 						} catch (IOException ignored) {
 						}
 					});
+				ConfigUI.getInstance().postReload();
 			}
 		});
 	}

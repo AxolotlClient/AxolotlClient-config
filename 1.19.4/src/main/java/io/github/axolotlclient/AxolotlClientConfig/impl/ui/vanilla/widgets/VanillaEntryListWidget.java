@@ -16,6 +16,8 @@ public class VanillaEntryListWidget extends EntryListWidget {
 	public VanillaEntryListWidget(OptionCategory category, int screenWidth, int screenHeight, int top, int bottom, int entryHeight) {
 		super(category, screenWidth, screenHeight, top, bottom, entryHeight);
 		setRenderBackground(MinecraftClient.getInstance().world == null);
+		setRenderHeader(MinecraftClient.getInstance().world == null, headerHeight);
+		setRenderHorizontalShadows(MinecraftClient.getInstance().world == null);
 	}
 
 	protected void addOptions(Collection<Option<?>> options) {

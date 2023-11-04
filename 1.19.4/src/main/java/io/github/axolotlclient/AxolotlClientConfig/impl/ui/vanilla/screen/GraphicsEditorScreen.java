@@ -72,6 +72,7 @@ public class GraphicsEditorScreen extends Screen implements DrawingUtil {
 
 	@Override
 	public void render(MatrixStack graphics, int mouseX, int mouseY, float delta) {
+		renderBackground(graphics);
 		super.render(graphics, mouseX, mouseY, delta);
 
 		drawCenteredText(graphics, client.textRenderer, this.title, width / 2, 20, -1);

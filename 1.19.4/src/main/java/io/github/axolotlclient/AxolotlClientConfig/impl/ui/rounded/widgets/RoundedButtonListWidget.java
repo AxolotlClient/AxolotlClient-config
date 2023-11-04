@@ -18,6 +18,8 @@ public class RoundedButtonListWidget extends ButtonListWidget {
 	public RoundedButtonListWidget(OptionCategory category, int screenWidth, int screenHeight, int top, int bottom, int entryHeight) {
 		super(category, screenWidth, screenHeight, top, bottom, entryHeight);
 		setRenderBackground(false);
+		setRenderHeader(false, 0);
+		setRenderHorizontalShadows(false);
 	}
 
 	protected void addOptions(Collection<Option<?>> options) {

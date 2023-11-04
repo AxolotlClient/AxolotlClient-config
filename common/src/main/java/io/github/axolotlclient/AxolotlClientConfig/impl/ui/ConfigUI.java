@@ -1,5 +1,6 @@
 package io.github.axolotlclient.AxolotlClientConfig.impl.ui;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
@@ -34,7 +35,7 @@ public class ConfigUI {
 	@Getter
 	private final String uiJsonPath = "axolotlclientconfig:config.ui.json";
 
-	public void clearStyles(){
+	public void preReload(){
 		styles.clear();
 	}
 
@@ -51,7 +52,16 @@ public class ConfigUI {
 			String parentStyleName = getOrNull(entry.getValue(), "extends");
 			styles.put(entry.getKey(), new StyleImpl(entry.getKey(), widgets, screen, parentStyleName));
 		}
+	}
 
+	public void postReload(){
+		if (styles.isEmpty()){
+			try (InputStream stream = this.getClass().getResourceAsStream("/assets/axolotlclientconfig/config.ui.json")){
+				read(stream);
+			} catch (IOException e) {
+				throw new RuntimeException(e);
+			}
+		}
 		loaded = true;
 		runWhenLoaded.forEach(Runnable::run);
 	}

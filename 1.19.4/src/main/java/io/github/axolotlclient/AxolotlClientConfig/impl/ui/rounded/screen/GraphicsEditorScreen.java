@@ -81,6 +81,7 @@ public class GraphicsEditorScreen extends Screen implements DrawingUtil {
 	public void render(MatrixStack graphics, int mouseX, int mouseY, float delta) {
 		NVGMC.wrap(ctx -> {
 			NVGHolder.setContext(ctx);
+			renderBackground(graphics);
 			super.render(graphics, mouseX, mouseY, delta);
 
 			drawCenteredString(ctx, NVGHolder.getFont(), title.getString(), width / 2f, 25, Colors.WHITE);

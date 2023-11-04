@@ -32,6 +32,7 @@ public class VanillaConfigScreen extends Screen {
 
 	@Override
 	public void render(MatrixStack graphics, int mouseX, int mouseY, float delta) {
+		renderBackground(graphics);
 		super.render(graphics, mouseX, mouseY, delta);
 
 		drawCenteredText(graphics, client.textRenderer, getTitle(), width / 2, 25, -1);

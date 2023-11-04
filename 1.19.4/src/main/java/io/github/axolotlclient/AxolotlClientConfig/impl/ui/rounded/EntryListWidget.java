@@ -10,8 +10,6 @@ import com.google.common.collect.Lists;
 import com.mojang.blaze3d.systems.RenderSystem;
 import io.github.axolotlclient.AxolotlClientConfig.api.util.Colors;
 import io.github.axolotlclient.AxolotlClientConfig.impl.ui.DrawingUtil;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.*;
 import net.minecraft.client.gui.screen.NavigationDirection;
@@ -221,7 +219,7 @@ public abstract class EntryListWidget<E extends EntryListWidget.Entry<E>> extend
 		}
 
 		this.renderList(matrices, mouseX, mouseY, delta);
-		disableScissor();
+		popScissor(NVGHolder.getContext());
 		if (this.renderHorizontalShadows) {
 			RenderSystem.setShaderTexture(0, DrawableHelper.OPTIONS_BACKGROUND_TEXTURE);
 			int m = 32;
@@ -253,7 +251,7 @@ public abstract class EntryListWidget<E extends EntryListWidget.Entry<E>> extend
 	}
 
 	protected void enableScissor() {
-		enableScissor(this.left, this.top, this.right, this.bottom);
+		pushScissor(NVGHolder.getContext(), this.left, this.top, this.right, this.bottom);
 	}
 
 	protected void centerScrollOn(E entry) {

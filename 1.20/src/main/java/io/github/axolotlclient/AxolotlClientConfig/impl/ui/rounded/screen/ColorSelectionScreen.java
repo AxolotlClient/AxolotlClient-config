@@ -53,16 +53,16 @@ public class ColorSelectionScreen extends Screen implements DrawingUtil {
 		chroma = new BooleanOption("option.chroma", option.get().isChroma(), val -> {
 			option.get().setChroma(val);
 			children().forEach(e -> {
-				if (e instanceof net.minecraft.client.gui.widget.TextFieldWidget) {
-					((net.minecraft.client.gui.widget.TextFieldWidget) e).setText(option.get().toString().split(";")[0]);
+				if (e instanceof TextFieldWidget) {
+					((TextFieldWidget) e).setText(option.get().toString().split(";")[0]);
 				}
 			});
 		});
 		alpha = new IntegerOption("option.alpha", option.get().getAlpha(), val -> {
 			option.get().setAlpha(val);
 			children().forEach(e -> {
-				if (e instanceof net.minecraft.client.gui.widget.TextFieldWidget) {
-					((net.minecraft.client.gui.widget.TextFieldWidget) e).setText(option.get().toString().split(";")[0]);
+				if (e instanceof TextFieldWidget) {
+					((TextFieldWidget) e).setText(option.get().toString().split(";")[0]);
 				}
 			});
 		}, 0, 255);

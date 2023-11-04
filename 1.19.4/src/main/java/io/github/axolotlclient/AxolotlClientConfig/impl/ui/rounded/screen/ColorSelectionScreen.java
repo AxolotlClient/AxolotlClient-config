@@ -53,16 +53,16 @@ public class ColorSelectionScreen extends Screen implements DrawingUtil {
 		chroma = new BooleanOption("option.chroma", option.get().isChroma(), val -> {
 			option.get().setChroma(val);
 			children().forEach(e -> {
-				if (e instanceof net.minecraft.client.gui.widget.TextFieldWidget) {
-					((net.minecraft.client.gui.widget.TextFieldWidget) e).setText(option.get().toString().split(";")[0]);
+				if (e instanceof TextFieldWidget) {
+					((TextFieldWidget) e).setText(option.get().toString().split(";")[0]);
 				}
 			});
 		});
 		alpha = new IntegerOption("option.alpha", option.get().getAlpha(), val -> {
 			option.get().setAlpha(val);
 			children().forEach(e -> {
-				if (e instanceof net.minecraft.client.gui.widget.TextFieldWidget) {
-					((net.minecraft.client.gui.widget.TextFieldWidget) e).setText(option.get().toString().split(";")[0]);
+				if (e instanceof TextFieldWidget) {
+					((TextFieldWidget) e).setText(option.get().toString().split(";")[0]);
 				}
 			});
 		}, 0, 255);
@@ -99,6 +99,7 @@ public class ColorSelectionScreen extends Screen implements DrawingUtil {
 	public void render(MatrixStack graphics, int mouseX, int mouseY, float delta) {
 		NVGMC.wrap(ctx -> {
 			NVGHolder.setContext(ctx);
+			renderBackground(graphics);
 			super.render(graphics, mouseX, mouseY, delta);
 
 			drawCenteredString(ctx, NVGHolder.getFont(), title.getString(), width / 2f, 20, Colors.WHITE);
