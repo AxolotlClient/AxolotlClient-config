@@ -4,6 +4,7 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
 import com.mojang.blaze3d.glfw.Window;
+import com.mojang.blaze3d.systems.RenderSystem;
 import io.github.axolotlclient.AxolotlClientConfig.api.util.Color;
 import io.github.axolotlclient.AxolotlClientConfig.api.util.Colors;
 import io.github.axolotlclient.AxolotlClientConfig.impl.options.BooleanOption;
@@ -13,12 +14,11 @@ import io.github.axolotlclient.AxolotlClientConfig.impl.ui.Updatable;
 import io.github.axolotlclient.AxolotlClientConfig.impl.util.ConfigStyles;
 import io.github.axolotlclient.AxolotlClientConfig.impl.util.DrawUtil;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
-import net.minecraft.client.gui.widget.button.ButtonWidget;
-import net.minecraft.client.resource.language.I18n;
-import net.minecraft.text.CommonTexts;
+import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.text.ScreenTexts;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import org.lwjgl.opengl.GL11;
@@ -43,7 +43,7 @@ public class ColorSelectionScreen extends Screen {
 	@Override
 	public void init() {
 		super.init();
-		addDrawableSelectableElement(ButtonWidget.builder(CommonTexts.BACK, buttonWidget -> closeScreen())
+		addDrawableChild(ButtonWidget.builder(ScreenTexts.BACK, buttonWidget -> closeScreen())
 			.position(width / 2 - 75, height - 40).build());
 
 		selectorRadius = Math.max(Math.min(width / 4 - 10, (height) / 2 - 60), 75);
@@ -67,7 +67,7 @@ public class ColorSelectionScreen extends Screen {
 				}
 			});
 			text.setText(option.get().toString().split(";")[0]);
-			addDrawableSelectableElement(text);
+			addDrawableChild(text);
 		}
 
 		chroma = new BooleanOption("option.chroma", option.get().isChroma(), val -> {
@@ -87,26 +87,27 @@ public class ColorSelectionScreen extends Screen {
 			});
 		}, 0, 255);
 
-		addDrawableSelectableElement(ConfigStyles.createWidget(buttonsX, 120, 150, 20, chroma));
-		addDrawableSelectableElement(ConfigStyles.createWidget(buttonsX, 165, 150, 20, alpha));
+		addDrawableChild(ConfigStyles.createWidget(buttonsX, 120, 150, 20, chroma));
+		addDrawableChild(ConfigStyles.createWidget(buttonsX, 165, 150, 20, alpha));
 	}
 
 	@Override
-	public void render(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
+	public void render(MatrixStack graphics, int mouseX, int mouseY, float delta) {
 		super.render(graphics, mouseX, mouseY, delta);
-		graphics.drawCenteredShadowedText(client.textRenderer, title, width / 2, 20, Colors.WHITE.toInt());
+		drawCenteredText(graphics, client.textRenderer, title, width / 2, 20, Colors.WHITE.toInt());
 
-		graphics.drawTexture(texture, (int) selectorX, (int) selectorY, 0, 0, selectorRadius * 2, selectorRadius * 2, selectorRadius * 2, selectorRadius * 2);
+		RenderSystem.setShaderTexture(0, texture);
+		drawTexture(graphics, (int) selectorX, (int) selectorY, 0, 0, selectorRadius * 2, selectorRadius * 2, selectorRadius * 2, selectorRadius * 2);
 
 		DrawUtil.outlineRect(graphics, (int) selectorX, (int) selectorY, selectorRadius * 2, selectorRadius * 2, Colors.BLACK.toInt());
 
-		graphics.drawShadowedText(client.textRenderer, Text.translatable("option.current"), buttonsX, 40, Colors.WHITE.toInt());
+		drawTextWithShadow(graphics, client.textRenderer, Text.translatable("option.current"), buttonsX, 40, Colors.WHITE.toInt());
 
 		DrawUtil.fillRect(graphics, buttonsX, 55, 150, 40, option.get().get().toInt());
 		DrawUtil.outlineRect(graphics, buttonsX, 55, 150, 40, Colors.BLACK.toInt());
 
-		graphics.drawShadowedText(client.textRenderer, Text.translatable("option.chroma"), buttonsX, 105, Colors.WHITE.toInt());
-		graphics.drawShadowedText(client.textRenderer, Text.translatable("option.alpha"), buttonsX, 150, Colors.WHITE.toInt());
+		drawTextWithShadow(graphics, client.textRenderer, Text.translatable("option.chroma"), buttonsX, 105, Colors.WHITE.toInt());
+		drawTextWithShadow(graphics, client.textRenderer, Text.translatable("option.alpha"), buttonsX, 150, Colors.WHITE.toInt());
 	}
 
 	@Override

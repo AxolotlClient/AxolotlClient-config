@@ -34,6 +34,10 @@ public class ConfigUI {
 	@Getter
 	private final String uiJsonPath = "axolotlclientconfig:config.ui.json";
 
+	public void clearStyles(){
+		styles.clear();
+	}
+
 	public void read(InputStream stream) {
 		JsonObject ui = gson.fromJson(new InputStreamReader(stream), JsonObject.class);
 

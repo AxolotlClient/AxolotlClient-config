@@ -1,17 +1,16 @@
-package io.github.axolotlclient.AxolotlClientConfig.impl.ui.vanilla.widgets;
+package io.github.axolotlclient.AxolotlClientConfig.impl.ui.rounded.widgets;
 
 import io.github.axolotlclient.AxolotlClientConfig.impl.options.ColorOption;
-import io.github.axolotlclient.AxolotlClientConfig.impl.ui.vanilla.screen.ColorSelectionScreen;
+import io.github.axolotlclient.AxolotlClientConfig.impl.ui.rounded.screen.ColorSelectionScreen;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.widget.button.ButtonWidget;
 import net.minecraft.text.Text;
 
-public class ColorWidget extends ButtonWidget {
+public class ColorWidget extends RoundedButtonWidget {
 	private final ColorOption option;
 
 	public ColorWidget(int x, int y, int width, int height, ColorOption option) {
 		super(x, y, width, height, Text.translatable("open_selector"), widget -> {
-		}, DEFAULT_NARRATION);
+		});
 		this.option = option;
 	}
 
