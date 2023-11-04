@@ -11,8 +11,10 @@ import net.minecraft.text.Text;
 public class CategoryWidget extends ButtonWidget {
 
 	private final OptionCategory category;
+
 	public CategoryWidget(int x, int y, int width, int height, OptionCategoryImpl category) {
-		super(x, y, width, height, Text.translatable(category.getName()), widget ->{}, DEFAULT_NARRATION);
+		super(x, y, width, height, Text.translatable(category.getName()), widget -> {
+		}, DEFAULT_NARRATION);
 		this.category = category;
 	}
 

@@ -16,6 +16,7 @@ import org.lwjgl.nanovg.NanoVG;
 public class ResetButtonWidget extends RoundedButtonWidget {
 
 	private final Option<?> option;
+
 	public ResetButtonWidget(int x, int y, int width, int height, Option<?> option) {
 		super(x, y, width, height, Text.empty(), widget -> {
 			option.setDefault();
@@ -27,13 +28,13 @@ public class ResetButtonWidget extends RoundedButtonWidget {
 				AtomicDouble scroll = new AtomicDouble();
 				current.children().stream()
 					.filter(e -> e instanceof RoundedButtonListWidget)
-					.map(e -> (RoundedButtonListWidget)e).findFirst().ifPresent(list -> {
+					.map(e -> (RoundedButtonListWidget) e).findFirst().ifPresent(list -> {
 						scroll.set(list.getScrollAmount());
 					});
 				current.init(MinecraftClient.getInstance(), i, j);
 				current.children().stream()
 					.filter(e -> e instanceof RoundedButtonListWidget)
-					.map(e -> (RoundedButtonListWidget)e).findFirst().ifPresent(list -> {
+					.map(e -> (RoundedButtonListWidget) e).findFirst().ifPresent(list -> {
 						list.setScrollAmount(scroll.get());
 					});
 			}
@@ -60,13 +61,13 @@ public class ResetButtonWidget extends RoundedButtonWidget {
 
 		NanoVG.nvgLineCap(ctx, NanoVG.NVG_ROUND);
 		NanoVG.nvgLineJoin(ctx, NanoVG.NVG_ROUND);
-		outlineCircle(ctx, getX()+getWidth()/2, getY()+getHeight()/2, color, getWidth()/4, 2, 0, 270);
+		outlineCircle(ctx, getX() + getWidth() / 2, getY() + getHeight() / 2, color, getWidth() / 4, 2, 0, 270);
 		NanoVG.nvgBeginPath(ctx);
-		NanoVG.nvgMoveTo(ctx, getX()+getWidth()/2f, getY()+getHeight()/4f);
-		NanoVG.nvgLineTo(ctx, getX()+getWidth()/2f-3, getY()+getHeight()/4f);
-		NanoVG.nvgMoveTo(ctx, getX()+getWidth()/2f, getY()+getHeight()/2f-2);
-		NanoVG.nvgLineTo(ctx, getX()+getWidth()/2f-3, getY()+getHeight()/4f);
-		NanoVG.nvgLineTo(ctx, getX()+getWidth()/2f, getY()+2);
+		NanoVG.nvgMoveTo(ctx, getX() + getWidth() / 2f, getY() + getHeight() / 4f);
+		NanoVG.nvgLineTo(ctx, getX() + getWidth() / 2f - 3, getY() + getHeight() / 4f);
+		NanoVG.nvgMoveTo(ctx, getX() + getWidth() / 2f, getY() + getHeight() / 2f - 2);
+		NanoVG.nvgLineTo(ctx, getX() + getWidth() / 2f - 3, getY() + getHeight() / 4f);
+		NanoVG.nvgLineTo(ctx, getX() + getWidth() / 2f, getY() + 2);
 		NanoVG.nvgStrokeColor(ctx, color.toNVG());
 		NanoVG.nvgStroke(ctx);
 

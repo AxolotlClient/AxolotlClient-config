@@ -24,7 +24,7 @@ public class SliderWidget<O extends NumberOption<N>, N extends Number> extends n
 	@Override
 	protected void applyValue() {
 		option.set((N) (Double) (option.getMin().doubleValue() +
-			(value * (option.getMax().doubleValue()-option.getMin().doubleValue()))));
+			(value * (option.getMax().doubleValue() - option.getMin().doubleValue()))));
 	}
 
 	public void update() {

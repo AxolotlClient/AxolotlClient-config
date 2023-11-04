@@ -24,10 +24,11 @@ public class GraphicsEditorScreen extends Screen implements DrawingUtil {
 
 	private static final Color CHECKERBOARD_COLOR_1 = new Color(0xFF242424);
 	private static final Color CHECKERBOARD_COLOR_2 = new Color(0xFF383838);
-
+	private static final ColorOption colorOption = new ColorOption("current", Colors.WHITE);
 	private final Screen parent;
 	private final GraphicsOption option;
 	private final Graphics graphics;
+	private final int[] focusedPixel = new int[2];
 	private int gridX;
 	private int gridY;
 	private int maxGridWidth;
@@ -35,8 +36,6 @@ public class GraphicsEditorScreen extends Screen implements DrawingUtil {
 	private int gridColumns;
 	private int gridRows;
 	private int pixelSize;
-	private final int[] focusedPixel = new int[2];
-	private static final ColorOption colorOption = new ColorOption("current", Colors.WHITE);
 	private boolean keyboardInput;
 	private boolean mouseDown;
 	private int mouseButton;
@@ -51,7 +50,7 @@ public class GraphicsEditorScreen extends Screen implements DrawingUtil {
 
 	@Override
 	protected void init() {
-		addDrawableSelectableElement(new RoundedButtonWidget(width/2-75, height-40, Text.translatable("gui.back"),
+		addDrawableSelectableElement(new RoundedButtonWidget(width / 2 - 75, height - 40, Text.translatable("gui.back"),
 			button -> MinecraftClient.getInstance().setScreen(parent)));
 
 
@@ -70,8 +69,8 @@ public class GraphicsEditorScreen extends Screen implements DrawingUtil {
 		maxGridWidth = Math.min(maxGridWidth, gridColumns * pixelSize);
 		maxGridHeight = Math.min(maxGridHeight, gridRows * pixelSize);
 
-		addDrawableSelectableElement(ConfigStyles.createWidget(gridX + maxGridWidth + 10, gridY+35, 100, 20, colorOption));
-		ButtonWidget clear = new RoundedButtonWidget(gridX + maxGridWidth + 10, gridY+60,
+		addDrawableSelectableElement(ConfigStyles.createWidget(gridX + maxGridWidth + 10, gridY + 35, 100, 20, colorOption));
+		ButtonWidget clear = new RoundedButtonWidget(gridX + maxGridWidth + 10, gridY + 60,
 			Text.translatable("clear_graphics"), buttonWidget -> clearGraphics());
 		clear.setWidth(100);
 		addDrawableSelectableElement(clear);
@@ -90,7 +89,7 @@ public class GraphicsEditorScreen extends Screen implements DrawingUtil {
 			for (int x = 0; x < gridColumns; x++) {
 				for (int y = 0; y < gridRows; y++) {
 					if (option.get().getPixelColor(x, y) != 0) {
-						fill(ctx, gridX + x * pixelSize, gridY + y * pixelSize, pixelSize, pixelSize, new Color(option.get().getPixelColor(x,y)));
+						fill(ctx, gridX + x * pixelSize, gridY + y * pixelSize, pixelSize, pixelSize, new Color(option.get().getPixelColor(x, y)));
 					} else {
 						if (x % 2 == 0 && y % 2 == 0 || (x % 2 != 0 && y % 2 != 0)) {
 							fill(ctx, gridX + x * pixelSize, gridY + y * pixelSize, pixelSize, pixelSize, CHECKERBOARD_COLOR_1);
@@ -107,29 +106,29 @@ public class GraphicsEditorScreen extends Screen implements DrawingUtil {
 			if (mouseGridX >= 0 && mouseGridY >= 0 && mouseGridX < gridColumns && mouseGridY < gridRows && !keyboardInput) {
 
 				if (mouseDown) {
-						if (mouseButton == 0) {
-							this.graphics.setPixelColor(mouseGridX, mouseGridY, colorOption.get().get());
-						} else if (mouseButton == 1){
-							this.graphics.setPixelColor(mouseGridX, mouseGridY, Colors.TRANSPARENT);
-						}
+					if (mouseButton == 0) {
+						this.graphics.setPixelColor(mouseGridX, mouseGridY, colorOption.get().get());
+					} else if (mouseButton == 1) {
+						this.graphics.setPixelColor(mouseGridX, mouseGridY, Colors.TRANSPARENT);
+					}
 				}
 
 				focusedPixel[0] = mouseGridX;
 				focusedPixel[1] = mouseGridY;
 			}
-			outline(NVGHolder.getContext(), gridX + (pixelSize * focusedPixel[0]), gridY + (pixelSize*focusedPixel[1]), pixelSize, pixelSize, Colors.GREEN, 1);
+			outline(NVGHolder.getContext(), gridX + (pixelSize * focusedPixel[0]), gridY + (pixelSize * focusedPixel[1]), pixelSize, pixelSize, Colors.GREEN, 1);
 
 			drawString(NVGHolder.getContext(), NVGHolder.getFont(), Text.translatable("option.current").getString(),
-				gridX+maxGridWidth+10, gridY, Colors.WHITE);
-			fillRoundedRect(NVGHolder.getContext(), gridX+maxGridWidth+10, gridY+12, 100, 20, colorOption.get().get(), 5);
-			outlineRoundedRect(NVGHolder.getContext(), gridX+maxGridWidth+10, gridY+12, 100, 20, Colors.BLACK, 5, 1);
+				gridX + maxGridWidth + 10, gridY, Colors.WHITE);
+			fillRoundedRect(NVGHolder.getContext(), gridX + maxGridWidth + 10, gridY + 12, 100, 20, colorOption.get().get(), 5);
+			outlineRoundedRect(NVGHolder.getContext(), gridX + maxGridWidth + 10, gridY + 12, 100, 20, Colors.BLACK, 5, 1);
 		});
 	}
 
 	@Override
 	public void renderBackground(GuiGraphics graphics, int i, int j, float f) {
 		super.renderBackground(graphics, i, j, f);
-		fillRoundedRect(NVGHolder.getContext(), 15, 15, width-30, height - 30, Colors.DARK_GRAY, 12);
+		fillRoundedRect(NVGHolder.getContext(), 15, 15, width - 30, height - 30, Colors.DARK_GRAY, 12);
 	}
 
 	@Override
@@ -144,8 +143,8 @@ public class GraphicsEditorScreen extends Screen implements DrawingUtil {
 	}
 
 	private void clearGraphics() {
-		for (int x = 0;x<option.get().getWidth();x++){
-			for (int y = 0;y<option.get().getHeight();y++){
+		for (int x = 0; x < option.get().getWidth(); x++) {
+			for (int y = 0; y < option.get().getHeight(); y++) {
 				option.get().setPixelColor(x, y, Colors.TRANSPARENT);
 			}
 		}

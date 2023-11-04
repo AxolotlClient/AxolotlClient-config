@@ -17,7 +17,7 @@ public class BooleanWidget extends ButtonWidget implements Updatable {
 		this.option = option;
 	}
 
-	public void update(){
+	public void update() {
 		setMessage(option.get() ? CommonTexts.ON : CommonTexts.OFF);
 	}
 }

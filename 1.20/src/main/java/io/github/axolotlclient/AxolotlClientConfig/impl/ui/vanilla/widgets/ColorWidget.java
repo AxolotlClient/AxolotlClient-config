@@ -8,8 +8,10 @@ import net.minecraft.text.Text;
 
 public class ColorWidget extends ButtonWidget {
 	private final ColorOption option;
+
 	public ColorWidget(int x, int y, int width, int height, ColorOption option) {
-		super(x, y, width, height, Text.translatable("open_selector"), widget -> {}, DEFAULT_NARRATION);
+		super(x, y, width, height, Text.translatable("open_selector"), widget -> {
+		}, DEFAULT_NARRATION);
 		this.option = option;
 	}
 

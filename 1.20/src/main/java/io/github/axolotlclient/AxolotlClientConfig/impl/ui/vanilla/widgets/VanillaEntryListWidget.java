@@ -18,13 +18,13 @@ public class VanillaEntryListWidget extends EntryListWidget {
 		setRenderBackground(MinecraftClient.getInstance().world == null);
 	}
 
-	protected void addOptions(Collection<Option<?>> options){
+	protected void addOptions(Collection<Option<?>> options) {
 		options.forEach(o -> addEntry(o, null));
 	}
 
 	@Override
-	public void addEntry(Option<?> first, @Nullable Option<?> second){
-		addEntry(createOptionEntry(createWidget(width/2 + WIDGET_ROW_RIGHT, first), first, null, null));
+	public void addEntry(Option<?> first, @Nullable Option<?> second) {
+		addEntry(createOptionEntry(createWidget(width / 2 + WIDGET_ROW_RIGHT, first), first, null, null));
 	}
 
 	@Override
@@ -35,10 +35,11 @@ public class VanillaEntryListWidget extends EntryListWidget {
 	private class VanillaOptionEntry extends Entry {
 
 		private final Option<?> option;
+
 		public VanillaOptionEntry(ClickableWidget widget, Option<?> option) {
 			super(ImmutableList.of(widget,
-				new ResetButtonWidget(widget.getX() + widget.getWidth()-40, 0, 40, widget.getHeight(), option)));
-			widget.setWidth(widget.getWidth()-42);
+				new ResetButtonWidget(widget.getX() + widget.getWidth() - 40, 0, 40, widget.getHeight(), option)));
+			widget.setWidth(widget.getWidth() - 42);
 			this.option = option;
 		}
 
@@ -46,7 +47,7 @@ public class VanillaEntryListWidget extends EntryListWidget {
 		public void render(GuiGraphics graphics, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float tickDelta) {
 			super.render(graphics, index, y, x, entryWidth, entryHeight, mouseX, mouseY, hovered, tickDelta);
 
-			graphics.drawShadowedText(client.textRenderer, Text.translatable(option.getName()), width/2+WIDGET_ROW_LEFT, y, -1);
+			graphics.drawShadowedText(client.textRenderer, Text.translatable(option.getName()), width / 2 + WIDGET_ROW_LEFT, y, -1);
 		}
 	}
 }

@@ -27,10 +27,9 @@ public abstract class ElementListWidget<E extends ElementListWidget.Entry<E>> ex
 	public ElementPath nextFocusPath(GuiNavigationEvent event) {
 		if (this.getEntryCount() == 0) {
 			return null;
-		} else if (!(event instanceof GuiNavigationEvent.TabNavigation)) {
+		} else if (!(event instanceof GuiNavigationEvent.TabNavigation tabNavigation)) {
 			return super.nextFocusPath(event);
 		} else {
-			GuiNavigationEvent.TabNavigation tabNavigation = (GuiNavigationEvent.TabNavigation)event;
 			E entry = this.getFocused();
 			if (tabNavigation.direction().getAxis() == NavigationAxis.HORIZONTAL && entry != null) {
 				return ElementPath.createPath(this, entry.nextFocusPath(event));
@@ -42,7 +41,7 @@ public abstract class ElementListWidget<E extends ElementListWidget.Entry<E>> ex
 				}
 
 				if (i == -1) {
-					switch(navigationDirection) {
+					switch (navigationDirection) {
 						case LEFT:
 							i = Integer.MAX_VALUE;
 							navigationDirection = NavigationDirection.DOWN;
@@ -66,7 +65,7 @@ public abstract class ElementListWidget<E extends ElementListWidget.Entry<E>> ex
 					}
 
 					elementPath = entry2.getFocusPathAtIndex(tabNavigation, i);
-				} while(elementPath == null);
+				} while (elementPath == null);
 
 				return ElementPath.createPath(this, elementPath);
 			}
@@ -77,7 +76,7 @@ public abstract class ElementListWidget<E extends ElementListWidget.Entry<E>> ex
 	public void setFocusedChild(@Nullable Element child) {
 		super.setFocusedChild(child);
 		if (child == null) {
-			this.setSelected((E)null);
+			this.setSelected(null);
 		}
 	}
 
@@ -154,7 +153,7 @@ public abstract class ElementListWidget<E extends ElementListWidget.Entry<E>> ex
 			if (this.children().isEmpty()) {
 				return null;
 			} else {
-				ElementPath elementPath = ((Element)this.children().get(Math.min(index, this.children().size() - 1))).nextFocusPath(event);
+				ElementPath elementPath = this.children().get(Math.min(index, this.children().size() - 1)).nextFocusPath(event);
 				return ElementPath.createPath(this, elementPath);
 			}
 		}
@@ -163,7 +162,7 @@ public abstract class ElementListWidget<E extends ElementListWidget.Entry<E>> ex
 		@Override
 		public ElementPath nextFocusPath(GuiNavigationEvent event) {
 			if (event instanceof GuiNavigationEvent.TabNavigation tabNavigation) {
-				int i = switch(tabNavigation.direction()) {
+				int i = switch (tabNavigation.direction()) {
 					case LEFT -> -1;
 					case RIGHT -> 1;
 					case UP, DOWN -> 0;
@@ -174,8 +173,8 @@ public abstract class ElementListWidget<E extends ElementListWidget.Entry<E>> ex
 
 				int j = MathHelper.clamp(i + this.children().indexOf(this.getFocused()), 0, this.children().size() - 1);
 
-				for(int k = j; k >= 0 && k < this.children().size(); k += i) {
-					Element element = (Element)this.children().get(k);
+				for (int k = j; k >= 0 && k < this.children().size(); k += i) {
+					Element element = this.children().get(k);
 					ElementPath elementPath = element.nextFocusPath(event);
 					if (elementPath != null) {
 						return ElementPath.createPath(this, elementPath);

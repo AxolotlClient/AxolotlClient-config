@@ -20,13 +20,13 @@ public class RoundedButtonListWidget extends ButtonListWidget {
 		setRenderBackground(false);
 	}
 
-	protected void addOptions(Collection<Option<?>> options){
+	protected void addOptions(Collection<Option<?>> options) {
 		options.forEach(o -> addEntry(o, null));
 	}
 
 	@Override
-	public void addEntry(Option<?> first, @Nullable Option<?> second){
-		addEntry(createOptionEntry(createWidget(width/2 + WIDGET_ROW_RIGHT, first), first, null, null));
+	public void addEntry(Option<?> first, @Nullable Option<?> second) {
+		addEntry(createOptionEntry(createWidget(width / 2 + WIDGET_ROW_RIGHT, first), first, null, null));
 	}
 
 	@Override
@@ -37,10 +37,11 @@ public class RoundedButtonListWidget extends ButtonListWidget {
 	private class RoundedOptionEntry extends Entry implements DrawingUtil {
 
 		private final Option<?> option;
+
 		public RoundedOptionEntry(ClickableWidget widget, Option<?> option) {
 			super(ImmutableList.of(widget,
-				new ResetButtonWidget(widget.getX() + widget.getWidth()-20, 0, 20, widget.getHeight(), option)));
-			widget.setWidth(widget.getWidth()-22);
+				new ResetButtonWidget(widget.getX() + widget.getWidth() - 20, 0, 20, widget.getHeight(), option)));
+			widget.setWidth(widget.getWidth() - 22);
 			this.option = option;
 		}
 
@@ -49,7 +50,7 @@ public class RoundedButtonListWidget extends ButtonListWidget {
 			super.render(graphics, index, y, x, entryWidth, entryHeight, mouseX, mouseY, hovered, tickDelta);
 
 			drawString(NVGHolder.getContext(), NVGHolder.getFont(),
-				Text.translatable(option.getName()).getString(), width/2f+WIDGET_ROW_LEFT, y, Colors.TURQUOISE);
+				Text.translatable(option.getName()).getString(), width / 2f + WIDGET_ROW_LEFT, y, Colors.TURQUOISE);
 		}
 	}
 }

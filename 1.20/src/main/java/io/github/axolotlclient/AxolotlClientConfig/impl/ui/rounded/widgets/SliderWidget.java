@@ -25,27 +25,27 @@ public class SliderWidget<O extends NumberOption<N>, N extends Number> extends n
 		long ctx = NVGHolder.getContext();
 		double val = ((option.get().doubleValue() - option.getMin().doubleValue()) / (option.getMax().doubleValue() - option.getMin().doubleValue()));
 		if (!isHoveredOrFocused() &&
-			val != value){
+			val != value) {
 			value = val;
 			updateMessage();
 		}
 
-		fillRoundedRect(ctx, getX(), getY()+getHeight()/2f-1, getWidth(), 2, Colors.GRAY, 1);
+		fillRoundedRect(ctx, getX(), getY() + getHeight() / 2f - 1, getWidth(), 2, Colors.GRAY, 1);
 
 		NanoVG.nvgBeginPath(ctx);
-		NanoVG.nvgCircle(ctx, (float) (getX() + (this.value * (getWidth()-4))), getY()+getHeight()/2f, 4);
+		NanoVG.nvgCircle(ctx, (float) (getX() + (this.value * (getWidth() - 4))), getY() + getHeight() / 2f, 4);
 		NanoVG.nvgFillColor(ctx, isHovered() ? Colors.DARK_YELLOW.toNVG() : Colors.TURQUOISE.toNVG());
 		NanoVG.nvgFill(ctx);
 
-		if (isFocused()){
+		if (isFocused()) {
 			NanoVG.nvgBeginPath(ctx);
-			NanoVG.nvgCircle(ctx, (float) (getX() + (this.value * (getWidth()-4))), getY()+getHeight()/2f, 4);
+			NanoVG.nvgCircle(ctx, (float) (getX() + (this.value * (getWidth() - 4))), getY() + getHeight() / 2f, 4);
 			NanoVG.nvgStrokeColor(ctx, Colors.WHITE.toNVG());
 			NanoVG.nvgStroke(ctx);
 		}
 
-		drawCenteredString(ctx, NVGHolder.getFont(), this.getMessage().getString(), (float) (getX() + (this.value * (getWidth()-4))),
-			this.getY() + (this.getHeight()/2f - 8) / 2f - 4, Colors.WHITE);
+		drawCenteredString(ctx, NVGHolder.getFont(), this.getMessage().getString(), (float) (getX() + (this.value * (getWidth() - 4))),
+			this.getY() + (this.getHeight() / 2f - 8) / 2f - 4, Colors.WHITE);
 	}
 
 	public void updateMessage() {
@@ -57,7 +57,7 @@ public class SliderWidget<O extends NumberOption<N>, N extends Number> extends n
 	@Override
 	protected void applyValue() {
 		option.set((N) (Double) (option.getMin().doubleValue() +
-			(value * (option.getMax().doubleValue()-option.getMin().doubleValue()))));
+			(value * (option.getMax().doubleValue() - option.getMin().doubleValue()))));
 	}
 
 	public void update() {

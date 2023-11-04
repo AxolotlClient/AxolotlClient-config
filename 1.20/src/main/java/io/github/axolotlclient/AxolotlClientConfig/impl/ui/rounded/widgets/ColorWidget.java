@@ -7,8 +7,10 @@ import net.minecraft.text.Text;
 
 public class ColorWidget extends RoundedButtonWidget {
 	private final ColorOption option;
+
 	public ColorWidget(int x, int y, int width, int height, ColorOption option) {
-		super(x, y, width, height, Text.translatable("open_selector"), widget -> {});
+		super(x, y, width, height, Text.translatable("open_selector"), widget -> {
+		});
 		this.option = option;
 	}
 

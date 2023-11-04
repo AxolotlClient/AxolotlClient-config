@@ -12,7 +12,8 @@ public class CategoryWidget extends RoundedButtonWidget {
 	private final OptionCategory category;
 
 	public CategoryWidget(int x, int y, int width, int height, OptionCategoryImpl category) {
-		super(x, y, width, height, Text.translatable(category.getName()), widget -> {});
+		super(x, y, width, height, Text.translatable(category.getName()), widget -> {
+		});
 		this.category = category;
 	}
 

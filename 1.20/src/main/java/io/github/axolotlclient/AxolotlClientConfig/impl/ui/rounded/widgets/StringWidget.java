@@ -25,7 +25,7 @@ public class StringWidget extends TextFieldWidget implements DrawingUtil {
 
 	@Override
 	public void drawWidget(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
-		if (!option.get().equals(getText())){
+		if (!option.get().equals(getText())) {
 			setText(option.get());
 		}
 		super.drawWidget(graphics, mouseX, mouseY, delta);
@@ -53,7 +53,7 @@ public class StringWidget extends TextFieldWidget implements DrawingUtil {
 		}
 
 		NanoVG.nvgBeginPath(ctx);
-		NanoVG.nvgRect(ctx, x1, y1, x2-x1, y2-y1);
+		NanoVG.nvgRect(ctx, x1, y1, x2 - x1, y2 - y1);
 		NanoVG.nvgFillColor(ctx, highlightColor.toNVG());
 		NanoVG.nvgFill(ctx);
 	}

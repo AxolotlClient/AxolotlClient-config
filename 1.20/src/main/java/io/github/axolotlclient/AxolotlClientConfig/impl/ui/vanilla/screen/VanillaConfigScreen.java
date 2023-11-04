@@ -25,16 +25,16 @@ public class VanillaConfigScreen extends Screen {
 
 	@Override
 	protected void init() {
-		addDrawableSelectableElement(new VanillaEntryListWidget(root, width, height, 45, height-55, 25));
+		addDrawableSelectableElement(new VanillaEntryListWidget(root, width, height, 45, height - 55, 25));
 		addDrawableSelectableElement(ButtonWidget.builder(CommonTexts.BACK, w -> client.setScreen(parent))
-			.position(width/2-75, height-45).build());
+			.position(width / 2 - 75, height - 45).build());
 	}
 
 	@Override
 	public void render(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
 		super.render(graphics, mouseX, mouseY, delta);
 
-		graphics.drawCenteredShadowedText(client.textRenderer, getTitle(), width/2, 25, -1);
+		graphics.drawCenteredShadowedText(client.textRenderer, getTitle(), width / 2, 25, -1);
 	}
 
 	@Override

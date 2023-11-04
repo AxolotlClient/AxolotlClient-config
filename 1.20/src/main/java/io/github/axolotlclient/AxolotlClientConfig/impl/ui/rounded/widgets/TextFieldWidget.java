@@ -25,20 +25,18 @@ import org.lwjgl.nanovg.NanoVG;
 public class TextFieldWidget extends ClickableWidget implements DrawingUtil {
 	public static final int BACKWARDS = -1;
 	public static final int FORWARDS = 1;
-	private static final int INSERT_CURSOR_WIDTH = 1;
+	public static final int DEFAULT_EDITABLE_COLOR = 14737632;
 	protected static final int INSERT_CURSOR_COLOR = -3092272;
 	protected static final String UNDERSCORE = "_";
-	public static final int DEFAULT_EDITABLE_COLOR = 14737632;
 	protected static final int BORDER_COLOR_FOCUSED = -1;
 	protected static final int BORDER_COLOR = -6250336;
 	protected static final int BACKGROUND_COLOR = -16777216;
+	private static final int INSERT_CURSOR_WIDTH = 1;
 	protected final TextRenderer textRenderer;
+	private final Color highlightColor = Colors.DARK_YELLOW.withAlpha(100);
 	protected String text = "";
-	private int maxLength = 32;
 	protected boolean drawsBackground = true;
-	private boolean focusUnlocked = true;
 	protected boolean editable = true;
-	private boolean selecting;
 	protected int firstCharacterIndex;
 	protected int selectionStart;
 	protected int selectionEnd;
@@ -47,14 +45,14 @@ public class TextFieldWidget extends ClickableWidget implements DrawingUtil {
 	@Nullable
 	protected String suggestion;
 	@Nullable
+	protected String hint;
+	protected long focusedTime = Util.getMeasuringTimeMs();
+	private int maxLength = 32;
+	private boolean focusUnlocked = true;
+	private boolean selecting;
+	@Nullable
 	private Consumer<String> changedListener;
 	private Predicate<String> textPredicate = Objects::nonNull;
-	@Nullable
-	protected String hint;
-
-	private final Color highlightColor = Colors.DARK_YELLOW.withAlpha(100);
-
-	protected long focusedTime = Util.getMeasuringTimeMs();
 
 	public TextFieldWidget(TextRenderer textRenderer, int x, int y, int width, int height, Text text) {
 		this(textRenderer, x, y, width, height, null, text);
@@ -72,6 +70,10 @@ public class TextFieldWidget extends ClickableWidget implements DrawingUtil {
 		this.changedListener = changedListener;
 	}
 
+	public String getText() {
+		return this.text;
+	}
+
 	public void setText(String text) {
 		if (this.textPredicate.test(text)) {
 			if (text.length() > this.maxLength) {
@@ -84,10 +86,6 @@ public class TextFieldWidget extends ClickableWidget implements DrawingUtil {
 			this.setSelectionEnd(this.selectionStart);
 			this.onChanged(text);
 		}
-	}
-
-	public String getText() {
-		return this.text;
 	}
 
 	public String getSelectedText() {
@@ -345,7 +343,7 @@ public class TextFieldWidget extends ClickableWidget implements DrawingUtil {
 			NVGFont font = NVGHolder.getFont();
 			long ctx = NVGHolder.getContext();
 
-			fillRoundedRect(ctx, getX(), getY()+getHeight(), getWidth(), 1, isFocused() ? Colors.DARK_YELLOW : Colors.TURQUOISE, 1);
+			fillRoundedRect(ctx, getX(), getY() + getHeight(), getWidth(), 1, isFocused() ? Colors.DARK_YELLOW : Colors.TURQUOISE, 1);
 			Color i = Colors.WHITE;// new Color(this.editable ? this.editableColor : this.uneditableColor);
 			int j = this.selectionStart - this.firstCharacterIndex;
 			int k = this.selectionEnd - this.firstCharacterIndex;
@@ -379,7 +377,7 @@ public class TextFieldWidget extends ClickableWidget implements DrawingUtil {
 
 			if (bl2) {
 				if (bl3) {
-					fillRoundedRect(ctx, o, m-1, 1, 2+textRenderer.fontHeight, i, 2);
+					fillRoundedRect(ctx, o, m - 1, 1, 2 + textRenderer.fontHeight, i, 2);
 				} else {
 					drawString(ctx, font, UNDERSCORE, o, (float) m, i);
 				}
@@ -425,9 +423,13 @@ public class TextFieldWidget extends ClickableWidget implements DrawingUtil {
 		}
 
 		NanoVG.nvgBeginPath(ctx);
-		NanoVG.nvgRect(ctx, x1, y1, x2-x1, y2-y1);
+		NanoVG.nvgRect(ctx, x1, y1, x2 - x1, y2 - y1);
 		NanoVG.nvgFillColor(ctx, highlightColor.toNVG());
 		NanoVG.nvgFill(ctx);
+	}
+
+	protected int getMaxLength() {
+		return this.maxLength;
 	}
 
 	public void setMaxLength(int maxLength) {
@@ -436,10 +438,6 @@ public class TextFieldWidget extends ClickableWidget implements DrawingUtil {
 			this.text = this.text.substring(0, maxLength);
 			this.onChanged(this.text);
 		}
-	}
-
-	protected int getMaxLength() {
-		return this.maxLength;
 	}
 
 	public int getCursor() {
@@ -538,13 +536,15 @@ public class TextFieldWidget extends ClickableWidget implements DrawingUtil {
 		this.hint = hint;
 	}
 
-	protected float getStringWidth(String text){
+	protected float getStringWidth(String text) {
 		return NVGHolder.getFont().getWidth(text);
 	}
-	protected String trimToWidth(String text, float width){
+
+	protected String trimToWidth(String text, float width) {
 		return NVGHolder.getFont().trimToWidth(text, width);
 	}
-	protected String trimToWidth(String text, float width, boolean backwards){
+
+	protected String trimToWidth(String text, float width, boolean backwards) {
 		return NVGHolder.getFont().trimToWidth(text, width, backwards);
 	}
 }

@@ -25,16 +25,15 @@ import org.lwjgl.opengl.GL11;
 
 public class ColorSelectionScreen extends Screen {
 	private final ColorOption option;
+	private final Identifier texture = new Identifier("axolotlclientconfig", "textures/gui/colorwheel.png");
+	private final Screen parent;
 	private BooleanOption chroma;
 	private IntegerOption alpha;
-
-	private final Identifier texture = new Identifier("axolotlclientconfig", "textures/gui/colorwheel.png");
-
 	private int selectorRadius;
 	private float selectorX;
 	private float selectorY;
 	private int buttonsX;
-	private final Screen parent;
+
 	public ColorSelectionScreen(Screen parent, ColorOption option) {
 		super(Text.translatable("select_color"));
 		this.option = option;
@@ -45,26 +44,26 @@ public class ColorSelectionScreen extends Screen {
 	public void init() {
 		super.init();
 		addDrawableSelectableElement(ButtonWidget.builder(CommonTexts.BACK, buttonWidget -> closeScreen())
-				.position(width/2-75, height-40).build());
+			.position(width / 2 - 75, height - 40).build());
 
-		selectorRadius = Math.max(Math.min(width/4-10, (height)/2-60), 75) ;
-		selectorX = width/4f-selectorRadius;
-		selectorY = height/2f-selectorRadius;
+		selectorRadius = Math.max(Math.min(width / 4 - 10, (height) / 2 - 60), 75);
+		selectorX = width / 4f - selectorRadius;
+		selectorY = height / 2f - selectorRadius;
 
-		buttonsX = (int) Math.max(width/2f+25, selectorX+selectorRadius*2 + 10);
+		buttonsX = (int) Math.max(width / 2f + 25, selectorX + selectorRadius * 2 + 10);
 
-		if (this.height - 250 > 0){
+		if (this.height - 250 > 0) {
 			TextFieldWidget text = new TextFieldWidget(client.textRenderer, buttonsX, 190, 150, 20, Text.empty());
 			text.setChangedListener(s -> {
 				try {
 					option.set(Color.parse(s));
 
 					children().forEach(e -> {
-						if (e instanceof Updatable){
-							((Updatable)e).update();
+						if (e instanceof Updatable) {
+							((Updatable) e).update();
 						}
 					});
-				} catch (Throwable ignored){
+				} catch (Throwable ignored) {
 				}
 			});
 			text.setText(option.get().toString().split(";")[0]);
@@ -74,16 +73,16 @@ public class ColorSelectionScreen extends Screen {
 		chroma = new BooleanOption("option.chroma", option.get().isChroma(), val -> {
 			option.get().setChroma(val);
 			children().forEach(e -> {
-				if (e instanceof TextFieldWidget){
-					((TextFieldWidget)e).setText(option.get().toString().split(";")[0]);
+				if (e instanceof TextFieldWidget) {
+					((TextFieldWidget) e).setText(option.get().toString().split(";")[0]);
 				}
 			});
 		});
 		alpha = new IntegerOption("option.alpha", option.get().getAlpha(), val -> {
 			option.get().setAlpha(val);
 			children().forEach(e -> {
-				if (e instanceof TextFieldWidget){
-					((TextFieldWidget)e).setText(option.get().toString().split(";")[0]);
+				if (e instanceof TextFieldWidget) {
+					((TextFieldWidget) e).setText(option.get().toString().split(";")[0]);
 				}
 			});
 		}, 0, 255);
@@ -95,11 +94,11 @@ public class ColorSelectionScreen extends Screen {
 	@Override
 	public void render(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
 		super.render(graphics, mouseX, mouseY, delta);
-		graphics.drawCenteredShadowedText(client.textRenderer, title, width/2, 20, Colors.WHITE.toInt());
+		graphics.drawCenteredShadowedText(client.textRenderer, title, width / 2, 20, Colors.WHITE.toInt());
 
-		graphics.drawTexture(texture, (int) selectorX, (int) selectorY, 0, 0, selectorRadius*2, selectorRadius*2, selectorRadius*2, selectorRadius*2);
+		graphics.drawTexture(texture, (int) selectorX, (int) selectorY, 0, 0, selectorRadius * 2, selectorRadius * 2, selectorRadius * 2, selectorRadius * 2);
 
-		DrawUtil.outlineRect(graphics, (int) selectorX, (int) selectorY, selectorRadius*2, selectorRadius*2, Colors.BLACK.toInt());
+		DrawUtil.outlineRect(graphics, (int) selectorX, (int) selectorY, selectorRadius * 2, selectorRadius * 2, Colors.BLACK.toInt());
 
 		graphics.drawShadowedText(client.textRenderer, I18n.translate("option.current"), buttonsX, 40, Colors.WHITE.toInt());
 
@@ -114,8 +113,8 @@ public class ColorSelectionScreen extends Screen {
 	public boolean mouseClicked(double mouseX, double mouseY, int button) {
 
 		if (button == 0) {
-			if (mouseX >= selectorX && mouseX <= selectorX + selectorRadius*2 &&
-				mouseY >= selectorY && mouseY <= selectorY + selectorRadius*2) {
+			if (mouseX >= selectorX && mouseX <= selectorX + selectorRadius * 2 &&
+				mouseY >= selectorY && mouseY <= selectorY + selectorRadius * 2) {
 
 				final ByteBuffer pixelBuffer = ByteBuffer.allocateDirect(4);
 				pixelBuffer.order(ByteOrder.nativeOrder());
@@ -144,7 +143,7 @@ public class ColorSelectionScreen extends Screen {
 	private int toGlCoordsY(double y) {
 		Window window = MinecraftClient.getInstance().getWindow();
 		double scale = window.getScaleFactor();
-		return Math.round((float)(window.getHeight() - y * scale - scale));
+		return Math.round((float) (window.getHeight() - y * scale - scale));
 	}
 
 	@Override

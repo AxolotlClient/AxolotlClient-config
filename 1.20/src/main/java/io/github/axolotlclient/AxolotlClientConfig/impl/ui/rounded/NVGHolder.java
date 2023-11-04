@@ -9,16 +9,16 @@ public class NVGHolder {
 	private static long ctx;
 	private static NVGFont font;
 
-	public static long getContext(){
+	public static long getContext() {
 		return ctx;
 	}
 
-	public static void setContext(long context){
+	public static void setContext(long context) {
 		ctx = context;
 	}
 
-	public static NVGFont getFont(){
-		if (font == null){
+	public static NVGFont getFont() {
+		if (font == null) {
 			try {
 				font = NVGMC.createFont(NVGHolder.class.getResourceAsStream("/Inter-Regular.ttf"));
 			} catch (IOException ignored) {

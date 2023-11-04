@@ -21,6 +21,7 @@ public class GraphicsEditorScreen extends Screen implements DrawingUtil {
 	private final Screen parent;
 	private final GraphicsOption option;
 	private final int[] focusedPixel = new int[2];
+	private final ColorOption colorOption = new ColorOption("current", Colors.WHITE);
 	private int maxGridWidth;
 	private int maxGridHeight;
 	private int gridColumns;
@@ -31,8 +32,6 @@ public class GraphicsEditorScreen extends Screen implements DrawingUtil {
 	private boolean mouseDown;
 	private int mouseButton;
 	private boolean keyboardInput;
-
-	private final ColorOption colorOption = new ColorOption("current", Colors.WHITE);
 
 	public GraphicsEditorScreen(Screen parent, GraphicsOption option) {
 		super(Text.translatable("draw_graphics"));
@@ -48,7 +47,7 @@ public class GraphicsEditorScreen extends Screen implements DrawingUtil {
 		gridY = 40;
 
 		maxGridWidth = width - 100;
-		maxGridHeight = height - gridY*2;
+		maxGridHeight = height - gridY * 2;
 
 		gridColumns = option.get().getWidth();
 		gridRows = option.get().getHeight();
@@ -63,25 +62,25 @@ public class GraphicsEditorScreen extends Screen implements DrawingUtil {
 
 		addDrawableSelectableElement(ButtonWidget.builder(Text.translatable("clear_graphics"),
 				buttonWidget -> clearGraphics())
-			.width(100).position(gridX + maxGridWidth + 10, gridY+60).build());
+			.width(100).position(gridX + maxGridWidth + 10, gridY + 60).build());
 
-		addDrawableSelectableElement(ConfigStyles.createWidget(gridX + maxGridWidth + 10, gridY+35, 100, 20, colorOption));
+		addDrawableSelectableElement(ConfigStyles.createWidget(gridX + maxGridWidth + 10, gridY + 35, 100, 20, colorOption));
 
 		addDrawableSelectableElement(ButtonWidget.builder(CommonTexts.BACK, buttonWidget -> closeScreen())
-			.position(width/2-75, height-30).build());
+			.position(width / 2 - 75, height - 30).build());
 	}
 
 	@Override
 	public void render(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
 		super.render(graphics, mouseX, mouseY, delta);
 
-		graphics.drawCenteredShadowedText(client.textRenderer, this.title, width/2, 20, -1);
+		graphics.drawCenteredShadowedText(client.textRenderer, this.title, width / 2, 20, -1);
 
 		// Draw pixels
 		for (int x = 0; x < gridColumns; x++) {
 			for (int y = 0; y < gridRows; y++) {
 				if (option.get().getPixelColor(x, y) != 0) {
-					graphics.fill(gridX + x * pixelSize, gridY + y * pixelSize, gridX + x * pixelSize + pixelSize, gridY + y * pixelSize + pixelSize, option.get().getPixelColor(x,y));
+					graphics.fill(gridX + x * pixelSize, gridY + y * pixelSize, gridX + x * pixelSize + pixelSize, gridY + y * pixelSize + pixelSize, option.get().getPixelColor(x, y));
 				} else {
 					if (x % 2 == 0 && y % 2 == 0 || (x % 2 != 0 && y % 2 != 0)) {
 						int checkerboardColor1 = 0xFF242424;
@@ -114,12 +113,12 @@ public class GraphicsEditorScreen extends Screen implements DrawingUtil {
 			focusedPixel[1] = mouseGridY;
 		}
 
-		DrawUtil.outlineRect(graphics, gridX + (pixelSize * focusedPixel[0]), gridY + (pixelSize*focusedPixel[1]), pixelSize, pixelSize, Colors.GREEN.toInt());
+		DrawUtil.outlineRect(graphics, gridX + (pixelSize * focusedPixel[0]), gridY + (pixelSize * focusedPixel[1]), pixelSize, pixelSize, Colors.GREEN.toInt());
 
 		graphics.drawShadowedText(client.textRenderer, Text.translatable("option.current"),
-			gridX+maxGridWidth+10, gridY, Colors.WHITE.toInt());
-		DrawUtil.fillRect(graphics, gridX+maxGridWidth+10, gridY+10, 100, 20, colorOption.get().get().toInt());
-		DrawUtil.outlineRect(graphics, gridX+maxGridWidth+10, gridY+10, 100, 20, Colors.BLACK.toInt());
+			gridX + maxGridWidth + 10, gridY, Colors.WHITE.toInt());
+		DrawUtil.fillRect(graphics, gridX + maxGridWidth + 10, gridY + 10, 100, 20, colorOption.get().get().toInt());
+		DrawUtil.outlineRect(graphics, gridX + maxGridWidth + 10, gridY + 10, 100, 20, Colors.BLACK.toInt());
 	}
 
 	@Override
@@ -134,8 +133,8 @@ public class GraphicsEditorScreen extends Screen implements DrawingUtil {
 	}
 
 	private void clearGraphics() {
-		for (int x = 0;x<option.get().getWidth();x++){
-			for (int y = 0;y<option.get().getHeight();y++){
+		for (int x = 0; x < option.get().getWidth(); x++) {
+			for (int y = 0; y < option.get().getHeight(); y++) {
 				option.get().setPixelColor(x, y, Colors.TRANSPARENT);
 			}
 		}

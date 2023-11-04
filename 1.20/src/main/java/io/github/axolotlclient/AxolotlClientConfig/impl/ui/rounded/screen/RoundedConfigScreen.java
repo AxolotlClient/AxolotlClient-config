@@ -19,6 +19,7 @@ public class RoundedConfigScreen extends Screen implements ConfigScreen, Drawing
 	private final Screen parent;
 	private final String configName;
 	private final OptionCategory root;
+
 	public RoundedConfigScreen(Screen parent, OptionCategory root, String configName) {
 		super(Text.translatable(root.getName()));
 		this.parent = parent;
@@ -29,8 +30,8 @@ public class RoundedConfigScreen extends Screen implements ConfigScreen, Drawing
 	@Override
 	public void render(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
 		NVGMC.wrap(ctx -> {
-			fillRoundedRect(ctx, 15, 15, width-30, height - 30, Colors.DARK_GRAY, 12);
-			drawCenteredString(ctx, NVGHolder.getFont(), getTitle().getString(), width/2f, 25, Colors.WHITE);
+			fillRoundedRect(ctx, 15, 15, width - 30, height - 30, Colors.DARK_GRAY, 12);
+			drawCenteredString(ctx, NVGHolder.getFont(), getTitle().getString(), width / 2f, 25, Colors.WHITE);
 			NVGHolder.setContext(ctx);
 			super.render(graphics, mouseX, mouseY, delta);
 		});
@@ -43,8 +44,8 @@ public class RoundedConfigScreen extends Screen implements ConfigScreen, Drawing
 
 	@Override
 	public void init() {
-		addDrawableSelectableElement(new RoundedButtonListWidget(root, width, height, 45, height-55, 25));
-		addDrawableSelectableElement(new RoundedButtonWidget(width/2-75, height-40,
+		addDrawableSelectableElement(new RoundedButtonListWidget(root, width, height, 45, height - 55, 25));
+		addDrawableSelectableElement(new RoundedButtonWidget(width / 2 - 75, height - 40,
 			CommonTexts.BACK, w -> closeScreen()));
 	}
 

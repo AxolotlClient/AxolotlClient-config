@@ -15,7 +15,7 @@ public class BooleanWidget extends RoundedButtonWidget implements Updatable {
 		this.option = option;
 	}
 
-	public void update(){
+	public void update() {
 		setMessage(option.get() ? CommonTexts.ON : CommonTexts.OFF);
 	}
 }

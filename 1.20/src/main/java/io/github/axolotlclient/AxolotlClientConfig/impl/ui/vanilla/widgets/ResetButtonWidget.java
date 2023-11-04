@@ -12,6 +12,7 @@ import net.minecraft.text.Text;
 public class ResetButtonWidget extends ButtonWidget {
 
 	private final Option<?> option;
+
 	public ResetButtonWidget(int x, int y, int width, int height, Option<?> option) {
 		super(x, y, width, height, Text.translatable("action.reset"), widget -> {
 			option.setDefault();
@@ -23,13 +24,13 @@ public class ResetButtonWidget extends ButtonWidget {
 				AtomicDouble scroll = new AtomicDouble();
 				current.children().stream()
 					.filter(e -> e instanceof VanillaEntryListWidget)
-					.map(e -> (VanillaEntryListWidget)e).findFirst().ifPresent(list -> {
+					.map(e -> (VanillaEntryListWidget) e).findFirst().ifPresent(list -> {
 						scroll.set(list.getScrollAmount());
 					});
 				current.init(MinecraftClient.getInstance(), i, j);
 				current.children().stream()
 					.filter(e -> e instanceof VanillaEntryListWidget)
-					.map(e -> (VanillaEntryListWidget)e).findFirst().ifPresent(list -> {
+					.map(e -> (VanillaEntryListWidget) e).findFirst().ifPresent(list -> {
 						list.setScrollAmount(scroll.get());
 					});
 			}

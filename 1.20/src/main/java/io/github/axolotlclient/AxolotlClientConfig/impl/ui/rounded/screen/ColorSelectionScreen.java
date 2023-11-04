@@ -29,16 +29,16 @@ import org.lwjgl.opengl.GL11;
 import static org.lwjgl.nanovg.NanoVG.*;
 
 public class ColorSelectionScreen extends Screen implements DrawingUtil {
-	private NVGPaint paint;
 	private final ColorOption option;
+	private final Screen parent;
+	private NVGPaint paint;
 	private BooleanOption chroma;
 	private IntegerOption alpha;
-
 	private int selectorRadius;
 	private float selectorX;
 	private float selectorY;
 	private int buttonsX;
-	private final Screen parent;
+
 	public ColorSelectionScreen(Screen parent, ColorOption option) {
 		super(Text.translatable("select_color"));
 		this.option = option;
@@ -47,44 +47,44 @@ public class ColorSelectionScreen extends Screen implements DrawingUtil {
 
 	@Override
 	public void init() {
-		addDrawableSelectableElement(new RoundedButtonWidget(width/2-75, height-40, Text.translatable("gui.back"),
+		addDrawableSelectableElement(new RoundedButtonWidget(width / 2 - 75, height - 40, Text.translatable("gui.back"),
 			button -> MinecraftClient.getInstance().setScreen(parent)));
 
 		chroma = new BooleanOption("option.chroma", option.get().isChroma(), val -> {
 			option.get().setChroma(val);
 			children().forEach(e -> {
-				if (e instanceof net.minecraft.client.gui.widget.TextFieldWidget){
-					((net.minecraft.client.gui.widget.TextFieldWidget)e).setText(option.get().toString().split(";")[0]);
+				if (e instanceof net.minecraft.client.gui.widget.TextFieldWidget) {
+					((net.minecraft.client.gui.widget.TextFieldWidget) e).setText(option.get().toString().split(";")[0]);
 				}
 			});
 		});
 		alpha = new IntegerOption("option.alpha", option.get().getAlpha(), val -> {
 			option.get().setAlpha(val);
 			children().forEach(e -> {
-				if (e instanceof net.minecraft.client.gui.widget.TextFieldWidget){
-					((net.minecraft.client.gui.widget.TextFieldWidget)e).setText(option.get().toString().split(";")[0]);
+				if (e instanceof net.minecraft.client.gui.widget.TextFieldWidget) {
+					((net.minecraft.client.gui.widget.TextFieldWidget) e).setText(option.get().toString().split(";")[0]);
 				}
 			});
 		}, 0, 255);
 
-		selectorRadius = Math.max(Math.min(width/4-10, (height)/2-60), 75) ;
-		selectorX = width/4f-selectorRadius;//width/2f-selectorRadius*2;
-		selectorY = height/2f-selectorRadius;//height/2f - selectorRadius;
+		selectorRadius = Math.max(Math.min(width / 4 - 10, (height) / 2 - 60), 75);
+		selectorX = width / 4f - selectorRadius;//width/2f-selectorRadius*2;
+		selectorY = height / 2f - selectorRadius;//height/2f - selectorRadius;
 
-		buttonsX = (int) Math.max(width/2f+25, selectorX+selectorRadius*2 + 10);
+		buttonsX = (int) Math.max(width / 2f + 25, selectorX + selectorRadius * 2 + 10);
 
-		if (this.height - 250 > 0){
+		if (this.height - 250 > 0) {
 			TextFieldWidget text = new TextFieldWidget(client.textRenderer, buttonsX, 190, 150, 20, Text.empty());
 			text.setChangedListener(s -> {
 				try {
 					option.set(Color.parse(s));
 
 					children().forEach(e -> {
-						if (e instanceof Updatable){
-							((Updatable)e).update();
+						if (e instanceof Updatable) {
+							((Updatable) e).update();
 						}
 					});
-				} catch (Throwable ignored){
+				} catch (Throwable ignored) {
 				}
 			});
 			text.setText(option.get().toString().split(";")[0]);
@@ -132,7 +132,7 @@ public class ColorSelectionScreen extends Screen implements DrawingUtil {
 	@Override
 	public void renderBackground(GuiGraphics graphics, int i, int j, float f) {
 		super.renderBackground(graphics, i, j, f);
-		fillRoundedRect(NVGHolder.getContext(), 15, 15, width-30, height - 30, Colors.DARK_GRAY, 12);
+		fillRoundedRect(NVGHolder.getContext(), 15, 15, width - 30, height - 30, Colors.DARK_GRAY, 12);
 	}
 
 	@Override
@@ -170,14 +170,14 @@ public class ColorSelectionScreen extends Screen implements DrawingUtil {
 	private int toGlCoordsY(double y) {
 		Window window = MinecraftClient.getInstance().getWindow();
 		double scale = window.getScaleFactor();
-		return Math.round((float)(window.getHeight() - y * scale - scale));
+		return Math.round((float) (window.getHeight() - y * scale - scale));
 	}
 
 	@Override
 	public void resize(MinecraftClient minecraftClient, int i, int j) {
 		super.resize(minecraftClient, i, j);
-		if (paint != null){
-			paint=null;
+		if (paint != null) {
+			paint = null;
 		}
 	}
 }

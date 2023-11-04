@@ -12,15 +12,13 @@ public class PillBooleanWidget extends RoundedButtonWidget implements Updatable 
 
 	protected static final int HANDLE_MARGIN = 3;
 	protected static final int OFF_POSITION = HANDLE_MARGIN;
+	private final BooleanOption option;
 	protected int handleWidth;
 	protected int onPosition;
-
 	private boolean state;
 	private boolean targetState;
 	private double progress;
-
 	private long tickTime = Util.getEpochTimeMs();
-	private final BooleanOption option;
 	private int notWidth;
 
 	public PillBooleanWidget(int x, int y, int width, int height, BooleanOption option) {
@@ -44,37 +42,37 @@ public class PillBooleanWidget extends RoundedButtonWidget implements Updatable 
 	}
 
 	@Override
+	public int getWidth() {
+		return notWidth;
+	}
+
+	@Override
 	public void setWidth(int value) {
 		setX(getX() + value - 40);
 		this.notWidth = value;
 	}
 
 	@Override
-	public int getWidth() {
-		return notWidth;
-	}
-
-	@Override
 	protected void drawWidget(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
 		fillRoundedRect(NVGHolder.getContext(), getX(), getY(), super.getWidth(), getHeight(), Colors.GRAY, Math.min(getHeight(), super.getWidth()) / 2f);
 
-			if (((Util.getEpochTimeMs() - tickTime) / 300L) % 2L == 0L) {
-				tickTime = Util.getEpochTimeMs();
-				if (state != targetState) {
-					if (targetState) {
-						progress = Math.min(1, progress + 0.05f);
-					} else {
-						progress = Math.max(0, progress - 0.05f);
-					}
-					if (progress >= 1 || progress <= 0) {
-						state = targetState;
-					}
+		if (((Util.getEpochTimeMs() - tickTime) / 300L) % 2L == 0L) {
+			tickTime = Util.getEpochTimeMs();
+			if (state != targetState) {
+				if (targetState) {
+					progress = Math.min(1, progress + 0.05f);
+				} else {
+					progress = Math.max(0, progress - 0.05f);
+				}
+				if (progress >= 1 || progress <= 0) {
+					state = targetState;
 				}
 			}
+		}
 
-			double x = getX() + OFF_POSITION + (onPosition - OFF_POSITION) * progress;
-			double widthProgress = progress > 0.5f ? 1 - progress : progress;
-			drawHandle(NVGHolder.getContext(), (float) x, getY(), (float) (handleWidth + (handleWidth * widthProgress)));
+		double x = getX() + OFF_POSITION + (onPosition - OFF_POSITION) * progress;
+		double widthProgress = progress > 0.5f ? 1 - progress : progress;
+		drawHandle(NVGHolder.getContext(), (float) x, getY(), (float) (handleWidth + (handleWidth * widthProgress)));
 	}
 
 	protected void drawHandle(long ctx, float x, float y, float width) {
@@ -94,7 +92,7 @@ public class PillBooleanWidget extends RoundedButtonWidget implements Updatable 
 		targetState = !targetState;
 	}
 
-	public void update(){
+	public void update() {
 		targetState = option.get();
 		setMessage(option.get() ? CommonTexts.ON : CommonTexts.OFF);
 	}

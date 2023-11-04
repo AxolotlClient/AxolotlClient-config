@@ -7,8 +7,10 @@ import net.minecraft.text.Text;
 
 public class GraphicsWidget extends RoundedButtonWidget {
 	private final GraphicsOption option;
+
 	public GraphicsWidget(int x, int y, int width, int height, GraphicsOption option) {
-		super(x, y, width, height, Text.translatable("open_editor"), buttonWidget -> {});
+		super(x, y, width, height, Text.translatable("open_editor"), buttonWidget -> {
+		});
 		this.option = option;
 	}
 
