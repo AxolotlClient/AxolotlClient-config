@@ -10,6 +10,7 @@ targetCompatibility = JavaVersion.VERSION_1_8
 
 repositories {
 	mavenCentral()
+	mavenLocal()
 }
 
 dependencies {
@@ -17,6 +18,11 @@ dependencies {
 	implementation "com.google.code.gson:gson:2.2.4"
 	compileOnly "com.google.code.gson:gson:2.2.4"
 	implementation 'org.jetbrains:annotations:23.0.0'
+
+	compileOnly("commons-io:commons-io:2.4")
+	compileOnly("org.apache.commons:commons-lang3:3.3.2")
+
+	compileOnly("org.lwjgl:lwjgl-nanovg:3.3.2")
 
 }
 

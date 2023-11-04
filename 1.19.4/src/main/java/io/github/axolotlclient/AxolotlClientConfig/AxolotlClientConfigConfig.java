@@ -2,9 +2,9 @@ package io.github.axolotlclient.AxolotlClientConfig;
 
 import io.github.axolotlclient.AxolotlClientConfig.common.ConfigHolder;
 import io.github.axolotlclient.AxolotlClientConfig.common.options.OptionCategory;
-import io.github.axolotlclient.AxolotlClientConfig.options.BooleanOption;
-import io.github.axolotlclient.AxolotlClientConfig.options.EnumOption;
-import io.github.axolotlclient.AxolotlClientConfig.options.IntegerOption;
+import io.github.axolotlclient.AxolotlClientConfig.impl.options.BooleanOption;
+import io.github.axolotlclient.AxolotlClientConfig.impl.options.EnumOption;
+import io.github.axolotlclient.AxolotlClientConfig.impl.options.IntegerOption;
 
 import java.util.ArrayList;
 import java.util.List;

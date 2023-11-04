@@ -1,19 +1,15 @@
 package io.github.axolotlclient.AxolotlClientConfig.example;
 
-import java.io.FileReader;
 import java.util.Collections;
 import java.util.List;
 
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import com.mojang.blaze3d.platform.InputUtil;
-import io.github.axolotlclient.AxolotlClientConfig.AxolotlClientConfigConfig;
 import io.github.axolotlclient.AxolotlClientConfig.AxolotlClientConfigManager;
 import io.github.axolotlclient.AxolotlClientConfig.Color;
 import io.github.axolotlclient.AxolotlClientConfig.DefaultConfigManager;
 import io.github.axolotlclient.AxolotlClientConfig.common.ConfigHolder;
 import io.github.axolotlclient.AxolotlClientConfig.common.options.OptionCategory;
-import io.github.axolotlclient.AxolotlClientConfig.options.*;
+import io.github.axolotlclient.AxolotlClientConfig.impl.options.*;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.option.OptionsScreen;
 import net.minecraft.client.option.KeyBind;
@@ -36,7 +32,7 @@ public class Example implements ClientModInitializer {
         Instance = this;
         final String modid = "axolotlclientconfig-test";
 
-        OptionCategory example = new io.github.axolotlclient.AxolotlClientConfig.options.OptionCategory(modid);
+        OptionCategory example = new OptionCategory(modid);
         BooleanOption ignored = new BooleanOption("ignored_option", false);
         AxolotlClientConfigManager.getInstance().addIgnoredName(modid, ignored.getName());
         BooleanOption disabledExample = new BooleanOption("example_toggle_disabled", true);
@@ -67,7 +63,7 @@ public class Example implements ClientModInitializer {
                 disabledExample,
                 ignored,
                 graphicsOption);
-        OptionCategory sub = new io.github.axolotlclient.AxolotlClientConfig.options.OptionCategory("example_sub");
+        OptionCategory sub = new OptionCategory("example_sub");
         sub.add(new BooleanOption("example_toggle", true),
                 new ColorOption("example_color", Color.parse("#FF550055")),
                 new StringOption("example_string", "Example §bString"),

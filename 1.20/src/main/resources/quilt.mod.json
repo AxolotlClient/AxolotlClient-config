@@ -8,10 +8,7 @@
       "name": "AxolotlClientConfig",
       "description": "Config lib for AxolotlClient",
       "contributors": {
-        "moehreag": "Owner",
-        "YakisikliBaran": "Contributor",
-        "DragonEggBedrockBreaking": "Contributor",
-        "TheKodeToad": "Contributor"
+        "moehreag": "Owner"
       },
       "contact": {
         "homepage": "https://axolotlclient.github.io/",
@@ -23,7 +20,10 @@
     "intermediate_mappings": "net.fabricmc:intermediary",
     "entrypoints": {
       "modmenu": [
-        "io.github.axolotlclient.AxolotlClientConfig.screen.ModMenuConfigScreens"
+        "io.github.axolotlclient.AxolotlClientConfig.impl.util.AxolotlClientConfigModMenu"
+      ],
+      "client_init": [
+        "io.github.axolotlclient.AxolotlClientConfig.impl.AxolotlClientConfigMod"
       ]
     },
     "depends": [

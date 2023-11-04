@@ -1,0 +1,10 @@
+language.name=English
+language.region=US
+language.code=en_US
+
+action.reset=Reset
+select_color=Select Color
+option.current=Current
+option.chroma=Chroma
+option.alpha=Alpha
+open_selector=Open Selector

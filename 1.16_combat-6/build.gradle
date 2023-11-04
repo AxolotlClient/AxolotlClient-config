@@ -1,6 +1,5 @@
 plugins {
     id 'java'
-	id 'io.github.juuxel.loom-quiltflower' version '1.8.+'
 	id "fabric-loom" version "1.1.+"
 }
 
@@ -34,14 +33,22 @@ dependencies {
 
 	modImplementation "net.fabricmc:fabric-loader:${fabric_loader}"
 
-	modImplementation include("net.fabricmc.fabric-api:fabric-command-api-v1:1.1.3+3cc0f0907d")
-	modImplementation include("net.fabricmc.fabric-api:fabric-lifecycle-events-v1:1.2.2+3cc0f0907d")
-	modImplementation include("net.fabricmc.fabric-api:fabric-resource-loader-v0:0.4.8+3cc0f0907d")
-	modImplementation include("net.fabricmc.fabric-api:fabric-api-base:0.4.0+3cc0f0907d")
+	modImplementation include(fabricApi.module("fabric-resource-loader-v0", project.fabric_cts8))
+	modImplementation include(fabricApi.module("fabric-key-binding-api-v1", project.fabric_cts8))
+	modImplementation include(fabricApi.module("fabric-lifecycle-events-v1", project.fabric_cts8))
+	modImplementation include(fabricApi.module("fabric-screen-api-v1", project.fabric_cts8))
+	modImplementation("io.github.prospector:modmenu:1.14.9+build.14") {
+		exclude(group: "net.fabricmc.fabric-api")
+	}
 
-	modLocalRuntime modCompileOnlyApi("io.github.prospector:modmenu:1.14.9+build.14") // there is no working modmenu release for this version, but we still provide support for it just in case.
+	//modLocalRuntime modCompileOnlyApi("io.github.prospector:modmenu:1.14.9+build.14")
 
 	implementation include(project(":common"))
+
+	api include("org.lwjgl:lwjgl-nanovg:3.2.2")
+	api include('org.lwjgl:lwjgl-nanovg:3.2.2:natives-linux')
+	api include('org.lwjgl:lwjgl-nanovg:3.2.2:natives-windows')
+	api include('org.lwjgl:lwjgl-nanovg:3.2.2:natives-macos')
 }
 
 processResources {

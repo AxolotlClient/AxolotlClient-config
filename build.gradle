@@ -1,6 +1,7 @@
 plugins {
 	id 'maven-publish'
 	id 'java'
+	id 'io.freefair.lombok' version "8.+"
 }
 
 archivesBaseName = project.archives_base_name
@@ -17,6 +18,13 @@ repositories {
 
 subprojects {
 	apply plugin: "maven-publish"
+	apply plugin: "io.freefair.lombok"
+
+	repositories {
+		mavenLocal()
+		mavenCentral()
+		maven { url 'https://jitpack.io' }
+	}
 
 	java {
 

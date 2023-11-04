@@ -1,24 +1,28 @@
 package io.github.axolotlclient.AxolotlClientConfig.example;
 
-import com.mojang.blaze3d.platform.InputUtil;
-import io.github.axolotlclient.AxolotlClientConfig.AxolotlClientConfigManager;
-import io.github.axolotlclient.AxolotlClientConfig.Color;
-import io.github.axolotlclient.AxolotlClientConfig.common.ConfigHolder;
-import io.github.axolotlclient.AxolotlClientConfig.options.*;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.option.OptionsScreen;
-import net.minecraft.text.Text;
-import org.quiltmc.loader.api.ModContainer;
-import org.quiltmc.qsl.base.api.entrypoint.client.ClientModInitializer;
+import java.lang.reflect.InvocationTargetException;
+import java.util.function.Function;
 
-import java.util.Collections;
-import java.util.List;
+import com.mojang.blaze3d.platform.InputUtil;
+import io.github.axolotlclient.AxolotlClientConfig.api.AxolotlClientConfig;
+import io.github.axolotlclient.AxolotlClientConfig.api.options.OptionCategory;
+import io.github.axolotlclient.AxolotlClientConfig.api.util.Colors;
+import io.github.axolotlclient.AxolotlClientConfig.impl.managers.JsonConfigManager;
+import io.github.axolotlclient.AxolotlClientConfig.impl.options.*;
+import io.github.axolotlclient.AxolotlClientConfig.impl.ui.ConfigUI;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.option.KeyBind;
+import org.quiltmc.loader.api.ModContainer;
+import org.quiltmc.loader.api.QuiltLoader;
+import org.quiltmc.qsl.base.api.entrypoint.client.ClientModInitializer;
+import org.quiltmc.qsl.lifecycle.api.client.event.ClientTickEvents;
 
 public class Example implements ClientModInitializer {
 
 	private static Example Instance;
 
-	public GraphicsOption graphicsOption;
+	//public GraphicsOption graphicsOption;
 
 	public static Example getInstance() {
 		return Instance;
@@ -29,7 +33,46 @@ public class Example implements ClientModInitializer {
 		Instance = this;
 		final String modid = "axolotlclientconfig-test";
 
-		OptionCategory example = new OptionCategory(modid);
+		OptionCategory example = OptionCategory.create(modid);
+		example.add(new BooleanOption("boolean", true));
+		example.add(new BooleanOption("false", false));
+
+		OptionCategory subCategory = OptionCategory.create("sub-category");
+		subCategory.add(new BooleanOption("some option", true));
+		example.add(subCategory);
+
+		example.add(new IntegerOption("integer", 5, 0, 8));
+		example.add(new FloatOption("float", 3f, 1f, 5f));
+		example.add(new DoubleOption("double", 8d, 5d, 12d));
+		example.add(new ColorOption("color", Colors.GREEN));
+
+		example.add(new StringOption("string option", "default value"));
+		example.add(new BooleanOption("option", false));
+		example.add(new BooleanOption("other option", true));
+
+		AxolotlClientConfig.getInstance().register(new JsonConfigManager(QuiltLoader.getConfigDir().resolve(modid+".json"), example));
+
+		KeyBind bind = new KeyBind(modid, InputUtil.KEY_O_CODE, modid);
+
+		ClientTickEvents.END.register(client -> {
+			if (bind.wasPressed()){
+				client.setScreen(getConfigScreenFactory(modid).apply(client.currentScreen));
+			}
+		});
+
+		ConfigUI.getInstance().runWhenLoaded(() -> {
+			StringArrayOption option;
+			example.add(option = new StringArrayOption("style",
+				ConfigUI.getInstance().getStyleNames().toArray(new String[0]),
+				ConfigUI.getInstance().getCurrentStyle().getName(), s -> {
+				ConfigUI.getInstance().setStyle(s);
+				MinecraftClient.getInstance().setScreen(null);
+			}));
+			AxolotlClientConfig.getInstance().getConfigManager(modid).load();
+			ConfigUI.getInstance().setStyle(option.get());
+		});
+
+		/*OptionCategory example = new OptionCategory(modid);
 		BooleanOption ignored = new BooleanOption("ignored_option", false);
 		AxolotlClientConfigManager.getInstance().addIgnoredName(modid, ignored.getName());
 		BooleanOption disabledExample = new BooleanOption("example_toggle_disabled", true);
@@ -80,8 +123,21 @@ public class Example implements ClientModInitializer {
 			public List<io.github.axolotlclient.AxolotlClientConfig.common.options.OptionCategory> getCategories() {
 				return Collections.singletonList(example);
 			}
-		});
+		});*/
 
+	}
+
+	public Function<Screen, ? extends Screen> getConfigScreenFactory(String name) {
+
+		return parent -> {
+			try {
+				return (Screen) Class.forName(ConfigUI.getInstance().getCurrentStyle().getScreen())
+					.getConstructor(Screen.class, OptionCategory.class, String.class).newInstance(parent, AxolotlClientConfig.getInstance().getConfigManager(name).getRoot(), name);
+			} catch (InstantiationException | IllegalAccessException | InvocationTargetException |
+					 NoSuchMethodException | ClassNotFoundException e) {
+				throw new IllegalStateException(e);
+			}
+		};
 	}
 
 
