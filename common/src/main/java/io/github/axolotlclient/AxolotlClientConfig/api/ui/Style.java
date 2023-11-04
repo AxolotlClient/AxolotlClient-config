@@ -8,7 +8,6 @@ public interface Style {
 	String getName();
 	String getScreen();
 	Map<String, String> getWidgets();
-	Optional<Class<?>> createScreen();
 	Optional<String> getParentStyleName();
 
 }

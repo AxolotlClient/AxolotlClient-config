@@ -5,12 +5,13 @@ import java.text.DecimalFormat;
 import io.github.axolotlclient.AxolotlClientConfig.api.util.Colors;
 import io.github.axolotlclient.AxolotlClientConfig.impl.options.NumberOption;
 import io.github.axolotlclient.AxolotlClientConfig.impl.ui.DrawingUtil;
+import io.github.axolotlclient.AxolotlClientConfig.impl.ui.Updatable;
 import io.github.axolotlclient.AxolotlClientConfig.impl.ui.rounded.NVGHolder;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.text.Text;
 import org.lwjgl.nanovg.NanoVG;
 
-public class SliderWidget<O extends NumberOption<N>, N extends Number> extends net.minecraft.client.gui.widget.SliderWidget implements DrawingUtil {
+public class SliderWidget<O extends NumberOption<N>, N extends Number> extends net.minecraft.client.gui.widget.SliderWidget implements DrawingUtil, Updatable {
 	private final O option;
 
 	public SliderWidget(int x, int y, int width, int height, O option) {
@@ -59,7 +60,7 @@ public class SliderWidget<O extends NumberOption<N>, N extends Number> extends n
 			(value * (option.getMax().doubleValue()-option.getMin().doubleValue()))));
 	}
 
-	public void updateValue() {
+	public void update() {
 		this.value = ((option.get().doubleValue() - option.getMin().doubleValue()) / (option.getMax().doubleValue() - option.getMin().doubleValue()));
 		updateMessage();
 	}

@@ -1,9 +1,10 @@
 package io.github.axolotlclient.AxolotlClientConfig.impl.ui.rounded.widgets;
 
 import io.github.axolotlclient.AxolotlClientConfig.impl.options.BooleanOption;
+import io.github.axolotlclient.AxolotlClientConfig.impl.ui.Updatable;
 import net.minecraft.text.CommonTexts;
 
-public class BooleanWidget extends RoundedButtonWidget {
+public class BooleanWidget extends RoundedButtonWidget implements Updatable {
 	private final BooleanOption option;
 
 	public BooleanWidget(int x, int y, int width, int height, BooleanOption option) {

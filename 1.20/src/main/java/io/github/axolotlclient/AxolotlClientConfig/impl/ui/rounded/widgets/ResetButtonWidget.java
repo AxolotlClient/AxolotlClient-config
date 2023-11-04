@@ -1,7 +1,5 @@
 package io.github.axolotlclient.AxolotlClientConfig.impl.ui.rounded.widgets;
 
-import java.util.concurrent.atomic.AtomicInteger;
-
 import com.google.common.util.concurrent.AtomicDouble;
 import com.mojang.blaze3d.glfw.Window;
 import io.github.axolotlclient.AxolotlClientConfig.api.options.Option;

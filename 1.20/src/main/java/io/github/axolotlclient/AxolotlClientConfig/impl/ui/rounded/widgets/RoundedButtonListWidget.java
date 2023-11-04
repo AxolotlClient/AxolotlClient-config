@@ -39,8 +39,8 @@ public class RoundedButtonListWidget extends ButtonListWidget {
 		private final Option<?> option;
 		public RoundedOptionEntry(ClickableWidget widget, Option<?> option) {
 			super(ImmutableList.of(widget,
-				new ResetButtonWidget(width/2 + WIDGET_ROW_RIGHT + WIDGET_WIDTH-20, 0, 20, widget.getHeight(), option)));
-			widget.setWidth(WIDGET_WIDTH-22);
+				new ResetButtonWidget(widget.getX() + widget.getWidth()-20, 0, 20, widget.getHeight(), option)));
+			widget.setWidth(widget.getWidth()-22);
 			this.option = option;
 		}
 

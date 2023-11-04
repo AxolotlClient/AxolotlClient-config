@@ -9,9 +9,8 @@ import io.github.axolotlclient.AxolotlClientConfig.api.util.Colors;
 import io.github.axolotlclient.AxolotlClientConfig.impl.options.BooleanOption;
 import io.github.axolotlclient.AxolotlClientConfig.impl.options.ColorOption;
 import io.github.axolotlclient.AxolotlClientConfig.impl.options.IntegerOption;
-import io.github.axolotlclient.AxolotlClientConfig.impl.ui.vanilla.widgets.BooleanWidget;
-import io.github.axolotlclient.AxolotlClientConfig.impl.ui.vanilla.widgets.IntegerWidget;
-import io.github.axolotlclient.AxolotlClientConfig.impl.ui.vanilla.widgets.SliderWidget;
+import io.github.axolotlclient.AxolotlClientConfig.impl.ui.Updatable;
+import io.github.axolotlclient.AxolotlClientConfig.impl.util.ConfigStyles;
 import io.github.axolotlclient.AxolotlClientConfig.impl.util.DrawUtil;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.GuiGraphics;
@@ -61,10 +60,8 @@ public class ColorSelectionScreen extends Screen {
 					option.set(Color.parse(s));
 
 					children().forEach(e -> {
-						if (e instanceof SliderWidget){
-							((SliderWidget<?, ?>)e).updateValue();
-						} else if (e instanceof BooleanWidget) {
-							((BooleanWidget) e).update();
+						if (e instanceof Updatable){
+							((Updatable)e).update();
 						}
 					});
 				} catch (Throwable ignored){
@@ -84,10 +81,15 @@ public class ColorSelectionScreen extends Screen {
 		});
 		alpha = new IntegerOption("option.alpha", option.get().getAlpha(), val -> {
 			option.get().setAlpha(val);
+			children().forEach(e -> {
+				if (e instanceof TextFieldWidget){
+					((TextFieldWidget)e).setText(option.get().toString().split(";")[0]);
+				}
+			});
 		}, 0, 255);
 
-		addDrawableSelectableElement(new BooleanWidget(buttonsX, 120, 150, 20, chroma));
-		addDrawableSelectableElement(new IntegerWidget(buttonsX, 165, 150, 20, alpha));
+		addDrawableSelectableElement(ConfigStyles.createWidget(buttonsX, 120, 150, 20, chroma));
+		addDrawableSelectableElement(ConfigStyles.createWidget(buttonsX, 165, 150, 20, alpha));
 	}
 
 	@Override

@@ -47,7 +47,6 @@ public class AxolotlClientConfigMod implements ClientModInitializer {
 
 			@Override
 			public void reload(ResourceManager resourceManager) {
-				//ConfigUI.getInstance().read(this.getClass().getResourceAsStream("assets/axolotlclientconfig/config.ui.json"));
 
 				MinecraftClient.getInstance().getResourceManager()
 					.getAllResources(new Identifier(ConfigUI.getInstance().getUiJsonPath())).forEach(resource -> {

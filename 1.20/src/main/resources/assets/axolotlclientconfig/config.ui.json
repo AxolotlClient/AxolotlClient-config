@@ -17,7 +17,7 @@
     },
     "rounded": {
       "widgets": {
-        "boolean": "io.github.axolotlclient.AxolotlClientConfig.impl.ui.rounded.widgets.BooleanWidget",
+        "boolean": "io.github.axolotlclient.AxolotlClientConfig.impl.ui.rounded.widgets.PillBooleanWidget",
         "string[]": "io.github.axolotlclient.AxolotlClientConfig.impl.ui.rounded.widgets.StringArrayButtonWidget",
         "category": "io.github.axolotlclient.AxolotlClientConfig.impl.ui.rounded.widgets.CategoryWidget",
         "string": "io.github.axolotlclient.AxolotlClientConfig.impl.ui.rounded.widgets.StringWidget",
@@ -29,12 +29,6 @@
         "graphics": "io.github.axolotlclient.AxolotlClientConfig.impl.ui.rounded.widgets.GraphicsWidget"
       },
       "screen": "io.github.axolotlclient.AxolotlClientConfig.impl.ui.rounded.screen.RoundedConfigScreen"
-    },
-    "pillboolean": {
-      "extends": "rounded",
-      "widgets": {
-        "boolean": "io.github.axolotlclient.AxolotlClientConfig.impl.ui.rounded.widgets.PillBooleanWidget"
-      }
     }
   }
 }

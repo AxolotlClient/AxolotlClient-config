@@ -5,8 +5,7 @@ import io.github.axolotlclient.AxolotlClientConfig.api.util.Colors;
 import io.github.axolotlclient.AxolotlClientConfig.impl.options.ColorOption;
 import io.github.axolotlclient.AxolotlClientConfig.impl.options.GraphicsOption;
 import io.github.axolotlclient.AxolotlClientConfig.impl.ui.DrawingUtil;
-import io.github.axolotlclient.AxolotlClientConfig.impl.ui.rounded.NVGHolder;
-import io.github.axolotlclient.AxolotlClientConfig.impl.ui.vanilla.widgets.ColorWidget;
+import io.github.axolotlclient.AxolotlClientConfig.impl.util.ConfigStyles;
 import io.github.axolotlclient.AxolotlClientConfig.impl.util.DrawUtil;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.GuiGraphics;
@@ -24,7 +23,7 @@ public class GraphicsEditorScreen extends Screen implements DrawingUtil {
 	private final int[] focusedPixel = new int[2];
 	private int maxGridWidth;
 	private int maxGridHeight;
-	private int gridCollumns;
+	private int gridColumns;
 	private int gridRows;
 	private int pixelSize;
 	private int gridX;
@@ -48,18 +47,16 @@ public class GraphicsEditorScreen extends Screen implements DrawingUtil {
 		gridX = 110;
 		gridY = 40;
 
-		//pixels = option.get();
-
 		maxGridWidth = width - 100;
 		maxGridHeight = height - gridY*2;
 
-		gridCollumns = option.get().getWidth();
+		gridColumns = option.get().getWidth();
 		gridRows = option.get().getHeight();
 
-		pixelSize = Math.min(maxGridHeight / gridRows, maxGridWidth / gridCollumns);
+		pixelSize = Math.min(maxGridHeight / gridRows, maxGridWidth / gridColumns);
 
-		gridX = MinecraftClient.getInstance().getWindow().getScaledWidth() / 2 - (gridCollumns * pixelSize) / 2;
-		maxGridWidth = Math.min(maxGridWidth, gridCollumns * pixelSize);
+		gridX = MinecraftClient.getInstance().getWindow().getScaledWidth() / 2 - (gridColumns * pixelSize) / 2;
+		maxGridWidth = Math.min(maxGridWidth, gridColumns * pixelSize);
 		maxGridHeight = Math.min(maxGridHeight, gridRows * pixelSize);
 
 		addDrawableSelectableElement(new ElementSelectable(gridX, gridY, maxGridWidth, maxGridHeight));
@@ -68,26 +65,10 @@ public class GraphicsEditorScreen extends Screen implements DrawingUtil {
 				buttonWidget -> clearGraphics())
 			.width(100).position(gridX + maxGridWidth + 10, gridY+60).build());
 
-		addDrawableSelectableElement(new ColorWidget(gridX + maxGridWidth + 10, gridY+35, 100, 20, colorOption));
+		addDrawableSelectableElement(ConfigStyles.createWidget(gridX + maxGridWidth + 10, gridY+35, 100, 20, colorOption));
 
 		addDrawableSelectableElement(ButtonWidget.builder(CommonTexts.BACK, buttonWidget -> closeScreen())
 			.position(width/2-75, height-30).build());
-
-		/*if (option.mayDrawHint()) {
-			addDrawableChild(
-				new BooleanWidget(gridX + maxGridWidth + 10, gridY + 25, 50, 20,
-					new BooleanOption("showHint", option::setDrawHint, option.isDrawHint())) {
-					@Override
-					public boolean canHover() {
-						return true;
-					}
-
-					@Override
-					public Text getMessage() {
-						return Text.of(this.option.getTranslatedName()).copy().append(": ").append(super.getMessage());
-					}
-				});
-		}*/
 	}
 
 	@Override
@@ -97,7 +78,7 @@ public class GraphicsEditorScreen extends Screen implements DrawingUtil {
 		graphics.drawCenteredShadowedText(client.textRenderer, this.title, width/2, 20, -1);
 
 		// Draw pixels
-		for (int x = 0; x < gridCollumns; x++) {
+		for (int x = 0; x < gridColumns; x++) {
 			for (int y = 0; y < gridRows; y++) {
 				if (option.get().getPixelColor(x, y) != 0) {
 					graphics.fill(gridX + x * pixelSize, gridY + y * pixelSize, gridX + x * pixelSize + pixelSize, gridY + y * pixelSize + pixelSize, option.get().getPixelColor(x,y));
@@ -113,32 +94,19 @@ public class GraphicsEditorScreen extends Screen implements DrawingUtil {
 			}
 		}
 
-		// Draw Hint (default, but in black and outlined)
-		/*if (option.isDrawHint()) {
-			for (int x = 0; x < gridCollumns; x++) {
-				for (int y = 0; y < gridRows; y++) {
-					if (option.getDefault()[x][y] != 0) {
-						DrawUtil.outlineRect(graphics, gridX + x * pixelSize, gridY + y * pixelSize, pixelSize, pixelSize, 0xFF000000);
-					}
-				}
-			}
-		}*/
-
 		DrawUtil.outlineRect(graphics, gridX + focusedPixel[0] * pixelSize, gridY + focusedPixel[1] * pixelSize, pixelSize, pixelSize, Colors.GREEN.toInt());
 
 		// Mouse interaction
 		int mouseGridX = (int) Math.floor((mouseX - gridX) / (float) pixelSize);
 		int mouseGridY = (int) Math.floor((mouseY - gridY) / (float) pixelSize);
 
-		if (mouseGridX >= 0 && mouseGridY >= 0 && mouseGridX < gridCollumns && mouseGridY < gridRows && !keyboardInput) {
+		if (mouseGridX >= 0 && mouseGridY >= 0 && mouseGridX < gridColumns && mouseGridY < gridRows && !keyboardInput) {
 
 			if (mouseDown) {
-				if (mouseGridX != focusedPixel[0] || mouseGridY != focusedPixel[1]) {
-					if (mouseButton == 0) {
-						option.get().setPixelColor(mouseGridX, mouseGridY, colorOption.get().get());
-					} else if (mouseButton == 1) {
-						option.get().setPixelColor(mouseGridX, mouseGridY, Colors.TRANSPARENT);
-					}
+				if (mouseButton == 0) {
+					option.get().setPixelColor(mouseGridX, mouseGridY, colorOption.get().get());
+				} else if (mouseButton == 1) {
+					option.get().setPixelColor(mouseGridX, mouseGridY, Colors.TRANSPARENT);
 				}
 			}
 
@@ -177,7 +145,6 @@ public class GraphicsEditorScreen extends Screen implements DrawingUtil {
 	public boolean mouseReleased(double mouseX, double mouseY, int button) {
 		if (mouseDown) {
 			mouseDown = false;
-			//option.set(pixels);
 			return true;
 		}
 		return false;

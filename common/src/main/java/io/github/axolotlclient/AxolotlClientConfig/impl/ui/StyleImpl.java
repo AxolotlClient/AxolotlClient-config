@@ -29,14 +29,6 @@ public class StyleImpl implements Style {
 		return widgets;
 	}
 
-	public Optional<Class<?>> createScreen(){
-		try {
-			return Optional.of(Class.forName(screen));
-		} catch (ClassNotFoundException e) {
-			return Optional.empty();
-		}
-	}
-
 	@Override
 	public Optional<String> getParentStyleName() {
 		return Optional.ofNullable(parentStyle);

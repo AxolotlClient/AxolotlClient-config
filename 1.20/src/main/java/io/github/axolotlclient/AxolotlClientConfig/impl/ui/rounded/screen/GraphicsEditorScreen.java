@@ -9,8 +9,8 @@ import io.github.axolotlclient.AxolotlClientConfig.impl.options.GraphicsOption;
 import io.github.axolotlclient.AxolotlClientConfig.impl.ui.DrawingUtil;
 import io.github.axolotlclient.AxolotlClientConfig.impl.ui.NVGMC;
 import io.github.axolotlclient.AxolotlClientConfig.impl.ui.rounded.NVGHolder;
-import io.github.axolotlclient.AxolotlClientConfig.impl.ui.rounded.widgets.ColorWidget;
 import io.github.axolotlclient.AxolotlClientConfig.impl.ui.rounded.widgets.RoundedButtonWidget;
+import io.github.axolotlclient.AxolotlClientConfig.impl.util.ConfigStyles;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screen.Screen;
@@ -70,7 +70,7 @@ public class GraphicsEditorScreen extends Screen implements DrawingUtil {
 		maxGridWidth = Math.min(maxGridWidth, gridColumns * pixelSize);
 		maxGridHeight = Math.min(maxGridHeight, gridRows * pixelSize);
 
-		addDrawableSelectableElement(new ColorWidget(gridX + maxGridWidth + 10, gridY+35, 100, 20, colorOption));
+		addDrawableSelectableElement(ConfigStyles.createWidget(gridX + maxGridWidth + 10, gridY+35, 100, 20, colorOption));
 		ButtonWidget clear = new RoundedButtonWidget(gridX + maxGridWidth + 10, gridY+60,
 			Text.translatable("clear_graphics"), buttonWidget -> clearGraphics());
 		clear.setWidth(100);
@@ -107,13 +107,11 @@ public class GraphicsEditorScreen extends Screen implements DrawingUtil {
 			if (mouseGridX >= 0 && mouseGridY >= 0 && mouseGridX < gridColumns && mouseGridY < gridRows && !keyboardInput) {
 
 				if (mouseDown) {
-					//if (mouseGridX != focusedPixel[0] || mouseGridY != focusedPixel[1]) {
 						if (mouseButton == 0) {
 							this.graphics.setPixelColor(mouseGridX, mouseGridY, colorOption.get().get());
 						} else if (mouseButton == 1){
 							this.graphics.setPixelColor(mouseGridX, mouseGridY, Colors.TRANSPARENT);
 						}
-					//}
 				}
 
 				focusedPixel[0] = mouseGridX;

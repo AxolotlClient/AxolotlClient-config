@@ -4,16 +4,18 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
 import com.mojang.blaze3d.glfw.Window;
+import io.github.axolotlclient.AxolotlClientConfig.api.util.Color;
 import io.github.axolotlclient.AxolotlClientConfig.api.util.Colors;
 import io.github.axolotlclient.AxolotlClientConfig.impl.options.BooleanOption;
 import io.github.axolotlclient.AxolotlClientConfig.impl.options.ColorOption;
 import io.github.axolotlclient.AxolotlClientConfig.impl.options.IntegerOption;
 import io.github.axolotlclient.AxolotlClientConfig.impl.ui.DrawingUtil;
 import io.github.axolotlclient.AxolotlClientConfig.impl.ui.NVGMC;
+import io.github.axolotlclient.AxolotlClientConfig.impl.ui.Updatable;
 import io.github.axolotlclient.AxolotlClientConfig.impl.ui.rounded.NVGHolder;
-import io.github.axolotlclient.AxolotlClientConfig.impl.ui.rounded.widgets.PillBooleanWidget;
-import io.github.axolotlclient.AxolotlClientConfig.impl.ui.rounded.widgets.IntegerWidget;
 import io.github.axolotlclient.AxolotlClientConfig.impl.ui.rounded.widgets.RoundedButtonWidget;
+import io.github.axolotlclient.AxolotlClientConfig.impl.ui.rounded.widgets.TextFieldWidget;
+import io.github.axolotlclient.AxolotlClientConfig.impl.util.ConfigStyles;
 import io.github.axolotlclient.AxolotlClientConfig.impl.util.DrawUtil;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.GuiGraphics;
@@ -48,16 +50,49 @@ public class ColorSelectionScreen extends Screen implements DrawingUtil {
 		addDrawableSelectableElement(new RoundedButtonWidget(width/2-75, height-40, Text.translatable("gui.back"),
 			button -> MinecraftClient.getInstance().setScreen(parent)));
 
-		chroma = new BooleanOption("option.chroma", option.get().isChroma(), val -> option.get().setChroma(val));
-		alpha = new IntegerOption("option.alpha", option.get().getAlpha(), val -> option.get().setAlpha(val), 0, 255);
+		chroma = new BooleanOption("option.chroma", option.get().isChroma(), val -> {
+			option.get().setChroma(val);
+			children().forEach(e -> {
+				if (e instanceof net.minecraft.client.gui.widget.TextFieldWidget){
+					((net.minecraft.client.gui.widget.TextFieldWidget)e).setText(option.get().toString().split(";")[0]);
+				}
+			});
+		});
+		alpha = new IntegerOption("option.alpha", option.get().getAlpha(), val -> {
+			option.get().setAlpha(val);
+			children().forEach(e -> {
+				if (e instanceof net.minecraft.client.gui.widget.TextFieldWidget){
+					((net.minecraft.client.gui.widget.TextFieldWidget)e).setText(option.get().toString().split(";")[0]);
+				}
+			});
+		}, 0, 255);
 
 		selectorRadius = Math.max(Math.min(width/4-10, (height)/2-60), 75) ;
 		selectorX = width/4f-selectorRadius;//width/2f-selectorRadius*2;
 		selectorY = height/2f-selectorRadius;//height/2f - selectorRadius;
 
 		buttonsX = (int) Math.max(width/2f+25, selectorX+selectorRadius*2 + 10);
-		addDrawableSelectableElement(new PillBooleanWidget(buttonsX, 120, 150, 20, chroma));
-		addDrawableSelectableElement(new IntegerWidget(buttonsX, 165, 150, 20, alpha));
+
+		if (this.height - 250 > 0){
+			TextFieldWidget text = new TextFieldWidget(client.textRenderer, buttonsX, 190, 150, 20, Text.empty());
+			text.setChangedListener(s -> {
+				try {
+					option.set(Color.parse(s));
+
+					children().forEach(e -> {
+						if (e instanceof Updatable){
+							((Updatable)e).update();
+						}
+					});
+				} catch (Throwable ignored){
+				}
+			});
+			text.setText(option.get().toString().split(";")[0]);
+			addDrawableSelectableElement(text);
+		}
+
+		addDrawableSelectableElement(ConfigStyles.createWidget(buttonsX, 120, 150, 20, chroma));
+		addDrawableSelectableElement(ConfigStyles.createWidget(buttonsX, 165, 150, 20, alpha));
 	}
 
 	@Override
