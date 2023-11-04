@@ -31,16 +31,16 @@ public class RoundedButtonListWidget extends ButtonListWidget {
 
 	@Override
 	protected Entry createOptionEntry(ClickableWidget widget, Option<?> option, @Nullable ClickableWidget other, @Nullable Option<?> otherOption) {
-		return new VanillaOptionEntry(widget, option);
+		return new RoundedOptionEntry(widget, option);
 	}
 
-	private class VanillaOptionEntry extends Entry implements DrawingUtil {
+	private class RoundedOptionEntry extends Entry implements DrawingUtil {
 
 		private final Option<?> option;
-		public VanillaOptionEntry(ClickableWidget widget, Option<?> option) {
+		public RoundedOptionEntry(ClickableWidget widget, Option<?> option) {
 			super(ImmutableList.of(widget,
-				new ResetButtonWidget(widget.getX() + widget.getWidth()-20, 0, 20, widget.getHeight(), option)));
-			widget.setWidth(widget.getWidth()-22);
+				new ResetButtonWidget(width/2 + WIDGET_ROW_RIGHT + WIDGET_WIDTH-20, 0, 20, widget.getHeight(), option)));
+			widget.setWidth(WIDGET_WIDTH-22);
 			this.option = option;
 		}
 

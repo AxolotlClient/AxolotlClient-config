@@ -22,6 +22,14 @@ public class GraphicsOption extends OptionBase<Graphics> {
 		super(name, new GraphicsImpl(data), changeListener);
 	}
 
+	public GraphicsOption(String name, Graphics data) {
+		super(name, data);
+	}
+
+	public GraphicsOption(String name, Graphics data, ChangeListener<Graphics> changeListener) {
+		super(name, data, changeListener);
+	}
+
 	@Override
 	public String toSerializedValue() {
 		return Base64.getEncoder().encodeToString(get().getPixelData());

@@ -6,7 +6,7 @@ import lombok.Setter;
 import org.lwjgl.nanovg.NVGColor;
 import org.lwjgl.nanovg.NanoVG;
 
-public class Color implements Runnable {
+public class Color implements Runnable, Cloneable {
 
 	@Getter
 	@Setter
@@ -154,9 +154,9 @@ public class Color implements Runnable {
 
 	@Override
 	public void run() {
-		chromaHue += 0.001*(2*Math.PI);
+		chromaHue += (float) (0.001*(2*Math.PI));
 		if (chromaHue >= 2*Math.PI) {
-			chromaHue -= 2*Math.PI;
+			chromaHue -= (float) (2*Math.PI);
 		}
 	}
 
@@ -207,6 +207,114 @@ public class Color implements Runnable {
 		} else {
 			vals[2] = brightness;
 			return fromHSV(vals);
+		}
+	}
+
+	public Color immutable(){
+		return new Color(getRed(), getGreen(), getBlue(), getAlpha(), isChroma()){
+
+			@Override
+			public void setGreen(int green) {
+				throw new UnsupportedOperationException("Immutable Color Object!");
+			}
+
+			@Override
+			public void setRed(int red) {
+				throw new UnsupportedOperationException("Immutable Color Object!");
+			}
+
+			@Override
+			public void setBlue(int blue) {
+				throw new UnsupportedOperationException("Immutable Color Object!");
+			}
+
+			@Override
+			public void setAlpha(int alpha) {
+				throw new UnsupportedOperationException("Immutable Color Object!");
+			}
+
+			@Override
+			public void setChroma(boolean chroma) {
+			}
+
+			@Override
+			public Color withRed(int red) {
+				return new Color(red, getGreen(), getBlue(), getAlpha());
+			}
+
+			@Override
+			public Color withGreen(int green) {
+				return new Color(getRed(), green, getBlue(), getAlpha());
+			}
+
+			@Override
+			public Color withBlue(int blue) {
+				return new Color(getRed(), getGreen(), blue, getAlpha());
+			}
+
+			@Override
+			public Color withAlpha(int alpha) {
+				return new Color(getRed(), getGreen(), getBlue(), alpha);
+			}
+
+			@Override
+			public Color withChroma(boolean chroma) {
+				Color c = new Color(getRed(), getGreen(), getBlue(), getAlpha());
+				c.setChroma(chroma);
+				return c;
+			}
+
+			@Override
+			public Color withHue(float hue) {
+				float[] vals = toHSV();
+				vals[0] = hue;
+				return fromHSV(vals);
+			}
+
+			@Override
+			public Color withSaturation(float saturation) {
+				float[] vals = toHSV();
+				vals[1] = saturation;
+				return fromHSV(vals);
+			}
+
+			@Override
+			public Color withBrightness(float brightness) {
+				float[] vals = toHSV();
+				vals[2] = brightness;
+				return fromHSV(vals);
+			}
+
+			@Override
+			public Color immutable() {
+				return this;
+			}
+
+			@Override
+			public Color mutable() {
+				return new Color(getRed(), getBlue(), getGreen(), getAlpha());
+			}
+		};
+	}
+
+	public Color mutable(){
+		return this;
+	}
+
+	@Override
+	public Color clone() {
+		try {
+			Color clone = ((Color) super.clone()).mutable();
+			clone.setAlpha(getAlpha());
+			clone.setRed(getRed());
+			clone.setGreen(getGreen());
+			clone.setBlue(getBlue());
+			clone.setChroma(isChroma());
+			clone.chromaHue = chromaHue;
+			clone.nvgColor = null;
+			return clone;
+		} catch (CloneNotSupportedException e) {
+			throw new AssertionError();
 		}
 	}
 }

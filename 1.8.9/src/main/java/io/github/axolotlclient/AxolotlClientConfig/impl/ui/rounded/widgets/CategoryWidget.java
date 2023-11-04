@@ -4,10 +4,8 @@ import java.lang.reflect.InvocationTargetException;
 
 import io.github.axolotlclient.AxolotlClientConfig.api.options.OptionCategory;
 import io.github.axolotlclient.AxolotlClientConfig.impl.options.OptionCategoryImpl;
-import io.github.axolotlclient.AxolotlClientConfig.impl.ui.AbstractScreen;
+import io.github.axolotlclient.AxolotlClientConfig.impl.ui.Screen;
 import io.github.axolotlclient.AxolotlClientConfig.impl.ui.ConfigUI;
-import io.github.axolotlclient.AxolotlClientConfig.impl.ui.rounded.screen.RoundedConfigScreen;
-import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.resource.language.I18n;
 
 public class CategoryWidget extends RoundedButtonWidget {
@@ -25,8 +23,8 @@ public class CategoryWidget extends RoundedButtonWidget {
 		ConfigUI.getInstance().getCurrentStyle().createScreen().ifPresent(cl -> {
 			try {
 				if (client.currentScreen != null) {
-					Screen screen = (Screen) cl.getConstructor(Screen.class, OptionCategory.class, String.class)
-						.newInstance(client.currentScreen, category, ((AbstractScreen) client.currentScreen).getConfigName());
+					net.minecraft.client.gui.screen.Screen screen = (net.minecraft.client.gui.screen.Screen) cl.getConstructor(net.minecraft.client.gui.screen.Screen.class, OptionCategory.class, String.class)
+						.newInstance(client.currentScreen, category, ((Screen) client.currentScreen).getConfigName());
 					client.setScreen(screen);
 				}
 			} catch (InstantiationException | IllegalAccessException | InvocationTargetException |

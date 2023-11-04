@@ -1,9 +1,7 @@
 package io.github.axolotlclient.AxolotlClientConfig.impl.util;
 
-import io.github.axolotlclient.AxolotlClientConfig.Color;
 import io.github.axolotlclient.AxolotlClientConfig.api.util.Color;
 import io.github.axolotlclient.AxolotlClientConfig.api.util.Rectangle;
-import io.github.axolotlclient.AxolotlClientConfig.common.util.Rectangle;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.util.math.MatrixStack;
@@ -18,9 +16,9 @@ import net.minecraft.client.util.math.MatrixStack;
 public class DrawUtil extends DrawableHelper{
 
     public static void fillRect(MatrixStack stack, Rectangle rectangle, Color color) {
-        fillRect(stack, rectangle.x, rectangle.y, rectangle.width,
-                rectangle.height,
-                color.getAsInt());
+        fillRect(stack, rectangle.x(), rectangle.y(), rectangle.width(),
+                rectangle.height(),
+                color.toInt());
     }
 
     public static void fillRect(MatrixStack stack, int x, int y, int width, int height, int color) {
@@ -28,7 +26,7 @@ public class DrawUtil extends DrawableHelper{
     }
 
     public static void outlineRect(MatrixStack stack, Rectangle rectangle, Color color) {
-        outlineRect(stack, rectangle.x, rectangle.y, rectangle.width, rectangle.height, color.getAsInt());
+        outlineRect(stack, rectangle.x(), rectangle.y(), rectangle.width(), rectangle.height(), color.toInt());
     }
 
     public static void outlineRect(MatrixStack stack, int x, int y, int width, int height, int color) {

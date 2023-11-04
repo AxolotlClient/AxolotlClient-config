@@ -1,7 +1,7 @@
 package io.github.axolotlclient.AxolotlClientConfig.impl.ui.rounded.widgets;
 
 import io.github.axolotlclient.AxolotlClientConfig.impl.options.ColorOption;
-import io.github.axolotlclient.AxolotlClientConfig.impl.ui.AbstractScreen;
+import io.github.axolotlclient.AxolotlClientConfig.impl.ui.Screen;
 import io.github.axolotlclient.AxolotlClientConfig.impl.ui.rounded.screen.ColorSelectionScreen;
 import net.minecraft.client.resource.language.I18n;
 
@@ -14,6 +14,6 @@ public class ColorWidget extends RoundedButtonWidget {
 
 	@Override
 	public void onClick(double mouseX, double mouseY) {
-		client.setScreen(new ColorSelectionScreen((AbstractScreen) client.currentScreen, option));
+		client.setScreen(new ColorSelectionScreen((Screen) client.currentScreen, option));
 	}
 }

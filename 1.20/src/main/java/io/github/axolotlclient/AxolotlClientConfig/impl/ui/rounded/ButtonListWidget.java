@@ -91,7 +91,7 @@ public class ButtonListWidget extends ElementListWidget<ButtonListWidget.Entry> 
 	protected static class Entry extends ElementListWidget.Entry<Entry> {
 
 
-		private final List<ClickableWidget> children = new ArrayList<>();
+		protected final List<ClickableWidget> children = new ArrayList<>();
 		public Entry(Collection<ClickableWidget> widgets){
 			children.addAll(widgets);
 		}

@@ -42,15 +42,21 @@ public class ConfigUI {
 				continue;
 			}
 			JsonObject widgetsObject = entry.getValue().getAsJsonObject().get("widgets").getAsJsonObject();
-			String screen = entry.getValue().getAsJsonObject().get("screen").getAsString();
+			String screen = getOrNull(entry.getValue(), "screen");
 			Map<String, String> widgets = widgetsObject.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue().getAsString()));
-			JsonElement parentStyle = entry.getValue().getAsJsonObject().get("extends");
-			String parentStyleName = parentStyle != null ? parentStyle.getAsString() : null;
+			String parentStyleName = getOrNull(entry.getValue(), "extends");
 			styles.put(entry.getKey(), new StyleImpl(entry.getKey(), widgets, screen, parentStyleName));
 		}
 
 		loaded = true;
 		runWhenLoaded.forEach(Runnable::run);
+	}
+
+	private String getOrNull(JsonElement element, String child){
+		if (element.isJsonObject() && element.getAsJsonObject().has(child)){
+			return element.getAsJsonObject().get(child).getAsString();
+		}
+		return null;
 	}
 
 	public Style getCurrentStyle() {
@@ -75,6 +81,26 @@ public class ConfigUI {
 		return styles.keySet();
 	}
 
+	public Class<?> getScreen(ClassLoader loader){
+		return getScreen(loader, getCurrentStyle());
+	}
+
+	private Class<?> getScreen(ClassLoader loader, Style style){
+		String name = style.getScreen();
+		if (name == null || name.isEmpty() || name.trim().isEmpty()) {
+			if (style.getParentStyleName().isPresent()) {
+				return getScreen(loader, getStyle(style.getParentStyleName().get()));
+			} else {
+				return getScreen(loader, getDefaultStyle());
+			}
+		}
+		try {
+			return Class.forName(name, true, loader);
+		} catch (Throwable e) {
+			throw new IllegalStateException("Error while getting screen for " + style.getName(), e);
+		}
+	}
+
 	public Class<?> getWidget(String identifier, ClassLoader loader) {
 		return getWidget(identifier, loader, getCurrentStyle());
 	}
@@ -83,19 +109,15 @@ public class ConfigUI {
 		String name = style.getWidgets().get(identifier);
 		if (name == null || name.isEmpty() || name.trim().isEmpty()) {
 			if (style.getParentStyleName().isPresent()) {
-				name = getStyle(style.getParentStyleName().get()).getWidgets().get(identifier);
+				return getWidget(identifier, loader, getStyle(style.getParentStyleName().get()));
 			} else {
-				name = getDefaultStyle().getWidgets().get(identifier);
-			}
-
-			if (name == null || name.isEmpty() || name.trim().isEmpty()) {
-				throw new IllegalStateException("Error while getting widget for " + name);
+				return getWidget(identifier, loader, getDefaultStyle());
 			}
 		}
 		try {
 			return Class.forName(name, true, loader);
 		} catch (Throwable e) {
-			throw new IllegalStateException("Error while getting widget for " + name, e);
+			throw new IllegalStateException("Error while getting widget for " + style.getName(), e);
 		}
 	}
 

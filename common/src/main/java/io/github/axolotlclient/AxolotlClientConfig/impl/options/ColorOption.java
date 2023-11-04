@@ -5,11 +5,11 @@ import io.github.axolotlclient.AxolotlClientConfig.api.util.Color;
 public class ColorOption extends OptionBase<Color> {
 
 	public ColorOption(String name, Color defaultValue) {
-		super(name, defaultValue);
+		super(name, defaultValue.mutable());
 	}
 
 	public ColorOption(String name, Color defaultValue, ChangeListener<Color> changeListener) {
-		super(name, defaultValue, changeListener);
+		super(name, defaultValue.mutable(), changeListener);
 	}
 
 	@Override

@@ -3,24 +3,22 @@ package io.github.axolotlclient.AxolotlClientConfig.impl.ui.rounded.screen;
 import java.io.IOException;
 
 import io.github.axolotlclient.AxolotlClientConfig.api.options.OptionCategory;
-import io.github.axolotlclient.AxolotlClientConfig.api.util.Color;
 import io.github.axolotlclient.AxolotlClientConfig.api.util.Colors;
-import io.github.axolotlclient.AxolotlClientConfig.impl.ui.AbstractScreen;
+import io.github.axolotlclient.AxolotlClientConfig.impl.ui.Screen;
 import io.github.axolotlclient.AxolotlClientConfig.impl.ui.ButtonListWidget;
 import io.github.axolotlclient.AxolotlClientConfig.impl.ui.NVGFont;
 import io.github.axolotlclient.AxolotlClientConfig.impl.ui.NVGMC;
 import io.github.axolotlclient.AxolotlClientConfig.impl.ui.rounded.widgets.RoundedButtonListWidget;
 import io.github.axolotlclient.AxolotlClientConfig.impl.ui.rounded.widgets.RoundedButtonWidget;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.resource.language.I18n;
 
-public class RoundedConfigScreen extends AbstractScreen {
+public class RoundedConfigScreen extends Screen {
 
 	private final OptionCategory root;
 	public static NVGFont font;
 
-	public RoundedConfigScreen(Screen parent, OptionCategory root, String configName){
+	public RoundedConfigScreen(net.minecraft.client.gui.screen.Screen parent, OptionCategory root, String configName){
 		super(I18n.translate(root.getName()), parent, configName);
 		this.root = root;
 		this.enableVanillaRendering = false;

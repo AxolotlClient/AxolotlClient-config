@@ -10,7 +10,8 @@
         "double": "io.github.axolotlclient.AxolotlClientConfig.impl.ui.vanilla.widgets.DoubleWidget",
         "float": "io.github.axolotlclient.AxolotlClientConfig.impl.ui.vanilla.widgets.FloatWidget",
         "integer": "io.github.axolotlclient.AxolotlClientConfig.impl.ui.vanilla.widgets.IntegerWidget",
-        "category": "io.github.axolotlclient.AxolotlClientConfig.impl.ui.vanilla.widgets.CategoryWidget"
+        "category": "io.github.axolotlclient.AxolotlClientConfig.impl.ui.vanilla.widgets.CategoryWidget",
+        "graphics": "io.github.axolotlclient.AxolotlClientConfig.impl.ui.vanilla.widgets.GraphicsWidget"
       },
       "screen": "io.github.axolotlclient.AxolotlClientConfig.impl.ui.vanilla.screen.VanillaConfigScreen"
     },
@@ -24,9 +25,16 @@
         "color": "io.github.axolotlclient.AxolotlClientConfig.impl.ui.rounded.widgets.ColorWidget",
         "double": "io.github.axolotlclient.AxolotlClientConfig.impl.ui.rounded.widgets.DoubleWidget",
         "float": "io.github.axolotlclient.AxolotlClientConfig.impl.ui.rounded.widgets.FloatWidget",
-        "integer": "io.github.axolotlclient.AxolotlClientConfig.impl.ui.rounded.widgets.IntegerWidget"
+        "integer": "io.github.axolotlclient.AxolotlClientConfig.impl.ui.rounded.widgets.IntegerWidget",
+        "graphics": "io.github.axolotlclient.AxolotlClientConfig.impl.ui.rounded.widgets.GraphicsWidget"
       },
       "screen": "io.github.axolotlclient.AxolotlClientConfig.impl.ui.rounded.screen.RoundedConfigScreen"
+    },
+    "pillboolean": {
+      "extends": "rounded",
+      "widgets": {
+        "boolean": "io.github.axolotlclient.AxolotlClientConfig.impl.ui.rounded.widgets.PillBooleanWidget"
+      }
     }
   }
 }

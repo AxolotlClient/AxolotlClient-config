@@ -7,7 +7,7 @@ import io.github.axolotlclient.AxolotlClientConfig.api.util.Colors;
 import io.github.axolotlclient.AxolotlClientConfig.impl.options.BooleanOption;
 import io.github.axolotlclient.AxolotlClientConfig.impl.options.ColorOption;
 import io.github.axolotlclient.AxolotlClientConfig.impl.options.IntegerOption;
-import io.github.axolotlclient.AxolotlClientConfig.impl.ui.AbstractScreen;
+import io.github.axolotlclient.AxolotlClientConfig.impl.ui.Screen;
 import io.github.axolotlclient.AxolotlClientConfig.impl.ui.vanilla.widgets.BooleanWidget;
 import io.github.axolotlclient.AxolotlClientConfig.impl.ui.vanilla.widgets.IntegerWidget;
 import io.github.axolotlclient.AxolotlClientConfig.impl.ui.vanilla.widgets.VanillaButtonWidget;
@@ -19,7 +19,7 @@ import net.minecraft.client.util.Window;
 import net.minecraft.util.Identifier;
 import org.lwjgl.opengl.GL11;
 
-public class ColorSelectionScreen extends AbstractScreen {
+public class ColorSelectionScreen extends Screen {
 	private final ColorOption option;
 	private BooleanOption chroma;
 	private IntegerOption alpha;
@@ -30,7 +30,7 @@ public class ColorSelectionScreen extends AbstractScreen {
 	private float selectorX;
 	private float selectorY;
 	private int buttonsX;
-	public ColorSelectionScreen(AbstractScreen parent, ColorOption option) {
+	public ColorSelectionScreen(Screen parent, ColorOption option) {
 		super(I18n.translate("select_color"), parent, parent.getConfigName());
 		this.option = option;
 	}

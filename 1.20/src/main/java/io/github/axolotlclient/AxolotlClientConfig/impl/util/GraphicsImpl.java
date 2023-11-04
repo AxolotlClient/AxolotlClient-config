@@ -46,7 +46,13 @@ public class GraphicsImpl implements Graphics {
 		AtomicInteger width = new AtomicInteger();
 		Arrays.stream(data).forEach(arr -> width.set(Math.max(width.get(), arr.length)));
 		int height = data.length;
-		return new NativeImage(width.get(), height, true);
+		NativeImage image = new NativeImage(width.get(), height, true);
+		for (int x = 0; x<width.get(); x++){
+			for (int y = 0;y<height;y++){
+				image.setPixelColor(x, y, data[y][x]);
+			}
+		}
+		return image;
 	}
 
 	@Override
@@ -66,7 +72,6 @@ public class GraphicsImpl implements Graphics {
 				return image.getBytes();
 			}
 		} catch (IOException ignored) {
-
 		}
 		return new byte[0];
 	}

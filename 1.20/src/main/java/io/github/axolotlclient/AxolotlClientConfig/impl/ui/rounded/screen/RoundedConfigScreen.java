@@ -1,5 +1,6 @@
 package io.github.axolotlclient.AxolotlClientConfig.impl.ui.rounded.screen;
 
+import io.github.axolotlclient.AxolotlClientConfig.api.AxolotlClientConfig;
 import io.github.axolotlclient.AxolotlClientConfig.api.options.OptionCategory;
 import io.github.axolotlclient.AxolotlClientConfig.api.ui.screen.ConfigScreen;
 import io.github.axolotlclient.AxolotlClientConfig.api.util.Color;
@@ -29,7 +30,7 @@ public class RoundedConfigScreen extends Screen implements ConfigScreen, Drawing
 	@Override
 	public void render(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
 		NVGMC.wrap(ctx -> {
-			fillRoundedRect(ctx, width / 2 - 200, 20, 400, height - 35, Colors.DARK_GRAY, 12);
+			fillRoundedRect(ctx, 15, 15, width-30, height - 30, Colors.DARK_GRAY, 12);
 			drawCenteredString(ctx, NVGHolder.getFont(), getTitle().getString(), width/2f, 25, Colors.WHITE);
 			NVGHolder.setContext(ctx);
 			super.render(graphics, mouseX, mouseY, delta);
@@ -44,7 +45,13 @@ public class RoundedConfigScreen extends Screen implements ConfigScreen, Drawing
 	@Override
 	public void init() {
 		addDrawableSelectableElement(new RoundedButtonListWidget(root, width, height, 45, height-55, 25));
-		addDrawableSelectableElement(new RoundedButtonWidget(width/2-75, height-45,
-			CommonTexts.BACK, w -> client.setScreen(parent)));
+		addDrawableSelectableElement(new RoundedButtonWidget(width/2-75, height-40,
+			CommonTexts.BACK, w -> closeScreen()));
+	}
+
+	@Override
+	public void closeScreen() {
+		client.setScreen(parent);
+		AxolotlClientConfig.getInstance().getConfigManager(getConfigName()).save();
 	}
 }

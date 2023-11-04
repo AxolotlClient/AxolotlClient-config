@@ -4,16 +4,19 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
 import com.mojang.blaze3d.glfw.Window;
+import io.github.axolotlclient.AxolotlClientConfig.api.util.Color;
 import io.github.axolotlclient.AxolotlClientConfig.api.util.Colors;
 import io.github.axolotlclient.AxolotlClientConfig.impl.options.BooleanOption;
 import io.github.axolotlclient.AxolotlClientConfig.impl.options.ColorOption;
 import io.github.axolotlclient.AxolotlClientConfig.impl.options.IntegerOption;
 import io.github.axolotlclient.AxolotlClientConfig.impl.ui.vanilla.widgets.BooleanWidget;
 import io.github.axolotlclient.AxolotlClientConfig.impl.ui.vanilla.widgets.IntegerWidget;
+import io.github.axolotlclient.AxolotlClientConfig.impl.ui.vanilla.widgets.SliderWidget;
 import io.github.axolotlclient.AxolotlClientConfig.impl.util.DrawUtil;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.gui.widget.button.ButtonWidget;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.text.CommonTexts;
@@ -45,20 +48,51 @@ public class ColorSelectionScreen extends Screen {
 		addDrawableSelectableElement(ButtonWidget.builder(CommonTexts.BACK, buttonWidget -> closeScreen())
 				.position(width/2-75, height-40).build());
 
-		chroma = new BooleanOption("option.chroma", option.get().isChroma(), val -> option.get().setChroma(val));
-		alpha = new IntegerOption("option.alpha", option.get().getAlpha(), val -> option.get().setAlpha(val), 0, 255);
-
 		selectorRadius = Math.max(Math.min(width/4-10, (height)/2-60), 75) ;
 		selectorX = width/4f-selectorRadius;
 		selectorY = height/2f-selectorRadius;
 
 		buttonsX = (int) Math.max(width/2f+25, selectorX+selectorRadius*2 + 10);
+
+		if (this.height - 250 > 0){
+			TextFieldWidget text = new TextFieldWidget(client.textRenderer, buttonsX, 190, 150, 20, Text.empty());
+			text.setChangedListener(s -> {
+				try {
+					option.set(Color.parse(s));
+
+					children().forEach(e -> {
+						if (e instanceof SliderWidget){
+							((SliderWidget<?, ?>)e).updateValue();
+						} else if (e instanceof BooleanWidget) {
+							((BooleanWidget) e).update();
+						}
+					});
+				} catch (Throwable ignored){
+				}
+			});
+			text.setText(option.get().toString().split(";")[0]);
+			addDrawableSelectableElement(text);
+		}
+
+		chroma = new BooleanOption("option.chroma", option.get().isChroma(), val -> {
+			option.get().setChroma(val);
+			children().forEach(e -> {
+				if (e instanceof TextFieldWidget){
+					((TextFieldWidget)e).setText(option.get().toString().split(";")[0]);
+				}
+			});
+		});
+		alpha = new IntegerOption("option.alpha", option.get().getAlpha(), val -> {
+			option.get().setAlpha(val);
+		}, 0, 255);
+
 		addDrawableSelectableElement(new BooleanWidget(buttonsX, 120, 150, 20, chroma));
 		addDrawableSelectableElement(new IntegerWidget(buttonsX, 165, 150, 20, alpha));
 	}
 
 	@Override
 	public void render(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
+		super.render(graphics, mouseX, mouseY, delta);
 		graphics.drawCenteredShadowedText(client.textRenderer, title, width/2, 20, Colors.WHITE.toInt());
 
 		graphics.drawTexture(texture, (int) selectorX, (int) selectorY, 0, 0, selectorRadius*2, selectorRadius*2, selectorRadius*2, selectorRadius*2);

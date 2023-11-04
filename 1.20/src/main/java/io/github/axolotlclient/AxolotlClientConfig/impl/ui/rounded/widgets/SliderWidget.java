@@ -58,4 +58,9 @@ public class SliderWidget<O extends NumberOption<N>, N extends Number> extends n
 		option.set((N) (Double) (option.getMin().doubleValue() +
 			(value * (option.getMax().doubleValue()-option.getMin().doubleValue()))));
 	}
+
+	public void updateValue() {
+		this.value = ((option.get().doubleValue() - option.getMin().doubleValue()) / (option.getMax().doubleValue() - option.getMin().doubleValue()));
+		updateMessage();
+	}
 }

@@ -10,6 +10,7 @@ import io.github.axolotlclient.AxolotlClientConfig.api.util.Colors;
 import io.github.axolotlclient.AxolotlClientConfig.impl.managers.JsonConfigManager;
 import io.github.axolotlclient.AxolotlClientConfig.impl.options.*;
 import io.github.axolotlclient.AxolotlClientConfig.impl.ui.ConfigUI;
+import lombok.Getter;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.option.KeyBind;
@@ -20,13 +21,10 @@ import org.quiltmc.qsl.lifecycle.api.client.event.ClientTickEvents;
 
 public class Example implements ClientModInitializer {
 
+	@Getter
 	private static Example Instance;
 
 	//public GraphicsOption graphicsOption;
-
-	public static Example getInstance() {
-		return Instance;
-	}
 
 	@Override
 	public void onInitializeClient(ModContainer mod) {
@@ -49,6 +47,7 @@ public class Example implements ClientModInitializer {
 		example.add(new StringOption("string option", "default value"));
 		example.add(new BooleanOption("option", false));
 		example.add(new BooleanOption("other option", true));
+		example.add(new GraphicsOption("graphics", 40, 40));
 
 		AxolotlClientConfig.getInstance().register(new JsonConfigManager(QuiltLoader.getConfigDir().resolve(modid+".json"), example));
 
@@ -66,7 +65,7 @@ public class Example implements ClientModInitializer {
 				ConfigUI.getInstance().getStyleNames().toArray(new String[0]),
 				ConfigUI.getInstance().getCurrentStyle().getName(), s -> {
 				ConfigUI.getInstance().setStyle(s);
-				MinecraftClient.getInstance().setScreen(null);
+				MinecraftClient.getInstance().currentScreen.closeScreen();
 			}));
 			AxolotlClientConfig.getInstance().getConfigManager(modid).load();
 			ConfigUI.getInstance().setStyle(option.get());
@@ -131,10 +130,11 @@ public class Example implements ClientModInitializer {
 
 		return parent -> {
 			try {
-				return (Screen) Class.forName(ConfigUI.getInstance().getCurrentStyle().getScreen())
-					.getConstructor(Screen.class, OptionCategory.class, String.class).newInstance(parent, AxolotlClientConfig.getInstance().getConfigManager(name).getRoot(), name);
+				return (Screen) ConfigUI.getInstance().getScreen(this.getClass().getClassLoader())
+					.getConstructor(Screen.class, OptionCategory.class, String.class)
+					.newInstance(parent, AxolotlClientConfig.getInstance().getConfigManager(name).getRoot(), name);
 			} catch (InstantiationException | IllegalAccessException | InvocationTargetException |
-					 NoSuchMethodException | ClassNotFoundException e) {
+					 NoSuchMethodException e) {
 				throw new IllegalStateException(e);
 			}
 		};

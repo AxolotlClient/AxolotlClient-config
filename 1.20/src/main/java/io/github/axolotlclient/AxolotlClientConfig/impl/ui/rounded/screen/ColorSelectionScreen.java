@@ -11,7 +11,7 @@ import io.github.axolotlclient.AxolotlClientConfig.impl.options.IntegerOption;
 import io.github.axolotlclient.AxolotlClientConfig.impl.ui.DrawingUtil;
 import io.github.axolotlclient.AxolotlClientConfig.impl.ui.NVGMC;
 import io.github.axolotlclient.AxolotlClientConfig.impl.ui.rounded.NVGHolder;
-import io.github.axolotlclient.AxolotlClientConfig.impl.ui.rounded.widgets.BooleanWidget;
+import io.github.axolotlclient.AxolotlClientConfig.impl.ui.rounded.widgets.PillBooleanWidget;
 import io.github.axolotlclient.AxolotlClientConfig.impl.ui.rounded.widgets.IntegerWidget;
 import io.github.axolotlclient.AxolotlClientConfig.impl.ui.rounded.widgets.RoundedButtonWidget;
 import io.github.axolotlclient.AxolotlClientConfig.impl.util.DrawUtil;
@@ -45,7 +45,6 @@ public class ColorSelectionScreen extends Screen implements DrawingUtil {
 
 	@Override
 	public void init() {
-		super.init();
 		addDrawableSelectableElement(new RoundedButtonWidget(width/2-75, height-40, Text.translatable("gui.back"),
 			button -> MinecraftClient.getInstance().setScreen(parent)));
 
@@ -57,7 +56,7 @@ public class ColorSelectionScreen extends Screen implements DrawingUtil {
 		selectorY = height/2f-selectorRadius;//height/2f - selectorRadius;
 
 		buttonsX = (int) Math.max(width/2f+25, selectorX+selectorRadius*2 + 10);
-		addDrawableSelectableElement(new BooleanWidget(buttonsX, 120, 150, 20, chroma));
+		addDrawableSelectableElement(new PillBooleanWidget(buttonsX, 120, 150, 20, chroma));
 		addDrawableSelectableElement(new IntegerWidget(buttonsX, 165, 150, 20, alpha));
 	}
 
@@ -98,7 +97,7 @@ public class ColorSelectionScreen extends Screen implements DrawingUtil {
 	@Override
 	public void renderBackground(GuiGraphics graphics, int i, int j, float f) {
 		super.renderBackground(graphics, i, j, f);
-		fillRoundedRect(NVGHolder.getContext(), width / 2 - 200, 20, 400, height - 35, Colors.DARK_GRAY, 12);
+		fillRoundedRect(NVGHolder.getContext(), 15, 15, width-30, height - 30, Colors.DARK_GRAY, 12);
 	}
 
 	@Override

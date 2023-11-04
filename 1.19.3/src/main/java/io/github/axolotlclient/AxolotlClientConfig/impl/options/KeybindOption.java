@@ -22,4 +22,9 @@ public class KeybindOption extends OptionBase<KeyBind> {
 	public void fromSerializedValue(String value) {
 		this.value.setBoundKey(InputUtil.fromTranslationKey(value));
 	}
+
+	@Override
+	public String getWidgetIdentifier() {
+		return "keybind";
+	}
 }

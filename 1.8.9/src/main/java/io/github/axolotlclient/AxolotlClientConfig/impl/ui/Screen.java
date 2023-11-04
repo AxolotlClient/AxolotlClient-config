@@ -7,12 +7,11 @@ import io.github.axolotlclient.AxolotlClientConfig.api.AxolotlClientConfig;
 import io.github.axolotlclient.AxolotlClientConfig.api.ui.screen.ConfigScreen;
 import lombok.Getter;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.Screen;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
-public abstract class AbstractScreen extends Screen implements ParentElement, ConfigScreen {
+public abstract class Screen extends net.minecraft.client.gui.screen.Screen implements ParentElement, ConfigScreen {
 
 	private final List<Drawable> drawables = Lists.newArrayList();
 	private final List<Element> children = Lists.newArrayList();
@@ -22,17 +21,14 @@ public abstract class AbstractScreen extends Screen implements ParentElement, Co
 	private boolean dragging;
 
 	protected final String title;
-	protected final Screen parent;
+	protected final net.minecraft.client.gui.screen.Screen parent;
 
 	protected MinecraftClient client;
 
 	@Getter
 	private final String configName;
 
-	protected boolean enableNanoVGRendering = true;
-	protected boolean enableVanillaRendering = true;
-
-	public AbstractScreen(String title, Screen parent, String configName){
+	public Screen(String title, net.minecraft.client.gui.screen.Screen parent, String configName){
 		this.title = title;
 		this.parent = parent;
 		this.configName = configName;
@@ -49,20 +45,8 @@ public abstract class AbstractScreen extends Screen implements ParentElement, Co
 
 		renderBackground();
 
-		if (enableNanoVGRendering) {
-			GL11.glPushAttrib(GL11.GL_ALL_ATTRIB_BITS);
-			NVGMC.wrap(ctx -> {
-				render(ctx, mouseX, mouseY, delta);
 
-				drawables.forEach(drawable -> drawable.render(ctx, mouseX, mouseY, delta));
-			});
-			GL11.glPopAttrib();
-		}
-
-		if (enableVanillaRendering) {
-			drawables.forEach(drawable -> drawable.render(mouseX, mouseY, delta));
-		}
-
+		drawables.forEach(drawable -> drawable.render(mouseX, mouseY, delta));
 	}
 
 	@Override
