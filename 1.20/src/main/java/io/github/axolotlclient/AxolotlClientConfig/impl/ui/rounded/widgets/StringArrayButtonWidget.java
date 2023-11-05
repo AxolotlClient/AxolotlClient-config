@@ -17,7 +17,7 @@ public class StringArrayButtonWidget extends RoundedButtonWidget {
 
 	@Override
 	protected void drawWidget(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
-		if (!getMessage().equals(I18n.translate(option.get()))) {
+		if (!getMessage().getString().equals(I18n.translate(option.get()))) {
 			setMessage(Text.translatable(option.get()));
 		}
 		super.drawWidget(graphics, mouseX, mouseY, delta);

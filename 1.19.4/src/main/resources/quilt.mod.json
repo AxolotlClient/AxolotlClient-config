@@ -15,7 +15,7 @@
         "issues": "https://github.com/AxolotlClient/Axolotlclient-config/issues",
         "sources": "https://github.com/Axolotlclient?tab=repositories"
       },
-      "icon": "assets/axolotlclient/icon.png"
+      "icon": "assets/axolotlclientconfig/icon.png"
     },
     "intermediate_mappings": "net.fabricmc:intermediary",
     "entrypoints": {

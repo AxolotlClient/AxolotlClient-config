@@ -27,7 +27,7 @@ public class GraphicsImpl implements Graphics {
 	protected int[][] read(byte[] bytes) {
 		try {
 			try (NativeImage image = NativeImage.read(bytes)) {
-				int[][] data = new int[image.getHeight()][image.getWidth()];
+				int[][] data = new int[Math.max(image.getHeight(), this.data.length)][Math.max(image.getWidth(), this.data.length)];
 
 				for (int y = 0; y < data.length; y++) {
 					for (int x = 0; x < data[y].length; x++) {

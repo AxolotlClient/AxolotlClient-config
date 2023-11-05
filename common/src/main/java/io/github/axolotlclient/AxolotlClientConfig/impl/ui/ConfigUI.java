@@ -44,11 +44,19 @@ public class ConfigUI {
 
 		for (Map.Entry<String, JsonElement> entry : ui.get("styles").getAsJsonObject().entrySet()) {
 			if (styles.containsKey(entry.getKey())) {
+				Style s = styles.get(entry.getKey());
+				JsonObject widgetsObject = entry.getValue().getAsJsonObject().get("widgets").getAsJsonObject();
+				Map<String, String> widgets = widgetsObject.entrySet().stream()
+					.filter(en -> !en.getValue().getAsString().trim().isEmpty())
+					.collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue().getAsString()));
+				s.getWidgets().putAll(widgets);
 				continue;
 			}
 			JsonObject widgetsObject = entry.getValue().getAsJsonObject().get("widgets").getAsJsonObject();
 			String screen = getOrNull(entry.getValue(), "screen");
-			Map<String, String> widgets = widgetsObject.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue().getAsString()));
+			Map<String, String> widgets = widgetsObject.entrySet().stream()
+				.filter(en -> !en.getValue().getAsString().trim().isEmpty())
+				.collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue().getAsString()));
 			String parentStyleName = getOrNull(entry.getValue(), "extends");
 			styles.put(entry.getKey(), new StyleImpl(entry.getKey(), widgets, screen, parentStyleName));
 		}

@@ -1,6 +1,6 @@
 plugins {
     id 'java'
-	id "org.quiltmc.loom" version "1.0.+"
+	id "org.quiltmc.loom" version "1.3.+"
 }
 
 group = maven_group
@@ -35,21 +35,22 @@ dependencies {
 
 	modImplementation "org.quiltmc:quilt-loader:${project.quilt_loader}"
 
-	modApi include("org.quiltmc.qsl.core:qsl_base:${project.qsl_1193}+${project.minecraft_1193}")
-	modApi include("org.quiltmc.qsl.core:lifecycle_events:${project.qsl_1193}+${project.minecraft_1193}")
-	modApi include("org.quiltmc.qsl.management:client_command:${project.qsl_1193}+${project.minecraft_1193}")
+	modApi("org.quiltmc.qsl.core:qsl_base:${project.qsl_1193}+${project.minecraft_1193}")
+	modApi("org.quiltmc.qsl.core:lifecycle_events:${project.qsl_1193}+${project.minecraft_1193}")
+	modApi("org.quiltmc.qsl.core:resource_loader:${project.qsl_1193}+${project.minecraft_1193}")
+	modApi("org.quiltmc.qsl.management:client_command:${project.qsl_1193}+${project.minecraft_1193}")
 
-	modApi("com.terraformersmc:modmenu:5.0.2")
+	modCompileOnlyApi("com.terraformersmc:modmenu:5.0.2")
 
 	implementation include(project(":common"))
 
-	api include("org.lwjgl:lwjgl-nanovg:3.3.1")
-	api include('org.lwjgl:lwjgl-nanovg:3.3.1:natives-linux')
-	api include('org.lwjgl:lwjgl-nanovg:3.3.1:natives-linux-arm64')
-	api include('org.lwjgl:lwjgl-nanovg:3.3.1:natives-windows')
-	api include('org.lwjgl:lwjgl-nanovg:3.3.1:natives-windows-arm64')
-	api include('org.lwjgl:lwjgl-nanovg:3.3.1:natives-macos')
-	api include('org.lwjgl:lwjgl-nanovg:3.3.1:natives-macos-arm64')
+	implementation include("org.lwjgl:lwjgl-nanovg:3.3.1")
+	localRuntime include('org.lwjgl:lwjgl-nanovg:3.3.1:natives-linux')
+	localRuntime include('org.lwjgl:lwjgl-nanovg:3.3.1:natives-linux-arm64')
+	localRuntime include('org.lwjgl:lwjgl-nanovg:3.3.1:natives-windows')
+	localRuntime include('org.lwjgl:lwjgl-nanovg:3.3.1:natives-windows-arm64')
+	localRuntime include('org.lwjgl:lwjgl-nanovg:3.3.1:natives-macos')
+	localRuntime include('org.lwjgl:lwjgl-nanovg:3.3.1:natives-macos-arm64')
 }
 
 processResources {

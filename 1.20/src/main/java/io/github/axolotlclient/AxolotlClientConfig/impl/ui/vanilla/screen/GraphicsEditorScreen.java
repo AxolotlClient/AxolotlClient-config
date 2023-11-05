@@ -184,6 +184,9 @@ public class GraphicsEditorScreen extends Screen implements DrawingUtil {
 					return true;
 				}
 			}
+			if (keyCode == InputUtil.KEY_DELETE_CODE) {
+				option.get().setPixelColor(focusedPixel[0], focusedPixel[1], Colors.TRANSPARENT);
+			}
 			return super.keyPressed(keyCode, scanCode, modifiers);
 		}
 

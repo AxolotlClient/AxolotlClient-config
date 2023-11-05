@@ -1,6 +1,6 @@
 plugins {
     id 'java'
-	id "org.quiltmc.loom" version "1.0.+"
+	id "org.quiltmc.loom" version "1.3.+"
 }
 
 group = maven_group
@@ -39,17 +39,17 @@ dependencies {
 
 	modLocalRuntime("org.quiltmc.quilted-fabric-api:quilted-fabric-api:4.0.0-beta.30+0.76.0-1.19.2")
 
-	modApi("com.terraformersmc:modmenu:4.1.2")
+	modCompileOnlyApi("com.terraformersmc:modmenu:4.1.2")
 
 	implementation include(project(":common"))
 
-	api include("org.lwjgl:lwjgl-nanovg:3.3.1")
-	api include('org.lwjgl:lwjgl-nanovg:3.3.1:natives-linux')
-	api include('org.lwjgl:lwjgl-nanovg:3.3.1:natives-linux-arm64')
-	api include('org.lwjgl:lwjgl-nanovg:3.3.1:natives-windows')
-	api include('org.lwjgl:lwjgl-nanovg:3.3.1:natives-windows-arm64')
-	api include('org.lwjgl:lwjgl-nanovg:3.3.1:natives-macos')
-	api include('org.lwjgl:lwjgl-nanovg:3.3.1:natives-macos-arm64')
+	implementation include("org.lwjgl:lwjgl-nanovg:3.3.1")
+	runtimeOnly include('org.lwjgl:lwjgl-nanovg:3.3.1:natives-linux')
+	runtimeOnly include('org.lwjgl:lwjgl-nanovg:3.3.1:natives-linux-arm64')
+	runtimeOnly include('org.lwjgl:lwjgl-nanovg:3.3.1:natives-windows')
+	runtimeOnly include('org.lwjgl:lwjgl-nanovg:3.3.1:natives-windows-arm64')
+	runtimeOnly include('org.lwjgl:lwjgl-nanovg:3.3.1:natives-macos')
+	runtimeOnly include('org.lwjgl:lwjgl-nanovg:3.3.1:natives-macos-arm64')
 }
 
 processResources {

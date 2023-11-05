@@ -3,15 +3,12 @@ package io.github.axolotlclient.AxolotlClientConfig.impl.ui;
 import java.util.List;
 
 import com.google.common.collect.Lists;
-import io.github.axolotlclient.AxolotlClientConfig.api.AxolotlClientConfig;
-import io.github.axolotlclient.AxolotlClientConfig.api.ui.screen.ConfigScreen;
 import lombok.Getter;
 import net.minecraft.client.MinecraftClient;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.input.Mouse;
-import org.lwjgl.opengl.GL11;
 
-public abstract class Screen extends net.minecraft.client.gui.screen.Screen implements ParentElement, ConfigScreen {
+public abstract class Screen extends net.minecraft.client.gui.screen.Screen implements ParentElement {
 
 	private final List<Drawable> drawables = Lists.newArrayList();
 	private final List<Element> children = Lists.newArrayList();
@@ -20,29 +17,24 @@ public abstract class Screen extends net.minecraft.client.gui.screen.Screen impl
 	private Element focused;
 	private boolean dragging;
 
-	protected final String title;
-	protected final net.minecraft.client.gui.screen.Screen parent;
-
-	protected MinecraftClient client;
-
 	@Getter
-	private final String configName;
+	protected final String title;
 
-	public Screen(String title, net.minecraft.client.gui.screen.Screen parent, String configName){
+	private int lastMouseDragPosX, lastMouseDragPosY;
+
+	public Screen(String title){
 		this.title = title;
-		this.parent = parent;
-		this.configName = configName;
 	}
 
 	@Override
-	public void init() {
+	public void init(MinecraftClient minecraftClient, int i, int j) {
 		clearChildren();
 		client = MinecraftClient.getInstance();
+		super.init(minecraftClient, i, j);
 	}
 
 	@Override
 	public void render(int mouseX, int mouseY, float delta) {
-
 		renderBackground();
 
 
@@ -71,7 +63,9 @@ public abstract class Screen extends net.minecraft.client.gui.screen.Screen impl
 
 	@Override
 	protected void mouseDragged(int mouseX, int mouseY, int button, long lastClick) {
-		mouseDragged(mouseX, mouseY, button, 0, 0);
+		mouseDragged(mouseX, mouseY, button, mouseX- lastMouseDragPosX, mouseY- lastMouseDragPosY);
+		lastMouseDragPosX = mouseX;
+		lastMouseDragPosY = mouseY;
 	}
 
 	protected <T extends Element & Drawable & Selectable> T addDrawableChild(T drawableElement) {
@@ -132,15 +126,6 @@ public abstract class Screen extends net.minecraft.client.gui.screen.Screen impl
 	@Override
 	public void setDragging(boolean dragging) {
 		this.dragging = dragging;
-	}
-
-	@Override
-	public void removed(){
-		save();
-	}
-
-	public void save(){
-		AxolotlClientConfig.getInstance().getConfigManager(getConfigName()).save();
 	}
 
 	@Override

@@ -9,7 +9,6 @@ import java.util.Stack;
 
 import io.github.axolotlclient.AxolotlClientConfig.api.util.Color;
 import io.github.axolotlclient.AxolotlClientConfig.api.util.Rectangle;
-import io.github.axolotlclient.AxolotlClientConfig.impl.ui.DrawingUtil;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawableHelper;
@@ -20,51 +19,46 @@ import org.lwjgl.nanovg.NanoVG;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.system.MemoryUtil;
 
-public class DrawUtil extends DrawableHelper implements DrawingUtil {
+public class DrawUtil {
 
-	private static Stack<Rectangle> scissorStack = new Stack<>();
+	private static final Stack<Rectangle> scissorStack = new Stack<>();
 
-    public static void fillRect(MatrixStack matrices, Rectangle rectangle, Color color) {
-        fillRect(matrices, rectangle.x(), rectangle.y(), rectangle.width(),
-                rectangle.height(),
-                color.get().toInt());
-    }
+	public static void fillRect(MatrixStack stack, Rectangle rectangle, Color color) {
+		fillRect(stack, rectangle.x(), rectangle.y(), rectangle.width(),
+			rectangle.height(),
+			color.toInt());
+	}
 
-    public static void fillRect(MatrixStack matrices, int x, int y, int width, int height, int color) {
-        DrawableHelper.fill(matrices, x, y, x + width, y + height, color);
-    }
+	public static void fillRect(MatrixStack graphics, int x, int y, int width, int height, int color) {
+		DrawableHelper.fill(graphics, x, y, x + width, y + height, color);
+	}
 
-    public static void outlineRect(MatrixStack matrices, Rectangle rectangle, Color color) {
-        outlineRect(matrices, rectangle.x(), rectangle.y(), rectangle.width(), rectangle.height(), color.get().toInt());
-    }
+	public static void outlineRect(MatrixStack stack, Rectangle rectangle, Color color) {
+		outlineRect(stack, rectangle.x(), rectangle.y(), rectangle.width(), rectangle.height(), color.toInt());
+	}
 
-    public static void outlineRect(MatrixStack matrices, int x, int y, int width, int height, int color) {
-        fillRect(matrices, x, y, 1, height-1, color);
-        fillRect(matrices, x + width - 1, y + 1, 1, height-1, color);
-        fillRect(matrices, x+1, y, width-1, 1, color);
-        fillRect(matrices, x, y + height - 1, width-1, 1, color);
-    }
+	public static void outlineRect(MatrixStack stack, int x, int y, int width, int height, int color) {
+		fillRect(stack, x, y, 1, height - 1, color);
+		fillRect(stack, x + width - 1, y + 1, 1, height - 1, color);
+		fillRect(stack, x + 1, y, width - 1, 1, color);
+		fillRect(stack, x, y + height - 1, width - 1, 1, color);
+	}
 
-    public static void drawCenteredString(MatrixStack matrices, TextRenderer renderer,
-                                          String text, int centerX, int y,
-                                          int color, boolean shadow) {
-        drawString(matrices, renderer, text, centerX - renderer.getWidth(text) / 2,
-                y,
-                color, shadow);
-    }
+	public static void drawCenteredString(MatrixStack stack, TextRenderer renderer,
+										  String text, int centerX, int y,
+										  int color, boolean shadow) {
+		drawString(stack, renderer, text, centerX - renderer.getWidth(text) / 2,
+			y,
+			color, shadow);
+	}
 
-    public static void drawString(MatrixStack matrices, TextRenderer renderer, String text, int x, int y,
-                                  int color, boolean shadow) {
-        if(shadow) {
-            renderer.drawWithShadow(matrices, text, x, y, color);
-        }
-        else {
-            renderer.draw(matrices, text, x, y, color);
-        }
-    }
-
-	public static void bindTexture(Identifier texture){
-		MinecraftClient.getInstance().getTextureManager().bindTexture(texture);
+	public static void drawString(MatrixStack stack, TextRenderer renderer, String text, int x, int y,
+								  int color, boolean shadow) {
+		if (!shadow) {
+			renderer.draw(stack, text, x, y, color);
+		} else {
+			renderer.drawWithShadow(stack, text, x, y, color);
+		}
 	}
 
 	public static int nvgCreateImage(long ctx, Identifier texture) {

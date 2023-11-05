@@ -1,40 +1,45 @@
 package io.github.axolotlclient.AxolotlClientConfig.impl.ui.vanilla.screen;
 
+import io.github.axolotlclient.AxolotlClientConfig.api.AxolotlClientConfig;
 import io.github.axolotlclient.AxolotlClientConfig.api.options.OptionCategory;
-import io.github.axolotlclient.AxolotlClientConfig.impl.ui.AbstractScreen;
-import io.github.axolotlclient.AxolotlClientConfig.impl.ui.ButtonListWidget;
-import io.github.axolotlclient.AxolotlClientConfig.impl.ui.MatrixStackProvider;
-import io.github.axolotlclient.AxolotlClientConfig.impl.ui.vanilla.widgets.VanillaButtonListWidget;
 import io.github.axolotlclient.AxolotlClientConfig.impl.ui.vanilla.widgets.VanillaButtonWidget;
-import net.minecraft.client.MinecraftClient;
+import io.github.axolotlclient.AxolotlClientConfig.impl.ui.vanilla.widgets.VanillaEntryListWidget;
+import lombok.Getter;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.resource.language.I18n;
+import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.text.ScreenTexts;
+import net.minecraft.text.Text;
 
-public class VanillaConfigScreen extends AbstractScreen {
-
+public class VanillaConfigScreen extends Screen {
+	private final Screen parent;
+	@Getter
+	private final String configName;
 	private final OptionCategory root;
 
-	public VanillaConfigScreen(Screen parent, OptionCategory root, String configName){
-		super(I18n.translate(root.getName()), parent, configName);
+	public VanillaConfigScreen(Screen parent, OptionCategory root, String configName) {
+		super(Text.translatable(root.getName()));
+		this.parent = parent;
+		this.configName = configName;
 		this.root = root;
 	}
 
 	@Override
-	public void init() {
-		super.init();
-
-		ButtonListWidget widget = new VanillaButtonListWidget(client, width, height, 35, height-60, 25);
-		addDrawableChild(widget);
-		widget.addEntries(root);
-		setFocused(widget);
-
-		addDrawableChild(new VanillaButtonWidget(width/2-75, height-40, 150, 20, I18n.translate("gui.back"),
-			button -> MinecraftClient.getInstance().setScreen(parent)));
+	protected void init() {
+		addDrawableChild(new VanillaEntryListWidget(root, width, height, 45, height - 55, 25));
+		addDrawableChild(new VanillaButtonWidget(width / 2 - 75, height - 45, 150, 20,
+			ScreenTexts.BACK, w -> client.setScreen(parent)));
 	}
 
 	@Override
-	public void render(long ctx, double mouseX, double mouseY, float delta) {
-		client.textRenderer.draw(MatrixStackProvider.getInstance().getStack(),
-			title, width/2f - client.textRenderer.getWidth(title)/2f, 15, -1);
+	public void render(MatrixStack graphics, int mouseX, int mouseY, float delta) {
+		renderBackground(graphics);
+		super.render(graphics, mouseX, mouseY, delta);
+
+		drawCenteredText(graphics, client.textRenderer, getTitle(), width / 2, 25, -1);
+	}
+
+	@Override
+	public void removed() {
+		AxolotlClientConfig.getInstance().getConfigManager(configName).save();
 	}
 }

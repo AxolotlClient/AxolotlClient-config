@@ -4,84 +4,137 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
 import com.mojang.blaze3d.glfw.Window;
+import io.github.axolotlclient.AxolotlClientConfig.api.util.Color;
 import io.github.axolotlclient.AxolotlClientConfig.api.util.Colors;
 import io.github.axolotlclient.AxolotlClientConfig.impl.options.BooleanOption;
 import io.github.axolotlclient.AxolotlClientConfig.impl.options.ColorOption;
 import io.github.axolotlclient.AxolotlClientConfig.impl.options.IntegerOption;
-import io.github.axolotlclient.AxolotlClientConfig.impl.ui.AbstractScreen;
-import io.github.axolotlclient.AxolotlClientConfig.impl.ui.rounded.widgets.BooleanWidget;
-import io.github.axolotlclient.AxolotlClientConfig.impl.ui.rounded.widgets.IntegerWidget;
+import io.github.axolotlclient.AxolotlClientConfig.impl.ui.DrawingUtil;
+import io.github.axolotlclient.AxolotlClientConfig.impl.ui.NVGMC;
+import io.github.axolotlclient.AxolotlClientConfig.impl.ui.Updatable;
+import io.github.axolotlclient.AxolotlClientConfig.impl.ui.rounded.NVGHolder;
+import io.github.axolotlclient.AxolotlClientConfig.impl.ui.rounded.NVGUtil;
 import io.github.axolotlclient.AxolotlClientConfig.impl.ui.rounded.widgets.RoundedButtonWidget;
+import io.github.axolotlclient.AxolotlClientConfig.impl.ui.rounded.widgets.TextFieldWidget;
+import io.github.axolotlclient.AxolotlClientConfig.impl.util.ConfigStyles;
 import io.github.axolotlclient.AxolotlClientConfig.impl.util.DrawUtil;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.resource.language.I18n;
+import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import org.lwjgl.nanovg.NVGPaint;
 import org.lwjgl.opengl.GL11;
 
 import static org.lwjgl.nanovg.NanoVG.*;
 
-public class ColorSelectionScreen extends AbstractScreen {
-	private NVGPaint paint;
+public class ColorSelectionScreen extends Screen implements DrawingUtil {
 	private final ColorOption option;
+	private final Screen parent;
+	private NVGPaint paint;
 	private BooleanOption chroma;
 	private IntegerOption alpha;
-
 	private int selectorRadius;
 	private float selectorX;
 	private float selectorY;
 	private int buttonsX;
-	public ColorSelectionScreen(AbstractScreen parent, ColorOption option) {
-		super(I18n.translate("select_color"), parent, parent.getConfigName());
+
+	public ColorSelectionScreen(Screen parent, ColorOption option) {
+		super(Text.translatable("select_color"));
 		this.option = option;
-		enableVanillaRendering = false;
+		this.parent = parent;
 	}
 
 	@Override
 	public void init() {
-		super.init();
-		addDrawableChild(new RoundedButtonWidget(width/2-75, height-40, 150, 20, I18n.translate("gui.back"),
+		addDrawableChild(new RoundedButtonWidget(width / 2 - 75, height - 40, Text.translatable("gui.back"),
 			button -> MinecraftClient.getInstance().setScreen(parent)));
 
-		chroma = new BooleanOption("option.chroma", option.get().isChroma(), val -> option.get().setChroma(val));
-		alpha = new IntegerOption("option.alpha", option.get().getAlpha(), val -> option.get().setAlpha(val), 0, 255);
+		chroma = new BooleanOption("option.chroma", option.get().isChroma(), val -> {
+			option.get().setChroma(val);
+			children().forEach(e -> {
+				if (e instanceof TextFieldWidget) {
+					((TextFieldWidget) e).setText(option.get().toString().split(";")[0]);
+				}
+			});
+		});
+		alpha = new IntegerOption("option.alpha", option.get().getAlpha(), val -> {
+			option.get().setAlpha(val);
+			children().forEach(e -> {
+				if (e instanceof TextFieldWidget) {
+					((TextFieldWidget) e).setText(option.get().toString().split(";")[0]);
+				}
+			});
+		}, 0, 255);
 
-		selectorRadius = Math.max(Math.min(width/4-10, (height)/2-60), 75) ;
-		selectorX = width/4f-selectorRadius;//width/2f-selectorRadius*2;
-		selectorY = height/2f-selectorRadius;//height/2f - selectorRadius;
+		selectorRadius = Math.max(Math.min(width / 4 - 10, (height) / 2 - 60), 75);
+		selectorX = width / 4f - selectorRadius;//width/2f-selectorRadius*2;
+		selectorY = height / 2f - selectorRadius;//height/2f - selectorRadius;
 
-		buttonsX = (int) Math.max(width/2f+25, selectorX+selectorRadius*2 + 10);
-		addDrawableChild(new BooleanWidget(buttonsX, 120, 150, 20, chroma));
-		addDrawableChild(new IntegerWidget(buttonsX, 165, 150, 20, alpha));
+		buttonsX = (int) Math.max(width / 2f + 25, selectorX + selectorRadius * 2 + 10);
+
+		if (this.height - 250 > 0) {
+			TextFieldWidget text = new TextFieldWidget(client.textRenderer, buttonsX, 190, 150, 20, Text.empty());
+			text.setChangedListener(s -> {
+				try {
+					option.set(Color.parse(s));
+
+					children().forEach(e -> {
+						if (e instanceof Updatable) {
+							((Updatable) e).update();
+						}
+					});
+				} catch (Throwable ignored) {
+				}
+			});
+			text.setText(option.get().toString().split(";")[0]);
+			addDrawableChild(text);
+		}
+
+		addDrawableChild(ConfigStyles.createWidget(buttonsX, 120, 150, 20, chroma));
+		addDrawableChild(ConfigStyles.createWidget(buttonsX, 165, 150, 20, alpha));
 	}
 
 	@Override
-	public void render(long ctx, double mouseX, double mouseY, float delta) {
-		drawCenteredString(ctx, RoundedConfigScreen.font, title, width/2f, 20, Colors.WHITE);
+	public void render(MatrixStack graphics, int mouseX, int mouseY, float delta) {
+		NVGUtil.wrap(ctx -> {
+			NVGHolder.setContext(ctx);
+			renderBackground(graphics);
+			super.render(graphics, mouseX, mouseY, delta);
 
-		if (paint == null || paint.address() == 0) {
-			int image = DrawUtil.nvgCreateImage(ctx, new Identifier("axolotlclientconfig", "textures/gui/colorwheel.png"));
-			paint = nvgImagePattern(ctx, selectorX, selectorY, selectorRadius*2, selectorRadius*2, 0, image, 1, NVGPaint.create());
-		}
+			drawCenteredString(ctx, NVGHolder.getFont(), title.getString(), width / 2f, 20, Colors.WHITE);
 
-		nvgBeginPath(ctx);
-		nvgRoundedRect(ctx, selectorX, selectorY, selectorRadius*2, selectorRadius*2, selectorRadius);
-		nvgFillPaint(ctx, paint);
-		nvgFill(ctx);
+			if (paint == null || paint.address() == 0) {
+				int image = DrawUtil.nvgCreateImage(ctx, new Identifier("axolotlclientconfig", "textures/gui/colorwheel.png"));
+				paint = nvgImagePattern(ctx, selectorX, selectorY, selectorRadius * 2, selectorRadius * 2, 0, image, 1, NVGPaint.create());
+			}
 
-		nvgBeginPath(ctx);
-		nvgRoundedRect(ctx, selectorX, selectorY, selectorRadius*2, selectorRadius*2, selectorRadius);
-		nvgStrokeColor(ctx, Colors.BLACK.toNVG());
-		nvgStrokeWidth(ctx, 1);
-		nvgStroke(ctx);
+			nvgBeginPath(ctx);
+			nvgRoundedRect(ctx, selectorX, selectorY, selectorRadius * 2, selectorRadius * 2, selectorRadius);
+			nvgFillPaint(ctx, paint);
+			nvgFill(ctx);
 
-		drawString(ctx, RoundedConfigScreen.font, I18n.translate("option.current"), buttonsX, 40, Colors.WHITE);
+			nvgBeginPath(ctx);
+			nvgRoundedRect(ctx, selectorX, selectorY, selectorRadius * 2, selectorRadius * 2, selectorRadius);
+			nvgStrokeColor(ctx, Colors.BLACK.toNVG());
+			nvgStrokeWidth(ctx, 1);
+			nvgStroke(ctx);
 
-		fillRoundedRect(ctx, buttonsX, 55, 150, 40, option.get().get(), 10);
-		outlineRoundedRect(ctx, buttonsX, 55, 150, 40, Colors.BLACK, 10, 1);
+			drawString(ctx, NVGHolder.getFont(), I18n.translate("option.current"), buttonsX, 40, Colors.WHITE);
 
-		drawString(ctx, RoundedConfigScreen.font, I18n.translate("option.chroma"), buttonsX, 105, Colors.WHITE);
-		drawString(ctx, RoundedConfigScreen.font, I18n.translate("option.alpha"), buttonsX, 150, Colors.WHITE);
+			fillRoundedRect(ctx, buttonsX, 55, 150, 40, option.get().get(), 10);
+			outlineRoundedRect(ctx, buttonsX, 55, 150, 40, Colors.BLACK, 10, 1);
+
+			drawString(ctx, NVGHolder.getFont(), I18n.translate("option.chroma"), buttonsX, 105, Colors.WHITE);
+			drawString(ctx, NVGHolder.getFont(), I18n.translate("option.alpha"), buttonsX, 150, Colors.WHITE);
+		});
+	}
+
+	@Override
+	public void renderBackground(MatrixStack graphics) {
+		super.renderBackground(graphics);
+		fillRoundedRect(NVGHolder.getContext(), 15, 15, width - 30, height - 30, Colors.DARK_GRAY, 12);
 	}
 
 	@Override
@@ -119,14 +172,14 @@ public class ColorSelectionScreen extends AbstractScreen {
 	private int toGlCoordsY(double y) {
 		Window window = MinecraftClient.getInstance().getWindow();
 		double scale = window.getScaleFactor();
-		return Math.round((float)(window.getHeight() - y * scale - scale));
+		return Math.round((float) (window.getHeight() - y * scale - scale));
 	}
 
 	@Override
 	public void resize(MinecraftClient minecraftClient, int i, int j) {
 		super.resize(minecraftClient, i, j);
-		if (paint != null){
-			paint=null;
+		if (paint != null) {
+			paint = null;
 		}
 	}
 }

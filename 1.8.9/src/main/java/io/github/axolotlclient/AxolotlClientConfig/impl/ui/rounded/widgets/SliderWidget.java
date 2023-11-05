@@ -2,7 +2,7 @@ package io.github.axolotlclient.AxolotlClientConfig.impl.ui.rounded.widgets;
 
 import io.github.axolotlclient.AxolotlClientConfig.api.util.Colors;
 import io.github.axolotlclient.AxolotlClientConfig.impl.options.NumberOption;
-import io.github.axolotlclient.AxolotlClientConfig.impl.ui.rounded.screen.RoundedConfigScreen;
+import io.github.axolotlclient.AxolotlClientConfig.impl.ui.rounded.NVGHolder;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.sound.SoundManager;
 import net.minecraft.util.math.MathHelper;
@@ -20,7 +20,8 @@ public class SliderWidget<O extends NumberOption<N>, N extends Number> extends R
 	}
 
 	@Override
-	protected void drawWidget(long ctx, int mouseX, int mouseY, float delta) {
+	public void drawWidget(int mouseX, int mouseY, float delta) {
+		long ctx = NVGHolder.getContext();
 		double val = ((option.get().doubleValue() - option.getMin().doubleValue()) / (option.getMax().doubleValue() - option.getMin().doubleValue()));
 		if (val != value){
 			value = val;
@@ -34,7 +35,7 @@ public class SliderWidget<O extends NumberOption<N>, N extends Number> extends R
 		NanoVG.nvgFillColor(ctx, isHovered() ? Colors.DARK_YELLOW.toNVG() : Colors.TURQUOISE.toNVG());
 		NanoVG.nvgFill(ctx);
 
-		drawCenteredString(ctx, RoundedConfigScreen.font, this.getMessage(), (float) (getX() + (this.value * (getWidth()-4))),
+		drawCenteredString(ctx, NVGHolder.getFont(), this.getMessage(), (float) (getX() + (this.value * (getWidth()-4))),
 			this.getY() + (this.getHeight()/2f - 8) / 2f - 4, Colors.WHITE);
 	}
 

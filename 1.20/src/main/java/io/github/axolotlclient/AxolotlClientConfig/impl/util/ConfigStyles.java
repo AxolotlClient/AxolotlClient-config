@@ -4,6 +4,7 @@ import java.lang.reflect.InvocationTargetException;
 
 import io.github.axolotlclient.AxolotlClientConfig.api.options.Option;
 import io.github.axolotlclient.AxolotlClientConfig.api.options.OptionCategory;
+import io.github.axolotlclient.AxolotlClientConfig.api.options.WidgetIdentifieable;
 import io.github.axolotlclient.AxolotlClientConfig.impl.ui.ConfigUI;
 import lombok.experimental.UtilityClass;
 import net.minecraft.client.gui.screen.Screen;
@@ -23,7 +24,7 @@ public class ConfigStyles {
 		}
 	}
 
-	public ClickableWidget createWidget(int x, int y, int width, int height, Option<?> option) {
+	public ClickableWidget createWidget(int x, int y, int width, int height, WidgetIdentifieable option) {
 		try {
 			return (ClickableWidget) ConfigUI.getInstance().getWidget(option.getWidgetIdentifier(), ConfigStyles.class.getClassLoader())
 				.getConstructor(int.class, int.class, int.class, int.class, option.getClass())

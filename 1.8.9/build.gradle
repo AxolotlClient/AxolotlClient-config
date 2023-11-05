@@ -1,6 +1,6 @@
 plugins {
     id 'java'
-	id "fabric-loom" version "1.1.+"
+	id "org.quiltmc.loom" version "1.3.+"
 }
 
 group = maven_group
@@ -26,23 +26,29 @@ dependencies {
 	minecraft "com.mojang:minecraft:${project.minecraft_18}"
 	mappings "net.legacyfabric:yarn:${project.mappings_18}"
 
-	modImplementation "net.fabricmc:fabric-loader:${project.fabric_loader}"
+	//modImplementation "net.fabricmc:fabric-loader:${project.fabric_loader}"
+	modImplementation "org.quiltmc:quilt-loader:${project.quilt_loader}"
 
-	modImplementation include("io.github.moehreag:LegacyClientCommands:1.0.0")
+	//modImplementation include("io.github.moehreag:LegacyClientCommands:1.0.0")
 
-	modImplementation "net.legacyfabric.legacy-fabric-api:legacy-fabric-api:${project.lfapi}+${project.minecraft_18}"
+	modApi "net.legacyfabric.legacy-fabric-api:legacy-fabric-lifecycle-events-v1:1.0.1+1.8.9+d86bee7939"
+	modApi "net.legacyfabric.legacy-fabric-api:legacy-fabric-keybindings-api-v1:1.0.0+1.8.9+244aa6c039"
+	modApi "net.legacyfabric.legacy-fabric-api:legacy-fabric-resource-loader-v1:2.1.0+1.8.9+022f9a7539"
+	//modApi(.module("legacy-fabric-resource-loader-v1", project.lfapi))
+	//modApi "net.legacyfabric.legacy-fabric-api:legacy-fabric-api:${project.lfapi}+${project.minecraft_18}"
 
-	modCompileOnlyApi(files("libs/legacy-modmenu-1.2.0+1.8.9-dev.jar"))
+	modCompileOnlyApi(files("libs/legacy-modmenu-1.2.0.jar"))
 
 	implementation include(project(":common"))
 
 	localRuntime("org.ow2.asm:asm-tree:9.4")
 
-	modRuntimeOnly ("com.github.zarzelcow:legacy-lwjgl3:1.0.0") {
+	modCompileOnly ("com.github.zarzelcow:legacy-lwjgl3:1.0.0") {
 		exclude group: 'org.lwjgl', module: 'lwjgl-glfw'
 		exclude group: 'org.lwjgl', module: 'lwjgl-openal'
 		exclude group: 'org.lwjgl', module: 'lwjgl-opengl'
 		exclude group: 'org.lwjgl', module: 'lwjgl'
+		exclude group: 'net.fabricmc'
 	}
 	implementation include ("org.lwjgl:lwjgl-nanovg:3.3.2")
 	include runtimeOnly ('org.lwjgl:lwjgl-nanovg:3.3.2:natives-linux')

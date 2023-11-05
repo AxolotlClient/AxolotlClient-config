@@ -192,7 +192,7 @@ public abstract class EntryListWidget<E extends EntryListWidget.Entry<E>> extend
 	@Override
 	public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
 		this.renderBackground(matrices);
-		this.hoveredEntry = this.isMouseOver((double)mouseX, (double)mouseY) ? this.getEntryAtPosition((double)mouseX, (double)mouseY) : null;
+		this.hoveredEntry = this.isMouseOver(mouseX, mouseY) ? this.getEntryAtPosition(mouseX, mouseY) : null;
 		if (this.renderBackground) {
 			RenderSystem.setShaderTexture(0, DrawableHelper.OPTIONS_BACKGROUND_TEXTURE);
 			RenderSystem.setShaderColor(0.125F, 0.125F, 0.125F, 1.0F);
@@ -251,7 +251,7 @@ public abstract class EntryListWidget<E extends EntryListWidget.Entry<E>> extend
 	}
 
 	protected void enableScissor() {
-		pushScissor(NVGHolder.getContext(), this.left, this.top, this.right, this.bottom);
+		pushScissor(NVGHolder.getContext(), this.left, this.top, this.right - this.left, this.bottom - this.top);
 	}
 
 	protected void centerScrollOn(E entry) {

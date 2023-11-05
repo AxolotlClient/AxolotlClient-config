@@ -54,7 +54,7 @@ public final class NVGFont implements AutoCloseable {
 		int major = Integer.parseInt(lwjglVersion[0]);
 		int minor = Integer.parseInt(lwjglVersion[1]);
 		int patch = Integer.parseInt(lwjglVersion[2]);
-		boolean requiresAlternative = major <= 3 && (minor <= 3 && (patch <= 1));
+		boolean requiresAlternative = major <= 3 && (minor <= 2 && (patch <= 2));
 		if (!requiresAlternative) {
 			imageHandle = NanoVG.nvgCreateFontMem(ctx, "", buffer, false);
 		} else {

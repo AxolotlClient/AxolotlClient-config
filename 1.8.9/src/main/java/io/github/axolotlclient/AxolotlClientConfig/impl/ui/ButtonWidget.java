@@ -10,6 +10,10 @@ public abstract class ButtonWidget extends ClickableWidget {
 
 	@Override
 	public void onClick(double mouseX, double mouseY) {
+		onPress();
+	}
+
+	public void onPress(){
 		action.onPress(this);
 	}
 

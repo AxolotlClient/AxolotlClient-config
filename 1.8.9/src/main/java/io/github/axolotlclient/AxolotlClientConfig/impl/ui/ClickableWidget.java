@@ -45,22 +45,12 @@ public abstract class ClickableWidget extends DrawUtil implements Drawable, Elem
 	}
 
 	@Override
-	public void render(long ctx, int mouseX, int mouseY, float delta) {
-		if (this.visible) {
-			this.hovered = mouseX >= this.getX() && mouseY >= this.getY() && mouseX < this.getX() + this.width && mouseY < this.getY() + this.height;
-			this.drawWidget(ctx, mouseX, mouseY, delta);
-		}
-	}
-
-	@Override
 	public void render(int mouseX, int mouseY, float delta) {
 		if (this.visible) {
 			this.hovered = mouseX >= this.getX() && mouseY >= this.getY() && mouseX < this.getX() + this.width && mouseY < this.getY() + this.height;
 			this.drawWidget(mouseX, mouseY, delta);
 		}
 	}
-
-	protected void drawWidget(long ctx, int mouseX, int mouseY, float delta){}
 
 	protected void drawWidget(int mouseX, int mouseY, float delta){}
 

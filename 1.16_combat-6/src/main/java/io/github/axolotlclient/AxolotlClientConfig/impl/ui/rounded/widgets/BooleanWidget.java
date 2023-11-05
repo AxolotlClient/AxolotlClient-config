@@ -1,25 +1,21 @@
 package io.github.axolotlclient.AxolotlClientConfig.impl.ui.rounded.widgets;
 
 import io.github.axolotlclient.AxolotlClientConfig.impl.options.BooleanOption;
-import net.minecraft.client.resource.language.I18n;
+import io.github.axolotlclient.AxolotlClientConfig.impl.ui.Updatable;
+import net.minecraft.client.gui.screen.ScreenTexts;
 
-public class BooleanWidget extends RoundedButtonWidget {
-
+public class BooleanWidget extends RoundedButtonWidget implements Updatable {
 	private final BooleanOption option;
 
 	public BooleanWidget(int x, int y, int width, int height, BooleanOption option) {
-		super(x, y, width, height, option.get() ? I18n.translate("options.on") : I18n.translate("options.off"), button -> {
+		super(x, y, width, height, option.get() ? ScreenTexts.ON : ScreenTexts.OFF, widget -> {
 			option.set(!option.get());
-			button.setMessage(option.get() ? I18n.translate("options.on") : I18n.translate("options.off"));
+			widget.setMessage(option.get() ? ScreenTexts.ON : ScreenTexts.OFF);
 		});
 		this.option = option;
 	}
 
-	@Override
-	protected void drawWidget(long ctx, int mouseX, int mouseY, float delta) {
-		if (getMessage().equals(I18n.translate("options.on")) != option.get()) {
-			setMessage(option.get() ? I18n.translate("options.on") : I18n.translate("options.off"));
-		}
-		super.drawWidget(ctx, mouseX, mouseY, delta);
+	public void update() {
+		setMessage(option.get() ? ScreenTexts.ON : ScreenTexts.OFF);
 	}
 }

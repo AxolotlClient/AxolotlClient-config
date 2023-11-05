@@ -1,91 +1,76 @@
 package io.github.axolotlclient.AxolotlClientConfig.impl.ui.rounded.widgets;
 
+import java.text.DecimalFormat;
+
 import io.github.axolotlclient.AxolotlClientConfig.api.util.Colors;
 import io.github.axolotlclient.AxolotlClientConfig.impl.options.NumberOption;
-import io.github.axolotlclient.AxolotlClientConfig.impl.ui.rounded.screen.RoundedConfigScreen;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.sound.SoundManager;
-import net.minecraft.util.math.MathHelper;
+import io.github.axolotlclient.AxolotlClientConfig.impl.ui.DrawingUtil;
+import io.github.axolotlclient.AxolotlClientConfig.impl.ui.Updatable;
+import io.github.axolotlclient.AxolotlClientConfig.impl.ui.rounded.NVGHolder;
+import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.text.LiteralText;
+import net.minecraft.text.TranslatableText;
 import org.lwjgl.nanovg.NanoVG;
 
-public class SliderWidget<O extends NumberOption<N>, N extends Number> extends RoundedButtonWidget {
-
-	protected double value;
+public class SliderWidget<O extends NumberOption<N>, N extends Number> extends net.minecraft.client.gui.widget.SliderWidget implements DrawingUtil, Updatable {
 	private final O option;
 
 	public SliderWidget(int x, int y, int width, int height, O option) {
-		super(x, y, width, height, String.valueOf(option.get()), widget ->{});
+		super(x, y, width, height, new TranslatableText(String.valueOf(option.get())), 0);
 		this.value = ((option.get().doubleValue() - option.getMin().doubleValue()) / (option.getMax().doubleValue() - option.getMin().doubleValue()));
 		this.option = option;
 	}
 
+	public int getX(){
+		return x;
+	}
+
+	public int getY(){
+		return y;
+	}
+
 	@Override
-	protected void drawWidget(long ctx, int mouseX, int mouseY, float delta) {
+	public void renderButton(MatrixStack graphics, int mouseX, int mouseY, float delta) {
+		long ctx = NVGHolder.getContext();
 		double val = ((option.get().doubleValue() - option.getMin().doubleValue()) / (option.getMax().doubleValue() - option.getMin().doubleValue()));
-		if (val != value){
+		if (!(isHovered() || isFocused()) &&
+			val != value) {
 			value = val;
 			updateMessage();
 		}
 
-		fillRoundedRect(ctx, getX(), getY()+getHeight()/2-1, getWidth(), 2, Colors.GRAY, 1);
+		fillRoundedRect(ctx, getX(), getY() + getHeight() / 2f - 1, getWidth(), 2, Colors.GRAY, 1);
 
 		NanoVG.nvgBeginPath(ctx);
-		NanoVG.nvgCircle(ctx, (float) (getX() + (this.value * (getWidth()-4))), getY()+getHeight()/2f, 4);
-		NanoVG.nvgFillColor(ctx, isHovered() ? Colors.DARK_YELLOW.toNVG() : Colors.TURQUOISE.toNVG());
+		NanoVG.nvgCircle(ctx, (float) (getX() + (this.value * (getWidth() - 4))), getY() + getHeight() / 2f, 4);
+		NanoVG.nvgFillColor(ctx, hovered ? Colors.DARK_YELLOW.toNVG() : Colors.TURQUOISE.toNVG());
 		NanoVG.nvgFill(ctx);
 
-		drawCenteredString(ctx, RoundedConfigScreen.font, this.getMessage(), (float) (getX() + (this.value * (getWidth()-4))),
-			this.getY() + (this.getHeight()/2f - 8) / 2f - 4, Colors.WHITE);
-	}
-
-	@Override
-	public void onClick(double mouseX, double mouseY) {
-		this.setValueFromMouse(mouseX);
-	}
-
-	@Override
-	public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-		boolean bl = keyCode == 263;
-		if (bl || keyCode == 262) {
-			float f = bl ? -1.0F : 1.0F;
-			this.setValue(this.value + (double)(f / (float)(this.getWidth() - 8)));
+		if (isFocused()) {
+			NanoVG.nvgBeginPath(ctx);
+			NanoVG.nvgCircle(ctx, (float) (getX() + (this.value * (getWidth() - 4))), getY() + getHeight() / 2f, 4);
+			NanoVG.nvgStrokeColor(ctx, Colors.WHITE.toNVG());
+			NanoVG.nvgStroke(ctx);
 		}
 
-		return false;
+		drawCenteredString(ctx, NVGHolder.getFont(), this.getMessage().getString(), (float) (getX() + (this.value * (getWidth() - 4))),
+			this.getY() + (this.getHeight() / 2f - 8) / 2f - 4, Colors.WHITE);
 	}
 
-	private void setValueFromMouse(double mouseX) {
-		this.setValue((mouseX - (double)(this.getX() + 4)) / (double)(this.getWidth() - 8));
+	public void updateMessage() {
+		DecimalFormat format = new DecimalFormat("0.##");
+		setMessage(new LiteralText(format.format(option.get().doubleValue())));
 	}
 
 	@SuppressWarnings("unchecked")
-	private void setValue(double value) {
-		double d = this.value;
-		this.value = MathHelper.clamp(value, 0.0, 1.0);
-		if (d != this.value) {
-			option.set((N) (Double) (option.getMin().doubleValue() +
-				(value * (option.getMax().doubleValue()-option.getMin().doubleValue()))));
-		}
-
-		this.updateMessage();
-	}
-
-	private void updateMessage() {
-		setMessage(String.valueOf(option.get()));
-	}
-
 	@Override
-	protected void onDrag(double mouseX, double mouseY, double deltaX, double deltaY) {
-		this.setValueFromMouse(mouseX);
-		super.onDrag(mouseX, mouseY, deltaX, deltaY);
+	protected void applyValue() {
+		option.set((N) (Double) (option.getMin().doubleValue() +
+			(value * (option.getMax().doubleValue() - option.getMin().doubleValue()))));
 	}
 
-	@Override
-	public void playDownSound(SoundManager soundManager) {
-	}
-
-	@Override
-	public void onRelease(double mouseX, double mouseY) {
-		super.playDownSound(MinecraftClient.getInstance().getSoundManager());
+	public void update() {
+		this.value = ((option.get().doubleValue() - option.getMin().doubleValue()) / (option.getMax().doubleValue() - option.getMin().doubleValue()));
+		updateMessage();
 	}
 }
