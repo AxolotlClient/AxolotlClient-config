@@ -41,7 +41,7 @@ public class ColorSelectionScreen extends io.github.axolotlclient.AxolotlClientC
 	public void init() {
 		super.init();
 		addDrawableChild(new VanillaButtonWidget(width / 2 - 75, height - 40, 150, 20,
-			I18n.translate("gui.back"), buttonWidget -> removed()));
+			I18n.translate("gui.back"), buttonWidget -> client.setScreen(parent)));
 
 		selectorRadius = Math.max(Math.min(width / 4 - 10, (height) / 2 - 60), 75);
 		selectorX = width / 4f - selectorRadius;
@@ -90,7 +90,6 @@ public class ColorSelectionScreen extends io.github.axolotlclient.AxolotlClientC
 
 	@Override
 	public void render(int mouseX, int mouseY, float delta) {
-		renderBackground();
 		super.render(mouseX, mouseY, delta);
 		drawCenteredString(client.textRenderer, title, width / 2, 20, Colors.WHITE.toInt());
 
@@ -143,10 +142,5 @@ public class ColorSelectionScreen extends io.github.axolotlclient.AxolotlClientC
 		Window window = new Window(MinecraftClient.getInstance());
 		double scale = window.getScaleFactor();
 		return Math.round((float) (MinecraftClient.getInstance().height - y * scale - scale));
-	}
-
-	@Override
-	public void removed() {
-		client.setScreen(parent);
 	}
 }

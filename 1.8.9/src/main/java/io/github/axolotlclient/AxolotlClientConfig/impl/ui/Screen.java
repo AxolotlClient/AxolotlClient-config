@@ -20,7 +20,7 @@ public abstract class Screen extends net.minecraft.client.gui.screen.Screen impl
 	@Getter
 	protected final String title;
 
-	private int lastMouseDragPosX, lastMouseDragPosY;
+	private int lastMouseDragPosX, lastMouseDragPosY = -1;
 
 	public Screen(String title){
 		this.title = title;
@@ -63,6 +63,10 @@ public abstract class Screen extends net.minecraft.client.gui.screen.Screen impl
 
 	@Override
 	protected void mouseDragged(int mouseX, int mouseY, int button, long lastClick) {
+		if (lastMouseDragPosX == -1 || lastMouseDragPosY == -1){
+			lastMouseDragPosX = mouseX;
+			lastMouseDragPosY = mouseY;
+		}
 		mouseDragged(mouseX, mouseY, button, mouseX- lastMouseDragPosX, mouseY- lastMouseDragPosY);
 		lastMouseDragPosX = mouseX;
 		lastMouseDragPosY = mouseY;

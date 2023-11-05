@@ -19,7 +19,6 @@ public class AxolotlClientConfigMod implements ClientModInitializer {
 	@Override
 	public void onInitializeClient() {
 		ClientTickEvents.END_CLIENT_TICK.register(client -> AxolotlClientConfigImpl.getInstance().runTick());
-
 		NVGMC.setWindowPropertiesProvider(new WindowPropertiesProvider() {
 			@Override
 			public int getHeight() {

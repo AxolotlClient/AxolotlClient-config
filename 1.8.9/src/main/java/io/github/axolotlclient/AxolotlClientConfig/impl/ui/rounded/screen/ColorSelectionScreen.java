@@ -97,7 +97,6 @@ public class ColorSelectionScreen extends io.github.axolotlclient.AxolotlClientC
 	public void render(int mouseX, int mouseY, float delta) {
 		NVGUtil.wrap(ctx -> {
 			NVGHolder.setContext(ctx);
-			renderBackground();
 			super.render(mouseX, mouseY, delta);
 
 			drawCenteredString(ctx, NVGHolder.getFont(), title, width / 2f, 20, Colors.WHITE);

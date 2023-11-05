@@ -32,7 +32,6 @@ public class VanillaConfigScreen extends io.github.axolotlclient.AxolotlClientCo
 
 	@Override
 	public void render(int mouseX, int mouseY, float delta) {
-		renderBackground();
 		super.render(mouseX, mouseY, delta);
 
 		drawCenteredString(MinecraftClient.getInstance().textRenderer, getTitle(), width / 2, 25, -1);

@@ -5,27 +5,14 @@ import java.io.InputStream;
 import java.util.function.Consumer;
 
 import io.github.axolotlclient.AxolotlClientConfig.api.util.WindowPropertiesProvider;
+import lombok.Setter;
 import org.lwjgl.nanovg.NanoVG;
-import org.lwjgl.nanovg.NanoVGGL2;
 import org.lwjgl.nanovg.NanoVGGL3;
 
 public class NVGMC {
 	private static long nvgContext;
 	private static boolean initialized;
 	private static WindowPropertiesProvider propertiesProvider;
-	private static Boolean LWJGL2;
-
-	public static boolean isLWJGL2(){
-		if (LWJGL2 == null){
-			try {
-				Class.forName("org.lwjgl.opengl.Display");
-				LWJGL2 = true;
-			} catch (ClassNotFoundException e) {
-				LWJGL2 = false;
-			}
-		}
-		return LWJGL2;
-	}
 
 	public static void setWindowPropertiesProvider(WindowPropertiesProvider provider){
 		propertiesProvider = provider;
@@ -37,7 +24,7 @@ public class NVGMC {
 			throw new IllegalStateException("WindowPropertiesProvider == null");
 		}
 
-		nvgContext = isLWJGL2() ? NanoVGGL2.nvgCreate(NanoVGGL2.NVG_ANTIALIAS) : NanoVGGL3.nvgCreate(NanoVGGL3.NVG_ANTIALIAS);
+		nvgContext = NanoVGGL3.nvgCreate(NanoVGGL3.NVG_ANTIALIAS);
 		initialized = true;
 	}
 

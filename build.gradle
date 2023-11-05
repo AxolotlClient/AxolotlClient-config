@@ -2,6 +2,7 @@ plugins {
 	id 'maven-publish'
 	id 'java'
 	id 'io.freefair.lombok' version "8.+"
+	id 'org.quiltmc.loom' version "1.4.+" apply false
 }
 
 archivesBaseName = project.archives_base_name

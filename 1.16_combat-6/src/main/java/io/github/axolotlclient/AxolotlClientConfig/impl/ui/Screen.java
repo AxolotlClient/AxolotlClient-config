@@ -28,8 +28,6 @@ public abstract class Screen extends net.minecraft.client.gui.screen.Screen {
 
 	@Override
 	public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-		renderBackground(matrices);
-
 		drawables.forEach(drawable -> drawable.render(matrices, mouseX, mouseY, delta));
 	}
 

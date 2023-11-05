@@ -70,7 +70,6 @@ public class GraphicsEditorScreen extends io.github.axolotlclient.AxolotlClientC
 
 	@Override
 	public void render(int mouseX, int mouseY, float delta) {
-		renderBackground();
 		super.render(mouseX, mouseY, delta);
 
 		drawCenteredString(client.textRenderer, this.title, width / 2, 20, -1);

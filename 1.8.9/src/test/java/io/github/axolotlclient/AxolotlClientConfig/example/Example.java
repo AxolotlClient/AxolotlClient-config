@@ -33,13 +33,9 @@ public class Example implements ClientModInitializer {
         Instance = this;
         modid = "axolotlclientconfig-test";
 
-        OptionCategory example = OptionCategory.create(modid);
-
-		example.add(new BooleanOption("test", false));
-
-        BooleanOption ignored = new BooleanOption("ignored_option", false);
-		example.add(ignored);
-
+		OptionCategory example = OptionCategory.create(modid);
+		example.add(new BooleanOption("boolean", true));
+		example.add(new BooleanOption("false", false));
 
 		OptionCategory subCategory = OptionCategory.create("sub-category");
 		subCategory.add(new BooleanOption("some option", true));
@@ -53,6 +49,7 @@ public class Example implements ClientModInitializer {
 		example.add(new StringOption("string option", "default value"));
 		example.add(new BooleanOption("option", false));
 		example.add(new BooleanOption("other option", true));
+		example.add(new GraphicsOption("graphics", 40, 40));
 
 		KeyBinding binding = new KeyBinding("test", 0, "test");
 		KeyBindingHelper.registerKeyBinding(binding);
