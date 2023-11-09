@@ -11,19 +11,17 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
+@Getter
 @RequiredArgsConstructor
 public class OptionCategoryImpl implements OptionCategory {
 
-	@Getter
 	private final String name;
 
-	@Getter
 	private final Collection<Option<?>> options = new ArrayList<>();
-	@Getter
 	private final Collection<OptionCategory> subCategories = new ArrayList<>();
 
 	@Accessors(fluent = true)
-	@Setter @Getter
+	@Setter
 	private boolean includeInParentTree = true;
 
 	@Override

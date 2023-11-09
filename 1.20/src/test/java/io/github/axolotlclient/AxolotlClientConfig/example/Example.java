@@ -38,6 +38,9 @@ public class Example implements ClientModInitializer {
 		OptionCategory subCategory = OptionCategory.create("sub-category");
 		subCategory.add(new BooleanOption("some option", true));
 		example.add(subCategory);
+		OptionCategory sub2 = OptionCategory.create("sub2");
+		example.add(sub2);
+		example.add(OptionCategory.create("sub3"));
 
 		example.add(new IntegerOption("integer", 5, 0, 8));
 		example.add(new FloatOption("float", 3f, 1f, 5f));

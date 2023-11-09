@@ -17,10 +17,10 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class JsonConfigManager implements ConfigManager {
 
-	private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
+	protected static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
-	private final Path file;
-	private final OptionCategory root;
+	protected final Path file;
+	protected final OptionCategory root;
 
 
 	@Override
@@ -35,12 +35,12 @@ public class JsonConfigManager implements ConfigManager {
 		}
 	}
 
-	private void save(JsonObject object, OptionCategory category){
-		for (OptionCategory child : category.getSubCategories()){
-			if (child.includeInParentTree()){
+	protected void save(JsonObject object, OptionCategory category) {
+		for (OptionCategory child : category.getSubCategories()) {
+			if (child.includeInParentTree()) {
 				JsonObject childObject = new JsonObject();
 				save(childObject, child);
-				if (!childObject.entrySet().isEmpty()){
+				if (!childObject.entrySet().isEmpty()) {
 					object.add(child.getName(), childObject);
 				}
 			}
@@ -61,7 +61,7 @@ public class JsonConfigManager implements ConfigManager {
 				return;
 			}
 		} catch (IOException e) {
-			e.printStackTrace();
+
 		}
 
 		setDefaults(root);
@@ -72,7 +72,7 @@ public class JsonConfigManager implements ConfigManager {
 		return root;
 	}
 
-	private void load(OptionCategory category, JsonObject object){
+	protected void load(OptionCategory category, JsonObject object) {
 		category.getOptions().forEach(option -> {
 			if (object.has(option.getName())) {
 				option.fromSerializedValue(object.get(option.getName()).getAsString());
@@ -81,13 +81,13 @@ public class JsonConfigManager implements ConfigManager {
 			}
 		});
 		category.getSubCategories().forEach(cat -> {
-			if (cat.includeInParentTree() && object.has(cat.getName())){
+			if (cat.includeInParentTree() && object.has(cat.getName())) {
 				load(cat, object.get(cat.getName()).getAsJsonObject());
 			}
 		});
 	}
 
-	private void setDefaults(OptionCategory category){
+	protected void setDefaults(OptionCategory category) {
 		category.getOptions().forEach(Option::setDefault);
 		category.getSubCategories().forEach(this::setDefaults);
 	}
