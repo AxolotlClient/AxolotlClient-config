@@ -2,11 +2,11 @@ package io.github.axolotlclient.AxolotlClientConfig.impl.ui.vanilla;
 
 import io.github.axolotlclient.AxolotlClientConfig.impl.ui.Element;
 import io.github.axolotlclient.AxolotlClientConfig.impl.ui.ParentElement;
-import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.Minecraft;
 import org.jetbrains.annotations.Nullable;
 
 public abstract class ElementListWidget<E extends ElementListWidget.Entry<E>> extends EntryListWidget<E> {
-	public ElementListWidget(MinecraftClient client, int width, int height, int top, int bottom, int itemHeight) {
+	public ElementListWidget(Minecraft client, int width, int height, int top, int bottom, int itemHeight) {
 		super(client, width, height, top, bottom, itemHeight);
 	}
 

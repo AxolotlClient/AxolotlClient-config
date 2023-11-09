@@ -8,10 +8,10 @@ import io.github.axolotlclient.AxolotlClientConfig.impl.ui.DrawingUtil;
 import io.github.axolotlclient.AxolotlClientConfig.impl.ui.vanilla.widgets.VanillaButtonWidget;
 import io.github.axolotlclient.AxolotlClientConfig.impl.util.ConfigStyles;
 import io.github.axolotlclient.AxolotlClientConfig.impl.util.DrawUtil;
-import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.render.Window;
 import net.minecraft.client.resource.language.I18n;
-import net.minecraft.client.util.Window;
 import org.lwjgl.input.Keyboard;
 
 public class GraphicsEditorScreen extends io.github.axolotlclient.AxolotlClientConfig.impl.ui.Screen implements DrawingUtil {
@@ -32,7 +32,7 @@ public class GraphicsEditorScreen extends io.github.axolotlclient.AxolotlClientC
 	private boolean keyboardInput;
 
 	public GraphicsEditorScreen(Screen parent, GraphicsOption option) {
-		super("draw_graphics");
+		super(I18n.translate("draw_graphics"));
 		this.option = option;
 		this.parent = parent;
 	}
@@ -52,7 +52,7 @@ public class GraphicsEditorScreen extends io.github.axolotlclient.AxolotlClientC
 
 		pixelSize = Math.min(maxGridHeight / gridRows, maxGridWidth / gridColumns);
 
-		gridX = (int) (new Window(MinecraftClient.getInstance()).getScaledWidth() / 2 - (gridColumns * pixelSize) / 2);
+		gridX = (int) (new Window(Minecraft.getInstance()).getScaledWidth() / 2 - (gridColumns * pixelSize) / 2);
 		maxGridWidth = Math.min(maxGridWidth, gridColumns * pixelSize);
 		maxGridHeight = Math.min(maxGridHeight, gridRows * pixelSize);
 
@@ -65,14 +65,14 @@ public class GraphicsEditorScreen extends io.github.axolotlclient.AxolotlClientC
 		addDrawableChild(ConfigStyles.createWidget(gridX + maxGridWidth + 10, gridY + 35, 100, 20, colorOption));
 
 		addDrawableChild(new VanillaButtonWidget(width / 2 - 75, height - 30, 150, 20,
-			I18n.translate("gui.back"), buttonWidget -> client.setScreen(parent)));
+			I18n.translate("gui.back"), buttonWidget -> minecraft.openScreen(parent)));
 	}
 
 	@Override
 	public void render(int mouseX, int mouseY, float delta) {
 		super.render(mouseX, mouseY, delta);
 
-		drawCenteredString(client.textRenderer, this.title, width / 2, 20, -1);
+		drawCenteredString(minecraft.textRenderer, this.title, width / 2, 20, -1);
 
 		// Draw pixels
 		for (int x = 0; x < gridColumns; x++) {
@@ -113,7 +113,7 @@ public class GraphicsEditorScreen extends io.github.axolotlclient.AxolotlClientC
 
 		DrawUtil.outlineRect(gridX + (pixelSize * focusedPixel[0]), gridY + (pixelSize * focusedPixel[1]), pixelSize, pixelSize, Colors.GREEN.toInt());
 
-		drawWithShadow(client.textRenderer, I18n.translate("option.current"),
+		drawString(minecraft.textRenderer, I18n.translate("option.current"),
 			gridX + maxGridWidth + 10, gridY, Colors.WHITE.toInt());
 		DrawUtil.fillRect(gridX + maxGridWidth + 10, gridY + 10, 100, 20, colorOption.get().get().toInt());
 		DrawUtil.outlineRect(gridX + maxGridWidth + 10, gridY + 10, 100, 20, Colors.BLACK.toInt());
@@ -145,6 +145,16 @@ public class GraphicsEditorScreen extends io.github.axolotlclient.AxolotlClientC
 			return true;
 		}
 		return false;
+	}
+
+	@Override
+	protected void keyPressed(char c, int i) {
+		if (i == 1) {
+			this.minecraft.openScreen(parent);
+			if (this.minecraft.screen == null) {
+				this.minecraft.closeScreen();
+			}
+		}
 	}
 
 	private class ElementSelectable extends ButtonWidget {

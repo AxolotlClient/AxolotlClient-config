@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.google.common.collect.Lists;
 import lombok.Getter;
-import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.Minecraft;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.input.Mouse;
 
@@ -27,10 +27,10 @@ public abstract class Screen extends net.minecraft.client.gui.screen.Screen impl
 	}
 
 	@Override
-	public void init(MinecraftClient minecraftClient, int i, int j) {
+	public void init(Minecraft Minecraft, int i, int j) {
 		clearChildren();
-		client = MinecraftClient.getInstance();
-		super.init(minecraftClient, i, j);
+		minecraft = Minecraft.getInstance();
+		super.init(Minecraft, i, j);
 	}
 
 	@Override
@@ -145,7 +145,7 @@ public abstract class Screen extends net.minecraft.client.gui.screen.Screen impl
 		int scroll = Mouse.getDWheel();
 		if (scroll != 0) {
 			//mouseScrolled(client.mouse.x, client.mouse.y, 0, scroll < 0 ? -1 : 1);
-			children.forEach(e -> e.mouseScrolled(client.mouse.x, client.mouse.y, 0, scroll < 0 ? -1 : 1));
+			children.forEach(e -> e.mouseScrolled(minecraft.mouse.dx, minecraft.mouse.dy, 0, scroll < 0 ? -1 : 1));
 		}
 	}
 }

@@ -9,7 +9,7 @@ import io.github.axolotlclient.AxolotlClientConfig.impl.ui.rounded.NVGHolder;
 import io.github.axolotlclient.AxolotlClientConfig.impl.ui.rounded.NVGUtil;
 import io.github.axolotlclient.AxolotlClientConfig.impl.ui.rounded.widgets.RoundedButtonListWidget;
 import io.github.axolotlclient.AxolotlClientConfig.impl.ui.rounded.widgets.RoundedButtonWidget;
-import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.resource.language.I18n;
 
@@ -45,7 +45,7 @@ public class RoundedConfigScreen extends io.github.axolotlclient.AxolotlClientCo
 	public void init() {
 		addDrawableChild(new RoundedButtonListWidget(root, width, height, 45, height - 55, 25));
 		addDrawableChild(new RoundedButtonWidget(width / 2 - 75, height - 40,
-			I18n.translate("gui.back"), w -> MinecraftClient.getInstance().setScreen(parent)));
+			I18n.translate("gui.back"), w -> Minecraft.getInstance().openScreen(parent)));
 	}
 
 	@Override

@@ -5,10 +5,10 @@ import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 import com.mojang.blaze3d.platform.GlStateManager;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.font.TextRenderer;
+import net.minecraft.SharedConstants;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.util.SharedConstants;
+import net.minecraft.client.render.TextRenderer;
 import net.minecraft.util.math.MathHelper;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.opengl.GL11;
@@ -43,7 +43,7 @@ public class TextFieldWidget extends ClickableWidget {
 	@Nullable
 	protected String hint;
 
-	protected long focusedTime = MinecraftClient.getTime();
+	protected long focusedTime = Minecraft.getTime();
 
 	public TextFieldWidget(TextRenderer textRenderer, int x, int y, int width, int height, String text) {
 		this(textRenderer, x, y, width, height, null, text);
@@ -116,7 +116,7 @@ public class TextFieldWidget extends ClickableWidget {
 	}
 
 	private void erase(int offset) {
-		if (Screen.hasControlDown()) {
+		if (Screen.isControlDown()) {
 			this.eraseWords(offset);
 		} else {
 			this.eraseCharacters(offset);
@@ -244,7 +244,7 @@ public class TextFieldWidget extends ClickableWidget {
 		if (!this.isActive()) {
 			return false;
 		} else {
-			this.selecting = Screen.hasShiftDown();
+			this.selecting = Screen.isShiftDown();
 			if (Screen.isSelectAll(keyCode)) {
 				this.setCursorToEnd();
 				this.setSelectionEnd(0);
@@ -268,7 +268,7 @@ public class TextFieldWidget extends ClickableWidget {
 			} else {
 				switch(keyCode) {
 					case 14:
-						if (Screen.hasControlDown()) {
+						if (Screen.isControlDown()) {
 							if (this.editable) {
 								this.eraseWords(-1);
 							}
@@ -278,7 +278,7 @@ public class TextFieldWidget extends ClickableWidget {
 
 						return true;
 					case 199:
-						if (Screen.hasShiftDown()) {
+						if (Screen.isShiftDown()) {
 							this.setSelectionEnd(0);
 						} else {
 							this.setCursorToStart();
@@ -286,13 +286,13 @@ public class TextFieldWidget extends ClickableWidget {
 
 						return true;
 					case 203:
-						if (Screen.hasShiftDown()) {
-							if (Screen.hasControlDown()) {
+						if (Screen.isShiftDown()) {
+							if (Screen.isControlDown()) {
 								this.setSelectionEnd(this.getWordSkipPosition(-1, selectionEnd));
 							} else {
 								this.setSelectionEnd(this.selectionEnd - 1);
 							}
-						} else if (Screen.hasControlDown()) {
+						} else if (Screen.isControlDown()) {
 							this.setCursor(this.getWordSkipPosition(-1));
 						} else {
 							this.moveCursor(-1);
@@ -300,13 +300,13 @@ public class TextFieldWidget extends ClickableWidget {
 
 						return true;
 					case 205:
-						if (Screen.hasShiftDown()) {
-							if (Screen.hasControlDown()) {
+						if (Screen.isShiftDown()) {
+							if (Screen.isControlDown()) {
 								this.setSelectionEnd(this.getWordSkipPosition(1, selectionEnd));
 							} else {
 								this.setSelectionEnd(this.selectionEnd + 1);
 							}
-						} else if (Screen.hasControlDown()) {
+						} else if (Screen.isControlDown()) {
 							this.setCursor(this.getWordSkipPosition(1));
 						} else {
 							this.moveCursor(1);
@@ -314,7 +314,7 @@ public class TextFieldWidget extends ClickableWidget {
 
 						return true;
 					case 207:
-						if (Screen.hasShiftDown()) {
+						if (Screen.isShiftDown()) {
 							this.setSelectionEnd(this.text.length());
 						} else {
 							this.setCursorToEnd();
@@ -322,7 +322,7 @@ public class TextFieldWidget extends ClickableWidget {
 
 						return true;
 					case 211:
-						if (Screen.hasControlDown()) {
+						if (Screen.isControlDown()) {
 							if (this.editable) {
 								this.eraseWords(1);
 							}
@@ -346,7 +346,7 @@ public class TextFieldWidget extends ClickableWidget {
 	public boolean charTyped(char chr, int modifiers) {
 		if (!this.isActive()) {
 			return false;
-		} else if (SharedConstants.isValidChar(chr)) {
+		} else if (SharedConstants.isValidChatChar(chr)) {
 			if (this.editable) {
 				this.write(Character.toString(chr));
 			}
@@ -407,10 +407,10 @@ public class TextFieldWidget extends ClickableWidget {
 		}
 
 		GlStateManager.disableTexture();
-		GlStateManager.enableColorLogic();
+		GlStateManager.enableColorLogicOp();
 		GlStateManager.logicOp(GL11.GL_OR_REVERSE);
 		fill(x1, y1, x2, y2, -16776961);
-		GlStateManager.disableColorLogic();
+		GlStateManager.disableColorLogicOp();
 		GlStateManager.enableTexture();
 	}
 
@@ -460,7 +460,7 @@ public class TextFieldWidget extends ClickableWidget {
 		if (this.focusUnlocked || focused) {
 			super.setFocused(focused);
 			if (focused) {
-				this.focusedTime = MinecraftClient.getTime();
+				this.focusedTime = Minecraft.getTime();
 			}
 		}
 	}
@@ -514,9 +514,9 @@ public class TextFieldWidget extends ClickableWidget {
 			int i = this.editable ? this.editableColor : this.uneditableColor;
 			int j = this.selectionStart - this.firstCharacterIndex;
 			int k = this.selectionEnd - this.firstCharacterIndex;
-			String string = this.textRenderer.trimToWidth(this.text.substring(this.firstCharacterIndex), this.getInnerWidth());
+			String string = this.textRenderer.trim(this.text.substring(this.firstCharacterIndex), this.getInnerWidth());
 			boolean bl = j >= 0 && j <= string.length();
-			boolean bl2 = this.isFocused() && (MinecraftClient.getTime() - this.focusedTime) / 300L % 2L == 0L && bl;
+			boolean bl2 = this.isFocused() && (Minecraft.getTime() - this.focusedTime) / 300L % 2L == 0L && bl;
 			int l = this.drawsBackground ? this.getX() + 4 : this.getX();
 			int m = this.drawsBackground ? this.getY() + (this.getHeight() - 8) / 2 : this.getY();
 			int n = l;
@@ -551,7 +551,7 @@ public class TextFieldWidget extends ClickableWidget {
 			}
 
 			if (k != j) {
-				int p = l + this.textRenderer.getStringWidth(string.substring(0, k));
+				int p = l + this.textRenderer.getWidth(string.substring(0, k));
 				this.drawSelectionHighlight(o, m - 1, p - 1, m + 1 + this.textRenderer.fontHeight);
 			}
 		}
@@ -582,12 +582,12 @@ public class TextFieldWidget extends ClickableWidget {
 	}
 
 	protected float getStringWidth(String text){
-		return client.textRenderer.getStringWidth(text);
+		return client.textRenderer.getWidth(text);
 	}
 	protected String trimToWidth(String text, float width){
-		return client.textRenderer.trimToWidth(text, (int) width);
+		return client.textRenderer.trim(text, (int) width);
 	}
 	protected String trimToWidth(String text, float width, boolean backwards){
-		return client.textRenderer.trimToWidth(text, (int) width, backwards);
+		return client.textRenderer.trim(text, (int) width, backwards);
 	}
 }

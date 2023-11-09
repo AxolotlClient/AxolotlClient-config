@@ -1,6 +1,7 @@
 plugins {
     id 'java'
 	id "org.quiltmc.loom"
+	id 'ploceus'
 }
 
 group = maven_group
@@ -26,29 +27,33 @@ loom {
 	mods {
 		"axolotlclientconfig" {
 			sourceSet("main")
-			//sourceSet("test") // This makes the test mod not load.. why?
+		}
+		"axolotlclientconfig-test" {
+			sourceSet("test")
 		}
 	}
 }
 
 dependencies {
 	minecraft "com.mojang:minecraft:${project.minecraft_18}"
-	mappings "net.legacyfabric:yarn:${project.mappings_18}"
+	mappings "net.ornithemc:feather:${project.mappings_18}"
 
-	modLocalRuntime "net.fabricmc:fabric-loader:${project.fabric_loader}"
+	modRuntimeOnly "net.fabricmc:fabric-loader:${project.fabric_loader}"
 	modCompileOnly "org.quiltmc:quilt-loader:${project.quilt_loader}"
 
-	modApi "net.legacyfabric.legacy-fabric-api:legacy-fabric-lifecycle-events-v1:1.0.1+1.8.9+d86bee7939"
-	modApi "net.legacyfabric.legacy-fabric-api:legacy-fabric-keybindings-api-v1:1.0.0+1.8.9+244aa6c039"
-	modApi "net.legacyfabric.legacy-fabric-api:legacy-fabric-resource-loader-v1:2.1.0+1.8.9+022f9a7539"
+	ploceus.dependOslModule("lifecycle-events", "0.5.1")
+	ploceus.dependOslModule("entrypoints", "0.4.1")
+	ploceus.dependOslModule("keybinds", "0.1.1")
+	ploceus.dependOslModule("resource-loader", "0.2.4")
+	ploceus.dependOslModule("core", "0.4.1")
 
-	modCompileOnlyApi(files("libs/legacy-modmenu-1.2.0.jar"))
+	modCompileOnlyApi("com.terraformersmc:modmenu:0.1.0+mc1.8.9")
 
 	implementation include(project(":common"))
 
 	localRuntime("org.ow2.asm:asm-tree:9.4")
 
-	modCompileOnly ("com.github.moehreag:legacy-lwjgl3:895d621496") {
+	modCompileOnly ("com.github.moehreag:legacy-lwjgl3:d27b6b3ce2") {
 		exclude group: 'org.lwjgl', module: 'lwjgl-glfw'
 		exclude group: 'org.lwjgl', module: 'lwjgl-openal'
 		exclude group: 'org.lwjgl', module: 'lwjgl-opengl'

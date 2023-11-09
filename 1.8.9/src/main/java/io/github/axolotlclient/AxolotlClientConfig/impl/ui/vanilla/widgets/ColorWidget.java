@@ -2,7 +2,7 @@ package io.github.axolotlclient.AxolotlClientConfig.impl.ui.vanilla.widgets;
 
 import io.github.axolotlclient.AxolotlClientConfig.impl.options.ColorOption;
 import io.github.axolotlclient.AxolotlClientConfig.impl.ui.vanilla.screen.ColorSelectionScreen;
-import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.text.TranslatableText;
 
@@ -17,7 +17,7 @@ public class ColorWidget extends VanillaButtonWidget {
 
 	@Override
 	public void onPress() {
-		MinecraftClient.getInstance()
-			.setScreen(new ColorSelectionScreen(MinecraftClient.getInstance().currentScreen, option));
+		Minecraft.getInstance()
+			.openScreen(new ColorSelectionScreen(Minecraft.getInstance().screen, option));
 	}
 }

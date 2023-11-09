@@ -4,7 +4,7 @@ import io.github.axolotlclient.AxolotlClientConfig.api.util.Color;
 import io.github.axolotlclient.AxolotlClientConfig.api.util.Colors;
 import io.github.axolotlclient.AxolotlClientConfig.impl.ui.*;
 import io.github.axolotlclient.AxolotlClientConfig.impl.ui.rounded.NVGHolder;
-import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.Minecraft;
 import net.minecraft.util.math.MathHelper;
 
 public class RoundedButtonWidget extends ButtonWidget implements DrawingUtil, Drawable, Selectable {
@@ -32,7 +32,7 @@ public class RoundedButtonWidget extends ButtonWidget implements DrawingUtil, Dr
 		int width = l - j;
 		if (textWidth > width) {
 			float r = textWidth - width;
-			double d = (double) MinecraftClient.getTime() / 1000.0;
+			double d = (double) Minecraft.getTime() / 1000.0;
 			double e = Math.max((double) r * 0.5, 3.0);
 			double f = Math.sin((Math.PI / 2) * Math.cos((Math.PI * 2) * d / e)) / 2.0 + 0.5;
 			double g = MathHelper.clampedLerp(f, 0.0, r);

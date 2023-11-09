@@ -6,7 +6,7 @@ import io.github.axolotlclient.AxolotlClientConfig.api.ui.screen.ConfigScreen;
 import io.github.axolotlclient.AxolotlClientConfig.impl.ui.vanilla.widgets.VanillaButtonListWidget;
 import io.github.axolotlclient.AxolotlClientConfig.impl.ui.vanilla.widgets.VanillaButtonWidget;
 import lombok.Getter;
-import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.resource.language.I18n;
 
@@ -27,14 +27,14 @@ public class VanillaConfigScreen extends io.github.axolotlclient.AxolotlClientCo
 	public void init() {
 		addDrawableChild(new VanillaButtonListWidget(root, width, height, 45, height - 55, 25));
 		addDrawableChild(new VanillaButtonWidget(width / 2 - 75, height - 45, 150, 20,
-			I18n.translate("gui.back"), w -> MinecraftClient.getInstance().setScreen(parent)));
+			I18n.translate("gui.back"), w -> Minecraft.getInstance().openScreen(parent)));
 	}
 
 	@Override
 	public void render(int mouseX, int mouseY, float delta) {
 		super.render(mouseX, mouseY, delta);
 
-		drawCenteredString(MinecraftClient.getInstance().textRenderer, getTitle(), width / 2, 25, -1);
+		drawCenteredString(Minecraft.getInstance().textRenderer, getTitle(), width / 2, 25, -1);
 	}
 
 	@Override

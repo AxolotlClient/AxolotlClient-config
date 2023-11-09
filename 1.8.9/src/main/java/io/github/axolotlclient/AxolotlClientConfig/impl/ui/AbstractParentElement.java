@@ -1,9 +1,9 @@
 package io.github.axolotlclient.AxolotlClientConfig.impl.ui;
 
-import net.minecraft.client.gui.DrawableHelper;
+import net.minecraft.client.gui.GuiElement;
 import org.jetbrains.annotations.Nullable;
 
-public abstract class AbstractParentElement extends DrawableHelper implements ParentElement {
+public abstract class AbstractParentElement extends GuiElement implements ParentElement {
 	@Nullable
 	private Element focused;
 	private boolean dragging;

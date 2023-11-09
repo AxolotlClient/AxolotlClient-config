@@ -15,7 +15,7 @@
   "icon": "assets/axolotlclientconfig/icon.png",
   "environment": "client",
   "entrypoints": {
-    "client": ["io.github.axolotlclient.AxolotlClientConfig.impl.AxolotlClientConfigMod"]
+    "client-init": ["io.github.axolotlclient.AxolotlClientConfig.impl.AxolotlClientConfigMod"]
   },
   "mixins": [
     "axolotlclientconfig.mixins.json"
@@ -26,6 +26,9 @@
   "depends": {
     "fabricloader": ">=0.14.0",
     "minecraft": "1.8.9",
-    "legacy-fabric-lifecycle-events-v1": "*"
+    "osl-resource-loader": "*",
+    "osl-lifecycle-events": "*",
+    "osl-keybinds": "*",
+    "osl-entrypoints": "*"
   }
 }

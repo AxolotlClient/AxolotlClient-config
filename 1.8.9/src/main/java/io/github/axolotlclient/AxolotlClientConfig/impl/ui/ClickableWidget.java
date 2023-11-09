@@ -3,10 +3,10 @@ package io.github.axolotlclient.AxolotlClientConfig.impl.ui;
 import io.github.axolotlclient.AxolotlClientConfig.impl.util.DrawUtil;
 import lombok.Getter;
 import lombok.Setter;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.sound.PositionedSoundInstance;
-import net.minecraft.client.sound.SoundManager;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.sound.instance.SimpleSoundInstance;
+import net.minecraft.client.sound.system.SoundManager;
+import net.minecraft.resource.Identifier;
 
 public abstract class ClickableWidget extends DrawUtil implements Drawable, Element, Widget, Selectable {
 
@@ -23,7 +23,7 @@ public abstract class ClickableWidget extends DrawUtil implements Drawable, Elem
 	public boolean active = true;
 	public boolean visible = true;
 
-	protected MinecraftClient client;
+	protected Minecraft client;
 
 	public ClickableWidget(int x, int y, int width, int height, String message){
 		this.x = x;
@@ -31,7 +31,7 @@ public abstract class ClickableWidget extends DrawUtil implements Drawable, Elem
 		this.width = width;
 		this.height = height;
 		this.message = message;
-		client = MinecraftClient.getInstance();
+		client = Minecraft.getInstance();
 	}
 
 	@Override
@@ -60,7 +60,7 @@ public abstract class ClickableWidget extends DrawUtil implements Drawable, Elem
 			if (this.isValidClickButton(button)) {
 				boolean bl = this.clicked(mouseX, mouseY);
 				if (bl) {
-					this.playDownSound(MinecraftClient.getInstance().getSoundManager());
+					this.playDownSound(Minecraft.getInstance().getSoundManager());
 					this.onClick(mouseX, mouseY);
 					return true;
 				}
@@ -122,7 +122,7 @@ public abstract class ClickableWidget extends DrawUtil implements Drawable, Elem
 	}
 
 	public void playDownSound(SoundManager soundManager) {
-		soundManager.play(PositionedSoundInstance.master(new Identifier("gui.button.press"), 1.0F));
+		soundManager.play(SimpleSoundInstance.of(new Identifier("gui.button.press"), 1.0F));
 	}
 
 	@Override

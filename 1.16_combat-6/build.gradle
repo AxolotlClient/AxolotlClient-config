@@ -29,7 +29,9 @@ loom {
 	mods {
 		"axolotlclientconfig" {
 			sourceSet("main")
-			//sourceSet("test") // This makes the test mod not load.. why?
+		}
+		"axolotlclientconfig-test" {
+			sourceSet("test")
 		}
 	}
 }

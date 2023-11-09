@@ -7,16 +7,16 @@ import io.github.axolotlclient.AxolotlClientConfig.api.options.Option;
 import io.github.axolotlclient.AxolotlClientConfig.api.options.OptionCategory;
 import io.github.axolotlclient.AxolotlClientConfig.impl.ui.ClickableWidget;
 import io.github.axolotlclient.AxolotlClientConfig.impl.ui.vanilla.ButtonListWidget;
-import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.resource.language.I18n;
 import org.jetbrains.annotations.Nullable;
 
 public class VanillaButtonListWidget extends ButtonListWidget {
 	public VanillaButtonListWidget(OptionCategory category, int screenWidth, int screenHeight, int top, int bottom, int entryHeight) {
 		super(category, screenWidth, screenHeight, top, bottom, entryHeight);
-		setRenderBackground(MinecraftClient.getInstance().world == null);
-		setRenderHeader(MinecraftClient.getInstance().world == null, headerHeight);
-		setRenderHorizontalShadows(MinecraftClient.getInstance().world == null);
+		setRenderBackground(Minecraft.getInstance().world == null);
+		setRenderHeader(Minecraft.getInstance().world == null, headerHeight);
+		setRenderHorizontalShadows(Minecraft.getInstance().world == null);
 	}
 
 	protected void addOptions(Collection<Option<?>> options) {

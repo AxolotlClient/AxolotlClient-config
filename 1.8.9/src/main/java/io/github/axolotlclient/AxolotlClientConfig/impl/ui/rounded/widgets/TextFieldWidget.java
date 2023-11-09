@@ -11,10 +11,10 @@ import io.github.axolotlclient.AxolotlClientConfig.impl.ui.DrawingUtil;
 import io.github.axolotlclient.AxolotlClientConfig.impl.ui.NVGFont;
 import io.github.axolotlclient.AxolotlClientConfig.impl.ui.Selectable;
 import io.github.axolotlclient.AxolotlClientConfig.impl.ui.rounded.NVGHolder;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.font.TextRenderer;
+import net.minecraft.SharedConstants;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.util.SharedConstants;
+import net.minecraft.client.render.TextRenderer;
 import net.minecraft.util.math.MathHelper;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.nanovg.NanoVG;
@@ -29,7 +29,6 @@ public class TextFieldWidget extends ClickableWidget implements DrawingUtil, Sel
 	protected static final int BORDER_COLOR = -6250336;
 	protected static final int BACKGROUND_COLOR = -16777216;
 	private static final int INSERT_CURSOR_WIDTH = 1;
-	protected final TextRenderer textRenderer;
 	private final Color highlightColor = Colors.DARK_YELLOW.withAlpha(100);
 	protected String text = "";
 	protected boolean drawsBackground = true;
@@ -43,7 +42,7 @@ public class TextFieldWidget extends ClickableWidget implements DrawingUtil, Sel
 	protected String suggestion;
 	@Nullable
 	protected String hint;
-	protected long focusedTime = MinecraftClient.getTime();
+	protected long focusedTime = Minecraft.getTime();
 	private int maxLength = 32;
 	private boolean focusUnlocked = true;
 	private boolean selecting;
@@ -57,7 +56,6 @@ public class TextFieldWidget extends ClickableWidget implements DrawingUtil, Sel
 
 	public TextFieldWidget(TextRenderer textRenderer, int x, int y, int width, int height, @Nullable TextFieldWidget copyFrom, String text) {
 		super(x, y, width, height, text);
-		this.textRenderer = textRenderer;
 		if (copyFrom != null) {
 			this.setText(copyFrom.getText());
 		}
@@ -122,7 +120,7 @@ public class TextFieldWidget extends ClickableWidget implements DrawingUtil, Sel
 	}
 
 	private void erase(int offset) {
-		if (Screen.hasControlDown()) {
+		if (Screen.isControlDown()) {
 			this.eraseWords(offset);
 		} else {
 			this.eraseCharacters(offset);
@@ -272,7 +270,7 @@ public class TextFieldWidget extends ClickableWidget implements DrawingUtil, Sel
 		} else {
 			switch (keyCode) {
 				case 263: {
-					if (Screen.hasControlDown()) {
+					if (Screen.isControlDown()) {
 						this.setCursor(this.getWordSkipPosition(-1), selecting);
 					} else {
 						this.moveCursor(-1, selecting);
@@ -280,7 +278,7 @@ public class TextFieldWidget extends ClickableWidget implements DrawingUtil, Sel
 					return true;
 				}
 				case 262: {
-					if (Screen.hasControlDown()) {
+					if (Screen.isControlDown()) {
 						this.setCursor(this.getWordSkipPosition(1), selecting);
 					} else {
 						this.moveCursor(1, selecting);
@@ -291,7 +289,7 @@ public class TextFieldWidget extends ClickableWidget implements DrawingUtil, Sel
 					if (this.editable) {
 						this.selecting = false;
 						this.erase(-1);
-						this.selecting = Screen.hasShiftDown();
+						this.selecting = Screen.isShiftDown();
 					}
 					return true;
 				}
@@ -299,7 +297,7 @@ public class TextFieldWidget extends ClickableWidget implements DrawingUtil, Sel
 					if (this.editable) {
 						this.selecting = false;
 						this.erase(1);
-						this.selecting = Screen.hasShiftDown();
+						this.selecting = Screen.isShiftDown();
 					}
 					return true;
 				}
@@ -324,7 +322,7 @@ public class TextFieldWidget extends ClickableWidget implements DrawingUtil, Sel
 	public boolean charTyped(char chr, int modifiers) {
 		if (!this.isActive()) {
 			return false;
-		} else if (SharedConstants.isValidChar(chr)) {
+		} else if (SharedConstants.isValidChatChar(chr)) {
 			if (this.editable) {
 				this.write(Character.toString(chr));
 			}
@@ -348,7 +346,7 @@ public class TextFieldWidget extends ClickableWidget implements DrawingUtil, Sel
 			int k = this.selectionEnd - this.firstCharacterIndex;
 			String string = font.trimToWidth(this.text.substring(this.firstCharacterIndex), this.getInnerWidth());
 			boolean bl = j >= 0 && j <= string.length();
-			boolean bl2 = this.isFocused() && (MinecraftClient.getTime() - this.focusedTime) / 300L % 2L == 0L && bl;
+			boolean bl2 = this.isFocused() && (Minecraft.getTime() - this.focusedTime) / 300L % 2L == 0L && bl;
 			int l = this.drawsBackground ? this.getX() + 4 : this.getX();
 			int m = this.drawsBackground ? this.getY() + (this.getHeight() - 8) / 2 : this.getY();
 			int n = l;
@@ -376,7 +374,7 @@ public class TextFieldWidget extends ClickableWidget implements DrawingUtil, Sel
 
 			if (bl2) {
 				if (bl3) {
-					fillRoundedRect(ctx, o, m - 1, 1, 2 + textRenderer.fontHeight, i, 2);
+					fillRoundedRect(ctx, o, m - 1, 1, 2 + NVGHolder.getFont().getLineHeight(), i, 2);
 				} else {
 					drawString(ctx, font, UNDERSCORE, o, (float) m, i);
 				}
@@ -384,7 +382,7 @@ public class TextFieldWidget extends ClickableWidget implements DrawingUtil, Sel
 
 			if (k != j) {
 				float p = l + font.getWidth(string.substring(0, k));
-				this.drawSelectionHighlight(ctx, o, m - 1, p - 1, m + 1 + this.textRenderer.fontHeight);
+				this.drawSelectionHighlight(ctx, o, m - 1, p - 1, m + 1 + NVGHolder.getFont().getLineHeight());
 			}
 		}
 	}
@@ -396,8 +394,8 @@ public class TextFieldWidget extends ClickableWidget implements DrawingUtil, Sel
 			i -= 4;
 		}
 
-		String string = this.textRenderer.trimToWidth(this.text.substring(this.firstCharacterIndex), this.getInnerWidth());
-		this.setCursor(this.textRenderer.trimToWidth(string, i).length() + this.firstCharacterIndex, Screen.hasShiftDown());
+		String string = trimToWidth(this.text.substring(this.firstCharacterIndex), this.getInnerWidth());
+		this.setCursor(trimToWidth(string, i).length() + this.firstCharacterIndex, Screen.isShiftDown());
 	}
 
 	protected void drawSelectionHighlight(long ctx, float x1, float y1, float x2, float y2) {
@@ -464,7 +462,7 @@ public class TextFieldWidget extends ClickableWidget implements DrawingUtil, Sel
 		if (this.focusUnlocked || focused) {
 			super.setFocused(focused);
 			if (focused) {
-				this.focusedTime = MinecraftClient.getTime();
+				this.focusedTime = Minecraft.getTime();
 			}
 		}
 	}
@@ -484,26 +482,25 @@ public class TextFieldWidget extends ClickableWidget implements DrawingUtil, Sel
 	public void setSelectionEnd(int index) {
 		int i = this.text.length();
 		this.selectionEnd = MathHelper.clamp(index, 0, i);
-		if (this.textRenderer != null) {
-			if (this.firstCharacterIndex > i) {
-				this.firstCharacterIndex = i;
-			}
-
-			int j = this.getInnerWidth();
-			String string = trimToWidth(this.text.substring(this.firstCharacterIndex), j);
-			int k = string.length() + this.firstCharacterIndex;
-			if (this.selectionEnd == this.firstCharacterIndex) {
-				this.firstCharacterIndex -= trimToWidth(this.text, j, true).length();
-			}
-
-			if (this.selectionEnd > k) {
-				this.firstCharacterIndex += this.selectionEnd - k;
-			} else if (this.selectionEnd <= this.firstCharacterIndex) {
-				this.firstCharacterIndex -= this.firstCharacterIndex - this.selectionEnd;
-			}
-
-			this.firstCharacterIndex = MathHelper.clamp(this.firstCharacterIndex, 0, i);
+		if (this.firstCharacterIndex > i) {
+			this.firstCharacterIndex = i;
 		}
+
+		int j = this.getInnerWidth();
+		String string = trimToWidth(this.text.substring(this.firstCharacterIndex), j);
+		int k = string.length() + this.firstCharacterIndex;
+		if (this.selectionEnd == this.firstCharacterIndex) {
+			this.firstCharacterIndex -= trimToWidth(this.text, j, true).length();
+		}
+
+		if (this.selectionEnd > k) {
+			this.firstCharacterIndex += this.selectionEnd - k;
+		} else if (this.selectionEnd <= this.firstCharacterIndex) {
+			this.firstCharacterIndex -= this.firstCharacterIndex - this.selectionEnd;
+		}
+
+		this.firstCharacterIndex = MathHelper.clamp(this.firstCharacterIndex, 0, i);
+
 	}
 
 	public void setFocusUnlocked(boolean focusUnlocked) {

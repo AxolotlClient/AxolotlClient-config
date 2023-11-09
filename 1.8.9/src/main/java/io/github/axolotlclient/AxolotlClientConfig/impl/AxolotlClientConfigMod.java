@@ -5,55 +5,45 @@ import java.io.IOException;
 import io.github.axolotlclient.AxolotlClientConfig.api.util.WindowPropertiesProvider;
 import io.github.axolotlclient.AxolotlClientConfig.impl.ui.ConfigUI;
 import io.github.axolotlclient.AxolotlClientConfig.impl.ui.NVGMC;
-import net.fabricmc.api.ClientModInitializer;
-import net.legacyfabric.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.legacyfabric.fabric.api.resource.IdentifiableResourceReloadListener;
-import net.legacyfabric.fabric.api.resource.ResourceManagerHelper;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.util.Window;
-import net.minecraft.resource.ResourceManager;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.render.Window;
+import net.minecraft.resource.Identifier;
+import net.ornithemc.osl.entrypoints.api.client.ClientModInitializer;
+import net.ornithemc.osl.lifecycle.api.client.MinecraftClientEvents;
+import net.ornithemc.osl.resource.loader.api.ResourceLoaderEvents;
 
 public class AxolotlClientConfigMod implements ClientModInitializer {
 
 	@Override
-	public void onInitializeClient() {
-		ClientTickEvents.END_CLIENT_TICK.register(client -> AxolotlClientConfigImpl.getInstance().runTick());
+	public void initClient() {
+		MinecraftClientEvents.TICK_END.register(client -> AxolotlClientConfigImpl.getInstance().runTick());
 		NVGMC.setWindowPropertiesProvider(new WindowPropertiesProvider() {
 			@Override
 			public int getHeight() {
-				return MinecraftClient.getInstance().height;
+				return Minecraft.getInstance().height;
 			}
 
 			@Override
 			public int getWidth() {
-				return MinecraftClient.getInstance().width;
+				return Minecraft.getInstance().width;
 			}
 
 			@Override
 			public float getScaleFactor() {
-				return new Window(MinecraftClient.getInstance()).getScaleFactor();
+				return new Window(Minecraft.getInstance()).getScale();
 			}
 		});
 
-		ResourceManagerHelper.getInstance().registerReloadListener(new IdentifiableResourceReloadListener() {
-			@Override
-			public net.legacyfabric.fabric.api.util.Identifier getFabricId() {
-				return new net.legacyfabric.fabric.api.util.Identifier("axolotlclientconfig", "resource_listener");
-			}
-
-			@Override
-			public void reload(ResourceManager resourceManager) {
+		ResourceLoaderEvents.END_RESOURCE_RELOAD.register(() -> {
 				ConfigUI.getInstance().preReload();
 				try {
-					MinecraftClient.getInstance().getResourceManager()
-						.getAllResources(new Identifier(ConfigUI.getInstance().getUiJsonPath())).forEach(resource -> {
-							ConfigUI.getInstance().read(resource.getInputStream());
+					Minecraft.getInstance().getResourceManager()
+						.getResources(new Identifier(ConfigUI.getInstance().getUiJsonPath())).forEach(resource -> {
+							ConfigUI.getInstance().read(resource.asStream());
 						});
 				} catch (IOException ignored) {
 				}
 				ConfigUI.getInstance().postReload();
-			}
 		});
 	}
 }

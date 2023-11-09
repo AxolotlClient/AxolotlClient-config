@@ -10,18 +10,18 @@ import java.util.Stack;
 import io.github.axolotlclient.AxolotlClientConfig.api.util.Color;
 import io.github.axolotlclient.AxolotlClientConfig.api.util.Rectangle;
 import io.github.axolotlclient.AxolotlClientConfig.impl.ui.DrawingUtil;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.gui.DrawableHelper;
-import net.minecraft.client.util.Window;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiElement;
+import net.minecraft.client.render.TextRenderer;
+import net.minecraft.client.render.Window;
+import net.minecraft.resource.Identifier;
 import org.lwjgl.nanovg.NanoVG;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.system.MemoryUtil;
 
-public class DrawUtil extends DrawableHelper implements DrawingUtil {
+public class DrawUtil extends GuiElement implements DrawingUtil {
 
-	private static Stack<Rectangle> scissorStack = new Stack<>();
+	private static final Stack<Rectangle> scissorStack = new Stack<>();
 
     public static void fillRect(Rectangle rectangle, Color color) {
         fillRect(rectangle.x(), rectangle.y(), rectangle.width(),
@@ -30,7 +30,7 @@ public class DrawUtil extends DrawableHelper implements DrawingUtil {
     }
 
     public static void fillRect(int x, int y, int width, int height, int color) {
-        DrawableHelper.fill(x, y, x + width, y + height, color);
+        GuiElement.fill(x, y, x + width, y + height, color);
     }
 
     public static void outlineRect(Rectangle rectangle, Color color) {
@@ -45,9 +45,9 @@ public class DrawUtil extends DrawableHelper implements DrawingUtil {
     }
 
     public static void drawCenteredString(TextRenderer renderer,
-                                          String text, int centerX, int y,
-                                          int color, boolean shadow) {
-        drawString(renderer, text, centerX - renderer.getStringWidth(text) / 2,
+										  String text, int centerX, int y,
+										  int color, boolean shadow) {
+        drawString(renderer, text, centerX - renderer.getWidth(text) / 2,
                 y,
                 color, shadow);
     }
@@ -63,7 +63,7 @@ public class DrawUtil extends DrawableHelper implements DrawingUtil {
     }
 
 	public static void bindTexture(Identifier texture){
-		MinecraftClient.getInstance().getTextureManager().bindTexture(texture);
+		Minecraft.getInstance().getTextureManager().bind(texture);
 	}
 
 	public static int nvgCreateImage(long ctx, Identifier texture) {
@@ -72,8 +72,8 @@ public class DrawUtil extends DrawableHelper implements DrawingUtil {
 
 	public static int nvgCreateImage(long ctx, Identifier texture, int imageFlags) {
 		try {
-			ByteBuffer buffer = mallocAndRead(MinecraftClient.getInstance().getResourceManager().getResource(texture)
-				.getInputStream());
+			ByteBuffer buffer = mallocAndRead(Minecraft.getInstance().getResourceManager().getResource(texture)
+				.asStream());
 			int handle = NanoVG.nvgCreateImageMem(ctx, imageFlags, buffer);
 			MemoryUtil.memFree(buffer);
 			return handle;
@@ -112,8 +112,8 @@ public class DrawUtil extends DrawableHelper implements DrawingUtil {
 	private static void setScissor(Rectangle rect){
 		if (rect != null) {
 			GL11.glEnable(GL11.GL_SCISSOR_TEST);
-			Window window = new Window(MinecraftClient.getInstance());
-			int scale = window.getScaleFactor();
+			Window window = new Window(Minecraft.getInstance());
+			int scale = window.getScale();
 			GL11.glScissor(rect.x() * scale, (int) ((window.getScaledHeight() - rect.height() - rect.y()) * scale),
 				rect.width() * scale, rect.height() * scale);
 		} else {

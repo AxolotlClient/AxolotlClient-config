@@ -3,9 +3,9 @@ package io.github.axolotlclient.AxolotlClientConfig.impl.ui.vanilla.widgets;
 import com.mojang.blaze3d.platform.GlStateManager;
 import io.github.axolotlclient.AxolotlClientConfig.impl.options.NumberOption;
 import io.github.axolotlclient.AxolotlClientConfig.impl.util.DrawUtil;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.sound.SoundManager;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.render.TextRenderer;
+import net.minecraft.client.sound.system.SoundManager;
 import net.minecraft.util.math.MathHelper;
 
 public class SliderWidget<O extends NumberOption<N>, N extends Number> extends VanillaButtonWidget {
@@ -23,8 +23,8 @@ public class SliderWidget<O extends NumberOption<N>, N extends Number> extends V
 	protected void drawWidget(int mouseX, int mouseY, float delta) {
 
 		TextRenderer textRenderer = client.textRenderer;
-		client.getTextureManager().bindTexture(WIDGETS_LOCATION);
-		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+		client.getTextureManager().bind(WIDGETS_LOCATION);
+		GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 		GlStateManager.enableBlend();
 		GlStateManager.blendFuncSeparate(770, 771, 1, 0);
 		GlStateManager.blendFunc(770, 771);
@@ -94,6 +94,6 @@ public class SliderWidget<O extends NumberOption<N>, N extends Number> extends V
 
 	@Override
 	public void onRelease(double mouseX, double mouseY) {
-		super.playDownSound(MinecraftClient.getInstance().getSoundManager());
+		super.playDownSound(Minecraft.getInstance().getSoundManager());
 	}
 }

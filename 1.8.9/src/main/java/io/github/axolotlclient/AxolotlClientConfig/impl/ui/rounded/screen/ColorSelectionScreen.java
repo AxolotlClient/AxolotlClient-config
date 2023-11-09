@@ -16,11 +16,11 @@ import io.github.axolotlclient.AxolotlClientConfig.impl.ui.rounded.widgets.Round
 import io.github.axolotlclient.AxolotlClientConfig.impl.ui.rounded.widgets.TextFieldWidget;
 import io.github.axolotlclient.AxolotlClientConfig.impl.util.ConfigStyles;
 import io.github.axolotlclient.AxolotlClientConfig.impl.util.DrawUtil;
-import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.render.Window;
 import net.minecraft.client.resource.language.I18n;
-import net.minecraft.client.util.Window;
-import net.minecraft.util.Identifier;
+import net.minecraft.resource.Identifier;
 import org.lwjgl.nanovg.NVGPaint;
 import org.lwjgl.opengl.GL11;
 
@@ -46,7 +46,7 @@ public class ColorSelectionScreen extends io.github.axolotlclient.AxolotlClientC
 	@Override
 	public void init() {
 		addDrawableChild(new RoundedButtonWidget(width / 2 - 75, height - 40, I18n.translate("gui.back"),
-			button -> MinecraftClient.getInstance().setScreen(parent)));
+			button -> Minecraft.getInstance().openScreen(parent)));
 
 		chroma = new BooleanOption("option.chroma", option.get().isChroma(), val -> {
 			option.get().setChroma(val);
@@ -72,7 +72,7 @@ public class ColorSelectionScreen extends io.github.axolotlclient.AxolotlClientC
 		buttonsX = (int) Math.max(width / 2f + 25, selectorX + selectorRadius * 2 + 10);
 
 		if (this.height - 250 > 0) {
-			TextFieldWidget text = new TextFieldWidget(client.textRenderer, buttonsX, 190, 150, 20, "");
+			TextFieldWidget text = new TextFieldWidget(minecraft.textRenderer, buttonsX, 190, 150, 20, "");
 			text.setChangedListener(s -> {
 				try {
 					option.set(Color.parse(s));
@@ -161,21 +161,31 @@ public class ColorSelectionScreen extends io.github.axolotlclient.AxolotlClientC
 	}
 
 	private int toGlCoordsX(double x) {
-		Window window = new Window(MinecraftClient.getInstance());
-		return (int) (x * window.getScaleFactor());
+		Window window = new Window(Minecraft.getInstance());
+		return (int) (x * window.getScale());
 	}
 
 	private int toGlCoordsY(double y) {
-		Window window = new Window(MinecraftClient.getInstance());
-		double scale = window.getScaleFactor();
-		return Math.round((float) (MinecraftClient.getInstance().height - y * scale - scale));
+		Window window = new Window(Minecraft.getInstance());
+		double scale = window.getScale();
+		return Math.round((float) (Minecraft.getInstance().height - y * scale - scale));
 	}
 
 	@Override
-	public void resize(MinecraftClient minecraftClient, int i, int j) {
-		super.resize(minecraftClient, i, j);
+	public void resize(Minecraft Minecraft, int i, int j) {
+		super.resize(Minecraft, i, j);
 		if (paint != null) {
 			paint = null;
+		}
+	}
+
+	@Override
+	protected void keyPressed(char c, int i) {
+		if (i == 1) {
+			this.minecraft.openScreen(parent);
+			if (this.minecraft.screen == null) {
+				this.minecraft.closeScreen();
+			}
 		}
 	}
 }

@@ -6,8 +6,8 @@ import io.github.axolotlclient.AxolotlClientConfig.api.util.Color;
 import io.github.axolotlclient.AxolotlClientConfig.api.util.Colors;
 import io.github.axolotlclient.AxolotlClientConfig.impl.ui.Screen;
 import io.github.axolotlclient.AxolotlClientConfig.impl.ui.rounded.NVGHolder;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.util.Window;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.render.Window;
 import org.lwjgl.nanovg.NanoVG;
 
 public class ResetButtonWidget extends RoundedButtonWidget {
@@ -17,10 +17,10 @@ public class ResetButtonWidget extends RoundedButtonWidget {
 	public ResetButtonWidget(int x, int y, int width, int height, Option<?> option) {
 		super(x, y, width, height, "", widget -> {
 			option.setDefault();
-			Window window = new Window(MinecraftClient.getInstance());
+			Window window = new Window(Minecraft.getInstance());
 			double i = window.getScaledWidth();
 			double j = window.getScaledHeight();
-			Screen current = (Screen) MinecraftClient.getInstance().currentScreen;
+			Screen current = (Screen) Minecraft.getInstance().screen;
 			if (current != null) {
 				AtomicDouble scroll = new AtomicDouble();
 				current.children().stream()
@@ -28,7 +28,7 @@ public class ResetButtonWidget extends RoundedButtonWidget {
 					.map(e -> (RoundedButtonListWidget) e).findFirst().ifPresent(list -> {
 						scroll.set(list.getScrollAmount());
 					});
-				current.init(MinecraftClient.getInstance(), (int) i, (int) j);
+				current.init(Minecraft.getInstance(), (int) i, (int) j);
 				current.children().stream()
 					.filter(e -> e instanceof RoundedButtonListWidget)
 					.map(e -> (RoundedButtonListWidget) e).findFirst().ifPresent(list -> {

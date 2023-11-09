@@ -5,7 +5,6 @@ import java.io.InputStream;
 import java.util.function.Consumer;
 
 import io.github.axolotlclient.AxolotlClientConfig.api.util.WindowPropertiesProvider;
-import lombok.Setter;
 import org.lwjgl.nanovg.NanoVG;
 import org.lwjgl.nanovg.NanoVGGL3;
 

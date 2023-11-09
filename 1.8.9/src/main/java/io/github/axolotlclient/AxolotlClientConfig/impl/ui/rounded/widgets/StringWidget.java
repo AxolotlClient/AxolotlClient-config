@@ -5,7 +5,7 @@ import io.github.axolotlclient.AxolotlClientConfig.api.util.Colors;
 import io.github.axolotlclient.AxolotlClientConfig.impl.options.StringOption;
 import io.github.axolotlclient.AxolotlClientConfig.impl.ui.DrawingUtil;
 import io.github.axolotlclient.AxolotlClientConfig.impl.ui.TextFieldWidget;
-import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.resource.language.I18n;
 import org.lwjgl.nanovg.NanoVG;
 
@@ -15,7 +15,7 @@ public class StringWidget extends TextFieldWidget implements DrawingUtil {
 	private final Color highlightColor = Colors.DARK_YELLOW.withAlpha(100);
 
 	public StringWidget(int x, int y, int width, int height, StringOption option) {
-		super(MinecraftClient.getInstance().textRenderer, x, y, width, height, I18n.translate(option.getName()));
+		super(Minecraft.getInstance().textRenderer, x, y, width, height, I18n.translate(option.getName()));
 
 		write(option.get());
 

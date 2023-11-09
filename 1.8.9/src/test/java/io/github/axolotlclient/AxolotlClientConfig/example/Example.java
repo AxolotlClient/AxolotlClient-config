@@ -9,27 +9,26 @@ import io.github.axolotlclient.AxolotlClientConfig.api.util.Colors;
 import io.github.axolotlclient.AxolotlClientConfig.impl.managers.JsonConfigManager;
 import io.github.axolotlclient.AxolotlClientConfig.impl.options.*;
 import io.github.axolotlclient.AxolotlClientConfig.impl.ui.ConfigUI;
-import net.fabricmc.api.ClientModInitializer;
+import lombok.Getter;
 import net.fabricmc.loader.api.FabricLoader;
-import net.legacyfabric.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.legacyfabric.fabric.api.client.keybinding.v1.KeyBindingHelper;
-import net.minecraft.client.MinecraftClient;
+import net.fabricmc.loader.launch.common.FabricLauncherBase;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.option.KeyBinding;
+import net.minecraft.client.options.KeyBinding;
+import net.ornithemc.osl.entrypoints.api.client.ClientModInitializer;
+import net.ornithemc.osl.keybinds.api.KeyBindingEvents;
+import net.ornithemc.osl.lifecycle.api.client.MinecraftClientEvents;
 
 public class Example implements ClientModInitializer {
 
 
-    private static Example Instance;
+    @Getter
+	private static Example Instance;
 
 	public String modid;
 
-    public static Example getInstance() {
-        return Instance;
-    }
-
-    @Override
-    public void onInitializeClient() {
+	@Override
+    public void initClient() {
         Instance = this;
         modid = "axolotlclientconfig-test";
 
@@ -55,11 +54,11 @@ public class Example implements ClientModInitializer {
 		example.add(new GraphicsOption("graphics", 40, 40));
 
 		KeyBinding binding = new KeyBinding("test", 0, "test");
-		KeyBindingHelper.registerKeyBinding(binding);
-		ClientTickEvents.END_CLIENT_TICK.register(client -> {
-			if (binding.wasPressed()){
+		KeyBindingEvents.REGISTER_KEYBINDS.register((registry) -> registry.register(binding));
+		MinecraftClientEvents.TICK_END.register(client -> {
+			if (binding.consumeClick()){
 				System.out.println("Opening Screen....");
-				MinecraftClient.getInstance().setScreen(getConfigScreenFactory().apply(MinecraftClient.getInstance().currentScreen));
+				Minecraft.getInstance().openScreen(getConfigScreenFactory().apply(Minecraft.getInstance().screen));
 			}
 		});
 
@@ -71,7 +70,7 @@ public class Example implements ClientModInitializer {
 				ConfigUI.getInstance().getStyleNames().toArray(new String[0]),
 				ConfigUI.getInstance().getCurrentStyle().getName(), s -> {
 				ConfigUI.getInstance().setStyle(s);
-				MinecraftClient.getInstance().setScreen(null);
+				Minecraft.getInstance().openScreen(null);
 			}));
 			AxolotlClientConfig.getInstance().getConfigManager(modid).load();
 			ConfigUI.getInstance().setStyle(option.get());
@@ -79,13 +78,12 @@ public class Example implements ClientModInitializer {
     }
 
 	public Function<Screen, ? extends Screen> getConfigScreenFactory() {
-
 		return parent -> {
 			try {
-				return (Screen) Class.forName(ConfigUI.getInstance().getCurrentStyle().getScreen())
+				return (Screen) ConfigUI.getInstance().getScreen(FabricLauncherBase.getLauncher().getTargetClassLoader())
 					.getConstructor(Screen.class, OptionCategory.class, String.class).newInstance(parent, AxolotlClientConfig.getInstance().getConfigManager(Example.getInstance().modid).getRoot(), modid);
 			} catch (InstantiationException | IllegalAccessException | InvocationTargetException |
-					 NoSuchMethodException | ClassNotFoundException e) {
+					 NoSuchMethodException e) {
 				throw new IllegalStateException(e);
 			}
 		};

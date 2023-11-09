@@ -4,7 +4,7 @@ import io.github.axolotlclient.AxolotlClientConfig.api.util.Colors;
 import io.github.axolotlclient.AxolotlClientConfig.impl.options.BooleanOption;
 import io.github.axolotlclient.AxolotlClientConfig.impl.ui.Updatable;
 import io.github.axolotlclient.AxolotlClientConfig.impl.ui.rounded.NVGHolder;
-import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.resource.language.I18n;
 
 public class PillBooleanWidget extends RoundedButtonWidget implements Updatable {
@@ -17,7 +17,7 @@ public class PillBooleanWidget extends RoundedButtonWidget implements Updatable 
 	private boolean state;
 	private boolean targetState;
 	private double progress;
-	private long tickTime = MinecraftClient.getTime();
+	private long tickTime = Minecraft.getTime();
 	private int notWidth;
 
 	public PillBooleanWidget(int x, int y, int width, int height, BooleanOption option) {
@@ -55,8 +55,8 @@ public class PillBooleanWidget extends RoundedButtonWidget implements Updatable 
 	public void drawWidget(int mouseX, int mouseY, float delta) {
 		fillRoundedRect(NVGHolder.getContext(), getX(), getY(), super.getWidth(), getHeight(), Colors.GRAY, Math.min(getHeight(), super.getWidth()) / 2f);
 
-		if (((MinecraftClient.getTime() - tickTime) / 300L) % 2L == 0L) {
-			tickTime = MinecraftClient.getTime();
+		if (((Minecraft.getTime() - tickTime) / 300L) % 2L == 0L) {
+			tickTime = Minecraft.getTime();
 			if (state != targetState) {
 				if (targetState) {
 					progress = Math.min(1, progress + 0.05f);

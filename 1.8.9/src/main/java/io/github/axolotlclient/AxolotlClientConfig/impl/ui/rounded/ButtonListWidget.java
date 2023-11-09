@@ -11,7 +11,7 @@ import io.github.axolotlclient.AxolotlClientConfig.api.options.WidgetIdentifieab
 import io.github.axolotlclient.AxolotlClientConfig.impl.ui.ClickableWidget;
 import io.github.axolotlclient.AxolotlClientConfig.impl.ui.ConfigUI;
 import io.github.axolotlclient.AxolotlClientConfig.impl.ui.Element;
-import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.Minecraft;
 import org.jetbrains.annotations.Nullable;
 
 public class ButtonListWidget extends ElementListWidget<ButtonListWidget.Entry> {
@@ -21,7 +21,7 @@ public class ButtonListWidget extends ElementListWidget<ButtonListWidget.Entry> 
 	protected static int WIDGET_ROW_RIGHT = WIDGET_ROW_LEFT + WIDGET_WIDTH + 10;
 
 	public ButtonListWidget(OptionCategory category, int screenWidth, int screenHeight, int top, int bottom, int entryHeight) {
-		super(MinecraftClient.getInstance(), screenWidth, screenHeight, top, bottom, entryHeight);
+		super(Minecraft.getInstance(), screenWidth, screenHeight, top, bottom, entryHeight);
 		centerListVertically = false;
 
 		addEntries(category);

@@ -3,9 +3,9 @@ package io.github.axolotlclient.AxolotlClientConfig.impl.ui.vanilla.widgets;
 import com.google.common.util.concurrent.AtomicDouble;
 import io.github.axolotlclient.AxolotlClientConfig.api.options.Option;
 import io.github.axolotlclient.AxolotlClientConfig.impl.ui.Screen;
-import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.render.Window;
 import net.minecraft.client.resource.language.I18n;
-import net.minecraft.client.util.Window;
 
 public class ResetButtonWidget extends VanillaButtonWidget {
 
@@ -14,10 +14,10 @@ public class ResetButtonWidget extends VanillaButtonWidget {
 	public ResetButtonWidget(int x, int y, int width, int height, Option<?> option) {
 		super(x, y, width, height, I18n.translate("action.reset"), widget -> {
 			option.setDefault();
-			Window window = new Window(MinecraftClient.getInstance());
+			Window window = new Window(Minecraft.getInstance());
 			int i = (int) window.getScaledWidth();
 			int j = (int) window.getScaledHeight();
-			Screen current = (Screen) MinecraftClient.getInstance().currentScreen;
+			Screen current = (Screen) Minecraft.getInstance().screen;
 			if (current != null) {
 				AtomicDouble scroll = new AtomicDouble();
 				current.children().stream()
@@ -25,7 +25,7 @@ public class ResetButtonWidget extends VanillaButtonWidget {
 					.map(e -> (VanillaButtonListWidget) e).findFirst().ifPresent(list -> {
 						scroll.set(list.getScrollAmount());
 					});
-				current.init(MinecraftClient.getInstance(), i, j);
+				current.init(Minecraft.getInstance(), i, j);
 				current.children().stream()
 					.filter(e -> e instanceof VanillaButtonListWidget)
 					.map(e -> (VanillaButtonListWidget) e).findFirst().ifPresent(list -> {

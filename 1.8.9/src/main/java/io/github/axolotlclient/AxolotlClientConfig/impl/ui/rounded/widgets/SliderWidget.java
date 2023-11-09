@@ -3,8 +3,8 @@ package io.github.axolotlclient.AxolotlClientConfig.impl.ui.rounded.widgets;
 import io.github.axolotlclient.AxolotlClientConfig.api.util.Colors;
 import io.github.axolotlclient.AxolotlClientConfig.impl.options.NumberOption;
 import io.github.axolotlclient.AxolotlClientConfig.impl.ui.rounded.NVGHolder;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.sound.SoundManager;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.sound.system.SoundManager;
 import net.minecraft.util.math.MathHelper;
 import org.lwjgl.nanovg.NanoVG;
 
@@ -87,6 +87,6 @@ public class SliderWidget<O extends NumberOption<N>, N extends Number> extends R
 
 	@Override
 	public void onRelease(double mouseX, double mouseY) {
-		super.playDownSound(MinecraftClient.getInstance().getSoundManager());
+		super.playDownSound(Minecraft.getInstance().getSoundManager());
 	}
 }

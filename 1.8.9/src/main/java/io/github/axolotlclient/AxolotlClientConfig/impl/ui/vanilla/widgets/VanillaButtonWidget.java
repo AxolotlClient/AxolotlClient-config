@@ -3,7 +3,7 @@ package io.github.axolotlclient.AxolotlClientConfig.impl.ui.vanilla.widgets;
 import com.mojang.blaze3d.platform.GlStateManager;
 import io.github.axolotlclient.AxolotlClientConfig.impl.ui.ButtonWidget;
 import io.github.axolotlclient.AxolotlClientConfig.impl.util.DrawUtil;
-import net.minecraft.client.font.TextRenderer;
+import net.minecraft.client.render.TextRenderer;
 
 public class VanillaButtonWidget extends ButtonWidget {
 
@@ -15,8 +15,8 @@ public class VanillaButtonWidget extends ButtonWidget {
 	protected void drawWidget(int mouseX, int mouseY, float delta) {
 
 		TextRenderer textRenderer = client.textRenderer;
-		client.getTextureManager().bindTexture(WIDGETS_LOCATION);
-		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+		client.getTextureManager().bind(WIDGETS_LOCATION);
+		GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 		int k = active ? (hovered ? 2 : 1) : 0;
 		GlStateManager.enableBlend();
 		GlStateManager.blendFuncSeparate(770, 771, 1, 0);

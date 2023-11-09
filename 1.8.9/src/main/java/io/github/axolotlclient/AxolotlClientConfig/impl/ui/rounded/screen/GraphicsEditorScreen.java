@@ -11,10 +11,10 @@ import io.github.axolotlclient.AxolotlClientConfig.impl.ui.rounded.NVGHolder;
 import io.github.axolotlclient.AxolotlClientConfig.impl.ui.rounded.NVGUtil;
 import io.github.axolotlclient.AxolotlClientConfig.impl.ui.rounded.widgets.RoundedButtonWidget;
 import io.github.axolotlclient.AxolotlClientConfig.impl.util.ConfigStyles;
-import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.render.Window;
 import net.minecraft.client.resource.language.I18n;
-import net.minecraft.client.util.Window;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.nanovg.NanoVG;
 
@@ -39,7 +39,7 @@ public class GraphicsEditorScreen extends io.github.axolotlclient.AxolotlClientC
 	private int mouseButton;
 
 	public GraphicsEditorScreen(Screen parent, GraphicsOption option) {
-		super("draw_graphics");
+		super(I18n.translate("draw_graphics"));
 
 		this.parent = parent;
 		this.option = option;
@@ -49,7 +49,7 @@ public class GraphicsEditorScreen extends io.github.axolotlclient.AxolotlClientC
 	@Override
 	public void init() {
 		addDrawableChild(new RoundedButtonWidget(width / 2 - 75, height - 40, I18n.translate("gui.back"),
-			button -> MinecraftClient.getInstance().setScreen(parent)));
+			button -> Minecraft.getInstance().openScreen(parent)));
 
 
 		gridX = 110;
@@ -63,7 +63,7 @@ public class GraphicsEditorScreen extends io.github.axolotlclient.AxolotlClientC
 
 		pixelSize = Math.min(maxGridHeight / gridRows, maxGridWidth / gridColumns);
 
-		gridX = (int) (new Window(MinecraftClient.getInstance()).getScaledWidth() / 2 - (gridColumns * pixelSize) / 2);
+		gridX = (int) (new Window(Minecraft.getInstance()).getScaledWidth() / 2 - (gridColumns * pixelSize) / 2);
 		maxGridWidth = Math.min(maxGridWidth, gridColumns * pixelSize);
 		maxGridHeight = Math.min(maxGridHeight, gridRows * pixelSize);
 
@@ -158,18 +158,12 @@ public class GraphicsEditorScreen extends io.github.axolotlclient.AxolotlClientC
 		return false;
 	}
 
-	public void drawCheckerboard(long nvg, Color a, Color b, int startX, int startY, int width, int height,
-								 int scale) {
-		for (int y = 0; y < height; y++) {
-			for (int x = 0; x < width; x++) {
-				boolean square = x % 2 == 0;
-				if (y % 2 == 0)
-					square = !square;
-
-				NanoVG.nvgBeginPath(nvg);
-				NanoVG.nvgRect(nvg, startX + x * scale, startY + y * scale, scale, scale);
-				NanoVG.nvgFillColor(nvg, (square ? a : b).toNVG());
-				NanoVG.nvgFill(nvg);
+	@Override
+	protected void keyPressed(char c, int i) {
+		if (i == 1) {
+			this.minecraft.openScreen(parent);
+			if (this.minecraft.screen == null) {
+				this.minecraft.closeScreen();
 			}
 		}
 	}

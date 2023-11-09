@@ -13,11 +13,11 @@ import io.github.axolotlclient.AxolotlClientConfig.impl.ui.Updatable;
 import io.github.axolotlclient.AxolotlClientConfig.impl.ui.vanilla.widgets.VanillaButtonWidget;
 import io.github.axolotlclient.AxolotlClientConfig.impl.util.ConfigStyles;
 import io.github.axolotlclient.AxolotlClientConfig.impl.util.DrawUtil;
-import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.render.Window;
 import net.minecraft.client.resource.language.I18n;
-import net.minecraft.client.util.Window;
-import net.minecraft.util.Identifier;
+import net.minecraft.resource.Identifier;
 import org.lwjgl.opengl.GL11;
 
 public class ColorSelectionScreen extends io.github.axolotlclient.AxolotlClientConfig.impl.ui.Screen {
@@ -32,7 +32,7 @@ public class ColorSelectionScreen extends io.github.axolotlclient.AxolotlClientC
 	private int buttonsX;
 
 	public ColorSelectionScreen(Screen parent, ColorOption option) {
-		super("select_color");
+		super(I18n.translate("select_color"));
 		this.option = option;
 		this.parent = parent;
 	}
@@ -41,7 +41,7 @@ public class ColorSelectionScreen extends io.github.axolotlclient.AxolotlClientC
 	public void init() {
 		super.init();
 		addDrawableChild(new VanillaButtonWidget(width / 2 - 75, height - 40, 150, 20,
-			I18n.translate("gui.back"), buttonWidget -> client.setScreen(parent)));
+			I18n.translate("gui.back"), buttonWidget -> minecraft.openScreen(parent)));
 
 		selectorRadius = Math.max(Math.min(width / 4 - 10, (height) / 2 - 60), 75);
 		selectorX = width / 4f - selectorRadius;
@@ -50,7 +50,7 @@ public class ColorSelectionScreen extends io.github.axolotlclient.AxolotlClientC
 		buttonsX = (int) Math.max(width / 2f + 25, selectorX + selectorRadius * 2 + 10);
 
 		if (this.height - 250 > 0) {
-			TextFieldWidget text = new TextFieldWidget(client.textRenderer, buttonsX, 190, 150, 20, "");
+			TextFieldWidget text = new TextFieldWidget(minecraft.textRenderer, buttonsX, 190, 150, 20, "");
 			text.setChangedListener(s -> {
 				try {
 					option.set(Color.parse(s));
@@ -91,20 +91,20 @@ public class ColorSelectionScreen extends io.github.axolotlclient.AxolotlClientC
 	@Override
 	public void render(int mouseX, int mouseY, float delta) {
 		super.render(mouseX, mouseY, delta);
-		drawCenteredString(client.textRenderer, title, width / 2, 20, Colors.WHITE.toInt());
+		drawCenteredString(minecraft.textRenderer, title, width / 2, 20, Colors.WHITE.toInt());
 
-		client.getTextureManager().bindTexture(texture);
+		minecraft.getTextureManager().bind(texture);
 		drawTexture((int) selectorX, (int) selectorY, 0, 0, selectorRadius * 2, selectorRadius * 2, selectorRadius * 2, selectorRadius * 2);
 
 		DrawUtil.outlineRect((int) selectorX, (int) selectorY, selectorRadius * 2, selectorRadius * 2, Colors.BLACK.toInt());
 
-		drawWithShadow(client.textRenderer, I18n.translate("option.current"), buttonsX, 40, Colors.WHITE.toInt());
+		drawString(minecraft.textRenderer, I18n.translate("option.current"), buttonsX, 40, Colors.WHITE.toInt());
 
 		DrawUtil.fillRect(buttonsX, 55, 150, 40, option.get().get().toInt());
 		DrawUtil.outlineRect(buttonsX, 55, 150, 40, Colors.BLACK.toInt());
 
-		drawWithShadow(client.textRenderer, I18n.translate("option.chroma"), buttonsX, 105, Colors.WHITE.toInt());
-		drawWithShadow(client.textRenderer, I18n.translate("option.alpha"), buttonsX, 150, Colors.WHITE.toInt());
+		drawString(minecraft.textRenderer, I18n.translate("option.chroma"), buttonsX, 105, Colors.WHITE.toInt());
+		drawString(minecraft.textRenderer, I18n.translate("option.alpha"), buttonsX, 150, Colors.WHITE.toInt());
 	}
 
 	@Override
@@ -134,13 +134,23 @@ public class ColorSelectionScreen extends io.github.axolotlclient.AxolotlClientC
 	}
 
 	private int toGlCoordsX(double x) {
-		Window window = new Window(MinecraftClient.getInstance());
-		return (int) (x * window.getScaleFactor());
+		Window window = new Window(Minecraft.getInstance());
+		return (int) (x * window.getScale());
 	}
 
 	private int toGlCoordsY(double y) {
-		Window window = new Window(MinecraftClient.getInstance());
-		double scale = window.getScaleFactor();
-		return Math.round((float) (MinecraftClient.getInstance().height - y * scale - scale));
+		Window window = new Window(Minecraft.getInstance());
+		double scale = window.getScale();
+		return Math.round((float) (Minecraft.getInstance().height - y * scale - scale));
+	}
+
+	@Override
+	protected void keyPressed(char c, int i) {
+		if (i == 1) {
+			this.minecraft.openScreen(parent);
+			if (this.minecraft.screen == null) {
+				this.minecraft.closeScreen();
+			}
+		}
 	}
 }
