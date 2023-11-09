@@ -39,7 +39,6 @@ public class GraphicsEditorScreen extends io.github.axolotlclient.AxolotlClientC
 
 	@Override
 	public void init() {
-
 		super.init();
 		gridX = 110;
 		gridY = 40;

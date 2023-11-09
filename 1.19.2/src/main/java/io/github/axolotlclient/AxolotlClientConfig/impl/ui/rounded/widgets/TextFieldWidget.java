@@ -32,7 +32,6 @@ public class TextFieldWidget extends ClickableWidget implements DrawingUtil {
 	protected static final int BORDER_COLOR = -6250336;
 	protected static final int BACKGROUND_COLOR = -16777216;
 	private static final int INSERT_CURSOR_WIDTH = 1;
-	protected final TextRenderer textRenderer;
 	private final Color highlightColor = Colors.DARK_YELLOW.withAlpha(100);
 	protected String text = "";
 	protected boolean drawsBackground = true;
@@ -60,7 +59,6 @@ public class TextFieldWidget extends ClickableWidget implements DrawingUtil {
 
 	public TextFieldWidget(TextRenderer textRenderer, int x, int y, int width, int height, @Nullable net.minecraft.client.gui.widget.TextFieldWidget copyFrom, Text text) {
 		super(x, y, width, height, text);
-		this.textRenderer = textRenderer;
 		if (copyFrom != null) {
 			this.setText(copyFrom.getText());
 		}
@@ -377,7 +375,7 @@ public class TextFieldWidget extends ClickableWidget implements DrawingUtil {
 
 			if (bl2) {
 				if (bl3) {
-					fillRoundedRect(ctx, o, m - 1, 1, 2 + textRenderer.fontHeight, i, 2);
+					fillRoundedRect(ctx, o, m - 1, 1, 2 + NVGHolder.getFont().getLineHeight(), i, 2);
 				} else {
 					drawString(ctx, font, UNDERSCORE, o, (float) m, i);
 				}
@@ -385,16 +383,16 @@ public class TextFieldWidget extends ClickableWidget implements DrawingUtil {
 
 			if (k != j) {
 				float p = l + font.getWidth(string.substring(0, k));
-				this.drawSelectionHighlight(ctx, o, m - 1, p - 1, m + 1 + this.textRenderer.fontHeight);
+				this.drawSelectionHighlight(ctx, o, m - 1, p - 1, m + 1 + NVGHolder.getFont().getLineHeight());
 			}
 		}
 	}
 
-	public int getX(){
+	public int getX() {
 		return x;
 	}
 
-	public int getY(){
+	public int getY() {
 		return y;
 	}
 
@@ -405,8 +403,8 @@ public class TextFieldWidget extends ClickableWidget implements DrawingUtil {
 			i -= 4;
 		}
 
-		String string = this.textRenderer.trimToWidth(this.text.substring(this.firstCharacterIndex), this.getInnerWidth());
-		this.setCursor(this.textRenderer.trimToWidth(string, i).length() + this.firstCharacterIndex, Screen.hasShiftDown());
+		String string = NVGHolder.getFont().trimToWidth(this.text.substring(this.firstCharacterIndex), this.getInnerWidth());
+		this.setCursor(NVGHolder.getFont().trimToWidth(string, i).length() + this.firstCharacterIndex, Screen.hasShiftDown());
 	}
 
 	protected void drawSelectionHighlight(long ctx, float x1, float y1, float x2, float y2) {
@@ -498,26 +496,25 @@ public class TextFieldWidget extends ClickableWidget implements DrawingUtil {
 	public void setSelectionEnd(int index) {
 		int i = this.text.length();
 		this.selectionEnd = MathHelper.clamp(index, 0, i);
-		if (this.textRenderer != null) {
-			if (this.firstCharacterIndex > i) {
-				this.firstCharacterIndex = i;
-			}
-
-			int j = this.getInnerWidth();
-			String string = trimToWidth(this.text.substring(this.firstCharacterIndex), j);
-			int k = string.length() + this.firstCharacterIndex;
-			if (this.selectionEnd == this.firstCharacterIndex) {
-				this.firstCharacterIndex -= trimToWidth(this.text, j, true).length();
-			}
-
-			if (this.selectionEnd > k) {
-				this.firstCharacterIndex += this.selectionEnd - k;
-			} else if (this.selectionEnd <= this.firstCharacterIndex) {
-				this.firstCharacterIndex -= this.firstCharacterIndex - this.selectionEnd;
-			}
-
-			this.firstCharacterIndex = MathHelper.clamp(this.firstCharacterIndex, 0, i);
+		if (this.firstCharacterIndex > i) {
+			this.firstCharacterIndex = i;
 		}
+
+		int j = this.getInnerWidth();
+		String string = trimToWidth(this.text.substring(this.firstCharacterIndex), j);
+		int k = string.length() + this.firstCharacterIndex;
+		if (this.selectionEnd == this.firstCharacterIndex) {
+			this.firstCharacterIndex -= trimToWidth(this.text, j, true).length();
+		}
+
+		if (this.selectionEnd > k) {
+			this.firstCharacterIndex += this.selectionEnd - k;
+		} else if (this.selectionEnd <= this.firstCharacterIndex) {
+			this.firstCharacterIndex -= this.firstCharacterIndex - this.selectionEnd;
+		}
+
+		this.firstCharacterIndex = MathHelper.clamp(this.firstCharacterIndex, 0, i);
+
 	}
 
 	public void setFocusUnlocked(boolean focusUnlocked) {

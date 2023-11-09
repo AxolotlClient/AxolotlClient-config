@@ -57,7 +57,9 @@ public final class NVGFont implements AutoCloseable {
 		boolean requiresAlternative = false;
 		if (major <= 3){
 			if (minor <= 3){
-				if (patch <= 1){
+				if (minor < 3){
+					requiresAlternative = true;
+				} else if (patch <= 1){
 					requiresAlternative = true;
 				}
 			}

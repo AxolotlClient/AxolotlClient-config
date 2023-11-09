@@ -82,8 +82,6 @@ public class GraphicsImpl implements Graphics {
 		} catch (IOException ignored) {
 		}
 		return new byte[0];
-		//return ((DataBufferInt) image.getData().getDataBuffer()).getData();
-		//return new byte[1];
 	}
 
 	@Override
