@@ -15,6 +15,10 @@ repositories {
 		url = "https://moehreag.duckdns.org/maven/releases"
 	}
 	maven {
+		name = 'Quilt'
+		url = 'https://maven.quiltmc.org/repository/snapshot'
+	}
+	maven {
 		url = "https://maven.terraformersmc.com/releases"
 	}
 	mavenCentral()

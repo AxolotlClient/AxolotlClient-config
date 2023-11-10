@@ -2,6 +2,7 @@ package io.github.axolotlclient.AxolotlClientConfig.impl.ui.vanilla.screen;
 
 import io.github.axolotlclient.AxolotlClientConfig.api.AxolotlClientConfig;
 import io.github.axolotlclient.AxolotlClientConfig.api.options.OptionCategory;
+import io.github.axolotlclient.AxolotlClientConfig.api.ui.screen.ConfigScreen;
 import io.github.axolotlclient.AxolotlClientConfig.impl.ui.vanilla.widgets.VanillaButtonWidget;
 import io.github.axolotlclient.AxolotlClientConfig.impl.ui.vanilla.widgets.VanillaEntryListWidget;
 import lombok.Getter;
@@ -10,7 +11,7 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.ScreenTexts;
 import net.minecraft.text.Text;
 
-public class VanillaConfigScreen extends Screen {
+public class VanillaConfigScreen extends Screen implements ConfigScreen {
 	private final Screen parent;
 	@Getter
 	private final String configName;

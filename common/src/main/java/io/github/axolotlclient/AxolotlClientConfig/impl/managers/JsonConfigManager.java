@@ -75,7 +75,11 @@ public class JsonConfigManager implements ConfigManager {
 	protected void load(OptionCategory category, JsonObject object) {
 		category.getOptions().forEach(option -> {
 			if (object.has(option.getName())) {
-				option.fromSerializedValue(object.get(option.getName()).getAsString());
+				try {
+					option.fromSerializedValue(object.get(option.getName()).getAsString());
+				} catch (Throwable t){
+					option.setDefault();
+				}
 			} else {
 				option.setDefault();
 			}

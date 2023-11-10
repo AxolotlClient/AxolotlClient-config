@@ -16,6 +16,8 @@ public class Color implements Runnable, Cloneable {
 	private boolean chroma;
 
 	private float chromaHue;
+	@Getter @Setter
+	private float chromaSpeed = 1f;
 
 	private NVGColor nvgColor;
 
@@ -42,10 +44,15 @@ public class Color implements Runnable, Cloneable {
 	}
 
 	public Color(int red, int green, int blue, int alpha, boolean chroma) {
+		this(red, green, blue, alpha, chroma, 1F);
+	}
+
+	public Color(int red, int green, int blue, int alpha, boolean chroma, float chromaSpeed) {
 		this.red = red;
 		this.green = green;
 		this.blue = blue;
 		this.alpha = alpha;
+		this.chromaSpeed = chromaSpeed;
 		setChroma(chroma);
 	}
 
@@ -99,7 +106,7 @@ public class Color implements Runnable, Cloneable {
 
 	@Override
 	public String toString() {
-		return String.format("#%08X;%s", toInt(), chroma);
+		return String.format("#%08X;%s;%s", toInt(), chroma, chromaSpeed);
 	}
 
 	public static Color parse(String color) {
@@ -135,6 +142,7 @@ public class Color implements Runnable, Cloneable {
 				Integer.valueOf(color.substring(0, 2), 16));
 			if (color.contains(";")){
 				c.setChroma(Boolean.parseBoolean(color.substring(0, color.indexOf(';'))));
+				c.setChromaSpeed(Float.parseFloat(color.substring(color.lastIndexOf(";"))));
 			}
 			return c;
 		} catch (NumberFormatException error) {
@@ -154,7 +162,7 @@ public class Color implements Runnable, Cloneable {
 
 	@Override
 	public void run() {
-		chromaHue += (float) (0.001*(2*Math.PI));
+		chromaHue += ((float) (0.001*(2*Math.PI)) * chromaSpeed);
 		if (chromaHue >= 2*Math.PI) {
 			chromaHue -= (float) (2*Math.PI);
 		}
@@ -178,6 +186,10 @@ public class Color implements Runnable, Cloneable {
 
 	public Color withChroma(boolean chroma) {
 		return this.chroma == chroma ? this : new Color(this.red, this.green, this.blue, this.alpha, chroma);
+	}
+
+	public Color withChromaSpeed(float speed) {
+		return this.chromaSpeed == speed ? this : new Color(this.red, this.green, this.blue, this.alpha, chroma);
 	}
 
 	public Color withHue(float hue){
@@ -238,6 +250,11 @@ public class Color implements Runnable, Cloneable {
 			}
 
 			@Override
+			public void setChromaSpeed(float chromaSpeed) {
+				throw new UnsupportedOperationException("Immutable Color Object!");
+			}
+
+			@Override
 			public Color withRed(int red) {
 				return new Color(red, getGreen(), getBlue(), getAlpha());
 			}
@@ -259,9 +276,12 @@ public class Color implements Runnable, Cloneable {
 
 			@Override
 			public Color withChroma(boolean chroma) {
-				Color c = new Color(getRed(), getGreen(), getBlue(), getAlpha());
-				c.setChroma(chroma);
-				return c;
+				return new Color(getRed(), getGreen(), getBlue(), getAlpha(), chroma);
+			}
+
+			@Override
+			public Color withChromaSpeed(float speed) {
+				return new Color(getRed(), getGreen(), getBlue(), getAlpha(), isChroma(), speed);
 			}
 
 			@Override
@@ -292,7 +312,7 @@ public class Color implements Runnable, Cloneable {
 
 			@Override
 			public Color mutable() {
-				return new Color(getRed(), getBlue(), getGreen(), getAlpha());
+				return new Color(getRed(), getBlue(), getGreen(), getAlpha(), isChroma(), getChromaSpeed());
 			}
 		};
 	}
@@ -310,6 +330,7 @@ public class Color implements Runnable, Cloneable {
 			clone.setGreen(getGreen());
 			clone.setBlue(getBlue());
 			clone.setChroma(isChroma());
+			clone.setChromaSpeed(getChromaSpeed());
 			clone.chromaHue = chromaHue;
 			clone.nvgColor = null;
 			return clone;

@@ -32,7 +32,7 @@
         "versions": ">=0.16.0-"
       },
       {
-        "id": "quilt_client_command",
+        "id": "quilt_lifecycle_events",
         "versions": "*"
       },
       {
