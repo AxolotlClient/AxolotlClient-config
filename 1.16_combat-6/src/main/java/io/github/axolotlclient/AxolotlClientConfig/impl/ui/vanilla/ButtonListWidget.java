@@ -55,7 +55,7 @@ public class ButtonListWidget extends ElementListWidget<ButtonListWidget.Entry> 
 
 	public void addEntries(OptionCategory root) {
 		addCategories(root.getSubCategories());
-		if (!children().isEmpty()) {
+		if (!children().isEmpty() && !root.getOptions().isEmpty()) {
 			addEntry(new Entry(Collections.emptyList()));
 		}
 		addOptions(root.getOptions());

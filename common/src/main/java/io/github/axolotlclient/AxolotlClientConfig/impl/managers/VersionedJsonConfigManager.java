@@ -15,6 +15,7 @@ public class VersionedJsonConfigManager extends JsonConfigManager {
 
 	protected ConfigVersion version;
 	protected VersionConverter converter;
+
 	public VersionedJsonConfigManager(Path file, OptionCategory root, ConfigVersion version, VersionConverter converter) {
 		super(file, root);
 		this.version = version;
@@ -33,7 +34,7 @@ public class VersionedJsonConfigManager extends JsonConfigManager {
 	public void save() {
 		JsonObject object = new JsonObject();
 		JsonObject config = new JsonObject();
-		save(config, root);
+		save(config, getRoot());
 		object.addProperty("version", version.toString());
 		object.add("config", config);
 
@@ -50,15 +51,25 @@ public class VersionedJsonConfigManager extends JsonConfigManager {
 			if (Files.exists(file)) {
 				try (BufferedReader reader = Files.newBufferedReader(file)) {
 					JsonObject object = GSON.fromJson(reader, JsonObject.class);
-					JsonObject config = object.get("config").getAsJsonObject();
 
-					ConfigVersion version = version(object.get("version").getAsString());
-					int i = this.version.compareTo(version);
-					if (i != 0){
-						if (i < 0){
-							throw new IllegalStateException("Saved config version is newer! This is not allowed to happen!");
-						} else {
-							config = this.converter.convert(version, this.version, getRoot(), config);
+					JsonObject config;
+					if (object.has("config") && object.entrySet().size() == 2) {
+						config = object.get("config").getAsJsonObject();
+					} else {
+						config = object;
+					}
+
+					if (!object.has("version") || object.entrySet().size() != 2) {
+						config = this.converter.convert(version(0), this.version, getRoot(), config);
+					} else {
+						ConfigVersion version = version(object.get("version").getAsString());
+						int i = this.version.compareTo(version);
+						if (i != 0) {
+							if (i < 0) {
+								throw new IllegalStateException("Saved config version is newer! This is not allowed to happen!");
+							} else {
+								config = this.converter.convert(version, this.version, getRoot(), config);
+							}
 						}
 					}
 
@@ -70,7 +81,7 @@ public class VersionedJsonConfigManager extends JsonConfigManager {
 
 		}
 
-		setDefaults(root);
+		setDefaults(getRoot());
 	}
 
 	@Data
@@ -78,30 +89,30 @@ public class VersionedJsonConfigManager extends JsonConfigManager {
 		private final int major, minor, patch;
 
 		@Override
-		public String toString(){
-			return major+"."+minor+"."+patch;
+		public String toString() {
+			return major + "." + minor + "." + patch;
 		}
 
 		@Override
 		public int compareTo(@NotNull VersionedJsonConfigManager.ConfigVersion o) {
 			int major = Integer.compare(getMajor(), o.getMajor());
-			if (major != 0){
+			if (major != 0) {
 				return major;
 			}
 			int minor = Integer.compare(getMinor(), o.getMinor());
-			if (minor != 0){
+			if (minor != 0) {
 				return minor;
 			}
 			return Integer.compare(getPatch(), o.getPatch());
 		}
 	}
 
-	static ConfigVersion version(String version){
+	static ConfigVersion version(String version) {
 		String[] versions = version.split("\\.", 3);
 		return new ConfigVersion(Integer.parseInt(versions[0]), Integer.parseInt(versions[1]), Integer.parseInt(versions[2]));
 	}
 
-	static ConfigVersion version(int version){
+	static ConfigVersion version(int version) {
 		return new ConfigVersion(version, 0, 0);
 	}
 

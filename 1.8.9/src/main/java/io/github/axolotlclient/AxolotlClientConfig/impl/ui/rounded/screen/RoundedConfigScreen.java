@@ -20,7 +20,7 @@ public class RoundedConfigScreen extends io.github.axolotlclient.AxolotlClientCo
 	private final OptionCategory root;
 
 	public RoundedConfigScreen(Screen parent, OptionCategory root, String configName) {
-		super(root.getName());
+		super(I18n.translate(root.getName()));
 		this.parent = parent;
 		this.configName = configName;
 		this.root = root;

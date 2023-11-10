@@ -43,21 +43,22 @@ public class ConfigUI {
 		JsonObject ui = gson.fromJson(new InputStreamReader(stream), JsonObject.class);
 
 		for (Map.Entry<String, JsonElement> entry : ui.get("styles").getAsJsonObject().entrySet()) {
-			if (styles.containsKey(entry.getKey())) {
-				Style s = styles.get(entry.getKey());
-				JsonObject widgetsObject = entry.getValue().getAsJsonObject().get("widgets").getAsJsonObject();
-				Map<String, String> widgets = widgetsObject.entrySet().stream()
-					.filter(en -> !en.getValue().getAsString().trim().isEmpty())
-					.collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue().getAsString()));
-				s.getWidgets().putAll(widgets);
-				continue;
-			}
 			JsonObject widgetsObject = entry.getValue().getAsJsonObject().get("widgets").getAsJsonObject();
 			String screen = getOrNull(entry.getValue(), "screen");
 			Map<String, String> widgets = widgetsObject.entrySet().stream()
 				.filter(en -> !en.getValue().getAsString().trim().isEmpty())
 				.collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue().getAsString()));
 			String parentStyleName = getOrNull(entry.getValue(), "extends");
+			if (styles.containsKey(entry.getKey())) {
+				Style s = styles.get(entry.getKey());
+				s.getWidgets().putAll(widgets);
+				if (screen != null && !screen.trim().isEmpty()){
+					styles.put(entry.getKey(), new StyleImpl(entry.getKey(), s.getWidgets(), screen,
+						parentStyleName != null ? parentStyleName : s.getParentStyleName().orElse(null)));
+				}
+				continue;
+			}
+
 			styles.put(entry.getKey(), new StyleImpl(entry.getKey(), widgets, screen, parentStyleName));
 		}
 	}
@@ -109,7 +110,10 @@ public class ConfigUI {
 
 	private Class<?> getScreen(ClassLoader loader, Style style){
 		String name = style.getScreen();
-		if (name == null || name.isEmpty() || name.trim().isEmpty()) {
+		if (name == null || name.trim().isEmpty()) {
+			if (style.equals(getDefaultStyle())){
+				throw new IllegalStateException("Something is seriously wrong! The default style's screen is empty! default style: "+getDefaultStyle());
+			}
 			if (style.getParentStyleName().isPresent()) {
 				return getScreen(loader, getStyle(style.getParentStyleName().get()));
 			} else {
@@ -129,7 +133,7 @@ public class ConfigUI {
 
 	private Class<?> getWidget(String identifier, ClassLoader loader, Style style) {
 		String name = style.getWidgets().get(identifier);
-		if (name == null || name.isEmpty() || name.trim().isEmpty()) {
+		if (name == null || name.trim().isEmpty()) {
 			if (style.getParentStyleName().isPresent()) {
 				return getWidget(identifier, loader, getStyle(style.getParentStyleName().get()));
 			} else {
