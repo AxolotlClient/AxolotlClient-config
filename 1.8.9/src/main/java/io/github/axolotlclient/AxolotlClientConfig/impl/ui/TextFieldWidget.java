@@ -16,20 +16,17 @@ import org.lwjgl.opengl.GL11;
 public class TextFieldWidget extends ClickableWidget {
 	public static final int BACKWARDS = -1;
 	public static final int FORWARDS = 1;
-	private static final int INSERT_CURSOR_WIDTH = 1;
+	public static final int DEFAULT_EDITABLE_COLOR = 14737632;
 	protected static final int INSERT_CURSOR_COLOR = -3092272;
 	protected static final String UNDERSCORE = "_";
-	public static final int DEFAULT_EDITABLE_COLOR = 14737632;
 	protected static final int BORDER_COLOR_FOCUSED = -1;
 	protected static final int BORDER_COLOR = -6250336;
 	protected static final int BACKGROUND_COLOR = -16777216;
+	private static final int INSERT_CURSOR_WIDTH = 1;
 	protected final TextRenderer textRenderer;
 	protected String text = "";
-	private int maxLength = 32;
 	protected boolean drawsBackground = true;
-	private boolean focusUnlocked = true;
 	protected boolean editable = true;
-	private boolean selecting;
 	protected int firstCharacterIndex;
 	protected int selectionStart;
 	protected int selectionEnd;
@@ -38,12 +35,14 @@ public class TextFieldWidget extends ClickableWidget {
 	@Nullable
 	protected String suggestion;
 	@Nullable
+	protected String hint;
+	protected long focusedTime = Minecraft.getTime();
+	private int maxLength = 32;
+	private boolean focusUnlocked = true;
+	private boolean selecting;
+	@Nullable
 	private Consumer<String> changedListener;
 	private Predicate<String> textPredicate = Objects::nonNull;
-	@Nullable
-	protected String hint;
-
-	protected long focusedTime = Minecraft.getTime();
 
 	public TextFieldWidget(TextRenderer textRenderer, int x, int y, int width, int height, String text) {
 		this(textRenderer, x, y, width, height, null, text);
@@ -61,6 +60,10 @@ public class TextFieldWidget extends ClickableWidget {
 		this.changedListener = changedListener;
 	}
 
+	public String getText() {
+		return this.text;
+	}
+
 	public void setText(String text) {
 		if (this.textPredicate.test(text)) {
 			if (text.length() > this.maxLength) {
@@ -73,10 +76,6 @@ public class TextFieldWidget extends ClickableWidget {
 			this.setSelectionEnd(this.selectionStart);
 			this.onChanged(text);
 		}
-	}
-
-	public String getText() {
-		return this.text;
 	}
 
 	public String getSelectedText() {
@@ -218,15 +217,6 @@ public class TextFieldWidget extends ClickableWidget {
 		return cursor;
 	}
 
-	public void setCursor(int cursor) {
-		this.setSelectionStart(cursor);
-		if (!this.selecting) {
-			this.setSelectionEnd(this.selectionStart);
-		}
-
-		this.onChanged(this.text);
-	}
-
 	public void setSelectionStart(int cursor) {
 		this.selectionStart = MathHelper.clamp(cursor, 0, this.text.length());
 	}
@@ -266,7 +256,7 @@ public class TextFieldWidget extends ClickableWidget {
 
 				return true;
 			} else {
-				switch(keyCode) {
+				switch (keyCode) {
 					case 14:
 						if (Screen.isControlDown()) {
 							if (this.editable) {
@@ -360,10 +350,10 @@ public class TextFieldWidget extends ClickableWidget {
 	@Override
 	public boolean mouseClicked(double mouseX, double mouseY, int button) {
 		if (this.isVisible() && button == 0) {
-			boolean bl = mouseX >= (double)this.getX()
-				&& mouseX < (double)(this.getX() + this.getWidth())
-				&& mouseY >= (double)this.getY()
-				&& mouseY < (double)(this.getY() + this.getHeight());
+			boolean bl = mouseX >= (double) this.getX()
+				&& mouseX < (double) (this.getX() + this.getWidth())
+				&& mouseY >= (double) this.getY()
+				&& mouseY < (double) (this.getY() + this.getHeight());
 			if (this.focusUnlocked) {
 				this.setFocused(bl);
 			}
@@ -414,6 +404,10 @@ public class TextFieldWidget extends ClickableWidget {
 		GlStateManager.enableTexture();
 	}
 
+	protected int getMaxLength() {
+		return this.maxLength;
+	}
+
 	public void setMaxLength(int maxLength) {
 		this.maxLength = maxLength;
 		if (this.text.length() > maxLength) {
@@ -422,12 +416,17 @@ public class TextFieldWidget extends ClickableWidget {
 		}
 	}
 
-	protected int getMaxLength() {
-		return this.maxLength;
-	}
-
 	public int getCursor() {
 		return this.selectionStart;
+	}
+
+	public void setCursor(int cursor) {
+		this.setSelectionStart(cursor);
+		if (!this.selecting) {
+			this.setSelectionEnd(this.selectionStart);
+		}
+
+		this.onChanged(this.text);
 	}
 
 	protected boolean drawsBackground() {
@@ -449,10 +448,10 @@ public class TextFieldWidget extends ClickableWidget {
 	@Override
 	public boolean isMouseOver(double mouseX, double mouseY) {
 		return this.visible
-			&& mouseX >= (double)this.getX()
-			&& mouseX < (double)(this.getX() + this.getWidth())
-			&& mouseY >= (double)this.getY()
-			&& mouseY < (double)(this.getY() + this.getHeight());
+			&& mouseX >= (double) this.getX()
+			&& mouseX < (double) (this.getX() + this.getWidth())
+			&& mouseY >= (double) this.getY()
+			&& mouseY < (double) (this.getY() + this.getHeight());
 	}
 
 	@Override
@@ -581,13 +580,15 @@ public class TextFieldWidget extends ClickableWidget {
 		this.hint = hint;
 	}
 
-	protected float getStringWidth(String text){
+	protected float getStringWidth(String text) {
 		return client.textRenderer.getWidth(text);
 	}
-	protected String trimToWidth(String text, float width){
+
+	protected String trimToWidth(String text, float width) {
 		return client.textRenderer.trim(text, (int) width);
 	}
-	protected String trimToWidth(String text, float width, boolean backwards){
+
+	protected String trimToWidth(String text, float width, boolean backwards) {
 		return client.textRenderer.trim(text, (int) width, backwards);
 	}
 }

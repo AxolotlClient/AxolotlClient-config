@@ -11,12 +11,11 @@ import net.minecraft.text.TranslatableText;
 
 public abstract class Screen extends net.minecraft.client.gui.screen.Screen {
 
-	private final List<Drawable> drawables = Lists.newArrayList();
 	protected final String title;
-
+	private final List<Drawable> drawables = Lists.newArrayList();
 	protected MinecraftClient client;
 
-	public Screen(String title){
+	public Screen(String title) {
 		super(new TranslatableText(title));
 		this.title = title;
 	}

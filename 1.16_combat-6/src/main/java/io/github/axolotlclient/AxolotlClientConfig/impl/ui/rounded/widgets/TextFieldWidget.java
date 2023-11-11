@@ -377,7 +377,7 @@ public class TextFieldWidget extends AbstractButtonWidget implements DrawingUtil
 
 			if (bl2) {
 				if (bl3) {
-					fillRoundedRect(ctx, o, m-1, 1, 2 + NVGHolder.getFont().getLineHeight(), i, 2);
+					fillRoundedRect(ctx, o, m - 1, 1, 2 + NVGHolder.getFont().getLineHeight(), i, 2);
 				} else {
 					drawString(ctx, font, UNDERSCORE, o, (float) m, i);
 				}
@@ -390,11 +390,11 @@ public class TextFieldWidget extends AbstractButtonWidget implements DrawingUtil
 		}
 	}
 
-	public int getX(){
+	public int getX() {
 		return x;
 	}
 
-	public int getY(){
+	public int getY() {
 		return y;
 	}
 
@@ -494,24 +494,24 @@ public class TextFieldWidget extends AbstractButtonWidget implements DrawingUtil
 	public void setSelectionEnd(int index) {
 		int i = this.text.length();
 		this.selectionEnd = MathHelper.clamp(index, 0, i);
-			if (this.firstCharacterIndex > i) {
-				this.firstCharacterIndex = i;
-			}
+		if (this.firstCharacterIndex > i) {
+			this.firstCharacterIndex = i;
+		}
 
-			int j = this.getInnerWidth();
-			String string = trimToWidth(this.text.substring(this.firstCharacterIndex), j);
-			int k = string.length() + this.firstCharacterIndex;
-			if (this.selectionEnd == this.firstCharacterIndex) {
-				this.firstCharacterIndex -= trimToWidth(this.text, j, true).length();
-			}
+		int j = this.getInnerWidth();
+		String string = trimToWidth(this.text.substring(this.firstCharacterIndex), j);
+		int k = string.length() + this.firstCharacterIndex;
+		if (this.selectionEnd == this.firstCharacterIndex) {
+			this.firstCharacterIndex -= trimToWidth(this.text, j, true).length();
+		}
 
-			if (this.selectionEnd > k) {
-				this.firstCharacterIndex += this.selectionEnd - k;
-			} else if (this.selectionEnd <= this.firstCharacterIndex) {
-				this.firstCharacterIndex -= this.firstCharacterIndex - this.selectionEnd;
-			}
+		if (this.selectionEnd > k) {
+			this.firstCharacterIndex += this.selectionEnd - k;
+		} else if (this.selectionEnd <= this.firstCharacterIndex) {
+			this.firstCharacterIndex -= this.firstCharacterIndex - this.selectionEnd;
+		}
 
-			this.firstCharacterIndex = MathHelper.clamp(this.firstCharacterIndex, 0, i);
+		this.firstCharacterIndex = MathHelper.clamp(this.firstCharacterIndex, 0, i);
 
 	}
 

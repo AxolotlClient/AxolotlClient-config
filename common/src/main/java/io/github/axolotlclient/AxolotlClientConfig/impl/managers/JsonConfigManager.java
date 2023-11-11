@@ -77,7 +77,7 @@ public class JsonConfigManager implements ConfigManager {
 			if (object.has(option.getName())) {
 				try {
 					option.fromSerializedValue(object.get(option.getName()).getAsString());
-				} catch (Throwable t){
+				} catch (Throwable t) {
 					option.setDefault();
 				}
 			} else {

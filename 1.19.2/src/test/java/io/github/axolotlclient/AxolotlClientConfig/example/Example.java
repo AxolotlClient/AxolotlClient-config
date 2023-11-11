@@ -49,12 +49,12 @@ public class Example implements ClientModInitializer {
 		example.add(new BooleanOption("other option", true));
 		example.add(new GraphicsOption("graphics", 40, 40));
 
-		AxolotlClientConfig.getInstance().register(new JsonConfigManager(QuiltLoader.getConfigDir().resolve(modid+".json"), example));
+		AxolotlClientConfig.getInstance().register(new JsonConfigManager(QuiltLoader.getConfigDir().resolve(modid + ".json"), example));
 
 		KeyBind bind = new KeyBind(modid, InputUtil.KEY_O_CODE, modid);
 
 		ClientTickEvents.END.register(client -> {
-			if (bind.wasPressed()){
+			if (bind.wasPressed()) {
 				client.setScreen(getConfigScreenFactory(modid).apply(client.currentScreen));
 			}
 		});

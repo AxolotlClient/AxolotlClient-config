@@ -37,12 +37,12 @@ public abstract class ElementListWidget<E extends ElementListWidget.Entry<E>> ex
 	}
 
 	public void appendNarrations(NarrationMessageBuilder builder) {
-		E entry = (E)this.getHoveredEntry();
+		E entry = (E) this.getHoveredEntry();
 		if (entry != null) {
 			entry.appendNarrations(builder.nextMessage());
 			this.appendNarrations(builder, entry);
 		} else {
-			E entry2 = (E)this.getFocused();
+			E entry2 = (E) this.getFocused();
 			if (entry2 != null) {
 				entry2.appendNarrations(builder.nextMessage());
 				this.appendNarrations(builder, entry2);
@@ -74,15 +74,15 @@ public abstract class ElementListWidget<E extends ElementListWidget.Entry<E>> ex
 			this.dragging = dragging;
 		}
 
-		@Override
-		public void setFocused(@Nullable Element focused) {
-			this.focused = focused;
-		}
-
 		@Nullable
 		@Override
 		public Element getFocused() {
 			return this.focused;
+		}
+
+		@Override
+		public void setFocused(@Nullable Element focused) {
+			this.focused = focused;
 		}
 
 		public abstract List<? extends Selectable> selectableChildren();

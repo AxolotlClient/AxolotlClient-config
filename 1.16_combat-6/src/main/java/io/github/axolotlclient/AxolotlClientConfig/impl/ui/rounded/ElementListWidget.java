@@ -1,8 +1,5 @@
 package io.github.axolotlclient.AxolotlClientConfig.impl.ui.rounded;
 
-import java.util.List;
-
-import io.github.axolotlclient.AxolotlClientConfig.impl.ui.Selectable;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.Element;
 import net.minecraft.client.gui.ParentElement;
@@ -52,15 +49,15 @@ public abstract class ElementListWidget<E extends ElementListWidget.Entry<E>> ex
 			this.dragging = dragging;
 		}
 
-		@Override
-		public void setFocused(@Nullable Element focused) {
-			this.focused = focused;
-		}
-
 		@Nullable
 		@Override
 		public Element getFocused() {
 			return this.focused;
+		}
+
+		@Override
+		public void setFocused(@Nullable Element focused) {
+			this.focused = focused;
 		}
 	}
 }

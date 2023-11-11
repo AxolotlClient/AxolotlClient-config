@@ -2,7 +2,6 @@ package io.github.axolotlclient.AxolotlClientConfig.impl.ui.rounded.widgets;
 
 import io.github.axolotlclient.AxolotlClientConfig.impl.options.EnumOption;
 import net.minecraft.client.resource.language.I18n;
-import net.minecraft.text.TranslatableText;
 
 public class EnumWidget<T extends Enum<T>> extends RoundedButtonWidget {
 	private final EnumOption<T> option;

@@ -91,20 +91,20 @@ public class DrawUtil {
 		}
 	}
 
-	public static void pushScissor(int x, int y, int width, int height){
+	public static void pushScissor(int x, int y, int width, int height) {
 		pushScissor(new Rectangle(x, y, width, height));
 	}
 
-	public static void pushScissor(Rectangle rect){
+	public static void pushScissor(Rectangle rect) {
 		setScissor(scissorStack.push(rect));
 	}
 
-	public static void popScissor(){
+	public static void popScissor() {
 		scissorStack.pop();
 		setScissor(scissorStack.empty() ? null : scissorStack.peek());
 	}
 
-	private static void setScissor(Rectangle rect){
+	private static void setScissor(Rectangle rect) {
 		if (rect != null) {
 			GL11.glEnable(GL11.GL_SCISSOR_TEST);
 			Window window = MinecraftClient.getInstance().getWindow();

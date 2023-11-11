@@ -7,14 +7,14 @@ public abstract class OptionBase<T> implements Option<T> {
 
 	@Getter
 	private final String name;
-	protected T value;
 	@Getter
 	private final T defaultValue;
-
 	private final ChangeListener<T> changeListener;
+	protected T value;
 
-	public OptionBase(String name, T defaultValue){
-		this(name, defaultValue, val -> {});
+	public OptionBase(String name, T defaultValue) {
+		this(name, defaultValue, val -> {
+		});
 	}
 
 	public OptionBase(String name, T defaultValue, ChangeListener<T> changeListener) {

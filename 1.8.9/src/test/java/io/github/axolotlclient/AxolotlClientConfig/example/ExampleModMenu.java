@@ -1,13 +1,6 @@
 package io.github.axolotlclient.AxolotlClientConfig.example;
 
-import java.lang.reflect.InvocationTargetException;
-import java.util.function.Function;
-
 import com.terraformersmc.modmenu.api.ModMenuApi;
-import io.github.axolotlclient.AxolotlClientConfig.api.AxolotlClientConfig;
-import io.github.axolotlclient.AxolotlClientConfig.api.options.OptionCategory;
-import io.github.axolotlclient.AxolotlClientConfig.impl.ui.ConfigUI;
-import net.minecraft.client.gui.screen.Screen;
 
 public class ExampleModMenu implements ModMenuApi {
     /*@Override

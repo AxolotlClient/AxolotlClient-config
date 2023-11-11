@@ -55,11 +55,11 @@ public final class NVGFont implements AutoCloseable {
 		int minor = Integer.parseInt(lwjglVersion[1]);
 		int patch = Integer.parseInt(lwjglVersion[2]);
 		boolean requiresAlternative = false;
-		if (major <= 3){
-			if (minor <= 3){
-				if (minor < 3){
+		if (major <= 3) {
+			if (minor <= 3) {
+				if (minor < 3) {
 					requiresAlternative = true;
-				} else if (patch <= 1){
+				} else if (patch <= 1) {
 					requiresAlternative = true;
 				}
 			}
@@ -81,7 +81,7 @@ public final class NVGFont implements AutoCloseable {
 		this.nvg = ctx;
 	}
 
-	NVGFont(long ctx, int handle){
+	NVGFont(long ctx, int handle) {
 		this.nvg = ctx;
 		this.handle = handle;
 		buffer = null;
@@ -136,23 +136,23 @@ public final class NVGFont implements AutoCloseable {
 		return bounds[2];
 	}
 
-	public String trimToWidth(String text, float width){
+	public String trimToWidth(String text, float width) {
 		return trimToWidth(text, width, false);
 	}
 
-	public String trimToWidth(String text, float width, boolean backwards){
+	public String trimToWidth(String text, float width, boolean backwards) {
 
-		if (getWidth(text) <= width){
+		if (getWidth(text) <= width) {
 			return text;
 		}
 
-		int i = backwards ? text.length()-1 : 0;
+		int i = backwards ? text.length() - 1 : 0;
 		StringBuilder builder = new StringBuilder();
-		while (getWidth(builder.toString()) < width){
+		while (getWidth(builder.toString()) < width) {
 			builder.append(text.charAt(i));
 			i += (backwards ? -1 : 1);
 		}
-		builder.delete(builder.length() -1- Character.charCount(builder.codePointAt(builder.length()-1)), builder.length()-1);
+		builder.delete(builder.length() - 1 - Character.charCount(builder.codePointAt(builder.length() - 1)), builder.length() - 1);
 		if (backwards) {
 			builder = builder.reverse();
 		}

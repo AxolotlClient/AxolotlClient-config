@@ -13,11 +13,11 @@ public class NVGMC {
 	private static boolean initialized;
 	private static WindowPropertiesProvider propertiesProvider;
 
-	public static void setWindowPropertiesProvider(WindowPropertiesProvider provider){
+	public static void setWindowPropertiesProvider(WindowPropertiesProvider provider) {
 		propertiesProvider = provider;
 	}
 
-	private static void initNVG(){
+	private static void initNVG() {
 
 		if (propertiesProvider == null) {
 			throw new IllegalStateException("WindowPropertiesProvider == null");
@@ -36,28 +36,28 @@ public class NVGMC {
 		return new NVGFont(getNvgContext(), fontHandle);
 	}
 
-	private static long getNvgContext(){
-		if (nvgContext == 0 || !initialized){
+	private static long getNvgContext() {
+		if (nvgContext == 0 || !initialized) {
 			initNVG();
 		}
 		return nvgContext;
 	}
 
-	public static void wrap(Consumer<Long> run){
+	public static void wrap(Consumer<Long> run) {
 		wrap(true, run);
 	}
 
-	public static void wrap(boolean scale, Consumer<Long> run){
+	public static void wrap(boolean scale, Consumer<Long> run) {
 
 		long ctx = getNvgContext();
 
 		int width = propertiesProvider.getWidth();
 		int height = propertiesProvider.getHeight();
 		NanoVG.nvgBeginFrame(ctx, width,
-				height,
-				(float) width / height);
+			height,
+			(float) width / height);
 
-		if (scale){
+		if (scale) {
 			float factor = propertiesProvider.getScaleFactor();
 			NanoVG.nvgScale(ctx, factor, factor);
 		}

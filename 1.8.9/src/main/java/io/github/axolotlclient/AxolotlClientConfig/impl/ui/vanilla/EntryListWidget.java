@@ -31,10 +31,10 @@ public abstract class EntryListWidget<E extends EntryListWidget.Entry<E>> extend
 	protected int right;
 	protected int left;
 	protected boolean centerListVertically = true;
+	protected int headerHeight;
 	private double scrollAmount;
 	private boolean renderSelection = true;
 	private boolean renderHeader;
-	protected int headerHeight;
 	private boolean scrolling;
 	@Nullable
 	private E selected;
@@ -92,7 +92,7 @@ public abstract class EntryListWidget<E extends EntryListWidget.Entry<E>> extend
 
 	@Nullable
 	public E getFocused() {
-		return (E)super.getFocused();
+		return (E) super.getFocused();
 	}
 
 	@Override
@@ -110,7 +110,7 @@ public abstract class EntryListWidget<E extends EntryListWidget.Entry<E>> extend
 	}
 
 	protected E getEntry(int index) {
-		return (E)this.children().get(index);
+		return (E) this.children().get(index);
 	}
 
 	protected int addEntry(E entry) {
@@ -119,15 +119,15 @@ public abstract class EntryListWidget<E extends EntryListWidget.Entry<E>> extend
 	}
 
 	protected void addEntryToTop(E entry) {
-		double d = (double)this.getMaxScroll() - this.getScrollAmount();
+		double d = (double) this.getMaxScroll() - this.getScrollAmount();
 		this.children.add(0, entry);
-		this.setScrollAmount((double)this.getMaxScroll() - d);
+		this.setScrollAmount((double) this.getMaxScroll() - d);
 	}
 
 	protected boolean removeEntryFromTop(E entry) {
-		double d = (double)this.getMaxScroll() - this.getScrollAmount();
+		double d = (double) this.getMaxScroll() - this.getScrollAmount();
 		boolean bl = this.removeEntry(entry);
-		this.setScrollAmount((double)this.getMaxScroll() - d);
+		this.setScrollAmount((double) this.getMaxScroll() - d);
 		return bl;
 	}
 
@@ -145,9 +145,9 @@ public abstract class EntryListWidget<E extends EntryListWidget.Entry<E>> extend
 		int j = this.left + this.width / 2;
 		int k = j - i;
 		int l = j + i;
-		int m = MathHelper.floor(y - (double)this.top) - this.headerHeight + (int)this.getScrollAmount() - 4;
+		int m = MathHelper.floor(y - (double) this.top) - this.headerHeight + (int) this.getScrollAmount() - 4;
 		int n = m / this.itemHeight;
-		return (E)(x < (double)this.getScrollbarPositionX() && x >= (double)k && x <= (double)l && n >= 0 && m >= 0 && n < this.getEntryCount()
+		return (E) (x < (double) this.getScrollbarPositionX() && x >= (double) k && x <= (double) l && n >= 0 && m >= 0 && n < this.getEntryCount()
 			? this.children().get(n)
 			: null);
 	}
@@ -195,15 +195,15 @@ public abstract class EntryListWidget<E extends EntryListWidget.Entry<E>> extend
 			GlStateManager.color4f(1.0f, 1.0f, 1.0f, 1.0f);
 			float f = 32.0f;
 			bufferBuilder.begin(7, DefaultVertexFormat.POSITION_TEX_COLOR);
-			bufferBuilder.vertex(this.left, this.bottom, 0.0).texture((float)this.left / 32.0f, (float)(this.bottom + (int)this.getScrollAmount()) / 32.0f).color(32, 32, 32, 255).nextVertex();
-			bufferBuilder.vertex(this.right, this.bottom, 0.0).texture((float)this.right / 32.0f, (float)(this.bottom + (int)this.getScrollAmount()) / 32.0f).color(32, 32, 32, 255).nextVertex();
-			bufferBuilder.vertex(this.right, this.top, 0.0).texture((float)this.right / 32.0f, (float)(this.top + (int)this.getScrollAmount()) / 32.0f).color(32, 32, 32, 255).nextVertex();
-			bufferBuilder.vertex(this.left, this.top, 0.0).texture((float)this.left / 32.0f, (float)(this.top + (int)this.getScrollAmount()) / 32.0f).color(32, 32, 32, 255).nextVertex();
+			bufferBuilder.vertex(this.left, this.bottom, 0.0).texture((float) this.left / 32.0f, (float) (this.bottom + (int) this.getScrollAmount()) / 32.0f).color(32, 32, 32, 255).nextVertex();
+			bufferBuilder.vertex(this.right, this.bottom, 0.0).texture((float) this.right / 32.0f, (float) (this.bottom + (int) this.getScrollAmount()) / 32.0f).color(32, 32, 32, 255).nextVertex();
+			bufferBuilder.vertex(this.right, this.top, 0.0).texture((float) this.right / 32.0f, (float) (this.top + (int) this.getScrollAmount()) / 32.0f).color(32, 32, 32, 255).nextVertex();
+			bufferBuilder.vertex(this.left, this.top, 0.0).texture((float) this.left / 32.0f, (float) (this.top + (int) this.getScrollAmount()) / 32.0f).color(32, 32, 32, 255).nextVertex();
 			tessellator.end();
 		}
 
 		int k = this.getRowLeft();
-		int l = this.top + 4 - (int)this.getScrollAmount();
+		int l = this.top + 4 - (int) this.getScrollAmount();
 		DrawUtil.pushScissor(this.left, this.top, this.right - this.left, this.bottom - this.top);
 		if (this.renderHeader) {
 			this.renderHeader(k, l, tessellator);
@@ -218,14 +218,14 @@ public abstract class EntryListWidget<E extends EntryListWidget.Entry<E>> extend
 			float g = 32.0f;
 			int m = -100;
 			bufferBuilder.begin(7, DefaultVertexFormat.POSITION_TEX_COLOR);
-			bufferBuilder.vertex(this.left, this.top, -100.0).texture(0.0f, (float)this.top / 32.0f).color(64, 64, 64, 255).nextVertex();
-			bufferBuilder.vertex(this.left + this.width, this.top, -100.0).texture((float)this.width / 32.0f, (float)this.top / 32.0f).color(64, 64, 64, 255).nextVertex();
-			bufferBuilder.vertex(this.left + this.width, 0.0, -100.0).texture((float)this.width / 32.0f, 0.0f).color(64, 64, 64, 255).nextVertex();
+			bufferBuilder.vertex(this.left, this.top, -100.0).texture(0.0f, (float) this.top / 32.0f).color(64, 64, 64, 255).nextVertex();
+			bufferBuilder.vertex(this.left + this.width, this.top, -100.0).texture((float) this.width / 32.0f, (float) this.top / 32.0f).color(64, 64, 64, 255).nextVertex();
+			bufferBuilder.vertex(this.left + this.width, 0.0, -100.0).texture((float) this.width / 32.0f, 0.0f).color(64, 64, 64, 255).nextVertex();
 			bufferBuilder.vertex(this.left, 0.0, -100.0).texture(0.0f, 0.0f).color(64, 64, 64, 255).nextVertex();
-			bufferBuilder.vertex(this.left, this.height, -100.0).texture(0.0f, (float)this.height / 32.0f).color(64, 64, 64, 255).nextVertex();
-			bufferBuilder.vertex(this.left + this.width, this.height, -100.0).texture((float)this.width / 32.0f, (float)this.height / 32.0f).color(64, 64, 64, 255).nextVertex();
-			bufferBuilder.vertex(this.left + this.width, this.bottom, -100.0).texture((float)this.width / 32.0f, (float)this.bottom / 32.0f).color(64, 64, 64, 255).nextVertex();
-			bufferBuilder.vertex(this.left, this.bottom, -100.0).texture(0.0f, (float)this.bottom / 32.0f).color(64, 64, 64, 255).nextVertex();
+			bufferBuilder.vertex(this.left, this.height, -100.0).texture(0.0f, (float) this.height / 32.0f).color(64, 64, 64, 255).nextVertex();
+			bufferBuilder.vertex(this.left + this.width, this.height, -100.0).texture((float) this.width / 32.0f, (float) this.height / 32.0f).color(64, 64, 64, 255).nextVertex();
+			bufferBuilder.vertex(this.left + this.width, this.bottom, -100.0).texture((float) this.width / 32.0f, (float) this.bottom / 32.0f).color(64, 64, 64, 255).nextVertex();
+			bufferBuilder.vertex(this.left, this.bottom, -100.0).texture(0.0f, (float) this.bottom / 32.0f).color(64, 64, 64, 255).nextVertex();
 			tessellator.end();
 			GlStateManager.depthFunc(515);
 			GlStateManager.disableDepthTest();
@@ -249,9 +249,9 @@ public abstract class EntryListWidget<E extends EntryListWidget.Entry<E>> extend
 
 		int o = this.getMaxScroll();
 		if (o > 0) {
-			int p = (int)((float)((this.bottom - this.top) * (this.bottom - this.top)) / (float)this.getMaxPosition());
+			int p = (int) ((float) ((this.bottom - this.top) * (this.bottom - this.top)) / (float) this.getMaxPosition());
 			p = MathHelper.clamp(p, 32, this.bottom - this.top - 8);
-			int q = (int)this.getScrollAmount() * (this.bottom - this.top - p) / o + this.top;
+			int q = (int) this.getScrollAmount() * (this.bottom - this.top - p) / o + this.top;
 			if (q < this.top) {
 				q = this.top;
 			}
@@ -297,7 +297,7 @@ public abstract class EntryListWidget<E extends EntryListWidget.Entry<E>> extend
 	}
 
 	private void scroll(int amount) {
-		this.setScrollAmount(this.getScrollAmount() + (double)amount);
+		this.setScrollAmount(this.getScrollAmount() + (double) amount);
 	}
 
 	public double getScrollAmount() {
@@ -313,11 +313,11 @@ public abstract class EntryListWidget<E extends EntryListWidget.Entry<E>> extend
 	}
 
 	public int getScrollBottom() {
-		return (int)this.getScrollAmount() - this.height - this.headerHeight;
+		return (int) this.getScrollAmount() - this.height - this.headerHeight;
 	}
 
 	protected void updateScrollingState(double mouseX, double mouseY, int button) {
-		this.scrolling = button == 0 && mouseX >= (double)this.getScrollbarPositionX() && mouseX < (double)(this.getScrollbarPositionX() + 6);
+		this.scrolling = button == 0 && mouseX >= (double) this.getScrollbarPositionX() && mouseX < (double) (this.getScrollbarPositionX() + 6);
 	}
 
 	protected int getScrollbarPositionX() {
@@ -339,7 +339,7 @@ public abstract class EntryListWidget<E extends EntryListWidget.Entry<E>> extend
 				}
 			} else if (button == 0) {
 				this.clickedHeader(
-					(int)(mouseX - (double)(this.left + this.width / 2 - this.getRowWidth() / 2)), (int)(mouseY - (double)this.top) + (int)this.getScrollAmount() - 4
+					(int) (mouseX - (double) (this.left + this.width / 2 - this.getRowWidth() / 2)), (int) (mouseY - (double) this.top) + (int) this.getScrollAmount() - 4
 				);
 				return true;
 			}
@@ -362,15 +362,15 @@ public abstract class EntryListWidget<E extends EntryListWidget.Entry<E>> extend
 		if (super.mouseDragged(mouseX, mouseY, button, deltaX, deltaY)) {
 			return true;
 		} else if (button == 0 && this.scrolling) {
-			if (mouseY < (double)this.top) {
+			if (mouseY < (double) this.top) {
 				this.setScrollAmount(0.0);
-			} else if (mouseY > (double)this.bottom) {
+			} else if (mouseY > (double) this.bottom) {
 				this.setScrollAmount(this.getMaxScroll());
 			} else {
 				double d = Math.max(1, this.getMaxScroll());
 				int i = this.bottom - this.top;
-				int j = MathHelper.clamp((int)((float)(i * i) / (float)this.getMaxPosition()), 32, i - 8);
-				double e = Math.max(1.0, d / (double)(i - j));
+				int j = MathHelper.clamp((int) ((float) (i * i) / (float) this.getMaxPosition()), 32, i - 8);
+				double e = Math.max(1.0, d / (double) (i - j));
 				this.setScrollAmount(this.getScrollAmount() + deltaY * e);
 			}
 
@@ -382,7 +382,7 @@ public abstract class EntryListWidget<E extends EntryListWidget.Entry<E>> extend
 
 	@Override
 	public boolean mouseScrolled(double mouseX, double mouseY, double amountX, double amountY) {
-		this.setScrollAmount(this.getScrollAmount() - amountY * (double)this.itemHeight / 2.0);
+		this.setScrollAmount(this.getScrollAmount() - amountY * (double) this.itemHeight / 2.0);
 		return true;
 	}
 
@@ -418,13 +418,13 @@ public abstract class EntryListWidget<E extends EntryListWidget.Entry<E>> extend
 		if (!this.children().isEmpty()) {
 			int j = this.children().indexOf(this.getSelectedOrNull());
 
-			while(true) {
+			while (true) {
 				int k = MathHelper.clamp(j + i, 0, this.getEntryCount() - 1);
 				if (j == k) {
 					break;
 				}
 
-				E entry = (E)this.children().get(k);
+				E entry = (E) this.children().get(k);
 				if (predicate.test(entry)) {
 					this.setSelected(entry);
 					this.ensureVisible(entry);
@@ -440,7 +440,7 @@ public abstract class EntryListWidget<E extends EntryListWidget.Entry<E>> extend
 
 	@Override
 	public boolean isMouseOver(double mouseX, double mouseY) {
-		return mouseY >= (double)this.top && mouseY <= (double)this.bottom && mouseX >= (double)this.left && mouseX <= (double)this.right;
+		return mouseY >= (double) this.top && mouseY <= (double) this.bottom && mouseX >= (double) this.left && mouseX <= (double) this.right;
 	}
 
 	protected void renderList(int mouseX, int mouseY, float delta) {
@@ -449,7 +449,7 @@ public abstract class EntryListWidget<E extends EntryListWidget.Entry<E>> extend
 		int k = this.itemHeight - 4;
 		int l = this.getEntryCount();
 
-		for(int m = 0; m < l; ++m) {
+		for (int m = 0; m < l; ++m) {
 			int n = this.getRowTop(m);
 			int o = this.getRowBottom(m);
 			if (o >= this.top && n <= this.bottom) {
@@ -484,7 +484,7 @@ public abstract class EntryListWidget<E extends EntryListWidget.Entry<E>> extend
 	}
 
 	protected int getRowTop(int index) {
-		return this.top + 4 - (int)this.getScrollAmount() + index * this.itemHeight + this.headerHeight;
+		return this.top + 4 - (int) this.getScrollAmount() + index * this.itemHeight + this.headerHeight;
 	}
 
 	private int getRowBottom(int index) {
@@ -513,7 +513,7 @@ public abstract class EntryListWidget<E extends EntryListWidget.Entry<E>> extend
 	protected boolean removeEntry(E entry) {
 		boolean bl = this.children.remove(entry);
 		if (bl && entry == this.getSelectedOrNull()) {
-			this.setSelected((E)null);
+			this.setSelected((E) null);
 		}
 
 		return bl;
@@ -528,31 +528,9 @@ public abstract class EntryListWidget<E extends EntryListWidget.Entry<E>> extend
 		entry.parentList = this;
 	}
 
-	class Entries extends AbstractList<E> {
-		private final List<E> entries = Lists.<E>newArrayList();
-
-		public E get(int i) {
-			return (E)this.entries.get(i);
-		}
-
-		public int size() {
-			return this.entries.size();
-		}
-
-		public E set(int i, E entry) {
-			E entry2 = (E)this.entries.set(i, entry);
-			EntryListWidget.this.setEntryParentList(entry);
-			return entry2;
-		}
-
-		public void add(int i, E entry) {
-			this.entries.add(i, entry);
-			EntryListWidget.this.setEntryParentList(entry);
-		}
-
-		public E remove(int i) {
-			return (E)this.entries.remove(i);
-		}
+	protected static enum MoveDirection {
+		UP,
+		DOWN;
 	}
 
 	public abstract static class Entry<E extends Entry<E>> implements Element {
@@ -569,8 +547,30 @@ public abstract class EntryListWidget<E extends EntryListWidget.Entry<E>> extend
 		}
 	}
 
-	protected static enum MoveDirection {
-		UP,
-		DOWN;
+	class Entries extends AbstractList<E> {
+		private final List<E> entries = Lists.<E>newArrayList();
+
+		public E get(int i) {
+			return (E) this.entries.get(i);
+		}
+
+		public int size() {
+			return this.entries.size();
+		}
+
+		public E set(int i, E entry) {
+			E entry2 = (E) this.entries.set(i, entry);
+			EntryListWidget.this.setEntryParentList(entry);
+			return entry2;
+		}
+
+		public void add(int i, E entry) {
+			this.entries.add(i, entry);
+			EntryListWidget.this.setEntryParentList(entry);
+		}
+
+		public E remove(int i) {
+			return (E) this.entries.remove(i);
+		}
 	}
 }

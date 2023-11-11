@@ -2,13 +2,13 @@ package io.github.axolotlclient.AxolotlClientConfig.impl.ui;
 
 public interface Widget {
 
-	void setX(int x);
-
-	void setY(int y);
-
 	int getX();
 
+	void setX(int x);
+
 	int getY();
+
+	void setY(int y);
 
 	int getWidth();
 

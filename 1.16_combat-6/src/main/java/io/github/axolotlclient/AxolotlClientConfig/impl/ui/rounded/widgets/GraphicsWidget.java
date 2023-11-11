@@ -3,7 +3,6 @@ package io.github.axolotlclient.AxolotlClientConfig.impl.ui.rounded.widgets;
 import io.github.axolotlclient.AxolotlClientConfig.impl.options.GraphicsOption;
 import io.github.axolotlclient.AxolotlClientConfig.impl.ui.rounded.screen.GraphicsEditorScreen;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 
 public class GraphicsWidget extends RoundedButtonWidget {

@@ -59,13 +59,13 @@ public class Example implements ClientModInitializer {
 		KeyBinding binding = new KeyBinding("test", -1, "test");
 		KeyBindingHelper.registerKeyBinding(binding);
 		ClientTickEvents.END_CLIENT_TICK.register(client -> {
-			if (binding.wasPressed()){
+			if (binding.wasPressed()) {
 				System.out.println("Opening Screen....");
 				MinecraftClient.getInstance().openScreen(getConfigScreenFactory().apply(MinecraftClient.getInstance().currentScreen));
 			}
 		});
 
-		AxolotlClientConfig.getInstance().register(new JsonConfigManager(FabricLoader.getInstance().getConfigDir().resolve(modid+".json"), example));
+		AxolotlClientConfig.getInstance().register(new JsonConfigManager(FabricLoader.getInstance().getConfigDir().resolve(modid + ".json"), example));
 
 		ConfigUI.getInstance().runWhenLoaded(() -> {
 			StringArrayOption option;

@@ -16,7 +16,6 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.render.Window;
 import net.minecraft.client.resource.language.I18n;
 import org.lwjgl.input.Keyboard;
-import org.lwjgl.nanovg.NanoVG;
 
 public class GraphicsEditorScreen extends io.github.axolotlclient.AxolotlClientConfig.impl.ui.Screen implements DrawingUtil {
 
@@ -171,7 +170,8 @@ public class GraphicsEditorScreen extends io.github.axolotlclient.AxolotlClientC
 	private class ElementSelectable extends ButtonWidget {
 
 		public ElementSelectable(int x, int y, int width, int height) {
-			super(x, y, width, height, "", w -> {});
+			super(x, y, width, height, "", w -> {
+			});
 		}
 
 		@Override

@@ -18,24 +18,19 @@ import lombok.Getter;
 
 public class ConfigUI {
 
-	Map<String, Style> styles = new HashMap<>();
-
-	private String currentStyle = "vanilla";
-
+	@Getter
+	private static final ConfigUI instance = new ConfigUI();
 	private final Gson gson = new GsonBuilder().setPrettyPrinting().create();
-
+	private final Collection<Runnable> runWhenLoaded = new ArrayList<>();
+	@Getter
+	private final String uiJsonPath = "axolotlclientconfig:config.ui.json";
+	Map<String, Style> styles = new HashMap<>();
+	private String currentStyle = "vanilla";
+	private boolean loaded;
 	private ConfigUI() {
 	}
 
-	@Getter
-	private static final ConfigUI instance = new ConfigUI();
-
-	private final Collection<Runnable> runWhenLoaded = new ArrayList<>();
-	private boolean loaded;
-	@Getter
-	private final String uiJsonPath = "axolotlclientconfig:config.ui.json";
-
-	public void preReload(){
+	public void preReload() {
 		styles.clear();
 	}
 
@@ -52,7 +47,7 @@ public class ConfigUI {
 			if (styles.containsKey(entry.getKey())) {
 				Style s = styles.get(entry.getKey());
 				s.getWidgets().putAll(widgets);
-				if (screen != null && !screen.trim().isEmpty()){
+				if (screen != null && !screen.trim().isEmpty()) {
 					styles.put(entry.getKey(), new StyleImpl(entry.getKey(), s.getWidgets(), screen,
 						parentStyleName != null ? parentStyleName : s.getParentStyleName().orElse(null)));
 				}
@@ -63,9 +58,9 @@ public class ConfigUI {
 		}
 	}
 
-	public void postReload(){
-		if (styles.isEmpty()){
-			try (InputStream stream = this.getClass().getResourceAsStream("/assets/axolotlclientconfig/config.ui.json")){
+	public void postReload() {
+		if (styles.isEmpty()) {
+			try (InputStream stream = this.getClass().getResourceAsStream("/assets/axolotlclientconfig/config.ui.json")) {
 				read(stream);
 			} catch (IOException e) {
 				throw new RuntimeException(e);
@@ -75,8 +70,8 @@ public class ConfigUI {
 		runWhenLoaded.forEach(Runnable::run);
 	}
 
-	private String getOrNull(JsonElement element, String child){
-		if (element.isJsonObject() && element.getAsJsonObject().has(child)){
+	private String getOrNull(JsonElement element, String child) {
+		if (element.isJsonObject() && element.getAsJsonObject().has(child)) {
 			return element.getAsJsonObject().get(child).getAsString();
 		}
 		return null;
@@ -104,15 +99,15 @@ public class ConfigUI {
 		return styles.keySet();
 	}
 
-	public Class<?> getScreen(ClassLoader loader){
+	public Class<?> getScreen(ClassLoader loader) {
 		return getScreen(loader, getCurrentStyle());
 	}
 
-	private Class<?> getScreen(ClassLoader loader, Style style){
+	private Class<?> getScreen(ClassLoader loader, Style style) {
 		String name = style.getScreen();
 		if (name == null || name.trim().isEmpty()) {
-			if (style.equals(getDefaultStyle())){
-				throw new IllegalStateException("Something is seriously wrong! The default style's screen is empty! default style: "+getDefaultStyle());
+			if (style.equals(getDefaultStyle())) {
+				throw new IllegalStateException("Something is seriously wrong! The default style's screen is empty! default style: " + getDefaultStyle());
 			}
 			if (style.getParentStyleName().isPresent()) {
 				return getScreen(loader, getStyle(style.getParentStyleName().get()));

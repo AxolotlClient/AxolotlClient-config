@@ -9,7 +9,7 @@ public class BooleanOption extends OptionBase<Boolean> {
 		super(name, defaultValue, changeListener);
 	}
 
-	public void toggle(){
+	public void toggle() {
 		set(!get());
 	}
 

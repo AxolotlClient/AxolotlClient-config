@@ -73,10 +73,10 @@ public interface ParentElement extends Element {
 
 	void setFocusedChild(@Nullable Element child);
 
-	default void setFocused(boolean focused) {
-	}
-
 	default boolean isFocused() {
 		return this.getFocused() != null;
+	}
+
+	default void setFocused(boolean focused) {
 	}
 }

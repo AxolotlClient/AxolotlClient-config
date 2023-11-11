@@ -49,11 +49,11 @@ public class RoundedButtonWidget extends ButtonWidget implements DrawingUtil {
 		}
 	}
 
-	public int getX(){
+	public int getX() {
 		return x;
 	}
 
-	public int getY(){
+	public int getY() {
 		return y;
 	}
 
@@ -84,7 +84,7 @@ public class RoundedButtonWidget extends ButtonWidget implements DrawingUtil {
 		return hovered && this.active ? Colors.DARK_YELLOW : backgroundColor;
 	}
 
-	public boolean isHovered(){
+	public boolean isHovered() {
 		return hovered;
 	}
 }

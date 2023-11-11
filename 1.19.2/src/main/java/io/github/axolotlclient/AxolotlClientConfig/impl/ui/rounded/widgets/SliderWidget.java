@@ -20,11 +20,11 @@ public class SliderWidget<O extends NumberOption<N>, N extends Number> extends n
 		this.option = option;
 	}
 
-	public int getX(){
+	public int getX() {
 		return x;
 	}
 
-	public int getY(){
+	public int getY() {
 		return y;
 	}
 

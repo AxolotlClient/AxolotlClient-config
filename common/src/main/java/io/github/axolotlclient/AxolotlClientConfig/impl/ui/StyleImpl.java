@@ -5,7 +5,6 @@ import java.util.Optional;
 
 import io.github.axolotlclient.AxolotlClientConfig.api.ui.Style;
 import lombok.Data;
-import lombok.RequiredArgsConstructor;
 
 @Data
 public class StyleImpl implements Style {

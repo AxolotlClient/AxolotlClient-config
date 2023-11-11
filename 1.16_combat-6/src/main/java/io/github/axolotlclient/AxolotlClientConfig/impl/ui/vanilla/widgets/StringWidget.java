@@ -3,7 +3,6 @@ package io.github.axolotlclient.AxolotlClientConfig.impl.ui.vanilla.widgets;
 import io.github.axolotlclient.AxolotlClientConfig.impl.options.StringOption;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.widget.TextFieldWidget;
-import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 
 public class StringWidget extends TextFieldWidget {

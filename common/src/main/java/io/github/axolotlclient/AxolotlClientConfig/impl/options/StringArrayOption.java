@@ -9,7 +9,7 @@ public class StringArrayOption extends OptionBase<String> {
 	@Getter
 	private final String[] values;
 
-	public StringArrayOption(String name, String... values){
+	public StringArrayOption(String name, String... values) {
 		super(name, values[0]);
 		this.values = values;
 	}

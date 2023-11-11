@@ -74,12 +74,12 @@ public class ColorSelectionScreen extends io.github.axolotlclient.AxolotlClientC
 		int y = 120;
 		addDrawableChild(ConfigStyles.createWidget(buttonsX, y, 150, 20, chroma));
 		y += 45;
-		if (height > 300){
+		if (height > 300) {
 			addDrawableChild(ConfigStyles.createWidget(buttonsX, y, 150, 20, speed));
 			y += 45;
 		}
 		addDrawableChild(ConfigStyles.createWidget(buttonsX, y, 150, 20, alpha));
-		y+= 45;
+		y += 45;
 		if (this.height - 250 > 0) {
 			y -= 25;
 			TextFieldWidget text = new TextFieldWidget(minecraft.textRenderer, buttonsX, y, 150, 20, "");
@@ -134,7 +134,7 @@ public class ColorSelectionScreen extends io.github.axolotlclient.AxolotlClientC
 			int y = 105;
 			drawString(ctx, NVGHolder.getFont(), I18n.translate("option.chroma"), buttonsX, y, Colors.WHITE);
 			y += 45;
-			if (height > 300){
+			if (height > 300) {
 				drawString(ctx, NVGHolder.getFont(), I18n.translate("option.speed"), buttonsX, y, Colors.WHITE);
 				y += 45;
 			}

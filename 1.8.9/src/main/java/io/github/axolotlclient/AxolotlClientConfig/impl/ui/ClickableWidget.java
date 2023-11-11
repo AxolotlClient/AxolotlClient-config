@@ -11,21 +11,20 @@ import net.minecraft.resource.Identifier;
 public abstract class ClickableWidget extends DrawUtil implements Drawable, Element, Widget, Selectable {
 
 	protected static final Identifier WIDGETS_LOCATION = new Identifier("textures/gui/widgets.png");
-
-	@Getter @Setter
-	private int x, y, width, height;
-	private boolean focused;
-	@Getter @Setter
-	private String message;
-
-	@Getter
-	protected boolean hovered;
 	public boolean active = true;
 	public boolean visible = true;
-
+	@Getter
+	protected boolean hovered;
 	protected Minecraft client;
+	@Getter
+	@Setter
+	private int x, y, width, height;
+	private boolean focused;
+	@Getter
+	@Setter
+	private String message;
 
-	public ClickableWidget(int x, int y, int width, int height, String message){
+	public ClickableWidget(int x, int y, int width, int height, String message) {
 		this.x = x;
 		this.y = y;
 		this.width = width;
@@ -35,13 +34,13 @@ public abstract class ClickableWidget extends DrawUtil implements Drawable, Elem
 	}
 
 	@Override
-	public void setFocused(boolean focused) {
-		this.focused = focused;
+	public boolean isFocused() {
+		return focused;
 	}
 
 	@Override
-	public boolean isFocused() {
-		return focused;
+	public void setFocused(boolean focused) {
+		this.focused = focused;
 	}
 
 	@Override
@@ -52,7 +51,8 @@ public abstract class ClickableWidget extends DrawUtil implements Drawable, Elem
 		}
 	}
 
-	protected void drawWidget(int mouseX, int mouseY, float delta){}
+	protected void drawWidget(int mouseX, int mouseY, float delta) {
+	}
 
 	@Override
 	public boolean mouseClicked(double mouseX, double mouseY, int button) {
@@ -73,10 +73,10 @@ public abstract class ClickableWidget extends DrawUtil implements Drawable, Elem
 	public boolean isMouseOver(double mouseX, double mouseY) {
 		return this.active
 			&& this.visible
-			&& mouseX >= (double)this.getX()
-			&& mouseY >= (double)this.getY()
-			&& mouseX < (double)(this.getX() + this.width)
-			&& mouseY < (double)(this.getY() + this.height);
+			&& mouseX >= (double) this.getX()
+			&& mouseY >= (double) this.getY()
+			&& mouseX < (double) (this.getX() + this.width)
+			&& mouseY < (double) (this.getY() + this.height);
 	}
 
 	@Override
@@ -106,10 +106,10 @@ public abstract class ClickableWidget extends DrawUtil implements Drawable, Elem
 	protected boolean clicked(double mouseX, double mouseY) {
 		return this.active
 			&& this.visible
-			&& mouseX >= (double)this.getX()
-			&& mouseY >= (double)this.getY()
-			&& mouseX < (double)(this.getX() + this.width)
-			&& mouseY < (double)(this.getY() + this.height);
+			&& mouseX >= (double) this.getX()
+			&& mouseY >= (double) this.getY()
+			&& mouseX < (double) (this.getX() + this.width)
+			&& mouseY < (double) (this.getY() + this.height);
 	}
 
 	public void onClick(double mouseX, double mouseY) {

@@ -52,7 +52,7 @@ public class PillBooleanWidget extends RoundedButtonWidget implements Updatable 
 		this.notWidth = value;
 	}
 
-	public void setX(int value){
+	public void setX(int value) {
 		this.x = value;
 	}
 

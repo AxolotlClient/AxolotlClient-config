@@ -2,7 +2,6 @@ package io.github.axolotlclient.AxolotlClientConfig.impl.ui.vanilla.widgets;
 
 import io.github.axolotlclient.AxolotlClientConfig.impl.options.BooleanOption;
 import io.github.axolotlclient.AxolotlClientConfig.impl.ui.Updatable;
-import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.text.ScreenTexts;
 
 public class BooleanWidget extends VanillaButtonWidget implements Updatable {

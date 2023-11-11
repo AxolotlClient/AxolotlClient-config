@@ -41,10 +41,10 @@ dependencies {
 
 	modImplementation "org.quiltmc:quilt-loader:${project.quilt_loader}"
 
-	modApi ("org.quiltmc.qsl.core:qsl_base:${project.qsl_120}+${project.minecraft_120}-SNAPSHOT")
-	modApi ("org.quiltmc.qsl.core:lifecycle_events:${project.qsl_120}+${project.minecraft_120}-SNAPSHOT")
-	modApi ("org.quiltmc.qsl.core:resource_loader:${project.qsl_120}+${project.minecraft_120}-SNAPSHOT")
-	modApi ("org.quiltmc.qsl.management:client_command:${project.qsl_120}+${project.minecraft_120}-SNAPSHOT")
+	modApi("org.quiltmc.qsl.core:qsl_base:${project.qsl_120}+${project.minecraft_120}-SNAPSHOT")
+	modApi("org.quiltmc.qsl.core:lifecycle_events:${project.qsl_120}+${project.minecraft_120}-SNAPSHOT")
+	modApi("org.quiltmc.qsl.core:resource_loader:${project.qsl_120}+${project.minecraft_120}-SNAPSHOT")
+	modApi("org.quiltmc.qsl.management:client_command:${project.qsl_120}+${project.minecraft_120}-SNAPSHOT")
 
 	modCompileOnlyApi("com.terraformersmc:modmenu:6.1.0-beta.3") {
 		transitive = false
@@ -53,12 +53,12 @@ dependencies {
 	implementation include(project(":common"))
 
 	include implementation("org.lwjgl:lwjgl-nanovg:3.3.2")
-	include runtimeOnly ('org.lwjgl:lwjgl-nanovg:3.3.2:natives-linux')
-	include runtimeOnly ('org.lwjgl:lwjgl-nanovg:3.3.2:natives-linux-arm64')
-	include runtimeOnly ('org.lwjgl:lwjgl-nanovg:3.3.2:natives-windows')
-	include runtimeOnly ('org.lwjgl:lwjgl-nanovg:3.3.2:natives-windows-arm64')
-	include runtimeOnly ('org.lwjgl:lwjgl-nanovg:3.3.2:natives-macos')
-	include runtimeOnly ('org.lwjgl:lwjgl-nanovg:3.3.2:natives-macos-arm64')
+	include runtimeOnly('org.lwjgl:lwjgl-nanovg:3.3.2:natives-linux')
+	include runtimeOnly('org.lwjgl:lwjgl-nanovg:3.3.2:natives-linux-arm64')
+	include runtimeOnly('org.lwjgl:lwjgl-nanovg:3.3.2:natives-windows')
+	include runtimeOnly('org.lwjgl:lwjgl-nanovg:3.3.2:natives-windows-arm64')
+	include runtimeOnly('org.lwjgl:lwjgl-nanovg:3.3.2:natives-macos')
+	include runtimeOnly('org.lwjgl:lwjgl-nanovg:3.3.2:natives-macos-arm64')
 }
 
 processResources {

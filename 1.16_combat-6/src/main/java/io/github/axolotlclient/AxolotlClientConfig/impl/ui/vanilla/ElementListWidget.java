@@ -49,15 +49,15 @@ public abstract class ElementListWidget<E extends ElementListWidget.Entry<E>> ex
 			this.dragging = dragging;
 		}
 
-		@Override
-		public void setFocused(@Nullable Element focused) {
-			this.focused = focused;
-		}
-
 		@Nullable
 		@Override
 		public Element getFocused() {
 			return this.focused;
+		}
+
+		@Override
+		public void setFocused(@Nullable Element focused) {
+			this.focused = focused;
 		}
 	}
 }

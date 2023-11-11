@@ -4,6 +4,7 @@ public class IntegerOption extends NumberOption<Integer> {
 	public IntegerOption(String name, Integer defaultValue, Integer min, Integer max) {
 		super(name, defaultValue, min, max);
 	}
+
 	public IntegerOption(String name, Integer defaultValue, ChangeListener<Integer> changeListener, Integer min, Integer max) {
 		super(name, defaultValue, changeListener, min, max);
 	}

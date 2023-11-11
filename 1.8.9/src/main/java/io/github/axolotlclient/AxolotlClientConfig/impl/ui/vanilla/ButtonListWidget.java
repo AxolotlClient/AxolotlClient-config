@@ -91,7 +91,7 @@ public class ButtonListWidget extends ElementListWidget<ButtonListWidget.Entry> 
 
 	@Override
 	protected void renderList(int mouseX, int mouseY, float delta) {
-		DrawUtil.pushScissor(left, top, right-left, bottom-top);
+		DrawUtil.pushScissor(left, top, right - left, bottom - top);
 		super.renderList(mouseX, mouseY, delta);
 		DrawUtil.popScissor();
 	}

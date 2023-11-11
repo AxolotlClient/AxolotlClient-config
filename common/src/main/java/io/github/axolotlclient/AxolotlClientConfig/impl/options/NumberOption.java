@@ -22,7 +22,7 @@ public abstract class NumberOption<T extends Number> extends OptionBase<T> {
 	public abstract T clamp(Number value);
 
 	@Override
-	public void set(T newValue){
+	public void set(T newValue) {
 		super.set(clamp(newValue));
 	}
 

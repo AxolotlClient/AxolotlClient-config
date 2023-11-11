@@ -92,7 +92,7 @@ public class EntryListWidget extends ElementListWidget<EntryListWidget.Entry> {
 
 	@Override
 	protected void renderList(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-		DrawUtil.pushScissor(left, top, right-left, bottom-top);
+		DrawUtil.pushScissor(left, top, right - left, bottom - top);
 		super.renderList(matrices, mouseX, mouseY, delta);
 		DrawUtil.popScissor();
 	}

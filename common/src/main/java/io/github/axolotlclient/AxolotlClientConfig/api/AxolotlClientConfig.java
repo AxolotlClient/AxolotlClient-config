@@ -6,13 +6,13 @@ import io.github.axolotlclient.AxolotlClientConfig.impl.AxolotlClientConfigImpl;
 
 public interface AxolotlClientConfig {
 
-	static AxolotlClientConfig getInstance(){
+	static AxolotlClientConfig getInstance() {
 		return AxolotlClientConfigImpl.getInstance();
 	}
 
 	void register(ConfigManager manager);
 
-	default void getConfigManager(OptionCategory root){
+	default void getConfigManager(OptionCategory root) {
 
 	}
 

@@ -6,7 +6,6 @@ import io.github.axolotlclient.AxolotlClientConfig.impl.options.OptionCategoryIm
 import io.github.axolotlclient.AxolotlClientConfig.impl.util.ConfigStyles;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resource.language.I18n;
-import net.minecraft.text.TranslatableText;
 
 public class CategoryWidget extends VanillaButtonWidget {
 

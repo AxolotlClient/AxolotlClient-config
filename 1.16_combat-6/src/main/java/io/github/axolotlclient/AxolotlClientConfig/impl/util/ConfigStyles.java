@@ -5,7 +5,6 @@ import java.lang.reflect.InvocationTargetException;
 import io.github.axolotlclient.AxolotlClientConfig.api.options.OptionCategory;
 import io.github.axolotlclient.AxolotlClientConfig.api.options.WidgetIdentifieable;
 import io.github.axolotlclient.AxolotlClientConfig.impl.ui.ConfigUI;
-import io.github.axolotlclient.AxolotlClientConfig.impl.ui.Selectable;
 import lombok.experimental.UtilityClass;
 import net.minecraft.client.gui.Element;
 import net.minecraft.client.gui.screen.Screen;

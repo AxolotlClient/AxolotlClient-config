@@ -3,6 +3,7 @@ package io.github.axolotlclient.AxolotlClientConfig.impl.ui;
 public abstract class ButtonWidget extends ClickableWidget {
 
 	private final PressAction action;
+
 	public ButtonWidget(int x, int y, int width, int height, String message, PressAction action) {
 		super(x, y, width, height, message);
 		this.action = action;
@@ -13,7 +14,7 @@ public abstract class ButtonWidget extends ClickableWidget {
 		onPress();
 	}
 
-	public void onPress(){
+	public void onPress() {
 		action.onPress(this);
 	}
 

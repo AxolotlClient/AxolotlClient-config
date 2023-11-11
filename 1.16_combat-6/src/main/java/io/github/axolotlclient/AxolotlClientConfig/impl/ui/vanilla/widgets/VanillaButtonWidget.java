@@ -16,15 +16,33 @@ public class VanillaButtonWidget extends ButtonWidget implements Selectable {
 		super(x, y, width, height, message, onPress);
 	}
 
-	public boolean isHovered(){
+	protected static void drawScrollableText(MatrixStack matrices, TextRenderer textRenderer, Text text, int left, int top, int right, int bottom, int color) {
+		int i = textRenderer.getWidth(text);
+		int j = (top + bottom - 9) / 2 + 1;
+		int k = right - left;
+		if (i > k) {
+			int l = i - k;
+			double d = (double) Util.getMeasuringTimeMs() / 1000.0;
+			double e = Math.max((double) l * 0.5, 3.0);
+			double f = Math.sin((Math.PI / 2) * Math.cos((Math.PI * 2) * d / e)) / 2.0 + 0.5;
+			double g = MathHelper.lerp(f, 0.0, (double) l);
+			DrawUtil.pushScissor(left, top, right - left, bottom - top);
+			drawTextWithShadow(matrices, textRenderer, text, left - (int) g, j, color);
+			DrawUtil.popScissor();
+		} else {
+			drawCenteredText(matrices, textRenderer, text, (left + right) / 2, j, color);
+		}
+	}
+
+	public boolean isHovered() {
 		return hovered;
 	}
 
-	public int getX(){
+	public int getX() {
 		return x;
 	}
 
-	public int getY(){
+	public int getY() {
 		return y;
 	}
 
@@ -45,24 +63,6 @@ public class VanillaButtonWidget extends ButtonWidget implements Selectable {
 
 	public void drawScrollableText(MatrixStack matrices, TextRenderer renderer, int color) {
 		this.drawScrollableText(matrices, renderer, 2, color);
-	}
-
-	protected static void drawScrollableText(MatrixStack matrices, TextRenderer textRenderer, Text text, int left, int top, int right, int bottom, int color) {
-		int i = textRenderer.getWidth(text);
-		int j = (top + bottom - 9) / 2 + 1;
-		int k = right - left;
-		if (i > k) {
-			int l = i - k;
-			double d = (double) Util.getMeasuringTimeMs() / 1000.0;
-			double e = Math.max((double)l * 0.5, 3.0);
-			double f = Math.sin((Math.PI / 2) * Math.cos((Math.PI * 2) * d / e)) / 2.0 + 0.5;
-			double g = MathHelper.lerp(f, 0.0, (double)l);
-			DrawUtil.pushScissor(left, top, right-left, bottom-top);
-			drawTextWithShadow(matrices, textRenderer, text, left - (int)g, j, color);
-			DrawUtil.popScissor();
-		} else {
-			drawCenteredText(matrices, textRenderer, text, (left + right) / 2, j, color);
-		}
 	}
 
 	protected void drawScrollableText(MatrixStack matrices, TextRenderer textRenderer, int xOffset, int color) {

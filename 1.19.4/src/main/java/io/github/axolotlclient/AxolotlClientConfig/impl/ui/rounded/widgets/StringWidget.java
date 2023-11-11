@@ -7,7 +7,6 @@ import io.github.axolotlclient.AxolotlClientConfig.impl.ui.DrawingUtil;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
-import org.lwjgl.nanovg.NanoVG;
 
 public class StringWidget extends TextFieldWidget implements DrawingUtil {
 	private final StringOption option;

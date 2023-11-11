@@ -30,6 +30,15 @@ public class VersionedJsonConfigManager extends JsonConfigManager {
 		this(file, root, version(version), converter);
 	}
 
+	static ConfigVersion version(String version) {
+		String[] versions = version.split("\\.", 3);
+		return new ConfigVersion(Integer.parseInt(versions[0]), Integer.parseInt(versions[1]), Integer.parseInt(versions[2]));
+	}
+
+	static ConfigVersion version(int version) {
+		return new ConfigVersion(version, 0, 0);
+	}
+
 	@Override
 	public void save() {
 		JsonObject object = new JsonObject();
@@ -84,6 +93,10 @@ public class VersionedJsonConfigManager extends JsonConfigManager {
 		setDefaults(getRoot());
 	}
 
+	public interface VersionConverter {
+		JsonObject convert(ConfigVersion from, ConfigVersion to, OptionCategory root, JsonObject oldConfig);
+	}
+
 	@Data
 	public static class ConfigVersion implements Comparable<ConfigVersion> {
 		private final int major, minor, patch;
@@ -105,18 +118,5 @@ public class VersionedJsonConfigManager extends JsonConfigManager {
 			}
 			return Integer.compare(getPatch(), o.getPatch());
 		}
-	}
-
-	static ConfigVersion version(String version) {
-		String[] versions = version.split("\\.", 3);
-		return new ConfigVersion(Integer.parseInt(versions[0]), Integer.parseInt(versions[1]), Integer.parseInt(versions[2]));
-	}
-
-	static ConfigVersion version(int version) {
-		return new ConfigVersion(version, 0, 0);
-	}
-
-	public interface VersionConverter {
-		JsonObject convert(ConfigVersion from, ConfigVersion to, OptionCategory root, JsonObject oldConfig);
 	}
 }

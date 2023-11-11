@@ -62,7 +62,7 @@ public class GraphicsEditorScreen extends io.github.axolotlclient.AxolotlClientC
 
 		addDrawableChild(new VanillaButtonWidget(gridX + maxGridWidth + 10, gridY + 60, 100, 20,
 			new TranslatableText("clear_graphics"),
-				buttonWidget -> clearGraphics()));
+			buttonWidget -> clearGraphics()));
 
 		addDrawableChild(ConfigStyles.createWidget(gridX + maxGridWidth + 10, gridY + 35, 100, 20, colorOption));
 

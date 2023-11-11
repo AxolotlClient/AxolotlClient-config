@@ -59,7 +59,7 @@ public class GraphicsEditorScreen extends io.github.axolotlclient.AxolotlClientC
 
 		addDrawableChild(new VanillaButtonWidget(gridX + maxGridWidth + 10, gridY + 60, 100, 20,
 			I18n.translate("clear_graphics"),
-				buttonWidget -> clearGraphics()));
+			buttonWidget -> clearGraphics()));
 
 		addDrawableChild(ConfigStyles.createWidget(gridX + maxGridWidth + 10, gridY + 35, 100, 20, colorOption));
 
@@ -159,7 +159,8 @@ public class GraphicsEditorScreen extends io.github.axolotlclient.AxolotlClientC
 	private class ElementSelectable extends ButtonWidget {
 
 		public ElementSelectable(int x, int y, int width, int height) {
-			super(x, y, width, height, "", w -> {});
+			super(x, y, width, height, "", w -> {
+			});
 		}
 
 		@Override

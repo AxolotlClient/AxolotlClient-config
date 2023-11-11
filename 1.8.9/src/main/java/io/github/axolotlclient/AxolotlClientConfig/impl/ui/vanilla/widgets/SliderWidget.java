@@ -10,11 +10,12 @@ import net.minecraft.util.math.MathHelper;
 
 public class SliderWidget<O extends NumberOption<N>, N extends Number> extends VanillaButtonWidget {
 
-	protected double value;
 	private final O option;
+	protected double value;
 
 	public SliderWidget(int x, int y, int width, int height, O option) {
-		super(x, y, width, height, String.valueOf(option.get()), widget ->{});
+		super(x, y, width, height, String.valueOf(option.get()), widget -> {
+		});
 		this.value = ((option.get().doubleValue() - option.getMin().doubleValue()) / (option.getMax().doubleValue() - option.getMin().doubleValue()));
 		this.option = option;
 	}
@@ -33,8 +34,8 @@ public class SliderWidget<O extends NumberOption<N>, N extends Number> extends V
 		drawTexture(this.getX() + this.getWidth() / 2, this.getY(), 200 - this.getWidth() / 2, 46, this.getWidth() / 2, this.getHeight());
 
 		int i = (this.isHovered() ? 2 : 1) * 20;
-		this.drawTexture(this.getX() + (int)(this.value * (double)(this.getWidth() - 8)), this.getY(), 0, 46 + i, 4, 20);
-		this.drawTexture(this.getX() + (int)(this.value * (double)(this.getWidth() - 8)) + 4, this.getY(), 196, 46 + i, 4, 20);
+		this.drawTexture(this.getX() + (int) (this.value * (double) (this.getWidth() - 8)), this.getY(), 0, 46 + i, 4, 20);
+		this.drawTexture(this.getX() + (int) (this.value * (double) (this.getWidth() - 8)) + 4, this.getY(), 196, 46 + i, 4, 20);
 
 		int l = 14737632;
 		if (!this.active) {
@@ -56,14 +57,14 @@ public class SliderWidget<O extends NumberOption<N>, N extends Number> extends V
 		boolean bl = keyCode == 263;
 		if (bl || keyCode == 262) {
 			float f = bl ? -1.0F : 1.0F;
-			this.setValue(this.value + (double)(f / (float)(this.getWidth() - 8)));
+			this.setValue(this.value + (double) (f / (float) (this.getWidth() - 8)));
 		}
 
 		return false;
 	}
 
 	private void setValueFromMouse(double mouseX) {
-		this.setValue((mouseX - (double)(this.getX() + 4)) / (double)(this.getWidth() - 8));
+		this.setValue((mouseX - (double) (this.getX() + 4)) / (double) (this.getWidth() - 8));
 	}
 
 	@SuppressWarnings("unchecked")
@@ -72,7 +73,7 @@ public class SliderWidget<O extends NumberOption<N>, N extends Number> extends V
 		this.value = MathHelper.clamp(value, 0.0, 1.0);
 		if (d != this.value) {
 			option.set((N) (Double) (option.getMin().doubleValue() +
-				(value * (option.getMax().doubleValue()-option.getMin().doubleValue()))));
+				(value * (option.getMax().doubleValue() - option.getMin().doubleValue()))));
 		}
 
 		this.updateMessage();

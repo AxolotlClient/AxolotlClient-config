@@ -15,7 +15,9 @@
   "icon": "assets/axolotlclientconfig/icon.png",
   "environment": "client",
   "entrypoints": {
-    "client-init": ["io.github.axolotlclient.AxolotlClientConfig.impl.AxolotlClientConfigMod"]
+    "client-init": [
+      "io.github.axolotlclient.AxolotlClientConfig.impl.AxolotlClientConfigMod"
+    ]
   },
   "mixins": [
     "axolotlclientconfig.mixins.json"

@@ -6,13 +6,14 @@ import io.github.axolotlclient.AxolotlClientConfig.impl.options.OptionCategoryIm
 
 public interface OptionCategory extends WidgetIdentifieable {
 
-	static OptionCategory create(String name){
+	static OptionCategory create(String name) {
 		return new OptionCategoryImpl(name);
 	}
 
 	String getName();
 
 	Collection<OptionCategory> getSubCategories();
+
 	Collection<Option<?>> getOptions();
 
 	void add(Option<?>... options);

@@ -33,10 +33,10 @@ public abstract class EntryListWidget<E extends EntryListWidget.Entry<E>> extend
 	protected int right;
 	protected int left;
 	protected boolean centerListVertically = true;
+	protected int headerHeight;
 	private double scrollAmount;
 	private boolean renderSelection = true;
 	private boolean renderHeader;
-	protected int headerHeight;
 	private boolean scrolling;
 	@Nullable
 	private E selected;
@@ -85,7 +85,7 @@ public abstract class EntryListWidget<E extends EntryListWidget.Entry<E>> extend
 	}
 
 	public E getFirstChild() {
-		return (E)this.children.get(0);
+		return (E) this.children.get(0);
 	}
 
 	public void setRenderBackground(boolean renderBackground) {
@@ -98,7 +98,7 @@ public abstract class EntryListWidget<E extends EntryListWidget.Entry<E>> extend
 
 	@Nullable
 	public E getFocused() {
-		return (E)super.getFocused();
+		return (E) super.getFocused();
 	}
 
 	@Override
@@ -117,7 +117,7 @@ public abstract class EntryListWidget<E extends EntryListWidget.Entry<E>> extend
 	}
 
 	protected E getEntry(int index) {
-		return (E)this.children().get(index);
+		return (E) this.children().get(index);
 	}
 
 	protected int addEntry(E entry) {
@@ -126,15 +126,15 @@ public abstract class EntryListWidget<E extends EntryListWidget.Entry<E>> extend
 	}
 
 	protected void addEntryToTop(E entry) {
-		double d = (double)this.getMaxScroll() - this.getScrollAmount();
+		double d = (double) this.getMaxScroll() - this.getScrollAmount();
 		this.children.add(0, entry);
-		this.setScrollAmount((double)this.getMaxScroll() - d);
+		this.setScrollAmount((double) this.getMaxScroll() - d);
 	}
 
 	protected boolean removeEntryFromTop(E entry) {
-		double d = (double)this.getMaxScroll() - this.getScrollAmount();
+		double d = (double) this.getMaxScroll() - this.getScrollAmount();
 		boolean bl = this.removeEntry(entry);
-		this.setScrollAmount((double)this.getMaxScroll() - d);
+		this.setScrollAmount((double) this.getMaxScroll() - d);
 		return bl;
 	}
 
@@ -152,9 +152,9 @@ public abstract class EntryListWidget<E extends EntryListWidget.Entry<E>> extend
 		int j = this.left + this.width / 2;
 		int k = j - i;
 		int l = j + i;
-		int m = MathHelper.floor(y - (double)this.top) - this.headerHeight + (int)this.getScrollAmount() - 4;
+		int m = MathHelper.floor(y - (double) this.top) - this.headerHeight + (int) this.getScrollAmount() - 4;
 		int n = m / this.itemHeight;
-		return (E)(x < (double)this.getScrollbarPositionX() && x >= (double)k && x <= (double)l && n >= 0 && m >= 0 && n < this.getEntryCount()
+		return (E) (x < (double) this.getScrollbarPositionX() && x >= (double) k && x <= (double) l && n >= 0 && m >= 0 && n < this.getEntryCount()
 			? this.children().get(n)
 			: null);
 	}
@@ -201,8 +201,8 @@ public abstract class EntryListWidget<E extends EntryListWidget.Entry<E>> extend
 				matrices,
 				this.left,
 				this.top,
-				(float)this.right,
-				(float)(this.bottom + (int)this.getScrollAmount()),
+				(float) this.right,
+				(float) (this.bottom + (int) this.getScrollAmount()),
 				this.right - this.left,
 				this.bottom - this.top,
 				32,
@@ -212,7 +212,7 @@ public abstract class EntryListWidget<E extends EntryListWidget.Entry<E>> extend
 		}
 
 		int k = this.getRowLeft();
-		int l = this.top + 4 - (int)this.getScrollAmount();
+		int l = this.top + 4 - (int) this.getScrollAmount();
 		this.enableScissor();
 		if (this.renderHeader) {
 			this.renderHeader(matrices, k, l);
@@ -225,7 +225,7 @@ public abstract class EntryListWidget<E extends EntryListWidget.Entry<E>> extend
 			int m = 32;
 			RenderSystem.setShaderColor(0.25F, 0.25F, 0.25F, 1.0F);
 			drawTexture(matrices, this.left, 0, 0.0F, 0.0F, this.width, this.top, 32, 32);
-			drawTexture(matrices, this.left, this.bottom, 0.0F, (float)this.bottom, this.width, this.height - this.bottom, 32, 32);
+			drawTexture(matrices, this.left, this.bottom, 0.0F, (float) this.bottom, this.width, this.height - this.bottom, 32, 32);
 			RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 			int n = 4;
 			fillGradient(matrices, this.left, this.top, this.right, this.top + 4, -16777216, 0);
@@ -272,7 +272,7 @@ public abstract class EntryListWidget<E extends EntryListWidget.Entry<E>> extend
 	}
 
 	private void scroll(int amount) {
-		this.setScrollAmount(this.getScrollAmount() + (double)amount);
+		this.setScrollAmount(this.getScrollAmount() + (double) amount);
 	}
 
 	public double getScrollAmount() {
@@ -280,7 +280,7 @@ public abstract class EntryListWidget<E extends EntryListWidget.Entry<E>> extend
 	}
 
 	public void setScrollAmount(double amount) {
-		this.scrollAmount = MathHelper.clamp(amount, 0.0, (double)this.getMaxScroll());
+		this.scrollAmount = MathHelper.clamp(amount, 0.0, (double) this.getMaxScroll());
 	}
 
 	public int getMaxScroll() {
@@ -288,11 +288,11 @@ public abstract class EntryListWidget<E extends EntryListWidget.Entry<E>> extend
 	}
 
 	public int getScrollBottom() {
-		return (int)this.getScrollAmount() - this.height - this.headerHeight;
+		return (int) this.getScrollAmount() - this.height - this.headerHeight;
 	}
 
 	protected void updateScrollingState(double mouseX, double mouseY, int button) {
-		this.scrolling = button == 0 && mouseX >= (double)this.getScrollbarPositionX() && mouseX < (double)(this.getScrollbarPositionX() + 6);
+		this.scrolling = button == 0 && mouseX >= (double) this.getScrollbarPositionX() && mouseX < (double) (this.getScrollbarPositionX() + 6);
 	}
 
 	protected int getScrollbarPositionX() {
@@ -319,7 +319,7 @@ public abstract class EntryListWidget<E extends EntryListWidget.Entry<E>> extend
 				}
 			} else if (button == 0) {
 				this.clickedHeader(
-					(int)(mouseX - (double)(this.left + this.width / 2 - this.getRowWidth() / 2)), (int)(mouseY - (double)this.top) + (int)this.getScrollAmount() - 4
+					(int) (mouseX - (double) (this.left + this.width / 2 - this.getRowWidth() / 2)), (int) (mouseY - (double) this.top) + (int) this.getScrollAmount() - 4
 				);
 				return true;
 			}
@@ -342,15 +342,15 @@ public abstract class EntryListWidget<E extends EntryListWidget.Entry<E>> extend
 		if (super.mouseDragged(mouseX, mouseY, button, deltaX, deltaY)) {
 			return true;
 		} else if (button == 0 && this.scrolling) {
-			if (mouseY < (double)this.top) {
+			if (mouseY < (double) this.top) {
 				this.setScrollAmount(0.0);
-			} else if (mouseY > (double)this.bottom) {
+			} else if (mouseY > (double) this.bottom) {
 				this.setScrollAmount(this.getMaxScroll());
 			} else {
 				double d = Math.max(1, this.getMaxScroll());
 				int i = this.bottom - this.top;
-				int j = MathHelper.clamp((int)((float)(i * i) / (float)this.getMaxPosition()), 32, i - 8);
-				double e = Math.max(1.0, d / (double)(i - j));
+				int j = MathHelper.clamp((int) ((float) (i * i) / (float) this.getMaxPosition()), 32, i - 8);
+				double e = Math.max(1.0, d / (double) (i - j));
 				this.setScrollAmount(this.getScrollAmount() + deltaY * e);
 			}
 
@@ -362,7 +362,7 @@ public abstract class EntryListWidget<E extends EntryListWidget.Entry<E>> extend
 
 	@Override
 	public boolean mouseScrolled(double mouseX, double mouseY, double amount) {
-		this.setScrollAmount(this.getScrollAmount() - amount * (double)this.itemHeight / 2.0);
+		this.setScrollAmount(this.getScrollAmount() - amount * (double) this.itemHeight / 2.0);
 		return true;
 	}
 
@@ -371,7 +371,7 @@ public abstract class EntryListWidget<E extends EntryListWidget.Entry<E>> extend
 		super.setFocusedChild(child);
 		int i = this.children.indexOf(child);
 		if (i >= 0) {
-			E entry = (E)this.children.get(i);
+			E entry = (E) this.children.get(i);
 			this.setSelected(entry);
 			if (this.client.getLastInputType().isKeyboard()) {
 				this.ensureVisible(entry);
@@ -391,7 +391,7 @@ public abstract class EntryListWidget<E extends EntryListWidget.Entry<E>> extend
 
 	@Nullable
 	protected E nextEntry(NavigationDirection direction, Predicate<E> predicate, @Nullable E currentEntry) {
-		int i = switch(direction) {
+		int i = switch (direction) {
 			case RIGHT, LEFT -> 0;
 			case UP -> -1;
 			case DOWN -> 1;
@@ -404,8 +404,8 @@ public abstract class EntryListWidget<E extends EntryListWidget.Entry<E>> extend
 				j = this.children().indexOf(currentEntry) + i;
 			}
 
-			for(int k = j; k >= 0 && k < this.children.size(); k += i) {
-				E entry = (E)this.children().get(k);
+			for (int k = j; k >= 0 && k < this.children.size(); k += i) {
+				E entry = (E) this.children().get(k);
 				if (predicate.test(entry)) {
 					return entry;
 				}
@@ -417,7 +417,7 @@ public abstract class EntryListWidget<E extends EntryListWidget.Entry<E>> extend
 
 	@Override
 	public boolean isMouseOver(double mouseX, double mouseY) {
-		return mouseY >= (double)this.top && mouseY <= (double)this.bottom && mouseX >= (double)this.left && mouseX <= (double)this.right;
+		return mouseY >= (double) this.top && mouseY <= (double) this.bottom && mouseX >= (double) this.left && mouseX <= (double) this.right;
 	}
 
 	protected void renderList(MatrixStack matrices, int mouseX, int mouseY, float delta) {
@@ -426,7 +426,7 @@ public abstract class EntryListWidget<E extends EntryListWidget.Entry<E>> extend
 		int k = this.itemHeight - 4;
 		int l = this.getEntryCount();
 
-		for(int m = 0; m < l; ++m) {
+		for (int m = 0; m < l; ++m) {
 			int n = this.getRowTop(m);
 			int o = this.getRowBottom(m);
 			if (o >= this.top && n <= this.bottom) {
@@ -462,7 +462,7 @@ public abstract class EntryListWidget<E extends EntryListWidget.Entry<E>> extend
 	}
 
 	protected int getRowTop(int index) {
-		return this.top + 4 - (int)this.getScrollAmount() + index * this.itemHeight + this.headerHeight;
+		return this.top + 4 - (int) this.getScrollAmount() + index * this.itemHeight + this.headerHeight;
 	}
 
 	protected int getRowBottom(int index) {
@@ -480,14 +480,14 @@ public abstract class EntryListWidget<E extends EntryListWidget.Entry<E>> extend
 
 	@Nullable
 	protected E remove(int index) {
-		E entry = (E)this.children.get(index);
-		return this.removeEntry((E)this.children.get(index)) ? entry : null;
+		E entry = (E) this.children.get(index);
+		return this.removeEntry((E) this.children.get(index)) ? entry : null;
 	}
 
 	protected boolean removeEntry(E entry) {
 		boolean bl = this.children.remove(entry);
 		if (bl && entry == this.getSelectedOrNull()) {
-			this.setSelected((E)null);
+			this.setSelected((E) null);
 		}
 
 		return bl;
@@ -517,6 +517,33 @@ public abstract class EntryListWidget<E extends EntryListWidget.Entry<E>> extend
 		return new ScreenArea(this.left, this.top, this.right - this.left, this.bottom - this.top);
 	}
 
+	protected abstract static class Entry<E extends Entry<E>> implements Element {
+		EntryListWidget<E> parentList;
+
+		@Override
+		public boolean isFocused() {
+			return this.parentList.getFocused() == this;
+		}
+
+		@Override
+		public void setFocused(boolean focused) {
+		}
+
+		public abstract void render(
+			MatrixStack matrices, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float tickDelta
+		);
+
+		public void drawBorder(
+			MatrixStack matrices, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float tickDelta
+		) {
+		}
+
+		@Override
+		public boolean isMouseOver(double mouseX, double mouseY) {
+			return Objects.equals(this.parentList.getEntryAtPosition(mouseX, mouseY), this);
+		}
+	}
+
 	class Entries extends AbstractList<E> {
 		private final List<E> entries = Lists.newArrayList();
 
@@ -540,34 +567,7 @@ public abstract class EntryListWidget<E extends EntryListWidget.Entry<E>> extend
 		}
 
 		public E remove(int i) {
-			return (E)this.entries.remove(i);
-		}
-	}
-
-	protected abstract static class Entry<E extends Entry<E>> implements Element {
-		EntryListWidget<E> parentList;
-
-		@Override
-		public void setFocused(boolean focused) {
-		}
-
-		@Override
-		public boolean isFocused() {
-			return this.parentList.getFocused() == this;
-		}
-
-		public abstract void render(
-			MatrixStack matrices, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float tickDelta
-		);
-
-		public void drawBorder(
-			MatrixStack matrices, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float tickDelta
-		) {
-		}
-
-		@Override
-		public boolean isMouseOver(double mouseX, double mouseY) {
-			return Objects.equals(this.parentList.getEntryAtPosition(mouseX, mouseY), this);
+			return (E) this.entries.remove(i);
 		}
 	}
 }

@@ -137,7 +137,7 @@ public class ColorSelectionScreen extends Screen implements DrawingUtil {
 			int y = 105;
 			drawString(ctx, NVGHolder.getFont(), I18n.translate("option.chroma"), buttonsX, y, Colors.WHITE);
 			y += 45;
-			if (height > 300){
+			if (height > 300) {
 				drawString(ctx, NVGHolder.getFont(), I18n.translate("option.speed"), buttonsX, y, Colors.WHITE);
 				y += 45;
 			}

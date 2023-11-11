@@ -16,7 +16,8 @@ public class Color implements Runnable, Cloneable {
 	private boolean chroma;
 
 	private float chromaHue;
-	@Getter @Setter
+	@Getter
+	@Setter
 	private float chromaSpeed = 1f;
 
 	private NVGColor nvgColor;
@@ -25,7 +26,7 @@ public class Color implements Runnable, Cloneable {
 		this(color >> 16 & 0xFF, color >> 8 & 0xFF, color & 0xFF, color >> 24 & 0xFF);
 	}
 
-	public Color(int color, boolean chroma){
+	public Color(int color, boolean chroma) {
 		this(color);
 		setChroma(chroma);
 	}
@@ -34,7 +35,7 @@ public class Color implements Runnable, Cloneable {
 		this(r, g, b, 255);
 	}
 
-	public Color(int r, int g, int b, boolean chroma){
+	public Color(int r, int g, int b, boolean chroma) {
 		this(r, g, b);
 		setChroma(chroma);
 	}
@@ -56,10 +57,65 @@ public class Color implements Runnable, Cloneable {
 		setChroma(chroma);
 	}
 
+	public static Color fromHSV(float[] vals) {
+		if (vals.length == 3) {
+			return fromHSV(vals[0], vals[1], vals[2]);
+		} else if (vals.length == 4) {
+			return fromHSV(vals[0], vals[1], vals[2]).withAlpha((int) (vals[3] * 255));
+		}
+		throw new IllegalArgumentException();
+	}
+
+	public static Color fromHSV(float hue, float saturation, float value) {
+		return new Color(java.awt.Color.HSBtoRGB(hue, saturation, value));
+	}
+
+	public static Color parse(String color) {
+		try {
+			return new Color(Integer.parseInt(color));
+		} catch (NumberFormatException ignored) {
+		}
+
+		if (color.startsWith("#")) {
+			color = color.substring(1);
+		} else if (color.startsWith("0x")) {
+			color = color.substring(2);
+		}
+		int length = color.length();
+		if (color.contains(";")) {
+			length = color.substring(0, color.indexOf(';')).length();
+		}
+		if (length == 6) {
+			color = "FF" + color;
+		}
+		length = color.length();
+		if (color.contains(";")) {
+			length = color.substring(0, color.indexOf(';')).length();
+		}
+		if (length != 8) {
+			throw new IllegalArgumentException();
+		}
+
+		try {
+			Color c = new Color(Integer.valueOf(color.substring(2, 4), 16),
+				Integer.valueOf(color.substring(4, 6), 16),
+				Integer.valueOf(color.substring(6, 8), 16),
+				Integer.valueOf(color.substring(0, 2), 16));
+			if (color.contains(";")) {
+				c.setChroma(Boolean.parseBoolean(color.substring(0, color.indexOf(';'))));
+				c.setChromaSpeed(Float.parseFloat(color.substring(color.lastIndexOf(";"))));
+			}
+			return c;
+		} catch (NumberFormatException error) {
+			throw new IllegalArgumentException(error);
+		}
+	}
+
 	/**
 	 * Get this color as an integer.
-	 * @implNote For allowing chroma, use <code>.get().toInt()</code>
+	 *
 	 * @return the color packed as an integer
+	 * @implNote For allowing chroma, use <code>.get().toInt()</code>
 	 */
 	public int toInt() {
 		int color = getAlpha();
@@ -70,12 +126,12 @@ public class Color implements Runnable, Cloneable {
 	}
 
 	public NVGColor toNVG() {
-		if (nvgColor == null){
+		if (nvgColor == null) {
 			nvgColor = NanoVG.nvgRGBA((byte) getRed(), (byte) getGreen(), (byte) getBlue(), (byte) getAlpha(), NVGColor.create());
 			return nvgColor;
 		}
-		if (nvgColor.a()*255 != getAlpha() || nvgColor.b()*255 != getBlue() || nvgColor.g()*255 != getGreen() || nvgColor.r()*255 != getRed()){
-			return nvgColor.a(getAlpha()/255f).r(getRed()/255f).g(getGreen()/255f).b(getBlue()/255f);
+		if (nvgColor.a() * 255 != getAlpha() || nvgColor.b() * 255 != getBlue() || nvgColor.g() * 255 != getGreen() || nvgColor.r() * 255 != getRed()) {
+			return nvgColor.a(getAlpha() / 255f).r(getRed() / 255f).g(getGreen() / 255f).b(getBlue() / 255f);
 		}
 		return nvgColor;
 	}
@@ -91,63 +147,9 @@ public class Color implements Runnable, Cloneable {
 		return vals;
 	}
 
-	public static Color fromHSV(float[] vals) {
-		if (vals.length == 3) {
-			return fromHSV(vals[0], vals[1], vals[2]);
-		} else if (vals.length == 4) {
-			return fromHSV(vals[0], vals[1], vals[2]).withAlpha((int) (vals[3] * 255));
-		}
-		throw new IllegalArgumentException();
-	}
-
-	public static Color fromHSV(float hue, float saturation, float value) {
-		return new Color(java.awt.Color.HSBtoRGB(hue, saturation, value));
-	}
-
 	@Override
 	public String toString() {
 		return String.format("#%08X;%s;%s", toInt(), chroma, chromaSpeed);
-	}
-
-	public static Color parse(String color) {
-		try {
-			return new Color(Integer.parseInt(color));
-		} catch (NumberFormatException ignored) {
-		}
-
-		if (color.startsWith("#")) {
-			color = color.substring(1);
-		} else if (color.startsWith("0x")) {
-			color = color.substring(2);
-		}
-		int length = color.length();
-		if (color.contains(";")){
-			length = color.substring(0, color.indexOf(';')).length();
-		}
-		if (length == 6) {
-			color = "FF" + color;
-		}
-		length = color.length();
-		if (color.contains(";")){
-			length = color.substring(0, color.indexOf(';')).length();
-		}
-		if (length != 8) {
-			throw new IllegalArgumentException();
-		}
-
-		try {
-			Color c = new Color(Integer.valueOf(color.substring(2, 4), 16),
-				Integer.valueOf(color.substring(4, 6), 16),
-				Integer.valueOf(color.substring(6, 8), 16),
-				Integer.valueOf(color.substring(0, 2), 16));
-			if (color.contains(";")){
-				c.setChroma(Boolean.parseBoolean(color.substring(0, color.indexOf(';'))));
-				c.setChromaSpeed(Float.parseFloat(color.substring(color.lastIndexOf(";"))));
-			}
-			return c;
-		} catch (NumberFormatException error) {
-			throw new IllegalArgumentException(error);
-		}
 	}
 
 	public void setChroma(boolean chroma) {
@@ -162,9 +164,9 @@ public class Color implements Runnable, Cloneable {
 
 	@Override
 	public void run() {
-		chromaHue += ((float) (0.001*(2*Math.PI)) * chromaSpeed);
-		if (chromaHue >= 2*Math.PI) {
-			chromaHue -= (float) (2*Math.PI);
+		chromaHue += ((float) (0.001 * (2 * Math.PI)) * chromaSpeed);
+		if (chromaHue >= 2 * Math.PI) {
+			chromaHue -= (float) (2 * Math.PI);
 		}
 	}
 
@@ -192,9 +194,9 @@ public class Color implements Runnable, Cloneable {
 		return this.chromaSpeed == speed ? this : new Color(this.red, this.green, this.blue, this.alpha, chroma);
 	}
 
-	public Color withHue(float hue){
+	public Color withHue(float hue) {
 		float[] vals = toHSV();
-		if (vals[0] == hue){
+		if (vals[0] == hue) {
 			return this;
 		} else {
 			vals[0] = hue;
@@ -202,9 +204,9 @@ public class Color implements Runnable, Cloneable {
 		}
 	}
 
-	public Color withSaturation(float saturation){
+	public Color withSaturation(float saturation) {
 		float[] vals = toHSV();
-		if (vals[1] == saturation){
+		if (vals[1] == saturation) {
 			return this;
 		} else {
 			vals[1] = saturation;
@@ -212,9 +214,9 @@ public class Color implements Runnable, Cloneable {
 		}
 	}
 
-	public Color withBrightness(float brightness){
+	public Color withBrightness(float brightness) {
 		float[] vals = toHSV();
-		if (vals[2] == brightness){
+		if (vals[2] == brightness) {
 			return this;
 		} else {
 			vals[2] = brightness;
@@ -222,8 +224,8 @@ public class Color implements Runnable, Cloneable {
 		}
 	}
 
-	public Color immutable(){
-		return new Color(getRed(), getGreen(), getBlue(), getAlpha(), isChroma()){
+	public Color immutable() {
+		return new Color(getRed(), getGreen(), getBlue(), getAlpha(), isChroma()) {
 
 			@Override
 			public void setGreen(int green) {
@@ -317,7 +319,7 @@ public class Color implements Runnable, Cloneable {
 		};
 	}
 
-	public Color mutable(){
+	public Color mutable() {
 		return this;
 	}
 

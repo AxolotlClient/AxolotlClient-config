@@ -1,8 +1,6 @@
 package io.github.axolotlclient.AxolotlClientConfig.api.util;
 
-import lombok.AccessLevel;
 import lombok.Data;
-import lombok.Getter;
 import lombok.With;
 import lombok.experimental.Accessors;
 

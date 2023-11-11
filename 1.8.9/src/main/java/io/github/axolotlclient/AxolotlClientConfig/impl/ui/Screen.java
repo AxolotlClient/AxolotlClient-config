@@ -10,19 +10,16 @@ import org.lwjgl.input.Mouse;
 
 public abstract class Screen extends net.minecraft.client.gui.screen.Screen implements ParentElement {
 
+	@Getter
+	protected final String title;
 	private final List<Drawable> drawables = Lists.newArrayList();
 	private final List<Element> children = Lists.newArrayList();
 	private final List<Selectable> selectables = Lists.newArrayList();
-
 	private Element focused;
 	private boolean dragging;
-
-	@Getter
-	protected final String title;
-
 	private int lastMouseDragPosX, lastMouseDragPosY = -1;
 
-	public Screen(String title){
+	public Screen(String title) {
 		this.title = title;
 	}
 
@@ -63,11 +60,11 @@ public abstract class Screen extends net.minecraft.client.gui.screen.Screen impl
 
 	@Override
 	protected void mouseDragged(int mouseX, int mouseY, int button, long lastClick) {
-		if (lastMouseDragPosX == -1 || lastMouseDragPosY == -1){
+		if (lastMouseDragPosX == -1 || lastMouseDragPosY == -1) {
 			lastMouseDragPosX = mouseX;
 			lastMouseDragPosY = mouseY;
 		}
-		mouseDragged(mouseX, mouseY, button, mouseX- lastMouseDragPosX, mouseY- lastMouseDragPosY);
+		mouseDragged(mouseX, mouseY, button, mouseX - lastMouseDragPosX, mouseY - lastMouseDragPosY);
 		lastMouseDragPosX = mouseX;
 		lastMouseDragPosY = mouseY;
 	}
@@ -90,11 +87,11 @@ public abstract class Screen extends net.minecraft.client.gui.screen.Screen impl
 
 	protected void remove(Element child) {
 		if (child instanceof Drawable) {
-			this.drawables.remove((Drawable)child);
+			this.drawables.remove((Drawable) child);
 		}
 
 		if (child instanceof Selectable) {
-			this.selectables.remove((Selectable)child);
+			this.selectables.remove((Selectable) child);
 		}
 
 		this.children.remove(child);
@@ -113,11 +110,11 @@ public abstract class Screen extends net.minecraft.client.gui.screen.Screen impl
 
 	@Override
 	public void setFocusedChild(@Nullable Element child) {
-		if (this.focused != null){
+		if (this.focused != null) {
 			focused.setFocused(false);
 		}
 		this.focused = child;
-		if (this.focused != null){
+		if (this.focused != null) {
 			focused.setFocused(true);
 		}
 	}

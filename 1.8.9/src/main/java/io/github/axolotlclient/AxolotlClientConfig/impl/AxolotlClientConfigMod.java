@@ -35,15 +35,15 @@ public class AxolotlClientConfigMod implements ClientModInitializer {
 		});
 
 		ResourceLoaderEvents.END_RESOURCE_RELOAD.register(() -> {
-				ConfigUI.getInstance().preReload();
-				try {
-					Minecraft.getInstance().getResourceManager()
-						.getResources(new Identifier(ConfigUI.getInstance().getUiJsonPath())).forEach(resource -> {
-							ConfigUI.getInstance().read(resource.asStream());
-						});
-				} catch (IOException ignored) {
-				}
-				ConfigUI.getInstance().postReload();
+			ConfigUI.getInstance().preReload();
+			try {
+				Minecraft.getInstance().getResourceManager()
+					.getResources(new Identifier(ConfigUI.getInstance().getUiJsonPath())).forEach(resource -> {
+						ConfigUI.getInstance().read(resource.asStream());
+					});
+			} catch (IOException ignored) {
+			}
+			ConfigUI.getInstance().postReload();
 		});
 	}
 }

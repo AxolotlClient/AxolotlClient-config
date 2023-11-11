@@ -72,7 +72,7 @@ public class RoundedButtonWidget extends ButtonWidget implements DrawingUtil, Dr
 		return hovered && this.active ? Colors.DARK_YELLOW : backgroundColor;
 	}
 
-	public boolean isHovered(){
+	public boolean isHovered() {
 		return hovered;
 	}
 

@@ -22,15 +22,15 @@ import net.ornithemc.osl.lifecycle.api.client.MinecraftClientEvents;
 public class Example implements ClientModInitializer {
 
 
-    @Getter
+	@Getter
 	private static Example Instance;
 
 	public String modid;
 
 	@Override
-    public void initClient() {
-        Instance = this;
-        modid = "axolotlclientconfig-test";
+	public void initClient() {
+		Instance = this;
+		modid = "axolotlclientconfig-test";
 
 		OptionCategory example = OptionCategory.create(modid);
 		example.add(new BooleanOption("boolean", true));
@@ -56,13 +56,13 @@ public class Example implements ClientModInitializer {
 		KeyBinding binding = new KeyBinding("test", 0, "test");
 		KeyBindingEvents.REGISTER_KEYBINDS.register((registry) -> registry.register(binding));
 		MinecraftClientEvents.TICK_END.register(client -> {
-			if (binding.consumeClick()){
+			if (binding.consumeClick()) {
 				System.out.println("Opening Screen....");
 				Minecraft.getInstance().openScreen(getConfigScreenFactory().apply(Minecraft.getInstance().screen));
 			}
 		});
 
-		AxolotlClientConfig.getInstance().register(new JsonConfigManager(FabricLoader.getInstance().getConfigDir().resolve(modid+".json"), example));
+		AxolotlClientConfig.getInstance().register(new JsonConfigManager(FabricLoader.getInstance().getConfigDir().resolve(modid + ".json"), example));
 
 		ConfigUI.getInstance().runWhenLoaded(() -> {
 			StringArrayOption option;
@@ -75,7 +75,7 @@ public class Example implements ClientModInitializer {
 			AxolotlClientConfig.getInstance().getConfigManager(modid).load();
 			ConfigUI.getInstance().setStyle(option.get());
 		});
-    }
+	}
 
 	public Function<Screen, ? extends Screen> getConfigScreenFactory() {
 		return parent -> {

@@ -25,12 +25,12 @@ public class OptionCategoryImpl implements OptionCategory {
 	private boolean includeInParentTree = true;
 
 	@Override
-	public void add(Option<?>... options){
+	public void add(Option<?>... options) {
 		Collections.addAll(this.options, options);
 	}
 
 	@Override
-	public void add(OptionCategory... categories){
+	public void add(OptionCategory... categories) {
 		Collections.addAll(subCategories, categories);
 	}
 

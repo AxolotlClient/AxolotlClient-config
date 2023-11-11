@@ -6,7 +6,6 @@ import java.util.HashMap;
 
 import io.github.axolotlclient.AxolotlClientConfig.api.AxolotlClientConfig;
 import io.github.axolotlclient.AxolotlClientConfig.api.manager.ConfigManager;
-import io.github.axolotlclient.AxolotlClientConfig.api.options.OptionCategory;
 import lombok.Getter;
 
 public class AxolotlClientConfigImpl implements AxolotlClientConfig {
@@ -18,7 +17,7 @@ public class AxolotlClientConfigImpl implements AxolotlClientConfig {
 	@Getter
 	private final HashMap<String, ConfigManager> registeredManagers = new HashMap<>();
 
-	public void runTick(){
+	public void runTick() {
 		listeners.forEach(Runnable::run);
 	}
 
@@ -32,11 +31,11 @@ public class AxolotlClientConfigImpl implements AxolotlClientConfig {
 		return registeredManagers.get(name);
 	}
 
-	public void registerTickListener(Runnable run){
+	public void registerTickListener(Runnable run) {
 		listeners.add(run);
 	}
 
-	public void removeTickListener(Runnable run){
+	public void removeTickListener(Runnable run) {
 		listeners.remove(run);
 	}
 }

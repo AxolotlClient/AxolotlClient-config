@@ -26,7 +26,7 @@ public interface Element extends DrawingUtil {
 		return false;
 	}
 
-	default boolean keyReleased(int keyCode, int scanCode, int modifiers){
+	default boolean keyReleased(int keyCode, int scanCode, int modifiers) {
 		return false;
 	}
 
@@ -34,7 +34,7 @@ public interface Element extends DrawingUtil {
 		return false;
 	}
 
-	void setFocused(boolean focused);
-
 	boolean isFocused();
+
+	void setFocused(boolean focused);
 }
