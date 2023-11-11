@@ -2,6 +2,7 @@ package io.github.axolotlclient.AxolotlClientConfig.impl.util;
 
 import java.lang.reflect.InvocationTargetException;
 
+import io.github.axolotlclient.AxolotlClientConfig.api.manager.ConfigManager;
 import io.github.axolotlclient.AxolotlClientConfig.api.options.OptionCategory;
 import io.github.axolotlclient.AxolotlClientConfig.api.options.WidgetIdentifieable;
 import io.github.axolotlclient.AxolotlClientConfig.impl.ui.ClickableWidget;
@@ -12,15 +13,8 @@ import net.minecraft.client.gui.screen.Screen;
 @UtilityClass
 public class ConfigStyles {
 
-	public Screen createScreen(Screen parent, OptionCategory root, String configName) {
-		try {
-			return (Screen) ConfigUI.getInstance().getScreen(ConfigStyles.class.getClassLoader())
-				.getConstructor(Screen.class, OptionCategory.class, String.class)
-				.newInstance(parent, root, configName);
-		} catch (InstantiationException | IllegalAccessException | InvocationTargetException |
-				 NoSuchMethodException e) {
-			throw new IllegalStateException(e);
-		}
+	public Screen createScreen(Screen parent, ConfigManager manager, OptionCategory category) {
+		return (Screen) ConfigUI.getInstance().getScreen(ConfigStyles.class.getClassLoader(), manager, category, parent);
 	}
 
 	public ClickableWidget createWidget(int x, int y, int width, int height, WidgetIdentifieable option) {

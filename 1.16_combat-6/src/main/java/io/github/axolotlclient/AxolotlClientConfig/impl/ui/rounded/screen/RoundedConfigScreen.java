@@ -1,6 +1,6 @@
 package io.github.axolotlclient.AxolotlClientConfig.impl.ui.rounded.screen;
 
-import io.github.axolotlclient.AxolotlClientConfig.api.AxolotlClientConfig;
+import io.github.axolotlclient.AxolotlClientConfig.api.manager.ConfigManager;
 import io.github.axolotlclient.AxolotlClientConfig.api.options.OptionCategory;
 import io.github.axolotlclient.AxolotlClientConfig.api.ui.screen.ConfigScreen;
 import io.github.axolotlclient.AxolotlClientConfig.api.util.Colors;
@@ -9,6 +9,7 @@ import io.github.axolotlclient.AxolotlClientConfig.impl.ui.rounded.NVGHolder;
 import io.github.axolotlclient.AxolotlClientConfig.impl.ui.rounded.NVGUtil;
 import io.github.axolotlclient.AxolotlClientConfig.impl.ui.rounded.widgets.RoundedButtonListWidget;
 import io.github.axolotlclient.AxolotlClientConfig.impl.ui.rounded.widgets.RoundedButtonWidget;
+import lombok.Getter;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ScreenTexts;
@@ -17,14 +18,15 @@ import net.minecraft.client.util.math.MatrixStack;
 public class RoundedConfigScreen extends io.github.axolotlclient.AxolotlClientConfig.impl.ui.Screen implements ConfigScreen, DrawingUtil {
 
 	private final Screen parent;
-	private final String configName;
-	private final OptionCategory root;
+	@Getter
+	private final ConfigManager configManager;
+	private final OptionCategory category;
 
-	public RoundedConfigScreen(Screen parent, OptionCategory root, String configName) {
-		super(root.getName());
+	public RoundedConfigScreen(Screen parent, ConfigManager manager, OptionCategory category) {
+		super(manager.getRoot().getName());
 		this.parent = parent;
-		this.configName = configName;
-		this.root = root;
+		this.configManager = manager;
+		this.category = category;
 	}
 
 	@Override
@@ -39,19 +41,14 @@ public class RoundedConfigScreen extends io.github.axolotlclient.AxolotlClientCo
 	}
 
 	@Override
-	public String getConfigName() {
-		return configName;
-	}
-
-	@Override
 	public void init() {
-		addDrawableChild(new RoundedButtonListWidget(root, width, height, 45, height - 55, 25));
+		addDrawableChild(new RoundedButtonListWidget(configManager, category, width, height, 45, height - 55, 25));
 		addDrawableChild(new RoundedButtonWidget(width / 2 - 75, height - 40,
 			ScreenTexts.BACK, w -> MinecraftClient.getInstance().openScreen(parent)));
 	}
 
 	@Override
 	public void removed() {
-		AxolotlClientConfig.getInstance().getConfigManager(getConfigName()).save();
+		configManager.save();
 	}
 }

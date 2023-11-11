@@ -3,6 +3,7 @@ package io.github.axolotlclient.AxolotlClientConfig.impl.ui.vanilla.widgets;
 import java.util.Collection;
 
 import com.google.common.collect.ImmutableList;
+import io.github.axolotlclient.AxolotlClientConfig.api.manager.ConfigManager;
 import io.github.axolotlclient.AxolotlClientConfig.api.options.Option;
 import io.github.axolotlclient.AxolotlClientConfig.api.options.OptionCategory;
 import io.github.axolotlclient.AxolotlClientConfig.impl.ui.ClickableWidget;
@@ -12,15 +13,18 @@ import net.minecraft.client.resource.language.I18n;
 import org.jetbrains.annotations.Nullable;
 
 public class VanillaButtonListWidget extends ButtonListWidget {
-	public VanillaButtonListWidget(OptionCategory category, int screenWidth, int screenHeight, int top, int bottom, int entryHeight) {
-		super(category, screenWidth, screenHeight, top, bottom, entryHeight);
+	public VanillaButtonListWidget(ConfigManager manager, OptionCategory category, int screenWidth, int screenHeight, int top, int bottom, int entryHeight) {
+		super(manager, category, screenWidth, screenHeight, top, bottom, entryHeight);
 		setRenderBackground(Minecraft.getInstance().world == null);
 		setRenderHeader(Minecraft.getInstance().world == null, headerHeight);
 		setRenderHorizontalShadows(Minecraft.getInstance().world == null);
 	}
 
-	protected void addOptions(Collection<Option<?>> options) {
-		options.forEach(o -> addEntry(o, null));
+	@Override
+	protected void addOptions(ConfigManager manager, Collection<Option<?>> options) {
+		options.stream()
+			.filter(o -> !manager.getSuppressedNames().contains(o.getName()))
+			.forEach(o -> addEntry(o, null));
 	}
 
 	@Override

@@ -1,6 +1,6 @@
 package io.github.axolotlclient.AxolotlClientConfig.impl.ui.vanilla.screen;
 
-import io.github.axolotlclient.AxolotlClientConfig.api.AxolotlClientConfig;
+import io.github.axolotlclient.AxolotlClientConfig.api.manager.ConfigManager;
 import io.github.axolotlclient.AxolotlClientConfig.api.options.OptionCategory;
 import io.github.axolotlclient.AxolotlClientConfig.api.ui.screen.ConfigScreen;
 import io.github.axolotlclient.AxolotlClientConfig.impl.ui.vanilla.widgets.VanillaButtonWidget;
@@ -14,21 +14,21 @@ import net.minecraft.text.Text;
 public class VanillaConfigScreen extends Screen implements ConfigScreen {
 	private final Screen parent;
 	@Getter
-	private final String configName;
-	private final OptionCategory root;
+	private final ConfigManager configManager;
+	private final OptionCategory category;
 
-	public VanillaConfigScreen(Screen parent, OptionCategory root, String configName) {
-		super(Text.translatable(root.getName()));
+	public VanillaConfigScreen(Screen parent, ConfigManager manager, OptionCategory category) {
+		super(Text.translatable(manager.getRoot().getName()));
 		this.parent = parent;
-		this.configName = configName;
-		this.root = root;
+		this.configManager = manager;
+		this.category = category;
 	}
 
 	@Override
 	protected void init() {
-		addDrawableChild(new VanillaEntryListWidget(root, width, height, 45, height - 55, 25));
+		addDrawableChild(new VanillaEntryListWidget(configManager, category, width, height, 45, height - 55, 25));
 		addDrawableChild(new VanillaButtonWidget(width / 2 - 75, height - 45, 150, 20,
-			ScreenTexts.BACK, w -> client.setScreen(parent)));
+			ScreenTexts.BACK, w -> closeScreen()));
 	}
 
 	@Override
@@ -40,7 +40,8 @@ public class VanillaConfigScreen extends Screen implements ConfigScreen {
 	}
 
 	@Override
-	public void removed() {
-		AxolotlClientConfig.getInstance().getConfigManager(configName).save();
+	public void closeScreen() {
+		client.setScreen(parent);
+		configManager.save();
 	}
 }

@@ -4,6 +4,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.function.Function;
 
 import io.github.axolotlclient.AxolotlClientConfig.api.AxolotlClientConfig;
+import io.github.axolotlclient.AxolotlClientConfig.api.manager.ConfigManager;
 import io.github.axolotlclient.AxolotlClientConfig.api.options.OptionCategory;
 import io.github.axolotlclient.AxolotlClientConfig.api.util.Colors;
 import io.github.axolotlclient.AxolotlClientConfig.impl.managers.JsonConfigManager;
@@ -21,16 +22,9 @@ import net.ornithemc.osl.lifecycle.api.client.MinecraftClientEvents;
 
 public class Example implements ClientModInitializer {
 
-
-	@Getter
-	private static Example Instance;
-
-	public String modid;
-
 	@Override
 	public void initClient() {
-		Instance = this;
-		modid = "axolotlclientconfig-test";
+		String modid = "axolotlclientconfig-test";
 
 		OptionCategory example = OptionCategory.create(modid);
 		example.add(new BooleanOption("boolean", true));
@@ -58,7 +52,7 @@ public class Example implements ClientModInitializer {
 		MinecraftClientEvents.TICK_END.register(client -> {
 			if (binding.consumeClick()) {
 				System.out.println("Opening Screen....");
-				Minecraft.getInstance().openScreen(getConfigScreenFactory().apply(Minecraft.getInstance().screen));
+				Minecraft.getInstance().openScreen(getConfigScreenFactory(modid).apply(Minecraft.getInstance().screen));
 			}
 		});
 
@@ -77,15 +71,9 @@ public class Example implements ClientModInitializer {
 		});
 	}
 
-	public Function<Screen, ? extends Screen> getConfigScreenFactory() {
-		return parent -> {
-			try {
-				return (Screen) ConfigUI.getInstance().getScreen(FabricLauncherBase.getLauncher().getTargetClassLoader())
-					.getConstructor(Screen.class, OptionCategory.class, String.class).newInstance(parent, AxolotlClientConfig.getInstance().getConfigManager(Example.getInstance().modid).getRoot(), modid);
-			} catch (InstantiationException | IllegalAccessException | InvocationTargetException |
-					 NoSuchMethodException e) {
-				throw new IllegalStateException(e);
-			}
-		};
+	public Function<Screen, ? extends Screen> getConfigScreenFactory(String name) {
+		ConfigManager manager = AxolotlClientConfig.getInstance().getConfigManager(name);
+		return parent -> (Screen) ConfigUI.getInstance().getScreen(this.getClass().getClassLoader(),
+			manager, manager.getRoot(), parent);
 	}
 }

@@ -1,9 +1,9 @@
 package io.github.axolotlclient.AxolotlClientConfig.example;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.function.Function;
 
 import io.github.axolotlclient.AxolotlClientConfig.api.AxolotlClientConfig;
+import io.github.axolotlclient.AxolotlClientConfig.api.manager.ConfigManager;
 import io.github.axolotlclient.AxolotlClientConfig.api.options.OptionCategory;
 import io.github.axolotlclient.AxolotlClientConfig.api.util.Colors;
 import io.github.axolotlclient.AxolotlClientConfig.impl.managers.JsonConfigManager;
@@ -19,18 +19,9 @@ import net.minecraft.client.options.KeyBinding;
 
 public class Example implements ClientModInitializer {
 
-	private static Example Instance;
-
-	public String modid;
-
-	public static Example getInstance() {
-		return Instance;
-	}
-
 	@Override
 	public void onInitializeClient() {
-		Instance = this;
-		modid = "axolotlclientconfig-test";
+		String modid = "axolotlclientconfig-test";
 
 		OptionCategory example = OptionCategory.create(modid);
 
@@ -61,7 +52,7 @@ public class Example implements ClientModInitializer {
 		ClientTickEvents.END_CLIENT_TICK.register(client -> {
 			if (binding.wasPressed()) {
 				System.out.println("Opening Screen....");
-				MinecraftClient.getInstance().openScreen(getConfigScreenFactory().apply(MinecraftClient.getInstance().currentScreen));
+				MinecraftClient.getInstance().openScreen(getConfigScreenFactory(modid).apply(MinecraftClient.getInstance().currentScreen));
 			}
 		});
 
@@ -80,17 +71,10 @@ public class Example implements ClientModInitializer {
 		});
 	}
 
-	public Function<Screen, ? extends Screen> getConfigScreenFactory() {
-
-		return parent -> {
-			try {
-				return (Screen) Class.forName(ConfigUI.getInstance().getCurrentStyle().getScreen())
-					.getConstructor(Screen.class, OptionCategory.class, String.class).newInstance(parent, AxolotlClientConfig.getInstance().getConfigManager(Example.getInstance().modid).getRoot(), modid);
-			} catch (InstantiationException | IllegalAccessException | InvocationTargetException |
-					 NoSuchMethodException | ClassNotFoundException e) {
-				throw new IllegalStateException(e);
-			}
-		};
+	public Function<Screen, ? extends Screen> getConfigScreenFactory(String name) {
+		ConfigManager manager = AxolotlClientConfig.getInstance().getConfigManager(name);
+		return parent -> (Screen) ConfigUI.getInstance().getScreen(this.getClass().getClassLoader(),
+			manager, manager.getRoot(), parent);
 	}
 
 

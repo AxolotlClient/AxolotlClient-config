@@ -5,6 +5,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import io.github.axolotlclient.AxolotlClientConfig.api.manager.ConfigManager;
 import io.github.axolotlclient.AxolotlClientConfig.api.options.Option;
 import io.github.axolotlclient.AxolotlClientConfig.api.options.OptionCategory;
 import io.github.axolotlclient.AxolotlClientConfig.api.options.WidgetIdentifieable;
@@ -22,11 +23,11 @@ public class ButtonListWidget extends ElementListWidget<ButtonListWidget.Entry> 
 	protected static int WIDGET_ROW_LEFT = -155;
 	protected static int WIDGET_ROW_RIGHT = WIDGET_ROW_LEFT + WIDGET_WIDTH + 10;
 
-	public ButtonListWidget(OptionCategory category, int screenWidth, int screenHeight, int top, int bottom, int entryHeight) {
+	public ButtonListWidget(ConfigManager manager, OptionCategory category, int screenWidth, int screenHeight, int top, int bottom, int entryHeight) {
 		super(MinecraftClient.getInstance(), screenWidth, screenHeight, top, bottom, entryHeight);
 		centerListVertically = false;
 
-		addEntries(category);
+		addEntries(manager, category);
 	}
 
 	public void addEntry(OptionCategory first, @Nullable OptionCategory second) {
@@ -39,26 +40,28 @@ public class ButtonListWidget extends ElementListWidget<ButtonListWidget.Entry> 
 			second == null ? null : createWidget(width / 2 + WIDGET_ROW_RIGHT, second), second));
 	}
 
-	protected void addCategories(Collection<OptionCategory> categories) {
-		List<OptionCategory> list = new ArrayList<>(categories);
+	protected void addCategories(ConfigManager manager, Collection<OptionCategory> categories) {
+		List<OptionCategory> list = categories.stream()
+			.filter(c -> !manager.getSuppressedNames().contains(c.getName())).collect(Collectors.toList());
 		for (int i = 0; i < list.size(); i += 2) {
 			addEntry(list.get(i), i < list.size() - 1 ? list.get(i + 1) : null);
 		}
 	}
 
-	protected void addOptions(Collection<Option<?>> options) {
-		List<Option<?>> list = new ArrayList<>(options);
+	protected void addOptions(ConfigManager manager, Collection<Option<?>> options) {
+		List<Option<?>> list = options.stream()
+			.filter(o -> !manager.getSuppressedNames().contains(o.getName())).collect(Collectors.toList());
 		for (int i = 0; i < list.size(); i += 2) {
 			addEntry(list.get(i), i < list.size() - 1 ? list.get(i + 1) : null);
 		}
 	}
 
-	public void addEntries(OptionCategory root) {
-		addCategories(root.getSubCategories());
-		if (!children().isEmpty() && !root.getOptions().isEmpty()) {
+	public void addEntries(ConfigManager manager, OptionCategory category) {
+		addCategories(manager, category.getSubCategories());
+		if (!children().isEmpty() && !category.getOptions().isEmpty()) {
 			addEntry(new Entry(Collections.emptyList()));
 		}
-		addOptions(root.getOptions());
+		addOptions(manager, category.getOptions());
 	}
 
 	protected AbstractButtonWidget createWidget(int x, WidgetIdentifieable id) {

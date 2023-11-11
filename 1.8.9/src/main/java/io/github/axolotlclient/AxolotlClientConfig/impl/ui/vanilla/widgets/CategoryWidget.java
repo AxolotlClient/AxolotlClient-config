@@ -22,7 +22,7 @@ public class CategoryWidget extends VanillaButtonWidget {
 		if (Minecraft.getInstance().screen != null) {
 			Minecraft.getInstance().openScreen(
 				ConfigStyles.createScreen(Minecraft.getInstance().screen,
-					category, ((ConfigScreen) Minecraft.getInstance().screen).getConfigName()));
+					((ConfigScreen) Minecraft.getInstance().screen).getConfigManager(), category));
 		}
 
 

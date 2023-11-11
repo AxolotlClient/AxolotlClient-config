@@ -13,6 +13,8 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import io.github.axolotlclient.AxolotlClientConfig.api.manager.ConfigManager;
+import io.github.axolotlclient.AxolotlClientConfig.api.options.OptionCategory;
 import io.github.axolotlclient.AxolotlClientConfig.api.ui.Style;
 import lombok.Getter;
 
@@ -99,24 +101,26 @@ public class ConfigUI {
 		return styles.keySet();
 	}
 
-	public Class<?> getScreen(ClassLoader loader) {
-		return getScreen(loader, getCurrentStyle());
+	public Object getScreen(ClassLoader loader, ConfigManager manager, OptionCategory category, Object parent) {
+		return getScreen(loader, getCurrentStyle(), manager, category, parent);
 	}
 
-	private Class<?> getScreen(ClassLoader loader, Style style) {
+	private Object getScreen(ClassLoader loader, Style style, ConfigManager manager, OptionCategory category, Object parent) {
 		String name = style.getScreen();
 		if (name == null || name.trim().isEmpty()) {
 			if (style.equals(getDefaultStyle())) {
 				throw new IllegalStateException("Something is seriously wrong! The default style's screen is empty! default style: " + getDefaultStyle());
 			}
 			if (style.getParentStyleName().isPresent()) {
-				return getScreen(loader, getStyle(style.getParentStyleName().get()));
+				return getScreen(loader, getStyle(style.getParentStyleName().get()), manager, category, parent);
 			} else {
-				return getScreen(loader, getDefaultStyle());
+				return getScreen(loader, getDefaultStyle(), manager, category, parent);
 			}
 		}
 		try {
-			return Class.forName(name, true, loader);
+			return Class.forName(name, true, loader)
+				.getConstructor(parent.getClass(), ConfigManager.class, OptionCategory.class)
+				.newInstance(parent, manager, category);
 		} catch (Throwable e) {
 			throw new IllegalStateException("Error while getting screen for " + style.getName(), e);
 		}

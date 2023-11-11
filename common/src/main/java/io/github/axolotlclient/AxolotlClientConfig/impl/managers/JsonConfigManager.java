@@ -5,6 +5,9 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -21,6 +24,7 @@ public class JsonConfigManager implements ConfigManager {
 
 	protected final Path file;
 	protected final OptionCategory root;
+	protected List<String> suppressedNames = new ArrayList<>();
 
 
 	@Override
@@ -70,6 +74,15 @@ public class JsonConfigManager implements ConfigManager {
 	@Override
 	public OptionCategory getRoot() {
 		return root;
+	}
+
+	public Collection<String> getSuppressedNames() {
+		return suppressedNames;
+	}
+
+	@Override
+	public void suppressName(String name) {
+		suppressedNames.add(name);
 	}
 
 	protected void load(OptionCategory category, JsonObject object) {
