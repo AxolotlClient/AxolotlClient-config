@@ -8,6 +8,7 @@ import io.github.axolotlclient.AxolotlClientConfig.api.util.Color;
 import io.github.axolotlclient.AxolotlClientConfig.api.util.Colors;
 import io.github.axolotlclient.AxolotlClientConfig.impl.options.BooleanOption;
 import io.github.axolotlclient.AxolotlClientConfig.impl.options.ColorOption;
+import io.github.axolotlclient.AxolotlClientConfig.impl.options.FloatOption;
 import io.github.axolotlclient.AxolotlClientConfig.impl.options.IntegerOption;
 import io.github.axolotlclient.AxolotlClientConfig.impl.ui.DrawingUtil;
 import io.github.axolotlclient.AxolotlClientConfig.impl.ui.NVGMC;
@@ -33,6 +34,7 @@ public class ColorSelectionScreen extends Screen implements DrawingUtil {
 	private final Screen parent;
 	private NVGPaint paint;
 	private BooleanOption chroma;
+	private FloatOption speed;
 	private IntegerOption alpha;
 	private int selectorRadius;
 	private float selectorX;
@@ -52,12 +54,10 @@ public class ColorSelectionScreen extends Screen implements DrawingUtil {
 
 		chroma = new BooleanOption("option.chroma", option.get().isChroma(), val -> {
 			option.get().setChroma(val);
-			children().forEach(e -> {
-				if (e instanceof TextFieldWidget) {
-					((TextFieldWidget) e).setText(option.get().toString().split(";")[0]);
-				}
-			});
 		});
+		speed = new FloatOption("option.speed", option.get().getChromaSpeed(), val -> {
+			option.get().setChromaSpeed(val);
+		}, 0f, 4f);
 		alpha = new IntegerOption("option.alpha", option.get().getAlpha(), val -> {
 			option.get().setAlpha(val);
 			children().forEach(e -> {
@@ -73,11 +73,23 @@ public class ColorSelectionScreen extends Screen implements DrawingUtil {
 
 		buttonsX = (int) Math.max(width / 2f + 25, selectorX + selectorRadius * 2 + 10);
 
+		int y = 120;
+		addDrawableChild(ConfigStyles.createWidget(buttonsX, y, 150, 20, chroma));
+		y += 45;
+		if (height > 300) {
+			addDrawableChild(ConfigStyles.createWidget(buttonsX, y, 150, 20, speed));
+			y += 45;
+		}
+		addDrawableChild(ConfigStyles.createWidget(buttonsX, y, 150, 20, alpha));
+		y += 45;
 		if (this.height - 250 > 0) {
-			TextFieldWidget text = new TextFieldWidget(client.textRenderer, buttonsX, 190, 150, 20, Text.empty());
+			y -= 25;
+			TextFieldWidget text = new TextFieldWidget(client.textRenderer, buttonsX, y, 150, 20, Text.empty());
 			text.setChangedListener(s -> {
 				try {
 					option.set(Color.parse(s));
+					option.get().setChroma(chroma.get());
+					option.get().setChromaSpeed(speed.get());
 
 					children().forEach(e -> {
 						if (e instanceof Updatable) {
@@ -90,9 +102,6 @@ public class ColorSelectionScreen extends Screen implements DrawingUtil {
 			text.setText(option.get().toString().split(";")[0]);
 			addDrawableChild(text);
 		}
-
-		addDrawableChild(ConfigStyles.createWidget(buttonsX, 120, 150, 20, chroma));
-		addDrawableChild(ConfigStyles.createWidget(buttonsX, 165, 150, 20, alpha));
 	}
 
 	@Override
@@ -125,8 +134,14 @@ public class ColorSelectionScreen extends Screen implements DrawingUtil {
 			fillRoundedRect(ctx, buttonsX, 55, 150, 40, option.get().get(), 10);
 			outlineRoundedRect(ctx, buttonsX, 55, 150, 40, Colors.BLACK, 10, 1);
 
-			drawString(ctx, NVGHolder.getFont(), I18n.translate("option.chroma"), buttonsX, 105, Colors.WHITE);
-			drawString(ctx, NVGHolder.getFont(), I18n.translate("option.alpha"), buttonsX, 150, Colors.WHITE);
+			int y = 105;
+			drawString(ctx, NVGHolder.getFont(), I18n.translate("option.chroma"), buttonsX, y, Colors.WHITE);
+			y += 45;
+			if (height > 300) {
+				drawString(ctx, NVGHolder.getFont(), I18n.translate("option.speed"), buttonsX, y, Colors.WHITE);
+				y += 45;
+			}
+			drawString(ctx, NVGHolder.getFont(), I18n.translate("option.alpha"), buttonsX, y, Colors.WHITE);
 		});
 	}
 

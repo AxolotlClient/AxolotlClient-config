@@ -13,11 +13,6 @@ public class ColorOption extends OptionBase<Color> {
 	}
 
 	@Override
-	public Color get() {
-		return super.get().get();
-	}
-
-	@Override
 	public String toSerializedValue() {
 		return get().toString();
 	}

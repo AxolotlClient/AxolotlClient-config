@@ -7,5 +7,6 @@
   "select_color": "Select Color",
   "option.current": "Current Color:",
   "option.chroma": "Chroma",
+  "option.speed": "Chroma Speed",
   "option.alpha": "Alpha"
 }

@@ -269,49 +269,74 @@ public class TextFieldWidget extends ClickableWidget implements DrawingUtil, Sel
 			return true;
 		} else {
 			switch (keyCode) {
-				case 263: {
+				case 14:
 					if (Screen.isControlDown()) {
+						if (this.editable) {
+							this.eraseWords(-1);
+						}
+					} else if (this.editable) {
+						this.eraseCharacters(-1);
+					}
+
+					return true;
+				case 199:
+					if (Screen.isShiftDown()) {
+						this.setSelectionEnd(0);
+					} else {
+						this.setCursorToStart(selecting);
+					}
+
+					return true;
+				case 203:
+					if (Screen.isShiftDown()) {
+						if (Screen.isControlDown()) {
+							this.setSelectionEnd(this.getWordSkipPosition(-1, selectionEnd));
+						} else {
+							this.setSelectionEnd(this.selectionEnd - 1);
+						}
+					} else if (Screen.isControlDown()) {
 						this.setCursor(this.getWordSkipPosition(-1), selecting);
 					} else {
 						this.moveCursor(-1, selecting);
 					}
+
 					return true;
-				}
-				case 262: {
-					if (Screen.isControlDown()) {
+				case 205:
+					if (Screen.isShiftDown()) {
+						if (Screen.isControlDown()) {
+							this.setSelectionEnd(this.getWordSkipPosition(1, selectionEnd));
+						} else {
+							this.setSelectionEnd(this.selectionEnd + 1);
+						}
+					} else if (Screen.isControlDown()) {
 						this.setCursor(this.getWordSkipPosition(1), selecting);
 					} else {
 						this.moveCursor(1, selecting);
 					}
+
 					return true;
-				}
-				case 259: {
-					if (this.editable) {
-						this.selecting = false;
-						this.erase(-1);
-						this.selecting = Screen.isShiftDown();
+				case 207:
+					if (Screen.isShiftDown()) {
+						this.setSelectionEnd(this.text.length());
+					} else {
+						this.setCursorToEnd(selecting);
 					}
+
 					return true;
-				}
-				case 261: {
-					if (this.editable) {
-						this.selecting = false;
-						this.erase(1);
-						this.selecting = Screen.isShiftDown();
+				case 211:
+					if (Screen.isControlDown()) {
+						if (this.editable) {
+							this.eraseWords(1);
+						}
+					} else if (this.editable) {
+						this.eraseCharacters(1);
 					}
+
 					return true;
-				}
-				case 268: {
-					this.setCursorToStart(selecting);
-					return true;
-				}
-				case 269: {
-					this.setCursorToEnd(selecting);
-					return true;
-				}
+				default:
+					return false;
 			}
 		}
-		return false;
 	}
 
 	public boolean isActive() {

@@ -152,7 +152,7 @@ public final class NVGFont implements AutoCloseable {
 			builder.append(text.charAt(i));
 			i += (backwards ? -1 : 1);
 		}
-		builder.delete(builder.length()-1- Character.charCount(builder.codePointAt(builder.length()-1)), builder.length()-1);
+		builder.delete(builder.length() -1- Character.charCount(builder.codePointAt(builder.length()-1)), builder.length()-1);
 		if (backwards) {
 			builder = builder.reverse();
 		}

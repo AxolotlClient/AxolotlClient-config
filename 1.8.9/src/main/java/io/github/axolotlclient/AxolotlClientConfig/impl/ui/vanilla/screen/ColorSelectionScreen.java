@@ -7,6 +7,7 @@ import io.github.axolotlclient.AxolotlClientConfig.api.util.Color;
 import io.github.axolotlclient.AxolotlClientConfig.api.util.Colors;
 import io.github.axolotlclient.AxolotlClientConfig.impl.options.BooleanOption;
 import io.github.axolotlclient.AxolotlClientConfig.impl.options.ColorOption;
+import io.github.axolotlclient.AxolotlClientConfig.impl.options.FloatOption;
 import io.github.axolotlclient.AxolotlClientConfig.impl.options.IntegerOption;
 import io.github.axolotlclient.AxolotlClientConfig.impl.ui.TextFieldWidget;
 import io.github.axolotlclient.AxolotlClientConfig.impl.ui.Updatable;
@@ -25,6 +26,7 @@ public class ColorSelectionScreen extends io.github.axolotlclient.AxolotlClientC
 	private final Identifier texture = new Identifier("axolotlclientconfig", "textures/gui/colorwheel.png");
 	private final Screen parent;
 	private BooleanOption chroma;
+	private FloatOption speed;
 	private IntegerOption alpha;
 	private int selectorRadius;
 	private float selectorX;
@@ -43,17 +45,44 @@ public class ColorSelectionScreen extends io.github.axolotlclient.AxolotlClientC
 		addDrawableChild(new VanillaButtonWidget(width / 2 - 75, height - 40, 150, 20,
 			I18n.translate("gui.back"), buttonWidget -> minecraft.openScreen(parent)));
 
+		chroma = new BooleanOption("option.chroma", option.get().isChroma(), val -> {
+			option.get().setChroma(val);
+		});
+		speed = new FloatOption("option.speed", option.get().getChromaSpeed(), val -> {
+			option.get().setChromaSpeed(val);
+		}, 0f, 4f);
+		alpha = new IntegerOption("option.alpha", option.get().getAlpha(), val -> {
+			option.get().setAlpha(val);
+			children().forEach(e -> {
+				if (e instanceof io.github.axolotlclient.AxolotlClientConfig.impl.ui.rounded.widgets.TextFieldWidget) {
+					((io.github.axolotlclient.AxolotlClientConfig.impl.ui.rounded.widgets.TextFieldWidget) e).setText(option.get().toString().split(";")[0]);
+				}
+			});
+		}, 0, 255);
+
 		selectorRadius = Math.max(Math.min(width / 4 - 10, (height) / 2 - 60), 75);
 		selectorX = width / 4f - selectorRadius;
 		selectorY = height / 2f - selectorRadius;
 
 		buttonsX = (int) Math.max(width / 2f + 25, selectorX + selectorRadius * 2 + 10);
 
+		int y = 120;
+		addDrawableChild(ConfigStyles.createWidget(buttonsX, y, 150, 20, chroma));
+		y += 45;
+		if (height > 300) {
+			addDrawableChild(ConfigStyles.createWidget(buttonsX, y, 150, 20, speed));
+			y += 45;
+		}
+		addDrawableChild(ConfigStyles.createWidget(buttonsX, y, 150, 20, alpha));
+		y += 45;
 		if (this.height - 250 > 0) {
-			TextFieldWidget text = new TextFieldWidget(minecraft.textRenderer, buttonsX, 190, 150, 20, "");
+			y -= 25;
+			TextFieldWidget text = new TextFieldWidget(minecraft.textRenderer, buttonsX, y, 150, 20, "");
 			text.setChangedListener(s -> {
 				try {
 					option.set(Color.parse(s));
+					option.get().setChroma(chroma.get());
+					option.get().setChromaSpeed(speed.get());
 
 					children().forEach(e -> {
 						if (e instanceof Updatable) {
@@ -66,26 +95,6 @@ public class ColorSelectionScreen extends io.github.axolotlclient.AxolotlClientC
 			text.setText(option.get().toString().split(";")[0]);
 			addDrawableChild(text);
 		}
-
-		chroma = new BooleanOption("option.chroma", option.get().isChroma(), val -> {
-			option.get().setChroma(val);
-			children().forEach(e -> {
-				if (e instanceof TextFieldWidget) {
-					((TextFieldWidget) e).setText(option.get().toString().split(";")[0]);
-				}
-			});
-		});
-		alpha = new IntegerOption("option.alpha", option.get().getAlpha(), val -> {
-			option.get().setAlpha(val);
-			children().forEach(e -> {
-				if (e instanceof TextFieldWidget) {
-					((TextFieldWidget) e).setText(option.get().toString().split(";")[0]);
-				}
-			});
-		}, 0, 255);
-
-		addDrawableChild(ConfigStyles.createWidget(buttonsX, 120, 150, 20, chroma));
-		addDrawableChild(ConfigStyles.createWidget(buttonsX, 165, 150, 20, alpha));
 	}
 
 	@Override
@@ -103,8 +112,14 @@ public class ColorSelectionScreen extends io.github.axolotlclient.AxolotlClientC
 		DrawUtil.fillRect(buttonsX, 55, 150, 40, option.get().get().toInt());
 		DrawUtil.outlineRect(buttonsX, 55, 150, 40, Colors.BLACK.toInt());
 
-		drawString(minecraft.textRenderer, I18n.translate("option.chroma"), buttonsX, 105, Colors.WHITE.toInt());
-		drawString(minecraft.textRenderer, I18n.translate("option.alpha"), buttonsX, 150, Colors.WHITE.toInt());
+		int y = 105;
+		drawString(minecraft.textRenderer, I18n.translate("option.chroma"), buttonsX, y, Colors.WHITE.toInt());
+		y += 45;
+		if (height > 300) {
+			drawString(minecraft.textRenderer, I18n.translate("option.speed"), buttonsX, y, Colors.WHITE.toInt());
+			y += 45;
+		}
+		drawString(minecraft.textRenderer, I18n.translate("option.alpha"), buttonsX, y, Colors.WHITE.toInt());
 	}
 
 	@Override
