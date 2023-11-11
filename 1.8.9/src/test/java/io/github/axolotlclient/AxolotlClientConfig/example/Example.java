@@ -1,6 +1,5 @@
 package io.github.axolotlclient.AxolotlClientConfig.example;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.function.Function;
 
 import io.github.axolotlclient.AxolotlClientConfig.api.AxolotlClientConfig;
@@ -10,9 +9,7 @@ import io.github.axolotlclient.AxolotlClientConfig.api.util.Colors;
 import io.github.axolotlclient.AxolotlClientConfig.impl.managers.JsonConfigManager;
 import io.github.axolotlclient.AxolotlClientConfig.impl.options.*;
 import io.github.axolotlclient.AxolotlClientConfig.impl.ui.ConfigUI;
-import lombok.Getter;
 import net.fabricmc.loader.api.FabricLoader;
-import net.fabricmc.loader.launch.common.FabricLauncherBase;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.options.KeyBinding;
@@ -73,7 +70,7 @@ public class Example implements ClientModInitializer {
 
 	public Function<Screen, ? extends Screen> getConfigScreenFactory(String name) {
 		ConfigManager manager = AxolotlClientConfig.getInstance().getConfigManager(name);
-		return parent -> (Screen) ConfigUI.getInstance().getScreen(this.getClass().getClassLoader(),
+		return parent -> ConfigUI.getInstance().getScreen(this.getClass().getClassLoader(),
 			manager, manager.getRoot(), parent);
 	}
 }

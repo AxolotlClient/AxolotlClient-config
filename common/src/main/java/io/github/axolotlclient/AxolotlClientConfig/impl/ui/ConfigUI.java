@@ -3,6 +3,7 @@ package io.github.axolotlclient.AxolotlClientConfig.impl.ui;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -15,6 +16,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import io.github.axolotlclient.AxolotlClientConfig.api.manager.ConfigManager;
 import io.github.axolotlclient.AxolotlClientConfig.api.options.OptionCategory;
+import io.github.axolotlclient.AxolotlClientConfig.api.options.WidgetIdentifieable;
 import io.github.axolotlclient.AxolotlClientConfig.api.ui.Style;
 import lombok.Getter;
 
@@ -29,6 +31,7 @@ public class ConfigUI {
 	Map<String, Style> styles = new HashMap<>();
 	private String currentStyle = "vanilla";
 	private boolean loaded;
+
 	private ConfigUI() {
 	}
 
@@ -101,11 +104,12 @@ public class ConfigUI {
 		return styles.keySet();
 	}
 
-	public Object getScreen(ClassLoader loader, ConfigManager manager, OptionCategory category, Object parent) {
+	public <T> T getScreen(ClassLoader loader, ConfigManager manager, OptionCategory category, T parent) {
 		return getScreen(loader, getCurrentStyle(), manager, category, parent);
 	}
 
-	private Object getScreen(ClassLoader loader, Style style, ConfigManager manager, OptionCategory category, Object parent) {
+	@SuppressWarnings("unchecked")
+	private <T> T getScreen(ClassLoader loader, Style style, ConfigManager manager, OptionCategory category, T parent) {
 		String name = style.getScreen();
 		if (name == null || name.trim().isEmpty()) {
 			if (style.equals(getDefaultStyle())) {
@@ -118,29 +122,52 @@ public class ConfigUI {
 			}
 		}
 		try {
-			return Class.forName(name, true, loader)
-				.getConstructor(parent.getClass(), ConfigManager.class, OptionCategory.class)
+			Class<?> c = Class.forName(name, true, loader);
+			Constructor<?> screenConstructor = null;
+			Object[] params = {parent, manager, category};
+			for (Constructor<?> con : c.getConstructors()) {
+				if (con.getParameterTypes().length != params.length) {
+					continue;
+				}
+				boolean matching = true;
+				for (int i = 0; i < params.length; i++) {
+					if (params[i] != null) {
+						if (!con.getParameterTypes()[i].isAssignableFrom(params[i].getClass())) {
+							matching = false;
+						}
+					}
+				}
+				if (matching) {
+					screenConstructor = con;
+				}
+			}
+			if (screenConstructor == null) {
+				throw new IllegalStateException("Constructor couldn't be found!");
+			}
+			return (T) screenConstructor
 				.newInstance(parent, manager, category);
 		} catch (Throwable e) {
 			throw new IllegalStateException("Error while getting screen for " + style.getName(), e);
 		}
 	}
 
-	public Class<?> getWidget(String identifier, ClassLoader loader) {
-		return getWidget(identifier, loader, getCurrentStyle());
+	public Object getWidget(int x, int y, int width, int height, WidgetIdentifieable id, ClassLoader loader) {
+		return getWidget(x, y, width, height, id, loader, getCurrentStyle());
 	}
 
-	private Class<?> getWidget(String identifier, ClassLoader loader, Style style) {
-		String name = style.getWidgets().get(identifier);
+	private Object getWidget(int x, int y, int width, int height, WidgetIdentifieable id, ClassLoader loader, Style style) {
+		String name = style.getWidgets().get(id.getWidgetIdentifier());
 		if (name == null || name.trim().isEmpty()) {
 			if (style.getParentStyleName().isPresent()) {
-				return getWidget(identifier, loader, getStyle(style.getParentStyleName().get()));
+				return getWidget(x, y, width, height, id, loader, getStyle(style.getParentStyleName().get()));
 			} else {
-				return getWidget(identifier, loader, getDefaultStyle());
+				return getWidget(x, y, width, height, id, loader, getDefaultStyle());
 			}
 		}
 		try {
-			return Class.forName(name, true, loader);
+			return Class.forName(name, true, loader)
+				.getConstructor(int.class, int.class, int.class, int.class, id.getClass())
+				.newInstance(x, y, width, height, id);
 		} catch (Throwable e) {
 			throw new IllegalStateException("Error while getting widget for " + style.getName(), e);
 		}

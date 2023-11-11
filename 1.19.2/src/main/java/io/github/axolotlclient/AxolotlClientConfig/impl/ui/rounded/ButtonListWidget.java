@@ -1,6 +1,5 @@
 package io.github.axolotlclient.AxolotlClientConfig.impl.ui.rounded;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 import java.util.stream.Stream;
 
@@ -8,7 +7,7 @@ import io.github.axolotlclient.AxolotlClientConfig.api.manager.ConfigManager;
 import io.github.axolotlclient.AxolotlClientConfig.api.options.Option;
 import io.github.axolotlclient.AxolotlClientConfig.api.options.OptionCategory;
 import io.github.axolotlclient.AxolotlClientConfig.api.options.WidgetIdentifieable;
-import io.github.axolotlclient.AxolotlClientConfig.impl.ui.ConfigUI;
+import io.github.axolotlclient.AxolotlClientConfig.impl.util.ConfigStyles;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.Element;
 import net.minecraft.client.gui.Selectable;
@@ -64,14 +63,7 @@ public class ButtonListWidget extends ElementListWidget<ButtonListWidget.Entry> 
 	}
 
 	protected ClickableWidget createWidget(int x, WidgetIdentifieable id) {
-		try {
-			return (ClickableWidget) ConfigUI.getInstance().getWidget(id.getWidgetIdentifier(), this.getClass().getClassLoader())
-				.getConstructor(int.class, int.class, int.class, int.class, id.getClass())
-				.newInstance(x, 0, WIDGET_WIDTH, itemHeight - 5, id);
-		} catch (InstantiationException | IllegalAccessException | InvocationTargetException |
-				 NoSuchMethodException e) {
-			throw new IllegalStateException(e);
-		}
+		return ConfigStyles.createWidget(x, 0, WIDGET_WIDTH, itemHeight - 5, id);
 	}
 
 	protected Entry createOptionEntry(ClickableWidget widget, Option<?> option, @Nullable ClickableWidget other, @Nullable Option<?> otherOption) {

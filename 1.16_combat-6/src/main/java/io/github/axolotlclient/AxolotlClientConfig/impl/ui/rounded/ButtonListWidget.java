@@ -1,6 +1,5 @@
 package io.github.axolotlclient.AxolotlClientConfig.impl.ui.rounded;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -9,7 +8,7 @@ import io.github.axolotlclient.AxolotlClientConfig.api.manager.ConfigManager;
 import io.github.axolotlclient.AxolotlClientConfig.api.options.Option;
 import io.github.axolotlclient.AxolotlClientConfig.api.options.OptionCategory;
 import io.github.axolotlclient.AxolotlClientConfig.api.options.WidgetIdentifieable;
-import io.github.axolotlclient.AxolotlClientConfig.impl.ui.ConfigUI;
+import io.github.axolotlclient.AxolotlClientConfig.impl.util.ConfigStyles;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.Element;
 import net.minecraft.client.gui.widget.AbstractButtonWidget;
@@ -41,7 +40,7 @@ public class ButtonListWidget extends ElementListWidget<ButtonListWidget.Entry> 
 
 	protected void addCategories(ConfigManager manager, Collection<OptionCategory> categories) {
 		List<OptionCategory> list = categories.stream()
-				.filter(c -> !manager.getSuppressedNames().contains(c.getName())).collect(Collectors.toList());
+			.filter(c -> !manager.getSuppressedNames().contains(c.getName())).collect(Collectors.toList());
 		for (int i = 0; i < list.size(); i += 2) {
 			addEntry(list.get(i), i < list.size() - 1 ? list.get(i + 1) : null);
 		}
@@ -49,7 +48,7 @@ public class ButtonListWidget extends ElementListWidget<ButtonListWidget.Entry> 
 
 	protected void addOptions(ConfigManager manager, Collection<Option<?>> options) {
 		List<Option<?>> list = options.stream()
-				.filter(o -> !manager.getSuppressedNames().contains(o.getName())).collect(Collectors.toList());
+			.filter(o -> !manager.getSuppressedNames().contains(o.getName())).collect(Collectors.toList());
 		for (int i = 0; i < list.size(); i += 2) {
 			addEntry(list.get(i), i < list.size() - 1 ? list.get(i + 1) : null);
 		}
@@ -64,14 +63,7 @@ public class ButtonListWidget extends ElementListWidget<ButtonListWidget.Entry> 
 	}
 
 	protected AbstractButtonWidget createWidget(int x, WidgetIdentifieable id) {
-		try {
-			return (AbstractButtonWidget) ConfigUI.getInstance().getWidget(id.getWidgetIdentifier(), this.getClass().getClassLoader())
-				.getConstructor(int.class, int.class, int.class, int.class, id.getClass())
-				.newInstance(x, 0, WIDGET_WIDTH, itemHeight - 5, id);
-		} catch (InstantiationException | IllegalAccessException | InvocationTargetException |
-				 NoSuchMethodException e) {
-			throw new IllegalStateException(e);
-		}
+		return ConfigStyles.createWidget(x, 0, WIDGET_WIDTH, itemHeight - 5, id);
 	}
 
 	protected Entry createOptionEntry(AbstractButtonWidget widget, Option<?> option, @Nullable AbstractButtonWidget other, @Nullable Option<?> otherOption) {
