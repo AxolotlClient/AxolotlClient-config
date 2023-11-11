@@ -53,7 +53,7 @@ dependencies {
 
 	localRuntime("org.ow2.asm:asm-tree:9.4")
 
-	modCompileOnly("com.github.moehreag:legacy-lwjgl3:d27b6b3ce2") {
+	modCompileOnly("com.github.moehreag:legacy-lwjgl3:b293a2612b") {
 		exclude group: 'org.lwjgl', module: 'lwjgl-glfw'
 		exclude group: 'org.lwjgl', module: 'lwjgl-openal'
 		exclude group: 'org.lwjgl', module: 'lwjgl-opengl'

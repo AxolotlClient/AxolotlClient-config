@@ -109,7 +109,7 @@ public class ConfigUI {
 	}
 
 	@SuppressWarnings("unchecked")
-	private <T> T getScreen(ClassLoader loader, Style style, ConfigManager manager, OptionCategory category, T parent) {
+	private   <T> T getScreen(ClassLoader loader, Style style, ConfigManager manager, OptionCategory category, T parent) {
 		String name = style.getScreen();
 		if (name == null || name.trim().isEmpty()) {
 			if (style.equals(getDefaultStyle())) {
@@ -125,7 +125,7 @@ public class ConfigUI {
 			Class<?> c = Class.forName(name, true, loader);
 			Constructor<?> screenConstructor = null;
 			Object[] params = {parent, manager, category};
-			for (Constructor<?> con : c.getConstructors()) {
+			for (Constructor<?> con : c.getDeclaredConstructors()) {
 				if (con.getParameterTypes().length != params.length) {
 					continue;
 				}
@@ -166,7 +166,7 @@ public class ConfigUI {
 		}
 		try {
 			return Class.forName(name, true, loader)
-				.getConstructor(int.class, int.class, int.class, int.class, id.getClass())
+				.getDeclaredConstructor(int.class, int.class, int.class, int.class, id.getClass())
 				.newInstance(x, y, width, height, id);
 		} catch (Throwable e) {
 			throw new IllegalStateException("Error while getting widget for " + style.getName(), e);

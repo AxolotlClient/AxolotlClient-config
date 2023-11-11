@@ -43,6 +43,7 @@ public class Example implements ClientModInitializer {
 		example.add(new BooleanOption("option", false));
 		example.add(new BooleanOption("other option", true));
 		example.add(new GraphicsOption("graphics", 40, 40));
+		example.add(new EnumOption<>("enum", TestEnum.class, TestEnum.TEST_ENUM1));
 
 		KeyBinding binding = new KeyBinding("test", 0, "test");
 		KeyBindingEvents.REGISTER_KEYBINDS.register((registry) -> registry.register(binding));
@@ -72,5 +73,10 @@ public class Example implements ClientModInitializer {
 		ConfigManager manager = AxolotlClientConfig.getInstance().getConfigManager(name);
 		return parent -> ConfigUI.getInstance().getScreen(this.getClass().getClassLoader(),
 			manager, manager.getRoot(), parent);
+	}
+
+	public enum TestEnum {
+		TEST_ENUM1,
+		TEST_ENUM2
 	}
 }

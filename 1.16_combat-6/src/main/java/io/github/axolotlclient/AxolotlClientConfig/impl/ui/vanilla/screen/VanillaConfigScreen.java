@@ -18,7 +18,7 @@ public class VanillaConfigScreen extends io.github.axolotlclient.AxolotlClientCo
 	private final OptionCategory category;
 
 	public VanillaConfigScreen(Screen parent, ConfigManager manager, OptionCategory category) {
-		super(manager.getRoot().getName());
+		super(category.getName());
 		this.parent = parent;
 		this.configManager = manager;
 		this.category = category;

@@ -22,7 +22,7 @@ public class RoundedConfigScreen extends io.github.axolotlclient.AxolotlClientCo
 	private final OptionCategory category;
 
 	public RoundedConfigScreen(Screen parent, ConfigManager manager, OptionCategory category) {
-		super(I18n.translate(manager.getRoot().getName()));
+		super(I18n.translate(category.getName()));
 		this.parent = parent;
 		this.configManager = manager;
 		this.category = category;

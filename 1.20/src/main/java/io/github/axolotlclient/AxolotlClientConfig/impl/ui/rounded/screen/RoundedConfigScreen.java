@@ -23,7 +23,7 @@ public class RoundedConfigScreen extends Screen implements ConfigScreen, Drawing
 	private final OptionCategory category;
 
 	public RoundedConfigScreen(Screen parent, ConfigManager manager, OptionCategory category) {
-		super(Text.translatable(manager.getRoot().getName()));
+		super(Text.translatable(category.getName()));
 		this.parent = parent;
 		this.configManager = manager;
 		this.category = category;

@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;
+import java.nio.Buffer;
 import java.nio.ByteBuffer;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
@@ -95,7 +96,7 @@ public final class NVGFont implements AutoCloseable {
 				if (buffer.remaining() == 0)
 					buffer = MemoryUtil.memRealloc(buffer, buffer.capacity() + buffer.capacity() * 3 / 2);
 
-			buffer.flip();
+			((Buffer) buffer).flip();
 
 			return buffer;
 		}
