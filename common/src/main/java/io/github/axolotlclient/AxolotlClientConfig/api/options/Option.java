@@ -10,9 +10,7 @@ public interface Option<T> extends WidgetIdentifieable {
 
 	void set(T newValue);
 
-	default void setDefault() {
-		set(getDefault());
-	}
+	void setDefault();
 
 	String toSerializedValue();
 

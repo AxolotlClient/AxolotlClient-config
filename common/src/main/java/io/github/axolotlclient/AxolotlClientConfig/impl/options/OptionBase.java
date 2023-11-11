@@ -7,7 +7,6 @@ public abstract class OptionBase<T> implements Option<T> {
 
 	@Getter
 	private final String name;
-	@Getter
 	private final T defaultValue;
 	private final ChangeListener<T> changeListener;
 	protected T value;
@@ -36,6 +35,11 @@ public abstract class OptionBase<T> implements Option<T> {
 	public void set(T value) {
 		this.value = value;
 		changeListener.onChange(value);
+	}
+
+	@Override
+	public void setDefault() {
+		this.value = getDefault();
 	}
 
 	public interface ChangeListener<T> {

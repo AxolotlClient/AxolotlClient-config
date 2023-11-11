@@ -106,6 +106,7 @@ public class JsonConfigManager implements ConfigManager {
 
 	protected void setDefaults(OptionCategory category) {
 		category.getOptions().forEach(Option::setDefault);
-		category.getSubCategories().forEach(this::setDefaults);
+		category.getSubCategories().stream().filter(OptionCategory::includeInParentTree)
+			.forEach(this::setDefaults);
 	}
 }
