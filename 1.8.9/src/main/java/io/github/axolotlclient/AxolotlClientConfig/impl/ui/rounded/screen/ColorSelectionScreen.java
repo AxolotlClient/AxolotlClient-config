@@ -81,8 +81,9 @@ public class ColorSelectionScreen extends io.github.axolotlclient.AxolotlClientC
 		addDrawableChild(ConfigStyles.createWidget(buttonsX, y, 150, 20, alpha));
 		y += 45;
 		if (this.height - 250 > 0) {
-			y -= 25;
+			y -= 20;
 			TextFieldWidget text = new TextFieldWidget(minecraft.textRenderer, buttonsX, y, 150, 20, "");
+			text.setText(option.get().toString().split(";")[0]);
 			text.setChangedListener(s -> {
 				try {
 					option.set(Color.parse(s));
@@ -97,7 +98,6 @@ public class ColorSelectionScreen extends io.github.axolotlclient.AxolotlClientC
 				} catch (Throwable ignored) {
 				}
 			});
-			text.setText(option.get().toString().split(";")[0]);
 			addDrawableChild(text);
 		}
 	}
@@ -168,6 +168,17 @@ public class ColorSelectionScreen extends io.github.axolotlclient.AxolotlClientC
 				option.get().setRed(r);
 				option.get().setGreen(g);
 				option.get().setBlue(b);
+
+				children().forEach(e -> {
+					if (e instanceof Updatable) {
+						((Updatable) e).update();
+					}
+				});
+				children().forEach(e -> {
+					if (e instanceof TextFieldWidget) {
+						((TextFieldWidget) e).setText(option.get().toString().split(";")[0]);
+					}
+				});
 				return true;
 			}
 		}
@@ -202,5 +213,6 @@ public class ColorSelectionScreen extends io.github.axolotlclient.AxolotlClientC
 				this.minecraft.closeScreen();
 			}
 		}
+		super.keyPressed(c, i);
 	}
 }

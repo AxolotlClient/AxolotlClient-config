@@ -65,7 +65,6 @@ public class JsonConfigManager implements ConfigManager {
 				return;
 			}
 		} catch (IOException e) {
-
 		}
 
 		setDefaults(root);

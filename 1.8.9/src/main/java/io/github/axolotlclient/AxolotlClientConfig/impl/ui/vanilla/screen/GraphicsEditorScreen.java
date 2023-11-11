@@ -154,6 +154,7 @@ public class GraphicsEditorScreen extends io.github.axolotlclient.AxolotlClientC
 				this.minecraft.closeScreen();
 			}
 		}
+		super.keyPressed(c, i);
 	}
 
 	private class ElementSelectable extends ButtonWidget {

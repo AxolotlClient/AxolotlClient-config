@@ -83,7 +83,7 @@ public class ColorSelectionScreen extends Screen implements DrawingUtil {
 		addDrawableSelectableElement(ConfigStyles.createWidget(buttonsX, y, 150, 20, alpha));
 		y += 45;
 		if (this.height - 250 > 0) {
-			y -= 25;
+			y -= 20;
 			TextFieldWidget text = new TextFieldWidget(client.textRenderer, buttonsX, y, 150, 20, Text.empty());
 			text.setChangedListener(s -> {
 				try {
@@ -170,6 +170,17 @@ public class ColorSelectionScreen extends Screen implements DrawingUtil {
 				option.get().setRed(r);
 				option.get().setGreen(g);
 				option.get().setBlue(b);
+
+				children().forEach(e -> {
+					if (e instanceof Updatable) {
+						((Updatable) e).update();
+					}
+				});
+				children().forEach(e -> {
+					if (e instanceof TextFieldWidget) {
+						((TextFieldWidget) e).setText(option.get().toString().split(";")[0]);
+					}
+				});
 				return true;
 			}
 		}

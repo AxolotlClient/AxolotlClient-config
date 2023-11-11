@@ -102,8 +102,9 @@ public class Color implements Runnable, Cloneable {
 				Integer.valueOf(color.substring(6, 8), 16),
 				Integer.valueOf(color.substring(0, 2), 16));
 			if (color.contains(";")) {
-				c.setChroma(Boolean.parseBoolean(color.substring(0, color.indexOf(';'))));
-				c.setChromaSpeed(Float.parseFloat(color.substring(color.lastIndexOf(";"))));
+				String[] parts = color.split(";");
+				c.setChroma(Boolean.parseBoolean(parts[1]));
+				c.setChromaSpeed(Float.parseFloat(parts[2]));
 			}
 			return c;
 		} catch (NumberFormatException error) {
