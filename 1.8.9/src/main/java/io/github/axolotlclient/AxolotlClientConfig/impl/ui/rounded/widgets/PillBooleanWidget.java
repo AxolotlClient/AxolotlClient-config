@@ -89,6 +89,7 @@ public class PillBooleanWidget extends RoundedButtonWidget implements Updatable 
 		super.onPress();
 		state = targetState;
 		targetState = !targetState;
+		tickTime = Minecraft.getTime();
 	}
 
 	public void update() {

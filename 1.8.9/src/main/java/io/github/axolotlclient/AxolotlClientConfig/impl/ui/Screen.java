@@ -24,10 +24,10 @@ public abstract class Screen extends net.minecraft.client.gui.screen.Screen impl
 	}
 
 	@Override
-	public void init(Minecraft Minecraft, int i, int j) {
+	public void init(Minecraft minecraft, int i, int j) {
 		clearChildren();
-		minecraft = Minecraft.getInstance();
-		super.init(Minecraft, i, j);
+		this.minecraft = Minecraft.getInstance();
+		super.init(minecraft, i, j);
 	}
 
 	@Override
@@ -41,6 +41,15 @@ public abstract class Screen extends net.minecraft.client.gui.screen.Screen impl
 	@Override
 	public List<? extends Element> children() {
 		return children;
+	}
+
+	@Override
+	public void handleMouse() {
+		super.handleMouse();
+		int scroll = Mouse.getDWheel();
+		if (scroll != 0) {
+			children.forEach(e -> e.mouseScrolled(minecraft.mouse.dx, minecraft.mouse.dy, 0, scroll));
+		}
 	}
 
 	@Override
@@ -139,10 +148,5 @@ public abstract class Screen extends net.minecraft.client.gui.screen.Screen impl
 
 	@Override
 	public void tick() {
-		int scroll = Mouse.getDWheel();
-		if (scroll != 0) {
-			//mouseScrolled(client.mouse.x, client.mouse.y, 0, scroll < 0 ? -1 : 1);
-			children.forEach(e -> e.mouseScrolled(minecraft.mouse.dx, minecraft.mouse.dy, 0, scroll < 0 ? -1 : 1));
-		}
 	}
 }

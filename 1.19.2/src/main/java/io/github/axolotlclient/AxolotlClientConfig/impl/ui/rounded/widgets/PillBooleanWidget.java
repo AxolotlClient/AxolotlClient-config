@@ -94,6 +94,7 @@ public class PillBooleanWidget extends RoundedButtonWidget implements Updatable 
 		super.onPress();
 		state = targetState;
 		targetState = !targetState;
+		tickTime = Util.getEpochTimeMs();
 	}
 
 	public void update() {
