@@ -20,7 +20,7 @@ public class DrawUtil {
 	public static void fillRect(GuiGraphics stack, Rectangle rectangle, Color color) {
 		fillRect(stack, rectangle.x(), rectangle.y(), rectangle.width(),
 			rectangle.height(),
-			color.toInt());
+			color.get().toInt());
 	}
 
 	public static void fillRect(GuiGraphics graphics, int x, int y, int width, int height, int color) {
@@ -28,7 +28,7 @@ public class DrawUtil {
 	}
 
 	public static void outlineRect(GuiGraphics stack, Rectangle rectangle, Color color) {
-		outlineRect(stack, rectangle.x(), rectangle.y(), rectangle.width(), rectangle.height(), color.toInt());
+		outlineRect(stack, rectangle.x(), rectangle.y(), rectangle.width(), rectangle.height(), color.get().toInt());
 	}
 
 	public static void outlineRect(GuiGraphics stack, int x, int y, int width, int height, int color) {

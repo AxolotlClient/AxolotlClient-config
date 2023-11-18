@@ -2,6 +2,7 @@ package io.github.axolotlclient.AxolotlClientConfig.impl.util;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.Buffer;
 import java.nio.ByteBuffer;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
@@ -89,7 +90,7 @@ public class DrawUtil extends GuiElement implements DrawingUtil {
 				if (buffer.remaining() == 0)
 					buffer = MemoryUtil.memRealloc(buffer, buffer.capacity() + buffer.capacity() * 3 / 2);
 
-			buffer.flip();
+			((Buffer) buffer).flip();
 
 			return buffer;
 		}

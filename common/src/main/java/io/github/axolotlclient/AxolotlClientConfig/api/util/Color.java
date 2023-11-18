@@ -18,7 +18,7 @@ public class Color implements Runnable, Cloneable {
 	private float chromaHue;
 	@Getter
 	@Setter
-	private float chromaSpeed = 1f;
+	private float chromaSpeed;
 
 	private NVGColor nvgColor;
 
@@ -116,13 +116,16 @@ public class Color implements Runnable, Cloneable {
 	 * Get this color as an integer.
 	 *
 	 * @return the color packed as an integer
-	 * @implNote For allowing chroma, use <code>.get().toInt()</code>
 	 */
 	public int toInt() {
-		int color = getAlpha();
-		color = (color << 8) + getRed();
-		color = (color << 8) + getGreen();
-		color = (color << 8) + getBlue();
+		return toInt(get());
+	}
+
+	public static int toInt(Color c){
+		int color = c.getAlpha();
+		color = (color << 8) + c.getRed();
+		color = (color << 8) + c.getGreen();
+		color = (color << 8) + c.getBlue();
 		return color;
 	}
 
@@ -150,7 +153,7 @@ public class Color implements Runnable, Cloneable {
 
 	@Override
 	public String toString() {
-		return String.format("#%08X;%s;%s", toInt(), chroma, chromaSpeed);
+		return String.format("#%08X;%s;%s", toInt(this), chroma, chromaSpeed);
 	}
 
 	public void setChroma(boolean chroma) {
@@ -226,98 +229,7 @@ public class Color implements Runnable, Cloneable {
 	}
 
 	public Color immutable() {
-		return new Color(getRed(), getGreen(), getBlue(), getAlpha(), isChroma()) {
-
-			@Override
-			public void setGreen(int green) {
-				throw new UnsupportedOperationException("Immutable Color Object!");
-			}
-
-			@Override
-			public void setRed(int red) {
-				throw new UnsupportedOperationException("Immutable Color Object!");
-			}
-
-			@Override
-			public void setBlue(int blue) {
-				throw new UnsupportedOperationException("Immutable Color Object!");
-			}
-
-			@Override
-			public void setAlpha(int alpha) {
-				throw new UnsupportedOperationException("Immutable Color Object!");
-			}
-
-			@Override
-			public void setChroma(boolean chroma) {
-			}
-
-			@Override
-			public void setChromaSpeed(float chromaSpeed) {
-				throw new UnsupportedOperationException("Immutable Color Object!");
-			}
-
-			@Override
-			public Color withRed(int red) {
-				return new Color(red, getGreen(), getBlue(), getAlpha());
-			}
-
-			@Override
-			public Color withGreen(int green) {
-				return new Color(getRed(), green, getBlue(), getAlpha());
-			}
-
-			@Override
-			public Color withBlue(int blue) {
-				return new Color(getRed(), getGreen(), blue, getAlpha());
-			}
-
-			@Override
-			public Color withAlpha(int alpha) {
-				return new Color(getRed(), getGreen(), getBlue(), alpha);
-			}
-
-			@Override
-			public Color withChroma(boolean chroma) {
-				return new Color(getRed(), getGreen(), getBlue(), getAlpha(), chroma);
-			}
-
-			@Override
-			public Color withChromaSpeed(float speed) {
-				return new Color(getRed(), getGreen(), getBlue(), getAlpha(), isChroma(), speed);
-			}
-
-			@Override
-			public Color withHue(float hue) {
-				float[] vals = toHSV();
-				vals[0] = hue;
-				return fromHSV(vals);
-			}
-
-			@Override
-			public Color withSaturation(float saturation) {
-				float[] vals = toHSV();
-				vals[1] = saturation;
-				return fromHSV(vals);
-			}
-
-			@Override
-			public Color withBrightness(float brightness) {
-				float[] vals = toHSV();
-				vals[2] = brightness;
-				return fromHSV(vals);
-			}
-
-			@Override
-			public Color immutable() {
-				return this;
-			}
-
-			@Override
-			public Color mutable() {
-				return new Color(getRed(), getBlue(), getGreen(), getAlpha(), isChroma(), getChromaSpeed());
-			}
-		};
+		return new ImmutableColor(getRed(), getGreen(), getBlue(), getAlpha(), isChroma(), getChromaSpeed());
 	}
 
 	public Color mutable() {
@@ -339,6 +251,106 @@ public class Color implements Runnable, Cloneable {
 			return clone;
 		} catch (CloneNotSupportedException e) {
 			throw new AssertionError();
+		}
+	}
+
+	private static class ImmutableColor extends Color {
+		public ImmutableColor(int red, int green, int blue, int alpha, boolean chroma, float chromaSpeed) {
+			super(red, green, blue, alpha, chroma, chromaSpeed);
+		}
+
+		@Override
+		public void setGreen(int green) {
+			throw new UnsupportedOperationException("Immutable Color Object!");
+		}
+
+		@Override
+		public void setRed(int red) {
+			throw new UnsupportedOperationException("Immutable Color Object!");
+		}
+
+		@Override
+		public void setBlue(int blue) {
+			throw new UnsupportedOperationException("Immutable Color Object!");
+		}
+
+		@Override
+		public void setAlpha(int alpha) {
+			throw new UnsupportedOperationException("Immutable Color Object!");
+		}
+
+		@Override
+		public void setChroma(boolean chroma) {
+		}
+
+		@Override
+		public void run() {
+		}
+
+		@Override
+		public void setChromaSpeed(float chromaSpeed) {
+			throw new UnsupportedOperationException("Immutable Color Object!");
+		}
+
+		@Override
+		public Color withRed(int red) {
+			return new Color(red, getGreen(), getBlue(), getAlpha());
+		}
+
+		@Override
+		public Color withGreen(int green) {
+			return new Color(getRed(), green, getBlue(), getAlpha());
+		}
+
+		@Override
+		public Color withBlue(int blue) {
+			return new Color(getRed(), getGreen(), blue, getAlpha());
+		}
+
+		@Override
+		public Color withAlpha(int alpha) {
+			return new Color(getRed(), getGreen(), getBlue(), alpha);
+		}
+
+		@Override
+		public Color withChroma(boolean chroma) {
+			return new Color(getRed(), getGreen(), getBlue(), getAlpha(), chroma);
+		}
+
+		@Override
+		public Color withChromaSpeed(float speed) {
+			return new Color(getRed(), getGreen(), getBlue(), getAlpha(), isChroma(), speed);
+		}
+
+		@Override
+		public Color withHue(float hue) {
+			float[] vals = toHSV();
+			vals[0] = hue;
+			return fromHSV(vals);
+		}
+
+		@Override
+		public Color withSaturation(float saturation) {
+			float[] vals = toHSV();
+			vals[1] = saturation;
+			return fromHSV(vals);
+		}
+
+		@Override
+		public Color withBrightness(float brightness) {
+			float[] vals = toHSV();
+			vals[2] = brightness;
+			return fromHSV(vals);
+		}
+
+		@Override
+		public Color immutable() {
+			return this;
+		}
+
+		@Override
+		public Color mutable() {
+			return new Color(getRed(), getBlue(), getGreen(), getAlpha(), isChroma(), getChromaSpeed());
 		}
 	}
 }

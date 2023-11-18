@@ -2,6 +2,7 @@ package io.github.axolotlclient.AxolotlClientConfig.impl.util;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.Buffer;
 import java.nio.ByteBuffer;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
@@ -26,7 +27,7 @@ public class DrawUtil {
 	public static void fillRect(MatrixStack stack, Rectangle rectangle, Color color) {
 		fillRect(stack, rectangle.x(), rectangle.y(), rectangle.width(),
 			rectangle.height(),
-			color.toInt());
+			color.get().toInt());
 	}
 
 	public static void fillRect(MatrixStack graphics, int x, int y, int width, int height, int color) {
@@ -34,7 +35,7 @@ public class DrawUtil {
 	}
 
 	public static void outlineRect(MatrixStack stack, Rectangle rectangle, Color color) {
-		outlineRect(stack, rectangle.x(), rectangle.y(), rectangle.width(), rectangle.height(), color.toInt());
+		outlineRect(stack, rectangle.x(), rectangle.y(), rectangle.width(), rectangle.height(), color.get().toInt());
 	}
 
 	public static void outlineRect(MatrixStack stack, int x, int y, int width, int height, int color) {
@@ -85,7 +86,7 @@ public class DrawUtil {
 				if (buffer.remaining() == 0)
 					buffer = MemoryUtil.memRealloc(buffer, buffer.capacity() + buffer.capacity() * 3 / 2);
 
-			buffer.flip();
+			((Buffer) buffer).flip();
 
 			return buffer;
 		}

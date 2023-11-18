@@ -40,7 +40,7 @@ public class ColorSelectionScreen extends io.github.axolotlclient.AxolotlClientC
 	private int buttonsX;
 
 	public ColorSelectionScreen(Screen parent, ColorOption option) {
-		super("select_color");
+		super(I18n.translate("select_color"));
 		this.option = option;
 		this.parent = parent;
 	}
