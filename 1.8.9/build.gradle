@@ -15,10 +15,6 @@ repositories {
 	maven {
 		url = "https://moehreag.duckdns.org/maven/releases"
 	}
-	maven {
-		name = "legacy-fabric"
-		url = "https://repo.legacyfabric.net/repository/legacyfabric/"
-	}
 	mavenLocal()
 	mavenCentral()
 }
@@ -53,7 +49,14 @@ dependencies {
 
 	localRuntime("org.ow2.asm:asm-tree:9.4")
 
-	modCompileOnly("com.github.moehreag:legacy-lwjgl3:b293a2612b") {
+	modCompileOnly("com.github.zarzelcow:legacy-lwjgl3:1.1.1") {
+		exclude group: 'org.lwjgl', module: 'lwjgl-glfw'
+		exclude group: 'org.lwjgl', module: 'lwjgl-openal'
+		exclude group: 'org.lwjgl', module: 'lwjgl-opengl'
+		exclude group: 'org.lwjgl', module: 'lwjgl'
+		exclude group: 'net.fabricmc'
+	}
+	modRuntimeOnly("com.github.zarzelcow:legacy-lwjgl3:1.1.1:all-remapped"){
 		exclude group: 'org.lwjgl', module: 'lwjgl-glfw'
 		exclude group: 'org.lwjgl', module: 'lwjgl-openal'
 		exclude group: 'org.lwjgl', module: 'lwjgl-opengl'
@@ -61,13 +64,14 @@ dependencies {
 		exclude group: 'net.fabricmc'
 	}
 
-	api include("org.lwjgl:lwjgl-nanovg:3.3.2")
-	include runtimeOnly('org.lwjgl:lwjgl-nanovg:3.3.2:natives-linux')
-	include runtimeOnly('org.lwjgl:lwjgl-nanovg:3.3.2:natives-linux-arm64')
-	include runtimeOnly('org.lwjgl:lwjgl-nanovg:3.3.2:natives-windows')
-	include runtimeOnly('org.lwjgl:lwjgl-nanovg:3.3.2:natives-windows-arm64')
-	include runtimeOnly('org.lwjgl:lwjgl-nanovg:3.3.2:natives-macos')
-	include runtimeOnly('org.lwjgl:lwjgl-nanovg:3.3.2:natives-macos-arm64')
+	def lwjglVersion = "3.3.2"
+	api include("org.lwjgl:lwjgl-nanovg:$lwjglVersion")
+	include runtimeOnly("org.lwjgl:lwjgl-nanovg:$lwjglVersion:natives-linux")
+	include runtimeOnly("org.lwjgl:lwjgl-nanovg:$lwjglVersion:natives-linux-arm64")
+	include runtimeOnly("org.lwjgl:lwjgl-nanovg:$lwjglVersion:natives-windows")
+	include runtimeOnly("org.lwjgl:lwjgl-nanovg:$lwjglVersion:natives-windows-arm64")
+	include runtimeOnly("org.lwjgl:lwjgl-nanovg:$lwjglVersion:natives-macos")
+	include runtimeOnly("org.lwjgl:lwjgl-nanovg:$lwjglVersion:natives-macos-arm64")
 
 	api "org.slf4j:slf4j-simple:1.7.30"
 	api "org.slf4j:slf4j-api:1.7.30"
