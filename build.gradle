@@ -4,6 +4,7 @@ plugins {
 	id 'io.freefair.lombok' version "8.+"
 	id 'org.quiltmc.loom' version "1.4.+" apply false
 	id 'ploceus' version "1.4.+" apply false
+	id "dev.yumi.gradle.licenser" version "1.0.+"
 }
 
 archivesBaseName = project.archives_base_name
@@ -21,6 +22,7 @@ repositories {
 subprojects {
 	apply plugin: "maven-publish"
 	apply plugin: "io.freefair.lombok"
+	apply plugin: "dev.yumi.gradle.licenser"
 
 	repositories {
 		mavenLocal()
@@ -39,7 +41,10 @@ subprojects {
 		}
 	}
 
-
+	license {
+		rule file('../HEADER')
+		include '**/*.java'
+	}
 }
 
 tasks.withType(JavaCompile).configureEach {
