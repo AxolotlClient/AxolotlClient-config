@@ -35,8 +35,6 @@ public interface DrawingUtil {
 		nvgBeginPath(ctx);
 		nvgFillColor(ctx, color.toNVG());
 		nvgArc(ctx, centerX, centerY, radius, nvgDegToRad(startDeg), nvgDegToRad(endDeg), NVG_CW);
-		//nvgLineTo(ctx, centerX, centerY);
-		//nvgCircle(ctx, centerX, centerY, radius);
 		nvgFill(ctx);
 	}
 
@@ -56,7 +54,6 @@ public interface DrawingUtil {
 	default void outlineRoundedRect(long ctx, float x, float y, float width, float height, Color color, float radius, float lineWidth) {
 		nvgBeginPath(ctx);
 		nvgStrokeColor(ctx, color.toNVG());
-		//nvgPathWinding(ctx, NVG_HOLE);
 		nvgRoundedRect(ctx, x, y, width, height, radius);
 		nvgStrokeWidth(ctx, lineWidth);
 		nvgStroke(ctx);
@@ -66,8 +63,6 @@ public interface DrawingUtil {
 		startDeg -= 90;
 		endDeg -= 90;
 		nvgBeginPath(ctx);
-		//nvgPathWinding(ctx, NVG_HOLE);
-		//nvgCircle(ctx, centerX, centerY, radius);
 		nvgArc(ctx, centerX, centerY, radius, nvgDegToRad(startDeg), nvgDegToRad(endDeg), NVG_CW);
 		nvgStrokeColor(ctx, color.toNVG());
 		nvgStrokeWidth(ctx, lineWidth);
@@ -83,9 +78,14 @@ public interface DrawingUtil {
 	}
 
 	default float drawString(long ctx, NVGFont font, String text, float x, float y, Color color) {
-		nvgFillColor(ctx, color.toNVG());
+		/*nvgFillColor(ctx, color.toNVG());
 		font.bind();
-		return font.renderString(text, x, y);
+		return font.renderString(text, x, y);*/
+		return drawStringWithFormatting(ctx, font, text, x, y, color);
+	}
+
+	default float drawStringWithFormatting(long ctx, NVGFont font, String text, float x, float y, Color color){
+		return FormattingUtil.getInstance().drawStringWithFormatting(ctx, font, text, x, y, color);
 	}
 
 	default float drawCenteredString(long ctx, NVGFont font, String text, float centerX, float y, Color color) {

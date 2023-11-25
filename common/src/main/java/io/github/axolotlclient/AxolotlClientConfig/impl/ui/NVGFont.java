@@ -26,7 +26,12 @@ import java.nio.Buffer;
 import java.nio.ByteBuffer;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Supplier;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import lombok.Getter;
 import org.lwjgl.Version;
@@ -37,17 +42,27 @@ import org.lwjgl.system.MemoryUtil;
  * @author TheKodeToad
  */
 
-public final class NVGFont implements AutoCloseable {
-
-	private final int handle;
-	private final long nvg;
+public class NVGFont implements AutoCloseable {
+	protected final int handle;
+	protected final long nvg;
 	private final ByteBuffer buffer;
 	@Getter
 	private int size = 8;
 
 	NVGFont(long ctx, InputStream in) throws IOException {
-		int imageHandle;
 		buffer = mallocAndRead(in);
+		handle = createFont(ctx, buffer, "regular");
+		this.nvg = ctx;
+	}
+
+	NVGFont(long ctx, int handle) {
+		this.nvg = ctx;
+		this.handle = handle;
+		buffer = null;
+	}
+
+	protected int createFont(long ctx, ByteBuffer buffer, String name) {
+		int imageHandle;
 		String[] lwjglVersion = Version.getVersion().split(" ")[0]
 			.split("-")[0]
 			.split("\\+")[0]
@@ -66,29 +81,21 @@ public final class NVGFont implements AutoCloseable {
 			}
 		}
 		if (!requiresAlternative) {
-			imageHandle = NanoVG.nvgCreateFontMem(ctx, "", buffer, false);
+			imageHandle = NanoVG.nvgCreateFontMem(ctx, name, buffer, false);
 		} else {
 			try {
 				imageHandle = (int) MethodHandles.lookup()
 					.findStatic(NanoVG.class, "nvgCreateFontMem",
 						MethodType.methodType(int.class, long.class, CharSequence.class, ByteBuffer.class, int.class))
-					.invoke(ctx, "", buffer, 0);
+					.invoke(ctx, name, buffer, 0);
 			} catch (Throwable t) {
 				throw new IllegalStateException(t);
 			}
 		}
-
-		handle = imageHandle;
-		this.nvg = ctx;
+		return imageHandle;
 	}
 
-	NVGFont(long ctx, int handle) {
-		this.nvg = ctx;
-		this.handle = handle;
-		buffer = null;
-	}
-
-	private ByteBuffer mallocAndRead(InputStream in) throws IOException {
+	protected ByteBuffer mallocAndRead(InputStream in) throws IOException {
 		try (ReadableByteChannel channel = Channels.newChannel(in)) {
 			ByteBuffer buffer = MemoryUtil.memAlloc(8192);
 
@@ -109,12 +116,10 @@ public final class NVGFont implements AutoCloseable {
 		this.size = oldSize;
 	}
 
-	// ew
-	@SuppressWarnings("unchecked")
 	public <T> T withSize(int size, Supplier<T> action) {
-		Object[] result = new Object[1];
-		withSize(size, (Runnable) () -> result[0] = action.get());
-		return (T) result[0];
+		AtomicReference<T> result = new AtomicReference<>();
+		withSize(size, () -> result.set(action.get()));
+		return result.get();
 	}
 
 
@@ -155,7 +160,7 @@ public final class NVGFont implements AutoCloseable {
 		}
 		builder.delete(builder.length() - 1 - Character.charCount(builder.codePointAt(builder.length() - 1)), builder.length() - 1);
 		if (backwards) {
-			builder = builder.reverse();
+			builder.reverse();
 		}
 		return builder.toString();
 	}

@@ -27,6 +27,10 @@ public class NVGMC {
 		initialized = true;
 	}
 
+	public static NVGFont createFont(String regular, String italic, String bold, String boldItalic) throws IOException {
+		return new VariantFont(getNvgContext(), regular, italic, bold, boldItalic);
+	}
+
 	public static NVGFont createFont(InputStream ttf) throws IOException {
 
 		return new NVGFont(getNvgContext(), ttf);

@@ -37,6 +37,27 @@ public class Example implements ClientModInitializer {
 		subCategory.add(new BooleanOption("some option", true));
 		example.add(subCategory);
 		OptionCategory sub2 = OptionCategory.create("sub2");
+		sub2.add(new BooleanOption("§0colored 1", false));
+		sub2.add(new BooleanOption("§1colored 2", false));
+		sub2.add(new BooleanOption("§2colored 3", false));
+		sub2.add(new BooleanOption("§3colored 4", false));
+		sub2.add(new BooleanOption("§4colored 5", false));
+		sub2.add(new BooleanOption("§5colored 6", false));
+		sub2.add(new BooleanOption("§6colored 7", false));
+		sub2.add(new BooleanOption("§7colored 8", false));
+		sub2.add(new BooleanOption("§8colored 9", false));
+		sub2.add(new BooleanOption("§9colored 10", false));
+		sub2.add(new BooleanOption("§acolored 11", false));
+		sub2.add(new BooleanOption("§bcolored 12", false));
+		sub2.add(new BooleanOption("§ccolored 13", false));
+		sub2.add(new BooleanOption("§dcolored 14", false));
+		sub2.add(new BooleanOption("§ecolored 15", false));
+		sub2.add(new BooleanOption("§fcolored 16", false));
+		sub2.add(new BooleanOption("§mstrikethrough", false));
+		sub2.add(new BooleanOption("§lbold", false));
+		sub2.add(new BooleanOption("§nunderlined", false));
+		sub2.add(new BooleanOption("§oitalic", false));
+		sub2.add(new BooleanOption("§rreset", false));
 		example.add(sub2);
 		example.add(OptionCategory.create("sub3"));
 
