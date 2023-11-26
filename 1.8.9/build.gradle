@@ -47,16 +47,14 @@ dependencies {
 
 	implementation include(project(":common"))
 
-	localRuntime("org.ow2.asm:asm-tree:9.4")
-
-	modCompileOnly("com.github.zarzelcow:legacy-lwjgl3:1.1.1") {
+	modCompileOnly("com.github.zarzelcow:legacy-lwjgl3:1.1.2") {
 		exclude group: 'org.lwjgl', module: 'lwjgl-glfw'
 		exclude group: 'org.lwjgl', module: 'lwjgl-openal'
 		exclude group: 'org.lwjgl', module: 'lwjgl-opengl'
 		exclude group: 'org.lwjgl', module: 'lwjgl'
 		exclude group: 'net.fabricmc'
 	}
-	modRuntimeOnly("com.github.zarzelcow:legacy-lwjgl3:1.1.1:all-remapped"){
+	modRuntimeOnly("com.github.zarzelcow:legacy-lwjgl3:1.1.2:all-remapped"){
 		exclude group: 'org.lwjgl', module: 'lwjgl-glfw'
 		exclude group: 'org.lwjgl', module: 'lwjgl-openal'
 		exclude group: 'org.lwjgl', module: 'lwjgl-opengl'
@@ -72,9 +70,6 @@ dependencies {
 	include runtimeOnly("org.lwjgl:lwjgl-nanovg:$lwjglVersion:natives-windows-arm64")
 	include runtimeOnly("org.lwjgl:lwjgl-nanovg:$lwjglVersion:natives-macos")
 	include runtimeOnly("org.lwjgl:lwjgl-nanovg:$lwjglVersion:natives-macos-arm64")
-
-	api "org.slf4j:slf4j-simple:1.7.30"
-	api "org.slf4j:slf4j-api:1.7.30"
 }
 
 processResources {
