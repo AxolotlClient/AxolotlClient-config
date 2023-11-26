@@ -37,10 +37,6 @@ public class VariantFont extends NVGFont {
 		italicVariant = createFont(ctx, italicBuffer = mallocAndRead(VariantFont.class.getResourceAsStream(italicPath)), "italic");
 		boldVariant = createFont(ctx, boldBuffer = mallocAndRead(VariantFont.class.getResourceAsStream(boldPath)), "bold");
 		boldItalicVariant = createFont(ctx, boldItalicBuffer = mallocAndRead(VariantFont.class.getResourceAsStream(boldItalicPath)), "boldItalic");
-		System.out.println(boldItalicVariant);
-		System.out.println(boldVariant);
-		System.out.println(italicVariant);
-		System.out.println(handle);
 	}
 
 	public float renderString(String text, float x, float y, boolean italic, boolean bold) {
