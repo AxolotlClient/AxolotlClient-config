@@ -34,8 +34,17 @@ public class StringWidget extends TextFieldWidget {
 	public StringWidget(int x, int y, int width, int height, StringOption option) {
 		super(Minecraft.getInstance().textRenderer, x, y, width, height, I18n.translate(option.getName()));
 
+		setMaxLength(option.getMaxLength());
 		write(option.get());
 		this.option = option;
 		setChangedListener(option::set);
+	}
+
+	@Override
+	public void drawWidget(int mouseX, int mouseY, float delta) {
+		if (!option.get().equals(getText())) {
+			setText(option.get());
+		}
+		super.drawWidget(mouseX, mouseY, delta);
 	}
 }

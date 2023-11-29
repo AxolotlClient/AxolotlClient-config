@@ -22,7 +22,12 @@
 
 package io.github.axolotlclient.AxolotlClientConfig.impl.options;
 
+import lombok.Getter;
+import lombok.Setter;
+
 public class StringOption extends OptionBase<String> {
+	@Getter @Setter
+	private int maxLength = 32;
 
 	public StringOption(String name, String defaultValue) {
 		super(name, defaultValue);

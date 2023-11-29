@@ -38,8 +38,8 @@ public class StringWidget extends TextFieldWidget implements DrawingUtil {
 	public StringWidget(int x, int y, int width, int height, StringOption option) {
 		super(MinecraftClient.getInstance().textRenderer, x, y, width, height, Text.translatable(option.getName()));
 
+		setMaxLength(option.getMaxLength());
 		write(option.get());
-
 		this.option = option;
 		setChangedListener(option::set);
 	}
