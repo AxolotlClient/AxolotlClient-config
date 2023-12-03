@@ -33,6 +33,7 @@ import io.github.axolotlclient.AxolotlClientConfig.impl.ui.DrawingUtil;
 import io.github.axolotlclient.AxolotlClientConfig.impl.ui.rounded.ButtonListWidget;
 import io.github.axolotlclient.AxolotlClientConfig.impl.ui.rounded.NVGHolder;
 import net.minecraft.client.gui.widget.AbstractButtonWidget;
+import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.TranslatableText;
 import org.jetbrains.annotations.Nullable;
@@ -77,8 +78,8 @@ public class RoundedButtonListWidget extends ButtonListWidget {
 		public void render(MatrixStack graphics, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float tickDelta) {
 			super.render(graphics, index, y, x, entryWidth, entryHeight, mouseX, mouseY, hovered, tickDelta);
 
-			drawString(NVGHolder.getContext(), NVGHolder.getFont(),
-				new TranslatableText(option.getName()).getString(), width / 2f + WIDGET_ROW_LEFT, y, Colors.TURQUOISE);
+			drawScrollingText(NVGHolder.getContext(), NVGHolder.getFont(), new TranslatableText(option.getName()).getString(),
+				width / 2 + WIDGET_ROW_LEFT, y, WIDGET_WIDTH, entryHeight, Colors.TURQUOISE);
 		}
 	}
 }

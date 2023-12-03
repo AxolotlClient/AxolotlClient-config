@@ -28,7 +28,9 @@ import com.google.common.collect.ImmutableList;
 import io.github.axolotlclient.AxolotlClientConfig.api.manager.ConfigManager;
 import io.github.axolotlclient.AxolotlClientConfig.api.options.Option;
 import io.github.axolotlclient.AxolotlClientConfig.api.options.OptionCategory;
+import io.github.axolotlclient.AxolotlClientConfig.api.util.Colors;
 import io.github.axolotlclient.AxolotlClientConfig.impl.ui.vanilla.EntryListWidget;
+import io.github.axolotlclient.AxolotlClientConfig.impl.util.DrawUtil;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.widget.ClickableWidget;
@@ -72,7 +74,8 @@ public class VanillaEntryListWidget extends EntryListWidget {
 		public void render(GuiGraphics graphics, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float tickDelta) {
 			super.render(graphics, index, y, x, entryWidth, entryHeight, mouseX, mouseY, hovered, tickDelta);
 
-			graphics.drawShadowedText(client.textRenderer, Text.translatable(option.getName()), width / 2 + WIDGET_ROW_LEFT, y, -1);
+			DrawUtil.drawScrollingText(graphics, Text.translatable(option.getName()),  width / 2 + WIDGET_ROW_LEFT,
+				y, WIDGET_WIDTH, entryHeight, Colors.WHITE);
 		}
 	}
 }

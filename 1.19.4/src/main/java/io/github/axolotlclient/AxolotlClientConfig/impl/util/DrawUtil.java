@@ -34,6 +34,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import org.lwjgl.nanovg.NanoVG;
 import org.lwjgl.system.MemoryUtil;
@@ -108,4 +109,36 @@ public class DrawUtil {
 		}
 	}
 
+	public static void drawScrollingText(MatrixStack stack, Text text, int x, int y, int width, int height, Color color) {
+		drawScrollingText(stack, text.getString(), x, y, width, height, color);
+	}
+
+	public static void drawScrollingText(MatrixStack stack, String text, int x, int y, int width, int height, Color color){
+		drawScrollingText(stack, x, y, x+width, y+height, text, color);
+	}
+
+	public static void drawScrollingText(MatrixStack stack, int left, int top, int right, int bottom, String text, Color color) {
+		drawScrollingText(stack, MinecraftClient.getInstance().textRenderer, text, (left + right) / 2, left, top, right, bottom, color);
+	}
+
+	public static void drawScrollingText(MatrixStack stack, TextRenderer renderer, String text, int center, int left, int top, int right, int bottom, Color color) {
+		int textWidth = renderer.getWidth(text);
+		int y = (top + bottom - 9) / 2 + 1;
+		int width = right - left;
+		if (textWidth > width) {
+			float r = textWidth - width;
+			double d = (double) (System.nanoTime() / 1000000L) / 1000.0;
+			double e = Math.max((double) r * 0.5, 3.0);
+			double f = Math.sin((Math.PI / 2) * Math.cos((Math.PI * 2) * d / e)) / 2.0 + 0.5;
+			double g = f*r;
+			DrawableHelper.enableScissor(left, top, right, bottom);
+			drawString(stack, renderer, text, left - (int) g, y, color.toInt(), true);
+			DrawableHelper.disableScissor();
+		} else {
+			int min = left + textWidth / 2;
+			int max = right - textWidth / 2;
+			int centerX = center < min ? min : Math.min(center, max);
+			drawCenteredString(stack, renderer, text, centerX, y, color.toInt(), true);
+		}
+	}
 }

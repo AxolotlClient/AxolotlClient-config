@@ -76,8 +76,8 @@ public class RoundedButtonListWidget extends ButtonListWidget {
 		public void render(int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float tickDelta) {
 			super.render(index, y, x, entryWidth, entryHeight, mouseX, mouseY, hovered, tickDelta);
 
-			drawString(NVGHolder.getContext(), NVGHolder.getFont(),
-				I18n.translate(option.getName()), width / 2f + WIDGET_ROW_LEFT, y, Colors.TURQUOISE);
+			drawScrollingText(NVGHolder.getContext(), NVGHolder.getFont(), I18n.translate(option.getName()),
+				width / 2 + WIDGET_ROW_LEFT, y, WIDGET_WIDTH, entryHeight, Colors.TURQUOISE);
 		}
 	}
 }

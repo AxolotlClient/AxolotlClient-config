@@ -100,9 +100,6 @@ public interface DrawingUtil {
 	}
 
 	default float drawString(long ctx, NVGFont font, String text, float x, float y, Color color) {
-		/*nvgFillColor(ctx, color.toNVG());
-		font.bind();
-		return font.renderString(text, x, y);*/
 		return drawStringWithFormatting(ctx, font, text, x, y, color);
 	}
 
@@ -112,5 +109,35 @@ public interface DrawingUtil {
 
 	default float drawCenteredString(long ctx, NVGFont font, String text, float centerX, float y, Color color) {
 		return drawString(ctx, font, text, centerX - font.getWidth(text) / 2, y, color);
+	}
+
+	default void drawScrollingText(long ctx, NVGFont font, String text, int x, int y, int width, int height, Color color){
+		int xOffset = 2;
+		drawScrollingText(ctx, font, x+xOffset, y, x+width-xOffset, y+height, text, color);
+	}
+
+	default void drawScrollingText(long ctx, NVGFont font, int left, int top, int right, int bottom, String text, Color color) {
+		drawScrollingText(ctx, font, text, (left + right) / 2, left, top, right, bottom, color);
+	}
+
+	default void drawScrollingText(long ctx, NVGFont font, String text, int center, int left, int top, int right, int bottom, Color color) {
+		float textWidth = font.getWidth(text);
+		float y = top + (bottom-top)/2f - font.getLineHeight()*2/3;
+		int width = right - left;
+		if (textWidth > width) {
+			float r = textWidth - width;
+			double d = (double) (System.nanoTime() / 1000000L) / 1000.0;
+			double e = Math.max((double) r * 0.5, 3.0);
+			double f = Math.sin((Math.PI / 2) * Math.cos((Math.PI * 2) * d / e)) / 2.0 + 0.5;
+			double g = f*r;
+			pushScissor(ctx, left, top, right-left, bottom-top);
+			drawString(ctx, font, text, left - (int) g, y, color);
+			popScissor(ctx);
+		} else {
+			float min = left + textWidth / 2;
+			float max = right - textWidth / 2;
+			float centerX = center < min ? min : Math.min(center, max);
+			drawCenteredString(ctx, font, text, centerX, y, color);
+		}
 	}
 }

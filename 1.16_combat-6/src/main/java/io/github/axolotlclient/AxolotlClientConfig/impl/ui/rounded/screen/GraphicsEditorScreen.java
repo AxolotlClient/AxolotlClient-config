@@ -72,6 +72,7 @@ public class GraphicsEditorScreen extends io.github.axolotlclient.AxolotlClientC
 
 	@Override
 	public void init() {
+		super.init();
 		addDrawableChild(new RoundedButtonWidget(width / 2 - 75, height - 40, new TranslatableText("gui.back"),
 			button -> MinecraftClient.getInstance().openScreen(parent)));
 

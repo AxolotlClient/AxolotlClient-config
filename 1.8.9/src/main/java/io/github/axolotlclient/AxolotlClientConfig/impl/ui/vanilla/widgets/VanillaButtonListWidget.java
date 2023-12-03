@@ -28,8 +28,10 @@ import com.google.common.collect.ImmutableList;
 import io.github.axolotlclient.AxolotlClientConfig.api.manager.ConfigManager;
 import io.github.axolotlclient.AxolotlClientConfig.api.options.Option;
 import io.github.axolotlclient.AxolotlClientConfig.api.options.OptionCategory;
+import io.github.axolotlclient.AxolotlClientConfig.api.util.Colors;
 import io.github.axolotlclient.AxolotlClientConfig.impl.ui.ClickableWidget;
 import io.github.axolotlclient.AxolotlClientConfig.impl.ui.vanilla.ButtonListWidget;
+import io.github.axolotlclient.AxolotlClientConfig.impl.util.DrawUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resource.language.I18n;
 import org.jetbrains.annotations.Nullable;
@@ -74,7 +76,8 @@ public class VanillaButtonListWidget extends ButtonListWidget {
 		public void render(int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float tickDelta) {
 			super.render(index, y, x, entryWidth, entryHeight, mouseX, mouseY, hovered, tickDelta);
 
-			client.textRenderer.drawWithShadow(I18n.translate(option.getName()), width / 2f + WIDGET_ROW_LEFT, y, -1);
+			DrawUtil.drawScrollingText(I18n.translate(option.getName()), width / 2 + WIDGET_ROW_LEFT,
+				y, WIDGET_WIDTH, entryHeight, Colors.WHITE);
 		}
 	}
 }

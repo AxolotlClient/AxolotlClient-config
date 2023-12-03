@@ -75,7 +75,9 @@ public class Example implements ClientModInitializer {
 		sub2.add(new BooleanOption("§oitalic", false));
 		sub2.add(new BooleanOption("§rreset", false));
 		example.add(sub2);
-		example.add(OptionCategory.create("sub3"));
+		OptionCategory sub3 = OptionCategory.create("sub3");
+		example.add(sub3);
+		sub3.add(new StringArrayOption("loooooooooooooooooooooooooooooooong option name", "value1", "value2"));
 
 		example.add(new IntegerOption("integer", 5, 0, 8));
 		example.add(new FloatOption("float", 3f, 1f, 5f));

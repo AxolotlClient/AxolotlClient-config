@@ -33,6 +33,7 @@ import java.util.Stack;
 import io.github.axolotlclient.AxolotlClientConfig.api.util.Color;
 import io.github.axolotlclient.AxolotlClientConfig.api.util.Rectangle;
 import io.github.axolotlclient.AxolotlClientConfig.impl.ui.DrawingUtil;
+import io.github.axolotlclient.AxolotlClientConfig.impl.ui.NVGFont;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiElement;
 import net.minecraft.client.render.TextRenderer;
@@ -140,6 +141,35 @@ public class DrawUtil extends GuiElement implements DrawingUtil {
 				rect.width() * scale, rect.height() * scale);
 		} else {
 			GL11.glDisable(GL11.GL_SCISSOR_TEST);
+		}
+	}
+
+	public static void drawScrollingText(String text, int x, int y, int width, int height, Color color){
+		drawScrollingText(x, y, x+width, y+height, text, color);
+	}
+
+	public static void drawScrollingText(int left, int top, int right, int bottom, String text, Color color) {
+		drawScrollingText(Minecraft.getInstance().textRenderer, text, (left + right) / 2, left, top, right, bottom, color);
+	}
+
+	public static void drawScrollingText(TextRenderer renderer, String text, int center, int left, int top, int right, int bottom, Color color) {
+		int textWidth = renderer.getWidth(text);
+		int y = (top + bottom - 9) / 2 + 1;
+		int width = right - left;
+		if (textWidth > width) {
+			float r = textWidth - width;
+			double d = (double) (System.nanoTime() / 1000000L) / 1000.0;
+			double e = Math.max((double) r * 0.5, 3.0);
+			double f = Math.sin((Math.PI / 2) * Math.cos((Math.PI * 2) * d / e)) / 2.0 + 0.5;
+			double g = f*r;
+			pushScissor(left, top, right-left, bottom-top);
+			drawString(renderer, text, left - (int) g, y, color.toInt(), true);
+			popScissor();
+		} else {
+			int min = left + textWidth / 2;
+			int max = right - textWidth / 2;
+			int centerX = center < min ? min : Math.min(center, max);
+			drawCenteredString(renderer, text, centerX, y, color.toInt(), true);
 		}
 	}
 
