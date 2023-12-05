@@ -193,7 +193,7 @@ public class ColorSelectionScreen extends io.github.axolotlclient.AxolotlClientC
 	private int toGlCoordsY(double y) {
 		Window window = MinecraftClient.getInstance().getWindow();
 		double scale = window.getScaleFactor();
-		return Math.round((float) (window.getHeight() - y * scale - scale));
+		return Math.round((float) (MinecraftClient.getInstance().getFramebuffer().textureHeight - y * scale - scale));
 	}
 
 	@Override
