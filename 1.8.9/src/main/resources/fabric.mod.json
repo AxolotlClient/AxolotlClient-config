@@ -17,6 +17,9 @@
   "entrypoints": {
     "client-init": [
       "io.github.axolotlclient.AxolotlClientConfig.impl.AxolotlClientConfigMod"
+    ],
+    "modmenu": [
+      "io.github.axolotlclient.AxolotlClientConfig.impl.util.AxolotlClientConfigModMenu"
     ]
   },
   "mixins": [

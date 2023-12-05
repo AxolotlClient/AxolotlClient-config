@@ -22,16 +22,13 @@
 
 package io.github.axolotlclient.AxolotlClientConfig.impl.util;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
 
-import io.github.axolotlclient.AxolotlClientConfig.api.options.OptionCategory;
 import io.github.axolotlclient.AxolotlClientConfig.impl.AxolotlClientConfigImpl;
 import io.github.axolotlclient.AxolotlClientConfig.impl.ui.ConfigUI;
 import io.github.prospector.modmenu.api.ConfigScreenFactory;
 import io.github.prospector.modmenu.api.ModMenuApi;
-import net.minecraft.client.gui.screen.Screen;
 
 public class AxolotlClientConfigModMenu implements ModMenuApi {
 
@@ -50,17 +47,9 @@ public class AxolotlClientConfigModMenu implements ModMenuApi {
 	@Override
 	public Map<String, ConfigScreenFactory<?>> getProvidedConfigScreenFactories() {
 		Map<String, ConfigScreenFactory<?>> map = new HashMap<>();
-		AxolotlClientConfigImpl.getInstance().getRegisteredManagers().forEach((s, manager) -> {
-			map.put(s, parent -> {
-				try {
-					return (Screen) Class.forName(ConfigUI.getInstance().getCurrentStyle().getScreen())
-						.getConstructor(Screen.class, OptionCategory.class, String.class).newInstance(parent, manager.getRoot(), s);
-				} catch (InstantiationException | IllegalAccessException | InvocationTargetException |
-						 NoSuchMethodException | ClassNotFoundException e) {
-					throw new IllegalStateException(e);
-				}
-			});
-		});
+		AxolotlClientConfigImpl.getInstance().getRegisteredManagers().forEach((s, manager) ->
+			map.put(s, parent -> ConfigUI.getInstance().getScreen(this.getClass().getClassLoader(),
+				manager, manager.getRoot(), parent)));
 		return map;
 	}
 }
