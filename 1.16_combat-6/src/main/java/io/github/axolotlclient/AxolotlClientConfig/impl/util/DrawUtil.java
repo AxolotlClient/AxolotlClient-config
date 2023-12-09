@@ -189,7 +189,7 @@ public class DrawUtil implements DrawingUtil {
 		String[] text = tooltip.split("<br>");
 		if (!text[0].isEmpty() || text.length > 1) {
 			MinecraftClient.getInstance().currentScreen.renderTooltip(graphics,
-				Arrays.stream(text).map(Text::of).collect(Collectors.toList()), x+5, y+5);
+				Arrays.stream(text).map(Text::of).collect(Collectors.toList()), x, y);
 		}
 	}
 

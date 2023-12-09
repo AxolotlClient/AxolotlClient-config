@@ -188,7 +188,7 @@ public class DrawUtil extends GuiElement implements DrawingUtil {
 		}
 		String[] text = tooltip.split("<br>");
 		if (!text[0].isEmpty() || text.length > 1) {
-			INSTANCE.renderTooltip(Arrays.asList(text), x+5, y+5);
+			INSTANCE.renderTooltip(Arrays.asList(text), x-2, y+12+3+10);
 		}
 
 	}

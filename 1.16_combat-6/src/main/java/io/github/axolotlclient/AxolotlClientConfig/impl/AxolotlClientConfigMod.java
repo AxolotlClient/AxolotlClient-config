@@ -47,12 +47,12 @@ public class AxolotlClientConfigMod implements ClientModInitializer {
 		NVGMC.setWindowPropertiesProvider(new WindowPropertiesProvider() {
 			@Override
 			public int getHeight() {
-				return MinecraftClient.getInstance().getWindow().getHeight();
+				return MinecraftClient.getInstance().getFramebuffer().textureHeight;
 			}
 
 			@Override
 			public int getWidth() {
-				return MinecraftClient.getInstance().getWindow().getWidth();
+				return MinecraftClient.getInstance().getFramebuffer().textureWidth;
 			}
 
 			@Override

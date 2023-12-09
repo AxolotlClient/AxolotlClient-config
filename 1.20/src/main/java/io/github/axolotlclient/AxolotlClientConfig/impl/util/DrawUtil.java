@@ -153,7 +153,7 @@ public class DrawUtil implements DrawingUtil {
 		if (!text[0].isEmpty() || text.length > 1) {
 			TextRenderer renderer = MinecraftClient.getInstance().textRenderer;
 			graphics.drawTooltip(renderer,
-				Arrays.stream(text).map(Text::of).toList(), x+5, y+5);
+				Arrays.stream(text).map(Text::of).toList(), x-2, y+12+3+10);
 		}
 	}
 

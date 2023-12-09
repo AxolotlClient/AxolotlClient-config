@@ -142,22 +142,26 @@ public interface DrawingUtil {
 		}
 	}
 
-	default void drawTooltip(long ctx, NVGFont font, String[] tooltipText, int x, int y, int screenWidth) {
+	default void drawTooltip(long ctx, NVGFont font, String[] tooltipText, int x, int y, int screenWidth, int screenHeight) {
 
 		float lineHeight = font.getLineHeight();
 		x += 5;
 		y += 5;
 		screenWidth-=5;
+		screenHeight-=5;
 		float maxWidth = 0;
+		float height = lineHeight*tooltipText.length;
 		for (String s : tooltipText) {
-			maxWidth = Math.min(Math.max(font.getWidth(s), maxWidth), screenWidth);
+			maxWidth = Math.max(font.getWidth(s), maxWidth);
 		}
 		if (maxWidth > screenWidth - x) {
 			x = (int) (screenWidth - maxWidth);
 		}
+		if (height > screenHeight - y) {
+			y = (int) (screenHeight-height);
+		}
 
-		fillRoundedRect(ctx, x + 2, y + 2, maxWidth + 5, tooltipText.length * lineHeight + 6, Colors.GRAY, 5);
-		//outlineRoundedRect(ctx, x+2, y+2, maxWidth+5, tooltipText.length*lineHeight+6, Colors.TURQUOISE, 5, 1);
+		fillRoundedRect(ctx, x + 2, y + 2, maxWidth + 5, height + 6, Colors.GRAY, 5);
 
 		float cY = y + 4;
 		for (String s : tooltipText) {

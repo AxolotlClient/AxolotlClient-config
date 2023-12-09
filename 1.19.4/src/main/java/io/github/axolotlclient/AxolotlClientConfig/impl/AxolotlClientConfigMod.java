@@ -24,6 +24,7 @@ package io.github.axolotlclient.AxolotlClientConfig.impl;
 
 import java.io.IOException;
 
+import io.github.axolotlclient.AxolotlClientConfig.api.ui.ConfigUI;
 import io.github.axolotlclient.AxolotlClientConfig.api.util.WindowPropertiesProvider;
 import io.github.axolotlclient.AxolotlClientConfig.impl.ui.ConfigUIImpl;
 import io.github.axolotlclient.AxolotlClientConfig.impl.ui.NVGMC;
@@ -47,12 +48,12 @@ public class AxolotlClientConfigMod implements ClientModInitializer {
 		NVGMC.setWindowPropertiesProvider(new WindowPropertiesProvider() {
 			@Override
 			public int getHeight() {
-				return MinecraftClient.getInstance().getWindow().getHeight();
+				return MinecraftClient.getInstance().getFramebuffer().textureHeight;
 			}
 
 			@Override
 			public int getWidth() {
-				return MinecraftClient.getInstance().getWindow().getWidth();
+				return MinecraftClient.getInstance().getFramebuffer().textureWidth;
 			}
 
 			@Override
@@ -71,10 +72,11 @@ public class AxolotlClientConfigMod implements ClientModInitializer {
 			public void reload(ResourceManager resourceManager) {
 				ConfigUIImpl.getInstance().preReload();
 				MinecraftClient.getInstance().getResourceManager()
-					.getAllResources(new Identifier(ConfigUIImpl.getInstance().getUiJsonPath())).forEach(resource -> {
+					.getAllResources(new Identifier(ConfigUI.getInstance().getUiJsonPath())).forEach(resource -> {
 						try {
 							ConfigUIImpl.getInstance().read(resource.open());
 						} catch (IOException ignored) {
+							ignored.printStackTrace();
 						}
 					});
 				ConfigUIImpl.getInstance().postReload();
