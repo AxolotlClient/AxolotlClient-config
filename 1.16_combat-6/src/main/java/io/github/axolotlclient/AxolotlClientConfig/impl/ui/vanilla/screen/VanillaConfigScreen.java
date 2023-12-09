@@ -49,9 +49,9 @@ public class VanillaConfigScreen extends io.github.axolotlclient.AxolotlClientCo
 	@Override
 	public void init() {
 		super.init();
-		addDrawableChild(new VanillaButtonListWidget(configManager, category, width, height, 45, height - 55, 25));
 		addDrawableChild(new VanillaButtonWidget(width / 2 - 75, height - 45, 150, 20,
 			ScreenTexts.BACK, w -> MinecraftClient.getInstance().openScreen(parent)));
+		addDrawableChild(new VanillaButtonListWidget(configManager, category, width, height, 45, height - 55, 25));
 	}
 
 	@Override

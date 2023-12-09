@@ -27,8 +27,8 @@ import java.util.Map;
 
 import com.terraformersmc.modmenu.api.ConfigScreenFactory;
 import com.terraformersmc.modmenu.api.ModMenuApi;
+import io.github.axolotlclient.AxolotlClientConfig.api.ui.ConfigUI;
 import io.github.axolotlclient.AxolotlClientConfig.impl.AxolotlClientConfigImpl;
-import io.github.axolotlclient.AxolotlClientConfig.impl.ui.ConfigUI;
 
 public class AxolotlClientConfigModMenu implements ModMenuApi {
 
@@ -49,7 +49,7 @@ public class AxolotlClientConfigModMenu implements ModMenuApi {
 		Map<String, ConfigScreenFactory<?>> map = new HashMap<>();
 		AxolotlClientConfigImpl.getInstance().getRegisteredManagers().forEach((s, manager) ->
 			map.put(s, parent -> ConfigUI.getInstance().getScreen(this.getClass().getClassLoader(),
-			manager, manager.getRoot(), parent)));
+				manager, manager.getRoot(), parent)));
 		return map;
 	}
 }

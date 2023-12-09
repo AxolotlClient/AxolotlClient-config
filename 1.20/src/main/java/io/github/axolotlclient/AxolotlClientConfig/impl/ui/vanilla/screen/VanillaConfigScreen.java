@@ -48,9 +48,9 @@ public class VanillaConfigScreen extends Screen implements ConfigScreen {
 
 	@Override
 	protected void init() {
-		addDrawableSelectableElement(new VanillaEntryListWidget(configManager, category, width, height, 45, height - 55, 25));
 		addDrawableSelectableElement(ButtonWidget.builder(CommonTexts.BACK, w -> closeScreen())
 			.position(width / 2 - 75, height - 45).build());
+		addDrawableSelectableElement(new VanillaEntryListWidget(configManager, category, width, height, 45, height - 55, 25));
 	}
 
 	@Override

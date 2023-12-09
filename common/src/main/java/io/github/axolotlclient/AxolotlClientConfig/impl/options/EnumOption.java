@@ -24,23 +24,47 @@ package io.github.axolotlclient.AxolotlClientConfig.impl.options;
 
 import lombok.Getter;
 
+@Getter
 public class EnumOption<T extends Enum<T>> extends OptionBase<T> {
 
-	@Getter
 	private final Class<T> clazz;
 
-	public EnumOption(String name, Class<T> e) {
-		this(name, e, e.getEnumConstants()[0]);
+	public EnumOption(String name, Class<T> clazz) {
+		this(name, clazz, clazz.getEnumConstants()[0]);
+	}
+	public EnumOption(String name, Class<T> clazz, String tooltip) {
+		super(name, tooltip, clazz.getEnumConstants()[0]);
+		this.clazz = clazz;
 	}
 
-	public EnumOption(String name, Class<T> e, T defaultValue) {
+	public EnumOption(String name, Class<T> clazz, ChangeListener<T> changeListener) {
+		super(name, clazz.getEnumConstants()[0], changeListener);
+		this.clazz = clazz;
+	}
+
+	public EnumOption(String name, Class<T> clazz, String tooltip, ChangeListener<T> changeListener) {
+		super(name, tooltip, clazz.getEnumConstants()[0], changeListener);
+		this.clazz = clazz;
+	}
+
+	public EnumOption(String name, Class<T> clazz, T defaultValue) {
 		super(name, defaultValue);
-		clazz = e;
+		this.clazz = clazz;
 	}
 
-	public EnumOption(String name, Class<T> e, T defaultValue, ChangeListener<T> changeListener) {
+	public EnumOption(String name, Class<T> clazz, String tooltip, T defaultValue) {
+		super(name, tooltip, defaultValue);
+		this.clazz = clazz;
+	}
+
+	public EnumOption(String name,  Class<T> clazz, T defaultValue, ChangeListener<T> changeListener) {
 		super(name, defaultValue, changeListener);
-		this.clazz = e;
+		this.clazz = clazz;
+	}
+
+	public EnumOption(String name, Class<T> clazz, String tooltip, T defaultValue, ChangeListener<T> changeListener) {
+		super(name, tooltip, defaultValue, changeListener);
+		this.clazz = clazz;
 	}
 
 	@Override

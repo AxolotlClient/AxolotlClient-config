@@ -1,0 +1,3 @@
+style=Style
+style.tooltip=The UI style to be used by the config library<br>Click to toggle.
+boolean.tooltip=Example Description!<br>Line two<br>Line three

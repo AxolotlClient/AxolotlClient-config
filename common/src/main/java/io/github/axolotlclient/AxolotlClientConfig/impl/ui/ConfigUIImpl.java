@@ -39,13 +39,14 @@ import com.google.gson.JsonObject;
 import io.github.axolotlclient.AxolotlClientConfig.api.manager.ConfigManager;
 import io.github.axolotlclient.AxolotlClientConfig.api.options.OptionCategory;
 import io.github.axolotlclient.AxolotlClientConfig.api.options.WidgetIdentifieable;
+import io.github.axolotlclient.AxolotlClientConfig.api.ui.ConfigUI;
 import io.github.axolotlclient.AxolotlClientConfig.api.ui.Style;
 import lombok.Getter;
 
-public class ConfigUI {
+public class ConfigUIImpl implements ConfigUI {
 
 	@Getter
-	private static final ConfigUI instance = new ConfigUI();
+	private static final ConfigUIImpl instance = new ConfigUIImpl();
 	private final Gson gson = new GsonBuilder().setPrettyPrinting().create();
 	private final Collection<Runnable> runWhenLoaded = new ArrayList<>();
 	@Getter
@@ -54,7 +55,7 @@ public class ConfigUI {
 	private String currentStyle = "vanilla";
 	private boolean loaded;
 
-	private ConfigUI() {
+	private ConfigUIImpl() {
 	}
 
 	public void preReload() {

@@ -29,17 +29,28 @@ public abstract class OptionBase<T> implements Option<T> {
 
 	@Getter
 	private final String name;
+
+	@Getter
+	private final String tooltip;
 	private final T defaultValue;
 	private final ChangeListener<T> changeListener;
 	protected T value;
 
 	public OptionBase(String name, T defaultValue) {
-		this(name, defaultValue, val -> {
-		});
+		this(name, defaultValue, val -> {});
 	}
 
-	public OptionBase(String name, T defaultValue, ChangeListener<T> changeListener) {
+	public OptionBase(String name, String tooltip, T defaultValue){
+		this(name, tooltip, defaultValue, val -> {});
+	}
+
+	public OptionBase(String name, T defaultValue, ChangeListener<T> changeListener){
+		this(name, name+".tooltip", defaultValue, changeListener);
+	}
+
+	public OptionBase(String name, String tooltip, T defaultValue, ChangeListener<T> changeListener) {
 		this.name = name;
+		this.tooltip = tooltip;
 		this.defaultValue = defaultValue;
 		this.value = defaultValue;
 		this.changeListener = changeListener;

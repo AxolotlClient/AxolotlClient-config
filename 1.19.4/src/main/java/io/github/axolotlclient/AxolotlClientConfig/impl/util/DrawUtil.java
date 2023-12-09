@@ -27,19 +27,26 @@ import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
+import java.util.Arrays;
 
+import io.github.axolotlclient.AxolotlClientConfig.api.options.Option;
 import io.github.axolotlclient.AxolotlClientConfig.api.util.Color;
 import io.github.axolotlclient.AxolotlClientConfig.api.util.Rectangle;
+import io.github.axolotlclient.AxolotlClientConfig.impl.ui.DrawingUtil;
+import io.github.axolotlclient.AxolotlClientConfig.impl.ui.NVGFont;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawableHelper;
+import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import org.lwjgl.nanovg.NanoVG;
 import org.lwjgl.system.MemoryUtil;
 
-public class DrawUtil {
+public class DrawUtil implements DrawingUtil {
+
+	private static final DrawUtil INSTANCE = new DrawUtil();
 
 	public static void fillRect(MatrixStack stack, Rectangle rectangle, Color color) {
 		fillRect(stack, rectangle.x(), rectangle.y(), rectangle.width(),
@@ -113,8 +120,8 @@ public class DrawUtil {
 		drawScrollingText(stack, text.getString(), x, y, width, height, color);
 	}
 
-	public static void drawScrollingText(MatrixStack stack, String text, int x, int y, int width, int height, Color color){
-		drawScrollingText(stack, x, y, x+width, y+height, text, color);
+	public static void drawScrollingText(MatrixStack stack, String text, int x, int y, int width, int height, Color color) {
+		drawScrollingText(stack, x, y, x + width, y + height, text, color);
 	}
 
 	public static void drawScrollingText(MatrixStack stack, int left, int top, int right, int bottom, String text, Color color) {
@@ -130,7 +137,7 @@ public class DrawUtil {
 			double d = (double) (System.nanoTime() / 1000000L) / 1000.0;
 			double e = Math.max((double) r * 0.5, 3.0);
 			double f = Math.sin((Math.PI / 2) * Math.cos((Math.PI * 2) * d / e)) / 2.0 + 0.5;
-			double g = f*r;
+			double g = f * r;
 			DrawableHelper.enableScissor(left, top, right, bottom);
 			drawString(stack, renderer, text, left - (int) g, y, color.toInt(), true);
 			DrawableHelper.disableScissor();
@@ -140,5 +147,30 @@ public class DrawUtil {
 			int centerX = center < min ? min : Math.min(center, max);
 			drawCenteredString(stack, renderer, text, centerX, y, color.toInt(), true);
 		}
+	}
+
+	public static void drawTooltip(MatrixStack graphics, Option<?> option, int x, int y) {
+		String tooltip = I18n.translate(option.getTooltip());
+		if (tooltip.equals(option.getTooltip())) {
+			return;
+		}
+		String[] text = tooltip.split("<br>");
+		if (!text[0].isEmpty() || text.length > 1) {
+			MinecraftClient.getInstance().currentScreen.renderTooltip(graphics,
+				Arrays.stream(text).map(Text::of).toList(), x+5, y+5);
+		}
+
+	}
+
+	public static void drawTooltip(long ctx, NVGFont font, Option<?> option, int x, int y) {
+		String tooltip = I18n.translate(option.getTooltip());
+		if (tooltip.equals(option.getTooltip())) {
+			return;
+		}
+		String[] text = tooltip.split("<br>");
+		if (!text[0].isEmpty() || text.length > 1) {
+			INSTANCE.drawTooltip(ctx, font, text, x, y, MinecraftClient.getInstance().currentScreen.width);
+		}
+
 	}
 }

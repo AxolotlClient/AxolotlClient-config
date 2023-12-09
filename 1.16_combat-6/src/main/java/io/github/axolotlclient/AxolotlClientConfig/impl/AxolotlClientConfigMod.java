@@ -24,8 +24,9 @@ package io.github.axolotlclient.AxolotlClientConfig.impl;
 
 import java.io.IOException;
 
+import io.github.axolotlclient.AxolotlClientConfig.api.ui.ConfigUI;
 import io.github.axolotlclient.AxolotlClientConfig.api.util.WindowPropertiesProvider;
-import io.github.axolotlclient.AxolotlClientConfig.impl.ui.ConfigUI;
+import io.github.axolotlclient.AxolotlClientConfig.impl.ui.ConfigUIImpl;
 import io.github.axolotlclient.AxolotlClientConfig.impl.ui.NVGMC;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
@@ -68,15 +69,15 @@ public class AxolotlClientConfigMod implements ClientModInitializer {
 
 			@Override
 			public void apply(ResourceManager resourceManager) {
-				ConfigUI.getInstance().preReload();
+				ConfigUIImpl.getInstance().preReload();
 				try {
 					MinecraftClient.getInstance().getResourceManager()
 						.getAllResources(new Identifier(ConfigUI.getInstance().getUiJsonPath())).forEach(resource -> {
-							ConfigUI.getInstance().read(resource.getInputStream());
+							ConfigUIImpl.getInstance().read(resource.getInputStream());
 						});
 				} catch (IOException ignored) {
 				}
-				ConfigUI.getInstance().postReload();
+				ConfigUIImpl.getInstance().postReload();
 			}
 		});
 	}

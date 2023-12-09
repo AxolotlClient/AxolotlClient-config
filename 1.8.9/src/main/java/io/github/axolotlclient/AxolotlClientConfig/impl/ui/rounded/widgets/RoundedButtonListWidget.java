@@ -33,6 +33,7 @@ import io.github.axolotlclient.AxolotlClientConfig.impl.ui.ClickableWidget;
 import io.github.axolotlclient.AxolotlClientConfig.impl.ui.DrawingUtil;
 import io.github.axolotlclient.AxolotlClientConfig.impl.ui.rounded.ButtonListWidget;
 import io.github.axolotlclient.AxolotlClientConfig.impl.ui.rounded.NVGHolder;
+import io.github.axolotlclient.AxolotlClientConfig.impl.util.DrawUtil;
 import net.minecraft.client.resource.language.I18n;
 import org.jetbrains.annotations.Nullable;
 
@@ -59,6 +60,14 @@ public class RoundedButtonListWidget extends ButtonListWidget {
 	@Override
 	protected Entry createOptionEntry(ClickableWidget widget, Option<?> option, @Nullable ClickableWidget other, @Nullable Option<?> otherOption) {
 		return new RoundedOptionEntry(widget, option);
+	}
+
+	@Override
+	protected void renderDecorations(int mouseX, int mouseY) {
+		if (getHoveredEntry() != null && getHoveredEntry() instanceof RoundedOptionEntry) {
+			DrawUtil.drawTooltip(NVGHolder.getContext(), NVGHolder.getFont(), ((RoundedOptionEntry) getHoveredEntry()).option,
+				mouseX, mouseY);
+		}
 	}
 
 	private class RoundedOptionEntry extends Entry implements DrawingUtil {

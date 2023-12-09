@@ -27,8 +27,16 @@ public class DoubleOption extends NumberOption<Double> {
 		super(name, defaultValue, min, max);
 	}
 
+	public DoubleOption(String name, String tooltip, Double defaultValue, Double min, Double max) {
+		super(name, tooltip, defaultValue, min, max);
+	}
+
 	public DoubleOption(String name, Double defaultValue, ChangeListener<Double> changeListener, Double min, Double max) {
 		super(name, defaultValue, changeListener, min, max);
+	}
+
+	public DoubleOption(String name, String tooltip, Double defaultValue, ChangeListener<Double> changeListener, Double min, Double max) {
+		super(name, tooltip, defaultValue, changeListener, min, max);
 	}
 
 	@Override

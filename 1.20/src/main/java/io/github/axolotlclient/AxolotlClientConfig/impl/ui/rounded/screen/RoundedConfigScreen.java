@@ -63,9 +63,9 @@ public class RoundedConfigScreen extends Screen implements ConfigScreen, Drawing
 
 	@Override
 	public void init() {
-		addDrawableSelectableElement(new RoundedButtonListWidget(configManager, category, width, height, 45, height - 55, 25));
 		addDrawableSelectableElement(new RoundedButtonWidget(width / 2 - 75, height - 40,
 			CommonTexts.BACK, w -> closeScreen()));
+		addDrawableSelectableElement(new RoundedButtonListWidget(configManager, category, width, height, 45, height - 55, 25));
 	}
 
 	@Override

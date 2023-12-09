@@ -34,6 +34,7 @@ import io.github.axolotlclient.AxolotlClientConfig.impl.util.DrawUtil;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.widget.ClickableWidget;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 import org.jetbrains.annotations.Nullable;
 
@@ -57,6 +58,14 @@ public class VanillaEntryListWidget extends EntryListWidget {
 	@Override
 	protected Entry createOptionEntry(ClickableWidget widget, Option<?> option, @Nullable ClickableWidget other, @Nullable Option<?> otherOption) {
 		return new VanillaOptionEntry(widget, option);
+	}
+
+	@Override
+	protected void renderDecorations(GuiGraphics graphics, int mouseX, int mouseY) {
+		if (getHoveredEntry() != null && getHoveredEntry() instanceof VanillaOptionEntry) {
+			DrawUtil.drawTooltip(graphics, ((VanillaOptionEntry) getHoveredEntry()).option,
+				mouseX, mouseY);
+		}
 	}
 
 	private class VanillaOptionEntry extends Entry {

@@ -37,4 +37,6 @@ public interface Option<T> extends WidgetIdentifieable {
 	String toSerializedValue();
 
 	void fromSerializedValue(String value);
+
+	String getTooltip();
 }

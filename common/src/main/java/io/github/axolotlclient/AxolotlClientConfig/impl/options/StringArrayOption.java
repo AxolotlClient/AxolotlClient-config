@@ -26,9 +26,9 @@ import java.util.Arrays;
 
 import lombok.Getter;
 
+@Getter
 public class StringArrayOption extends OptionBase<String> {
 
-	@Getter
 	private final String[] values;
 
 	public StringArrayOption(String name, String... values) {
@@ -43,6 +43,16 @@ public class StringArrayOption extends OptionBase<String> {
 
 	public StringArrayOption(String name, String[] values, String defaultValue, ChangeListener<String> changeListener) {
 		super(name, defaultValue, changeListener);
+		this.values = values;
+	}
+
+	public StringArrayOption(String name, String[] values, String tooltip, String defaultValue) {
+		super(name, tooltip, defaultValue);
+		this.values = values;
+	}
+
+	public StringArrayOption(String name, String[] values, String tooltip, String defaultValue, ChangeListener<String> changeListener) {
+		super(name, tooltip, defaultValue, changeListener);
 		this.values = values;
 	}
 

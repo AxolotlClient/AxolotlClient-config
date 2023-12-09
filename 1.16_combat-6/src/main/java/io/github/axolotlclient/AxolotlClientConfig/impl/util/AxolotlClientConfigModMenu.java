@@ -25,8 +25,8 @@ package io.github.axolotlclient.AxolotlClientConfig.impl.util;
 import java.util.HashMap;
 import java.util.Map;
 
+import io.github.axolotlclient.AxolotlClientConfig.api.ui.ConfigUI;
 import io.github.axolotlclient.AxolotlClientConfig.impl.AxolotlClientConfigImpl;
-import io.github.axolotlclient.AxolotlClientConfig.impl.ui.ConfigUI;
 import io.github.prospector.modmenu.api.ConfigScreenFactory;
 import io.github.prospector.modmenu.api.ModMenuApi;
 

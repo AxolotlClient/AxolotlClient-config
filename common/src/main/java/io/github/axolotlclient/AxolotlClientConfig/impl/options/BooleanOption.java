@@ -23,12 +23,21 @@
 package io.github.axolotlclient.AxolotlClientConfig.impl.options;
 
 public class BooleanOption extends OptionBase<Boolean> {
+
 	public BooleanOption(String name, Boolean defaultValue) {
 		super(name, defaultValue);
 	}
 
+	public BooleanOption(String name, String tooltip, Boolean defaultValue) {
+		super(name, tooltip, defaultValue);
+	}
+
 	public BooleanOption(String name, Boolean defaultValue, ChangeListener<Boolean> changeListener) {
 		super(name, defaultValue, changeListener);
+	}
+
+	public BooleanOption(String name, String tooltip, Boolean defaultValue, ChangeListener<Boolean> changeListener) {
+		super(name, tooltip, defaultValue, changeListener);
 	}
 
 	public void toggle() {

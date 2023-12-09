@@ -25,16 +25,25 @@ package io.github.axolotlclient.AxolotlClientConfig.impl.options;
 import lombok.Getter;
 import lombok.Setter;
 
+@Getter
 public class StringOption extends OptionBase<String> {
-	@Getter @Setter
+	@Setter
 	private int maxLength = 32;
 
 	public StringOption(String name, String defaultValue) {
 		super(name, defaultValue);
 	}
 
+	public StringOption(String name, String tooltip, String defaultValue) {
+		super(name, tooltip, defaultValue);
+	}
+
 	public StringOption(String name, String defaultValue, ChangeListener<String> changeListener) {
 		super(name, defaultValue, changeListener);
+	}
+
+	public StringOption(String name, String tooltip, String defaultValue, ChangeListener<String> changeListener) {
+		super(name, tooltip, defaultValue, changeListener);
 	}
 
 	@Override

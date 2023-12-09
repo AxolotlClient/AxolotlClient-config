@@ -27,12 +27,20 @@ public class IntegerOption extends NumberOption<Integer> {
 		super(name, defaultValue, min, max);
 	}
 
+	public IntegerOption(String name, String tooltip, Integer defaultValue, Integer min, Integer max) {
+		super(name, tooltip, defaultValue, min, max);
+	}
+
 	public IntegerOption(String name, Integer defaultValue, ChangeListener<Integer> changeListener, Integer min, Integer max) {
 		super(name, defaultValue, changeListener, min, max);
 	}
 
+	public IntegerOption(String name, String tooltip, Integer defaultValue, ChangeListener<Integer> changeListener, Integer min, Integer max) {
+		super(name, tooltip, defaultValue, changeListener, min, max);
+	}
+
 	@Override
-	public Integer clamp(Number value) {
+	protected Integer clamp(Number value) {
 		return value.intValue() > getMin() ? (value.intValue() < getMax() ? value.intValue() : getMax()) : getMin();
 	}
 

@@ -25,7 +25,7 @@ package io.github.axolotlclient.AxolotlClientConfig.impl.util;
 import io.github.axolotlclient.AxolotlClientConfig.api.manager.ConfigManager;
 import io.github.axolotlclient.AxolotlClientConfig.api.options.OptionCategory;
 import io.github.axolotlclient.AxolotlClientConfig.api.options.WidgetIdentifieable;
-import io.github.axolotlclient.AxolotlClientConfig.impl.ui.ConfigUI;
+import io.github.axolotlclient.AxolotlClientConfig.api.ui.ConfigUI;
 import lombok.experimental.UtilityClass;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ClickableWidget;

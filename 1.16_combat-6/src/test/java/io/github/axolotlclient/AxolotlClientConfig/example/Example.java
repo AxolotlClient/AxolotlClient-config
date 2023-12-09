@@ -27,10 +27,10 @@ import java.util.function.Function;
 import io.github.axolotlclient.AxolotlClientConfig.api.AxolotlClientConfig;
 import io.github.axolotlclient.AxolotlClientConfig.api.manager.ConfigManager;
 import io.github.axolotlclient.AxolotlClientConfig.api.options.OptionCategory;
+import io.github.axolotlclient.AxolotlClientConfig.api.ui.ConfigUI;
 import io.github.axolotlclient.AxolotlClientConfig.api.util.Colors;
 import io.github.axolotlclient.AxolotlClientConfig.impl.managers.JsonConfigManager;
 import io.github.axolotlclient.AxolotlClientConfig.impl.options.*;
-import io.github.axolotlclient.AxolotlClientConfig.impl.ui.ConfigUI;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
@@ -47,7 +47,7 @@ public class Example implements ClientModInitializer {
 
 		OptionCategory example = OptionCategory.create(modid);
 
-		example.add(new BooleanOption("test", false));
+		example.add(new BooleanOption("boolean", false));
 
 		BooleanOption ignored = new BooleanOption("ignored_option", false);
 		example.add(ignored);

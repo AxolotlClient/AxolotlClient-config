@@ -20,26 +20,32 @@
  * For more information, see the LICENSE file.
  */
 
-package io.github.axolotlclient.AxolotlClientConfig.impl.util;
+package io.github.axolotlclient.AxolotlClientConfig.api.ui;
+
+import java.util.Collection;
 
 import io.github.axolotlclient.AxolotlClientConfig.api.manager.ConfigManager;
 import io.github.axolotlclient.AxolotlClientConfig.api.options.OptionCategory;
 import io.github.axolotlclient.AxolotlClientConfig.api.options.WidgetIdentifieable;
-import io.github.axolotlclient.AxolotlClientConfig.api.ui.ConfigUI;
-import lombok.experimental.UtilityClass;
-import net.minecraft.client.gui.Element;
-import net.minecraft.client.gui.screen.Screen;
+import io.github.axolotlclient.AxolotlClientConfig.impl.ui.ConfigUIImpl;
 
-@UtilityClass
-public class ConfigStyles {
-
-	public Screen createScreen(Screen parent, ConfigManager configManager, OptionCategory category) {
-		return ConfigUI.getInstance().getScreen(ConfigStyles.class.getClassLoader(), configManager, category, parent);
+public interface ConfigUI {
+	static ConfigUI getInstance(){
+		return ConfigUIImpl.getInstance();
 	}
 
-	@SuppressWarnings("unchecked")
-	public <T extends Element & net.minecraft.client.gui.Drawable> T createWidget(int x, int y, int width, int height, WidgetIdentifieable option) {
-		return (T) ConfigUI.getInstance().getWidget(x, y, width, height,
-			option, ConfigStyles.class.getClassLoader());
-	}
+	Style getCurrentStyle();
+
+	Style getDefaultStyle();
+	Collection<String> getStyleNames();
+
+	void setStyle(String name);
+
+	<T> T getScreen(ClassLoader loader, ConfigManager manager, OptionCategory category, T parent);
+
+	Object getWidget(int x, int y, int width, int height, WidgetIdentifieable id, ClassLoader loader);
+
+	void runWhenLoaded(Runnable runnable);
+
+	String getUiJsonPath();
 }

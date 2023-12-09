@@ -27,18 +27,25 @@ import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
+import java.util.Arrays;
 
+import io.github.axolotlclient.AxolotlClientConfig.api.options.Option;
 import io.github.axolotlclient.AxolotlClientConfig.api.util.Color;
 import io.github.axolotlclient.AxolotlClientConfig.api.util.Rectangle;
+import io.github.axolotlclient.AxolotlClientConfig.impl.ui.DrawingUtil;
+import io.github.axolotlclient.AxolotlClientConfig.impl.ui.NVGFont;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.resource.language.I18n;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import org.lwjgl.nanovg.NanoVG;
 import org.lwjgl.system.MemoryUtil;
 
-public class DrawUtil {
+public class DrawUtil implements DrawingUtil {
+
+	private static final DrawUtil INSTANCE = new DrawUtil();
 
 	public static void fillRect(GuiGraphics stack, Rectangle rectangle, Color color) {
 		fillRect(stack, rectangle.x(), rectangle.y(), rectangle.width(),
@@ -134,6 +141,30 @@ public class DrawUtil {
 			int max = right - textWidth / 2;
 			int centerX = center < min ? min : Math.min(center, max);
 			drawCenteredString(graphics, renderer, text, centerX, y, color.toInt(), true);
+		}
+	}
+
+	public static void drawTooltip(GuiGraphics graphics, Option<?> option, int x, int y) {
+		String tooltip = I18n.translate(option.getTooltip());
+		if (tooltip.equals(option.getTooltip())) {
+			return;
+		}
+		String[] text = tooltip.split("<br>");
+		if (!text[0].isEmpty() || text.length > 1) {
+			TextRenderer renderer = MinecraftClient.getInstance().textRenderer;
+			graphics.drawTooltip(renderer,
+				Arrays.stream(text).map(Text::of).toList(), x+5, y+5);
+		}
+	}
+
+	public static void drawTooltip(long ctx, NVGFont font, Option<?> option, int x, int y) {
+		String tooltip = I18n.translate(option.getTooltip());
+		if (tooltip.equals(option.getTooltip())) {
+			return;
+		}
+		String[] text = tooltip.split("<br>");
+		if (!text[0].isEmpty() || text.length > 1) {
+			INSTANCE.drawTooltip(ctx, font, text, x, y, MinecraftClient.getInstance().currentScreen.width);
 		}
 	}
 }

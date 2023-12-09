@@ -24,13 +24,19 @@ package io.github.axolotlclient.AxolotlClientConfig.impl.options;
 
 import lombok.Getter;
 
+@Getter
 public abstract class NumberOption<T extends Number> extends OptionBase<T> {
 
-	@Getter
 	T min, max;
 
 	public NumberOption(String name, T defaultValue, T min, T max) {
 		super(name, defaultValue);
+		this.min = min;
+		this.max = max;
+	}
+
+	public NumberOption(String name, String tooltip, T defaultValue, T min, T max) {
+		super(name, tooltip, defaultValue);
 		this.min = min;
 		this.max = max;
 	}
@@ -41,7 +47,13 @@ public abstract class NumberOption<T extends Number> extends OptionBase<T> {
 		this.max = max;
 	}
 
-	public abstract T clamp(Number value);
+	public NumberOption(String name, String tooltip, T defaultValue, ChangeListener<T> changeListener, T min, T max) {
+		super(name, tooltip, defaultValue, changeListener);
+		this.min = min;
+		this.max = max;
+	}
+
+	protected abstract T clamp(Number value);
 
 	@Override
 	public void set(T newValue) {

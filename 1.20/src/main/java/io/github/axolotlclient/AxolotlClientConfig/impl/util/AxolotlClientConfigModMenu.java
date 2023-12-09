@@ -27,8 +27,8 @@ import java.util.Map;
 
 import com.terraformersmc.modmenu.api.ConfigScreenFactory;
 import com.terraformersmc.modmenu.api.ModMenuApi;
+import io.github.axolotlclient.AxolotlClientConfig.api.ui.ConfigUI;
 import io.github.axolotlclient.AxolotlClientConfig.impl.AxolotlClientConfigImpl;
-import io.github.axolotlclient.AxolotlClientConfig.impl.ui.ConfigUI;
 
 public class AxolotlClientConfigModMenu implements ModMenuApi {
 

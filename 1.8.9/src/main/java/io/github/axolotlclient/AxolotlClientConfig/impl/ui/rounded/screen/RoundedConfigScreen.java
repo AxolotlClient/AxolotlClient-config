@@ -62,9 +62,9 @@ public class RoundedConfigScreen extends io.github.axolotlclient.AxolotlClientCo
 
 	@Override
 	public void init() {
-		addDrawableChild(new RoundedButtonListWidget(configManager, category, width, height, 45, height - 55, 25));
 		addDrawableChild(new RoundedButtonWidget(width / 2 - 75, height - 40,
 			I18n.translate("gui.back"), w -> Minecraft.getInstance().openScreen(parent)));
+		addDrawableChild(new RoundedButtonListWidget(configManager, category, width, height, 45, height - 55, 25));
 	}
 
 	@Override

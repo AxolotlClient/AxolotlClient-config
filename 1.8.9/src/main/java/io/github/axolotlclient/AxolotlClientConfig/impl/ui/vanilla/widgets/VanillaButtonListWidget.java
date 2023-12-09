@@ -61,6 +61,13 @@ public class VanillaButtonListWidget extends ButtonListWidget {
 		return new VanillaOptionEntry(widget, option);
 	}
 
+	@Override
+	protected void renderDecorations(int mouseX, int mouseY) {
+		if (getHoveredEntry() != null && getHoveredEntry() instanceof VanillaOptionEntry){
+			DrawUtil.drawTooltip(((VanillaOptionEntry) getHoveredEntry()).option, mouseX, mouseY);
+		}
+	}
+
 	private class VanillaOptionEntry extends Entry {
 
 		private final Option<?> option;

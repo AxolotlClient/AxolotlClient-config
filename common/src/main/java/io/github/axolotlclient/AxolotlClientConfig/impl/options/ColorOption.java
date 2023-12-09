@@ -30,8 +30,16 @@ public class ColorOption extends OptionBase<Color> {
 		super(name, defaultValue.mutable());
 	}
 
+	public ColorOption(String name, String tooltip, Color defaultValue) {
+		super(name, tooltip, defaultValue);
+	}
+
 	public ColorOption(String name, Color defaultValue, ChangeListener<Color> changeListener) {
 		super(name, defaultValue.mutable(), changeListener);
+	}
+
+	public ColorOption(String name, String tooltip, Color defaultValue, ChangeListener<Color> changeListener) {
+		super(name, tooltip, defaultValue, changeListener);
 	}
 
 	@Override
