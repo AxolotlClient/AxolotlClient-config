@@ -130,7 +130,7 @@ public class ColorSelectionScreen extends io.github.axolotlclient.AxolotlClientC
 			NVGHolder.setContext(ctx);
 			super.render(mouseX, mouseY, delta);
 
-			drawCenteredString(ctx, NVGHolder.getFont(), title, width / 2f, 20, Colors.WHITE);
+			drawCenteredString(ctx, NVGHolder.getFont(), title, width / 2f, 20, Colors.TEXT);
 
 			if (paint == null || paint.address() == 0) {
 				int image = DrawUtil.nvgCreateImage(ctx, new Identifier("axolotlclientconfig", "textures/gui/colorwheel.png"));
@@ -148,26 +148,26 @@ public class ColorSelectionScreen extends io.github.axolotlclient.AxolotlClientC
 			nvgStrokeWidth(ctx, 1);
 			nvgStroke(ctx);
 
-			drawString(ctx, NVGHolder.getFont(), I18n.translate("option.current"), buttonsX, 40, Colors.WHITE);
+			drawString(ctx, NVGHolder.getFont(), I18n.translate("option.current"), buttonsX, 40, Colors.TEXT);
 
 			fillRoundedRect(ctx, buttonsX, 55, 150, 40, option.get().get(), 10);
 			outlineRoundedRect(ctx, buttonsX, 55, 150, 40, Colors.BLACK, 10, 1);
 
 			int y = 105;
-			drawString(ctx, NVGHolder.getFont(), I18n.translate("option.chroma"), buttonsX, y, Colors.WHITE);
+			drawString(ctx, NVGHolder.getFont(), I18n.translate("option.chroma"), buttonsX, y, Colors.TEXT);
 			y += 45;
 			if (height > 300) {
-				drawString(ctx, NVGHolder.getFont(), I18n.translate("option.speed"), buttonsX, y, Colors.WHITE);
+				drawString(ctx, NVGHolder.getFont(), I18n.translate("option.speed"), buttonsX, y, Colors.TEXT);
 				y += 45;
 			}
-			drawString(ctx, NVGHolder.getFont(), I18n.translate("option.alpha"), buttonsX, y, Colors.WHITE);
+			drawString(ctx, NVGHolder.getFont(), I18n.translate("option.alpha"), buttonsX, y, Colors.TEXT);
 		});
 	}
 
 	@Override
 	public void renderBackground() {
 		super.renderBackground();
-		fillRoundedRect(NVGHolder.getContext(), 15, 15, width - 30, height - 30, Colors.DARK_GRAY, 12);
+		fillRoundedRect(NVGHolder.getContext(), 15, 15, width - 30, height - 30, Colors.BACKGROUND, 12);
 	}
 
 	@Override

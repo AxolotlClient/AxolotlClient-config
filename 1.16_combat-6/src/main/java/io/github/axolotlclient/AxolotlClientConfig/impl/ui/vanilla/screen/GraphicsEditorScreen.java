@@ -139,7 +139,7 @@ public class GraphicsEditorScreen extends io.github.axolotlclient.AxolotlClientC
 		DrawUtil.outlineRect(graphics, gridX + (pixelSize * focusedPixel[0]), gridY + (pixelSize * focusedPixel[1]), pixelSize, pixelSize, Colors.GREEN.toInt());
 
 		drawTextWithShadow(graphics, client.textRenderer, new TranslatableText("option.current"),
-			gridX + maxGridWidth + 10, gridY, Colors.WHITE.toInt());
+			gridX + maxGridWidth + 10, gridY, Colors.TEXT.toInt());
 		DrawUtil.fillRect(graphics, gridX + maxGridWidth + 10, gridY + 10, 100, 20, colorOption.get().get().toInt());
 		DrawUtil.outlineRect(graphics, gridX + maxGridWidth + 10, gridY + 10, 100, 20, Colors.BLACK.toInt());
 	}

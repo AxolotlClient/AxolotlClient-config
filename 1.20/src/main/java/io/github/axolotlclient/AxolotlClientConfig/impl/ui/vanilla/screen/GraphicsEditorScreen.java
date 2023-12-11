@@ -138,7 +138,7 @@ public class GraphicsEditorScreen extends Screen implements DrawingUtil {
 		DrawUtil.outlineRect(graphics, gridX + (pixelSize * focusedPixel[0]), gridY + (pixelSize * focusedPixel[1]), pixelSize, pixelSize, Colors.GREEN.toInt());
 
 		graphics.drawShadowedText(client.textRenderer, Text.translatable("option.current"),
-			gridX + maxGridWidth + 10, gridY, Colors.WHITE.toInt());
+			gridX + maxGridWidth + 10, gridY, Colors.TEXT.toInt());
 		DrawUtil.fillRect(graphics, gridX + maxGridWidth + 10, gridY + 10, 100, 20, colorOption.get().get().toInt());
 		DrawUtil.outlineRect(graphics, gridX + maxGridWidth + 10, gridY + 10, 100, 20, Colors.BLACK.toInt());
 	}

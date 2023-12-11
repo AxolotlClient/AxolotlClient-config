@@ -122,26 +122,26 @@ public class ColorSelectionScreen extends io.github.axolotlclient.AxolotlClientC
 	@Override
 	public void render(int mouseX, int mouseY, float delta) {
 		super.render(mouseX, mouseY, delta);
-		drawCenteredString(minecraft.textRenderer, title, width / 2, 20, Colors.WHITE.toInt());
+		drawCenteredString(minecraft.textRenderer, title, width / 2, 20, Colors.TEXT.toInt());
 
 		minecraft.getTextureManager().bind(texture);
 		drawTexture((int) selectorX, (int) selectorY, 0, 0, selectorRadius * 2, selectorRadius * 2, selectorRadius * 2, selectorRadius * 2);
 
 		DrawUtil.outlineRect((int) selectorX, (int) selectorY, selectorRadius * 2, selectorRadius * 2, Colors.BLACK.toInt());
 
-		drawString(minecraft.textRenderer, I18n.translate("option.current"), buttonsX, 40, Colors.WHITE.toInt());
+		drawString(minecraft.textRenderer, I18n.translate("option.current"), buttonsX, 40, Colors.TEXT.toInt());
 
 		DrawUtil.fillRect(buttonsX, 55, 150, 40, option.get().get().toInt());
 		DrawUtil.outlineRect(buttonsX, 55, 150, 40, Colors.BLACK.toInt());
 
 		int y = 105;
-		drawString(minecraft.textRenderer, I18n.translate("option.chroma"), buttonsX, y, Colors.WHITE.toInt());
+		drawString(minecraft.textRenderer, I18n.translate("option.chroma"), buttonsX, y, Colors.TEXT.toInt());
 		y += 45;
 		if (height > 300) {
-			drawString(minecraft.textRenderer, I18n.translate("option.speed"), buttonsX, y, Colors.WHITE.toInt());
+			drawString(minecraft.textRenderer, I18n.translate("option.speed"), buttonsX, y, Colors.TEXT.toInt());
 			y += 45;
 		}
-		drawString(minecraft.textRenderer, I18n.translate("option.alpha"), buttonsX, y, Colors.WHITE.toInt());
+		drawString(minecraft.textRenderer, I18n.translate("option.alpha"), buttonsX, y, Colors.TEXT.toInt());
 	}
 
 	@Override

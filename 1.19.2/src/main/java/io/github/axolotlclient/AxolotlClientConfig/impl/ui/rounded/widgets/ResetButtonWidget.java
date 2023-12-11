@@ -76,9 +76,9 @@ public class ResetButtonWidget extends RoundedButtonWidget {
 		this.active = !option.getDefault().equals(option.get());
 		super.renderButton(graphics, mouseX, mouseY, delta);
 
-		Color color = !active ? Colors.GRAY : Colors.WHITE;
+		Color color = !active ? Colors.FOREGROUND : Colors.HIGHLIGHT;
 		if (active && isHovered()) {
-			color = Colors.DARK_YELLOW;
+			color = Colors.ACCENT2;
 		}
 
 		NanoVG.nvgLineCap(ctx, NanoVG.NVG_ROUND);
@@ -101,6 +101,6 @@ public class ResetButtonWidget extends RoundedButtonWidget {
 
 	@Override
 	protected Color getWidgetColor() {
-		return Colors.TURQUOISE;
+		return Colors.ACCENT;
 	}
 }

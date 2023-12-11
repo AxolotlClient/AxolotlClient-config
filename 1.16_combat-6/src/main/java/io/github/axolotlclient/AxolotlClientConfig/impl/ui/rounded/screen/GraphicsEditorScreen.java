@@ -107,7 +107,7 @@ public class GraphicsEditorScreen extends io.github.axolotlclient.AxolotlClientC
 			renderBackground(graphics);
 			super.render(graphics, mouseX, mouseY, delta);
 
-			drawCenteredString(ctx, NVGHolder.getFont(), title, width / 2f, 25, Colors.WHITE);
+			drawCenteredString(ctx, NVGHolder.getFont(), title, width / 2f, 25, Colors.TEXT);
 
 			// Draw pixels
 			for (int x = 0; x < gridColumns; x++) {
@@ -143,7 +143,7 @@ public class GraphicsEditorScreen extends io.github.axolotlclient.AxolotlClientC
 			outline(NVGHolder.getContext(), gridX + (pixelSize * focusedPixel[0]), gridY + (pixelSize * focusedPixel[1]), pixelSize, pixelSize, Colors.GREEN, 1);
 
 			drawString(NVGHolder.getContext(), NVGHolder.getFont(), new TranslatableText("option.current").getString(),
-				gridX + maxGridWidth + 10, gridY, Colors.WHITE);
+				gridX + maxGridWidth + 10, gridY, Colors.TEXT);
 			fillRoundedRect(NVGHolder.getContext(), gridX + maxGridWidth + 10, gridY + 12, 100, 20, colorOption.get().get(), 5);
 			outlineRoundedRect(NVGHolder.getContext(), gridX + maxGridWidth + 10, gridY + 12, 100, 20, Colors.BLACK, 5, 1);
 		});
@@ -152,7 +152,7 @@ public class GraphicsEditorScreen extends io.github.axolotlclient.AxolotlClientC
 	@Override
 	public void renderBackground(MatrixStack graphics) {
 		super.renderBackground(graphics);
-		fillRoundedRect(NVGHolder.getContext(), 15, 15, width - 30, height - 30, Colors.DARK_GRAY, 12);
+		fillRoundedRect(NVGHolder.getContext(), 15, 15, width - 30, height - 30, Colors.BACKGROUND, 12);
 	}
 
 	@Override
@@ -246,7 +246,7 @@ public class GraphicsEditorScreen extends io.github.axolotlclient.AxolotlClientC
 			if (isHovered() || isFocused()) {
 				outline(NVGHolder.getContext(), gridX - 1, gridY - 1, maxGridWidth + 2, maxGridHeight + 2, Colors.RED, 1);
 			} else {
-				outline(NVGHolder.getContext(), gridX - 1, gridY - 1, maxGridWidth + 2, maxGridHeight + 2, Colors.WHITE, 1);
+				outline(NVGHolder.getContext(), gridX - 1, gridY - 1, maxGridWidth + 2, maxGridHeight + 2, Colors.HIGHLIGHT, 1);
 			}
 		}
 

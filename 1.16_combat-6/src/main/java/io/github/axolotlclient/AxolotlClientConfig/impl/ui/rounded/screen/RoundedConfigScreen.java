@@ -55,8 +55,8 @@ public class RoundedConfigScreen extends io.github.axolotlclient.AxolotlClientCo
 	public void render(MatrixStack graphics, int mouseX, int mouseY, float delta) {
 		renderBackground(graphics);
 		NVGUtil.wrap(ctx -> {
-			fillRoundedRect(ctx, 15, 15, width - 30, height - 30, Colors.DARK_GRAY, 12);
-			drawCenteredString(ctx, NVGHolder.getFont(), getTitle().getString(), width / 2f, 25, Colors.WHITE);
+			fillRoundedRect(ctx, 15, 15, width - 30, height - 30, Colors.BACKGROUND, 12);
+			drawCenteredString(ctx, NVGHolder.getFont(), getTitle().getString(), width / 2f, 25, Colors.TEXT);
 			NVGHolder.setContext(ctx);
 			super.render(graphics, mouseX, mouseY, delta);
 		});

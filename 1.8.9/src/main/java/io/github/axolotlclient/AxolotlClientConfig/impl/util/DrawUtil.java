@@ -41,6 +41,7 @@ import io.github.axolotlclient.AxolotlClientConfig.impl.ui.DrawingUtil;
 import io.github.axolotlclient.AxolotlClientConfig.impl.ui.NVGFont;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiElement;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.render.TextRenderer;
 import net.minecraft.client.render.Window;
 import net.minecraft.client.resource.language.I18n;
@@ -258,14 +259,15 @@ public class DrawUtil extends GuiElement implements DrawingUtil {
 		}
 	}
 
-	public static void drawTooltip(long ctx, NVGFont font, Option<?> option, int mouseX, int mouseY) {
+	public static void drawTooltip(long ctx, NVGFont font, Option<?> option, int x, int y) {
 		String tooltip = I18n.translate(option.getTooltip());
 		if (tooltip.equals(option.getTooltip())) {
 			return;
 		}
 		String[] text = tooltip.split("<br>");
 		if (!text[0].isEmpty() || text.length > 1) {
-			INSTANCE.drawTooltip(ctx, font, text, mouseX, mouseY, Minecraft.getInstance().screen.width);
+			Screen screen = Minecraft.getInstance().screen;
+			INSTANCE.drawTooltip(ctx, font, text, x, y, screen.width, screen.height);
 		}
 
 	}

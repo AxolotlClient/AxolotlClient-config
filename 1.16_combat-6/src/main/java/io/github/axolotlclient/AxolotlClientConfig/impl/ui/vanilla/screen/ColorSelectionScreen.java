@@ -126,26 +126,26 @@ public class ColorSelectionScreen extends io.github.axolotlclient.AxolotlClientC
 	public void render(MatrixStack graphics, int mouseX, int mouseY, float delta) {
 		renderBackground(graphics);
 		super.render(graphics, mouseX, mouseY, delta);
-		drawCenteredString(graphics, client.textRenderer, title, width / 2, 20, Colors.WHITE.toInt());
+		drawCenteredString(graphics, client.textRenderer, title, width / 2, 20, Colors.TEXT.toInt());
 
 		client.getTextureManager().bindTexture(texture);
 		drawTexture(graphics, (int) selectorX, (int) selectorY, 0, 0, selectorRadius * 2, selectorRadius * 2, selectorRadius * 2, selectorRadius * 2);
 
 		DrawUtil.outlineRect(graphics, (int) selectorX, (int) selectorY, selectorRadius * 2, selectorRadius * 2, Colors.BLACK.toInt());
 
-		drawTextWithShadow(graphics, client.textRenderer, new TranslatableText("option.current"), buttonsX, 40, Colors.WHITE.toInt());
+		drawTextWithShadow(graphics, client.textRenderer, new TranslatableText("option.current"), buttonsX, 40, Colors.TEXT.toInt());
 
 		DrawUtil.fillRect(graphics, buttonsX, 55, 150, 40, option.get().get().toInt());
 		DrawUtil.outlineRect(graphics, buttonsX, 55, 150, 40, Colors.BLACK.toInt());
 
 		int y = 105;
-		drawTextWithShadow(graphics, client.textRenderer, new TranslatableText("option.chroma"), buttonsX, y, Colors.WHITE.toInt());
+		drawTextWithShadow(graphics, client.textRenderer, new TranslatableText("option.chroma"), buttonsX, y, Colors.TEXT.toInt());
 		y += 45;
 		if (height > 300) {
-			drawTextWithShadow(graphics, client.textRenderer, new TranslatableText("option.speed"), buttonsX, y, Colors.WHITE.toInt());
+			drawTextWithShadow(graphics, client.textRenderer, new TranslatableText("option.speed"), buttonsX, y, Colors.TEXT.toInt());
 			y += 45;
 		}
-		drawTextWithShadow(graphics, client.textRenderer, new TranslatableText("option.alpha"), buttonsX, y, Colors.WHITE.toInt());
+		drawTextWithShadow(graphics, client.textRenderer, new TranslatableText("option.alpha"), buttonsX, y, Colors.TEXT.toInt());
 	}
 
 	@Override

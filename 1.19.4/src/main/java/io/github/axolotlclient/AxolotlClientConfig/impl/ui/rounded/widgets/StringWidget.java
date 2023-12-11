@@ -33,7 +33,7 @@ import net.minecraft.text.Text;
 public class StringWidget extends TextFieldWidget implements DrawingUtil {
 	private final StringOption option;
 
-	private final Color highlightColor = Colors.DARK_YELLOW.withAlpha(100);
+	private final Color highlightColor = Colors.ACCENT2.withAlpha(100);
 
 	public StringWidget(int x, int y, int width, int height, StringOption option) {
 		super(MinecraftClient.getInstance().textRenderer, x, y, width, height, Text.translatable(option.getName()));

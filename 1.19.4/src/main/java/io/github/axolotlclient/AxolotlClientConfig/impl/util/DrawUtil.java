@@ -37,6 +37,7 @@ import io.github.axolotlclient.AxolotlClientConfig.impl.ui.NVGFont;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawableHelper;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
@@ -169,7 +170,8 @@ public class DrawUtil implements DrawingUtil {
 		}
 		String[] text = tooltip.split("<br>");
 		if (!text[0].isEmpty() || text.length > 1) {
-			INSTANCE.drawTooltip(ctx, font, text, x, y, MinecraftClient.getInstance().currentScreen.width);
+			Screen screen = MinecraftClient.getInstance().currentScreen;
+			INSTANCE.drawTooltip(ctx, font, text, x, y, screen.width, screen.height);
 		}
 
 	}

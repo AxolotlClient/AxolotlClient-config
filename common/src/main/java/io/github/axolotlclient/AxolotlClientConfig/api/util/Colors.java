@@ -38,4 +38,11 @@ public class Colors {
 	public final Color BLACK = new Color(0, 0, 0).immutable();
 	public final Color GRAY = new Color(127, 127, 127).immutable();
 	public final Color DARK_GRAY = new Color(50, 50, 50).immutable();
+
+	public final Color BACKGROUND = DARK_GRAY;
+	public final Color FOREGROUND = GRAY;
+	public final Color ACCENT = TURQUOISE;
+	public final Color ACCENT2 = DARK_YELLOW;
+	public final Color TEXT = WHITE;
+	public final Color HIGHLIGHT = WHITE;
 }

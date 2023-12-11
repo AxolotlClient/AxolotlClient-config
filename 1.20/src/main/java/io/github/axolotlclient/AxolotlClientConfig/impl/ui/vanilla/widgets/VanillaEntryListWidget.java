@@ -34,7 +34,6 @@ import io.github.axolotlclient.AxolotlClientConfig.impl.util.DrawUtil;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.widget.ClickableWidget;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 import org.jetbrains.annotations.Nullable;
 
@@ -84,7 +83,7 @@ public class VanillaEntryListWidget extends EntryListWidget {
 			super.render(graphics, index, y, x, entryWidth, entryHeight, mouseX, mouseY, hovered, tickDelta);
 
 			DrawUtil.drawScrollingText(graphics, Text.translatable(option.getName()),  width / 2 + WIDGET_ROW_LEFT,
-				y, WIDGET_WIDTH, entryHeight, Colors.WHITE);
+				y, WIDGET_WIDTH, entryHeight, Colors.TEXT);
 		}
 	}
 }

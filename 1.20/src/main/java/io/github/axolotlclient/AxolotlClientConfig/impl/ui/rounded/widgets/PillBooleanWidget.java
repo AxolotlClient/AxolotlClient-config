@@ -76,7 +76,7 @@ public class PillBooleanWidget extends RoundedButtonWidget implements Updatable 
 
 	@Override
 	protected void drawWidget(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
-		fillRoundedRect(NVGHolder.getContext(), getX(), getY(), super.getWidth(), getHeight(), Colors.GRAY, Math.min(getHeight(), super.getWidth()) / 2f);
+		fillRoundedRect(NVGHolder.getContext(), getX(), getY(), super.getWidth(), getHeight(), Colors.FOREGROUND, Math.min(getHeight(), super.getWidth()) / 2f);
 
 		if (((Util.getEpochTimeMs() - tickTime) / 300L) % 2L == 0L) {
 			tickTime = Util.getEpochTimeMs();
@@ -103,7 +103,7 @@ public class PillBooleanWidget extends RoundedButtonWidget implements Updatable 
 
 		if (isFocused()) {
 			outlineRoundedRect(ctx, x, y + HANDLE_MARGIN, width, getHeight() - HANDLE_MARGIN * 2,
-				Colors.WHITE, Math.min(width, getHeight()) / 2f + HANDLE_MARGIN, 1);
+				Colors.HIGHLIGHT, Math.min(width, getHeight()) / 2f + HANDLE_MARGIN, 1);
 		}
 	}
 
