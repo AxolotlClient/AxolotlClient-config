@@ -251,10 +251,6 @@ public class DrawUtil extends GuiElement implements DrawingUtil {
 
 			drawOffset = 0.0F;
 			Minecraft.getInstance().getItemRenderer().zOffset = 0.0F;
-			GlStateManager.enableLighting();
-			GlStateManager.enableDepthTest();
-			Lighting.turnOn();
-			GlStateManager.enableRescaleNormal();
 			GlStateManager.color3f(1, 1, 1);
 		}
 	}
