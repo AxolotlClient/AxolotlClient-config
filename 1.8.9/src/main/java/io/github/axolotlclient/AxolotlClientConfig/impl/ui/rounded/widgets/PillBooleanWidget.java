@@ -75,7 +75,7 @@ public class PillBooleanWidget extends RoundedButtonWidget implements Updatable 
 
 	@Override
 	public void drawWidget(int mouseX, int mouseY, float delta) {
-		fillRoundedRect(NVGHolder.getContext(), getX(), getY(), super.getWidth(), getHeight(), Colors.FOREGROUND, Math.min(getHeight(), super.getWidth()) / 2f);
+		fillRoundedRect(NVGHolder.getContext(), getX(), getY(), super.getWidth(), getHeight(), Colors.foreground(), Math.min(getHeight(), super.getWidth()) / 2f);
 
 		if (((Minecraft.getTime() - tickTime) / 300L) % 2L == 0L) {
 			tickTime = Minecraft.getTime();
@@ -102,7 +102,7 @@ public class PillBooleanWidget extends RoundedButtonWidget implements Updatable 
 
 		if (isFocused()) {
 			outlineRoundedRect(ctx, x, y + HANDLE_MARGIN, width, getHeight() - HANDLE_MARGIN * 2,
-				Colors.TEXT, Math.min(width, getHeight()) / 2f + HANDLE_MARGIN, 1);
+					Colors.text(), Math.min(width, getHeight()) / 2f + HANDLE_MARGIN, 1);
 		}
 	}
 

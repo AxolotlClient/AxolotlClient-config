@@ -31,7 +31,7 @@ import net.minecraft.util.math.MathHelper;
 
 public class RoundedButtonWidget extends ButtonWidget implements DrawingUtil, Drawable, Selectable {
 
-	protected final static Color DEFAULT_BACKGROUND_COLOR = Colors.ACCENT;
+	protected final static Color DEFAULT_BACKGROUND_COLOR = Colors.accent();
 	protected final Color activeColor = new Color(16777215);
 	protected final Color inactiveColor = new Color(10526880);
 	protected Color backgroundColor = DEFAULT_BACKGROUND_COLOR;
@@ -73,7 +73,7 @@ public class RoundedButtonWidget extends ButtonWidget implements DrawingUtil, Dr
 		fillRoundedRect(NVGHolder.getContext(), getX(), getY(), getWidth(), getHeight(), getWidgetColor(), Math.min(getHeight(), getHeight()) / 2f);
 
 		if (isFocused()) {
-			outlineRoundedRect(NVGHolder.getContext(), getX(), getY(), getWidth(), getHeight(), Colors.HIGHLIGHT, Math.min(getHeight(), getHeight()) / 2f, 1);
+			outlineRoundedRect(NVGHolder.getContext(), getX(), getY(), getWidth(), getHeight(), Colors.highlight(), Math.min(getHeight(), getHeight()) / 2f, 1);
 		}
 
 		Color i = this.active ? activeColor : inactiveColor;
@@ -91,7 +91,7 @@ public class RoundedButtonWidget extends ButtonWidget implements DrawingUtil, Dr
 	}
 
 	protected Color getWidgetColor() {
-		return hovered && this.active ? Colors.ACCENT2 : backgroundColor;
+		return hovered && this.active ? Colors.accent2() : backgroundColor;
 	}
 
 	public boolean isHovered() {

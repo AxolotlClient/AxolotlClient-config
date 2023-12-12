@@ -51,7 +51,7 @@ public class ConfigUIImpl implements ConfigUI {
 	private final Collection<Runnable> runWhenLoaded = new ArrayList<>();
 	@Getter
 	private final String uiJsonPath = "axolotlclientconfig:config.ui.json";
-	Map<String, Style> styles = new HashMap<>();
+	private final Map<String, Style> styles = new HashMap<>();
 	private String currentStyle = "vanilla";
 	private boolean loaded;
 
@@ -65,24 +65,26 @@ public class ConfigUIImpl implements ConfigUI {
 	public void read(InputStream stream) {
 		JsonObject ui = gson.fromJson(new InputStreamReader(stream), JsonObject.class);
 
-		for (Map.Entry<String, JsonElement> entry : ui.get("styles").getAsJsonObject().entrySet()) {
-			JsonObject widgetsObject = entry.getValue().getAsJsonObject().get("widgets").getAsJsonObject();
-			String screen = getOrNull(entry.getValue(), "screen");
-			Map<String, String> widgets = widgetsObject.entrySet().stream()
-				.filter(en -> !en.getValue().getAsString().trim().isEmpty())
-				.collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue().getAsString()));
-			String parentStyleName = getOrNull(entry.getValue(), "extends");
-			if (styles.containsKey(entry.getKey())) {
-				Style s = styles.get(entry.getKey());
-				s.getWidgets().putAll(widgets);
-				if (screen != null && !screen.trim().isEmpty()) {
-					styles.put(entry.getKey(), new StyleImpl(entry.getKey(), s.getWidgets(), screen,
-						parentStyleName != null ? parentStyleName : s.getParentStyleName().orElse(null)));
+		if (ui.has("styles")) {
+			for (Map.Entry<String, JsonElement> entry : ui.get("styles").getAsJsonObject().entrySet()) {
+				JsonObject widgetsObject = entry.getValue().getAsJsonObject().get("widgets").getAsJsonObject();
+				String screen = getOrNull(entry.getValue(), "screen");
+				Map<String, String> widgets = widgetsObject.entrySet().stream()
+					.filter(en -> !en.getValue().getAsString().trim().isEmpty())
+					.collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue().getAsString()));
+				String parentStyleName = getOrNull(entry.getValue(), "extends");
+				if (styles.containsKey(entry.getKey())) {
+					Style s = styles.get(entry.getKey());
+					s.getWidgets().putAll(widgets);
+					if (screen != null && !screen.trim().isEmpty()) {
+						styles.put(entry.getKey(), new StyleImpl(entry.getKey(), s.getWidgets(), screen,
+							parentStyleName != null ? parentStyleName : s.getParentStyleName().orElse(null)));
+					}
+					continue;
 				}
-				continue;
-			}
 
-			styles.put(entry.getKey(), new StyleImpl(entry.getKey(), widgets, screen, parentStyleName));
+				styles.put(entry.getKey(), new StyleImpl(entry.getKey(), widgets, screen, parentStyleName));
+			}
 		}
 	}
 

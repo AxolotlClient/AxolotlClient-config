@@ -126,26 +126,26 @@ public class ColorSelectionScreen extends Screen {
 	public void render(MatrixStack graphics, int mouseX, int mouseY, float delta) {
 		renderBackground(graphics);
 		super.render(graphics, mouseX, mouseY, delta);
-		drawCenteredText(graphics, client.textRenderer, title, width / 2, 20, Colors.TEXT.toInt());
+		drawCenteredText(graphics, client.textRenderer, title, width / 2, 20, Colors.text().toInt());
 
 		RenderSystem.setShaderTexture(0, texture);
 		drawTexture(graphics, (int) selectorX, (int) selectorY, 0, 0, selectorRadius * 2, selectorRadius * 2, selectorRadius * 2, selectorRadius * 2);
 
 		DrawUtil.outlineRect(graphics, (int) selectorX, (int) selectorY, selectorRadius * 2, selectorRadius * 2, Colors.BLACK.toInt());
 
-		drawTextWithShadow(graphics, client.textRenderer, Text.translatable("option.current"), buttonsX, 40, Colors.TEXT.toInt());
+		drawTextWithShadow(graphics, client.textRenderer, Text.translatable("option.current"), buttonsX, 40, Colors.text().toInt());
 
 		DrawUtil.fillRect(graphics, buttonsX, 55, 150, 40, option.get().get().toInt());
 		DrawUtil.outlineRect(graphics, buttonsX, 55, 150, 40, Colors.BLACK.toInt());
 
 		int y = 105;
-		drawTextWithShadow(graphics, client.textRenderer, Text.translatable("option.chroma"), buttonsX, y, Colors.TEXT.toInt());
+		drawTextWithShadow(graphics, client.textRenderer, Text.translatable("option.chroma"), buttonsX, y, Colors.text().toInt());
 		y += 45;
 		if (height > 300) {
-			drawTextWithShadow(graphics, client.textRenderer, Text.translatable("option.speed"), buttonsX, y, Colors.TEXT.toInt());
+			drawTextWithShadow(graphics, client.textRenderer, Text.translatable("option.speed"), buttonsX, y, Colors.text().toInt());
 			y += 45;
 		}
-		drawTextWithShadow(graphics, client.textRenderer, Text.translatable("option.alpha"), buttonsX, y, Colors.TEXT.toInt());
+		drawTextWithShadow(graphics, client.textRenderer, Text.translatable("option.alpha"), buttonsX, y, Colors.text().toInt());
 	}
 
 	@Override

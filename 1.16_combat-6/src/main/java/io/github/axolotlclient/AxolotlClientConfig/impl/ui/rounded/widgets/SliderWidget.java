@@ -61,22 +61,22 @@ public class SliderWidget<O extends NumberOption<N>, N extends Number> extends n
 			updateMessage();
 		}
 
-		fillRoundedRect(ctx, getX(), getY() + getHeight() / 2f - 1, getWidth(), 2, Colors.FOREGROUND, 1);
+		fillRoundedRect(ctx, getX(), getY() + getHeight() / 2f - 1, getWidth(), 2, Colors.foreground(), 1);
 
 		NanoVG.nvgBeginPath(ctx);
 		NanoVG.nvgCircle(ctx, (float) (getX() + (this.value * (getWidth() - 4))), getY() + getHeight() / 2f, 4);
-		NanoVG.nvgFillColor(ctx, hovered ? Colors.ACCENT2.toNVG() : Colors.ACCENT.toNVG());
+		NanoVG.nvgFillColor(ctx, hovered ? Colors.accent2().toNVG() : Colors.accent().toNVG());
 		NanoVG.nvgFill(ctx);
 
 		if (isFocused()) {
 			NanoVG.nvgBeginPath(ctx);
 			NanoVG.nvgCircle(ctx, (float) (getX() + (this.value * (getWidth() - 4))), getY() + getHeight() / 2f, 4);
-			NanoVG.nvgStrokeColor(ctx, Colors.HIGHLIGHT.toNVG());
+			NanoVG.nvgStrokeColor(ctx, Colors.highlight().toNVG());
 			NanoVG.nvgStroke(ctx);
 		}
 
 		drawCenteredString(ctx, NVGHolder.getFont(), this.getMessage().getString(), (float) (getX() + (this.value * (getWidth() - 4))),
-			this.getY() + (this.getHeight() / 2f - 8) / 2f - 4, Colors.TEXT);
+			this.getY() + (this.getHeight() / 2f - 8) / 2f - 4, Colors.text());
 	}
 
 	public void updateMessage() {

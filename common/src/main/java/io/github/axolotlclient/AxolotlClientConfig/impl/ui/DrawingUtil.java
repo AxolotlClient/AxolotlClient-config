@@ -161,11 +161,11 @@ public interface DrawingUtil {
 			y = (int) (screenHeight-height);
 		}
 
-		fillRoundedRect(ctx, x + 2, y + 2, maxWidth + 5, height + 6, Colors.FOREGROUND, 5);
+		fillRoundedRect(ctx, x + 2, y + 2, maxWidth + 5, height + 6, Colors.foreground(), 5);
 
 		float cY = y + 4;
 		for (String s : tooltipText) {
-			drawString(ctx, font, s, x + 4, cY, Colors.TEXT);
+			drawString(ctx, font, s, x + 4, cY, Colors.text());
 			cY += lineHeight;
 		}
 	}

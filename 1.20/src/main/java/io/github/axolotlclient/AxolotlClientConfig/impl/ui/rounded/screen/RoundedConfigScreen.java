@@ -54,8 +54,8 @@ public class RoundedConfigScreen extends Screen implements ConfigScreen, Drawing
 	@Override
 	public void render(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
 		NVGMC.wrap(ctx -> {
-			fillRoundedRect(ctx, 15, 15, width - 30, height - 30, Colors.BACKGROUND, 12);
-			drawCenteredString(ctx, NVGHolder.getFont(), getTitle().getString(), width / 2f, 25, Colors.TEXT);
+			fillRoundedRect(ctx, 15, 15, width - 30, height - 30, Colors.background(), 12);
+			drawCenteredString(ctx, NVGHolder.getFont(), getTitle().getString(), width / 2f, 25, Colors.text());
 			NVGHolder.setContext(ctx);
 			super.render(graphics, mouseX, mouseY, delta);
 		});

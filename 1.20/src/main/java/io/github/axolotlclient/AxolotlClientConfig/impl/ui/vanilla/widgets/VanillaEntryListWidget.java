@@ -83,7 +83,7 @@ public class VanillaEntryListWidget extends EntryListWidget {
 			super.render(graphics, index, y, x, entryWidth, entryHeight, mouseX, mouseY, hovered, tickDelta);
 
 			DrawUtil.drawScrollingText(graphics, Text.translatable(option.getName()),  width / 2 + WIDGET_ROW_LEFT,
-				y, WIDGET_WIDTH, entryHeight, Colors.TEXT);
+				y, WIDGET_WIDTH, entryHeight, Colors.text());
 		}
 	}
 }

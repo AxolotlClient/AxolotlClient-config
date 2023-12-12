@@ -84,7 +84,7 @@ public class VanillaButtonListWidget extends ButtonListWidget {
 			super.render(index, y, x, entryWidth, entryHeight, mouseX, mouseY, hovered, tickDelta);
 
 			DrawUtil.drawScrollingText(I18n.translate(option.getName()), width / 2 + WIDGET_ROW_LEFT,
-				y, WIDGET_WIDTH, entryHeight, Colors.TEXT);
+				y, WIDGET_WIDTH, entryHeight, Colors.text());
 		}
 	}
 }

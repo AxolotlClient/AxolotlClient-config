@@ -39,10 +39,28 @@ public class Colors {
 	public final Color GRAY = new Color(127, 127, 127).immutable();
 	public final Color DARK_GRAY = new Color(50, 50, 50).immutable();
 
-	public final Color BACKGROUND = DARK_GRAY;
-	public final Color FOREGROUND = GRAY;
-	public final Color ACCENT = TURQUOISE;
-	public final Color ACCENT2 = DARK_YELLOW;
-	public final Color TEXT = WHITE;
-	public final Color HIGHLIGHT = WHITE;
+
+	public static Color background() {
+		return DARK_GRAY;
+	}
+
+	public static Color foreground() {
+		return GRAY;
+	}
+
+	public static Color accent() {
+		return TURQUOISE;
+	}
+
+	public static Color accent2() {
+		return DARK_YELLOW;
+	}
+
+	public static Color text() {
+		return WHITE;
+	}
+
+	public static Color highlight() {
+		return WHITE;
+	}
 }

@@ -264,8 +264,8 @@ public abstract class EntryListWidget<E extends EntryListWidget.Entry<E>> extend
 				y = this.top;
 			}
 
-			fillRoundedRect(NVGHolder.getContext(), j, top, 6, bottom - top, Colors.FOREGROUND, 6 / 2f);
-			fillRoundedRect(NVGHolder.getContext(), j, y, 6, height, Colors.ACCENT, 6 / 2f);
+			fillRoundedRect(NVGHolder.getContext(), j, top, 6, bottom - top, Colors.foreground(), 6 / 2f);
+			fillRoundedRect(NVGHolder.getContext(), j, y, 6, height, Colors.accent(), 6 / 2f);
 		}
 
 		this.renderDecorations(matrices, mouseX, mouseY);

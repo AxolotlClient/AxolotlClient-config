@@ -132,7 +132,7 @@ public class ColorSelectionScreen extends Screen implements DrawingUtil {
 			NVGHolder.setContext(ctx);
 			super.render(graphics, mouseX, mouseY, delta);
 
-			drawCenteredString(ctx, NVGHolder.getFont(), title.getString(), width / 2f, 20, Colors.TEXT);
+			drawCenteredString(ctx, NVGHolder.getFont(), title.getString(), width / 2f, 20, Colors.text());
 
 			if (paint == null || paint.address() == 0) {
 				int image = DrawUtil.nvgCreateImage(ctx, new Identifier("axolotlclientconfig", "textures/gui/colorwheel.png"));
@@ -150,26 +150,26 @@ public class ColorSelectionScreen extends Screen implements DrawingUtil {
 			nvgStrokeWidth(ctx, 1);
 			nvgStroke(ctx);
 
-			drawString(ctx, NVGHolder.getFont(), I18n.translate("option.current"), buttonsX, 40, Colors.TEXT);
+			drawString(ctx, NVGHolder.getFont(), I18n.translate("option.current"), buttonsX, 40, Colors.text());
 
 			fillRoundedRect(ctx, buttonsX, 55, 150, 40, option.get().get(), 10);
 			outlineRoundedRect(ctx, buttonsX, 55, 150, 40, Colors.BLACK, 10, 1);
 
 			int y = 105;
-			drawString(ctx, NVGHolder.getFont(), I18n.translate("option.chroma"), buttonsX, y, Colors.TEXT);
+			drawString(ctx, NVGHolder.getFont(), I18n.translate("option.chroma"), buttonsX, y, Colors.text());
 			y += 45;
 			if (height > 300) {
-				drawString(ctx, NVGHolder.getFont(), I18n.translate("option.speed"), buttonsX, y, Colors.TEXT);
+				drawString(ctx, NVGHolder.getFont(), I18n.translate("option.speed"), buttonsX, y, Colors.text());
 				y += 45;
 			}
-			drawString(ctx, NVGHolder.getFont(), I18n.translate("option.alpha"), buttonsX, y, Colors.TEXT);
+			drawString(ctx, NVGHolder.getFont(), I18n.translate("option.alpha"), buttonsX, y, Colors.text());
 		});
 	}
 
 	@Override
 	public void renderBackground(GuiGraphics graphics, int i, int j, float f) {
 		super.renderBackground(graphics, i, j, f);
-		fillRoundedRect(NVGHolder.getContext(), 15, 15, width - 30, height - 30, Colors.BACKGROUND, 12);
+		fillRoundedRect(NVGHolder.getContext(), 15, 15, width - 30, height - 30, Colors.background(), 12);
 	}
 
 	@Override

@@ -124,25 +124,25 @@ public class ColorSelectionScreen extends Screen {
 	@Override
 	public void render(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
 		super.render(graphics, mouseX, mouseY, delta);
-		graphics.drawCenteredShadowedText(client.textRenderer, title, width / 2, 20, Colors.TEXT.toInt());
+		graphics.drawCenteredShadowedText(client.textRenderer, title, width / 2, 20, Colors.text().toInt());
 
 		graphics.drawTexture(texture, (int) selectorX, (int) selectorY, 0, 0, selectorRadius * 2, selectorRadius * 2, selectorRadius * 2, selectorRadius * 2);
 
 		DrawUtil.outlineRect(graphics, (int) selectorX, (int) selectorY, selectorRadius * 2, selectorRadius * 2, Colors.BLACK.toInt());
 
-		graphics.drawShadowedText(client.textRenderer, Text.translatable("option.current"), buttonsX, 40, Colors.TEXT.toInt());
+		graphics.drawShadowedText(client.textRenderer, Text.translatable("option.current"), buttonsX, 40, Colors.text().toInt());
 
 		DrawUtil.fillRect(graphics, buttonsX, 55, 150, 40, option.get().get().toInt());
 		DrawUtil.outlineRect(graphics, buttonsX, 55, 150, 40, Colors.BLACK.toInt());
 
 		int y = 105;
-		graphics.drawShadowedText(client.textRenderer, Text.translatable("option.chroma"), buttonsX, y, Colors.TEXT.toInt());
+		graphics.drawShadowedText(client.textRenderer, Text.translatable("option.chroma"), buttonsX, y, Colors.text().toInt());
 		y += 45;
 		if (height > 300) {
-			graphics.drawShadowedText(client.textRenderer, Text.translatable("option.speed"), buttonsX, y, Colors.TEXT.toInt());
+			graphics.drawShadowedText(client.textRenderer, Text.translatable("option.speed"), buttonsX, y, Colors.text().toInt());
 			y += 45;
 		}
-		graphics.drawShadowedText(client.textRenderer, Text.translatable("option.alpha"), buttonsX, y, Colors.TEXT.toInt());
+		graphics.drawShadowedText(client.textRenderer, Text.translatable("option.alpha"), buttonsX, y, Colors.text().toInt());
 	}
 
 	@Override

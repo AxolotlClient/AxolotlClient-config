@@ -54,7 +54,7 @@ public class TextFieldWidget extends AbstractButtonWidget implements DrawingUtil
 	protected static final int BORDER_COLOR = -6250336;
 	protected static final int BACKGROUND_COLOR = -16777216;
 	private static final int INSERT_CURSOR_WIDTH = 1;
-	private final Color highlightColor = Colors.ACCENT2.withAlpha(100);
+	private final Color highlightColor = Colors.accent2().withAlpha(100);
 	protected String text = "";
 	protected boolean drawsBackground = true;
 	protected boolean editable = true;
@@ -365,8 +365,8 @@ public class TextFieldWidget extends AbstractButtonWidget implements DrawingUtil
 			NVGFont font = NVGHolder.getFont();
 			long ctx = NVGHolder.getContext();
 
-			fillRoundedRect(ctx, getX(), getY() + getHeight(), getWidth(), 1, isFocused() ? Colors.ACCENT2 : Colors.ACCENT, 1);
-			Color i = Colors.TEXT;// new Color(this.editable ? this.editableColor : this.uneditableColor);
+			fillRoundedRect(ctx, getX(), getY() + getHeight(), getWidth(), 1, isFocused() ? Colors.accent2() : Colors.accent(), 1);
+			Color i = Colors.text();// new Color(this.editable ? this.editableColor : this.uneditableColor);
 			int j = this.selectionStart - this.firstCharacterIndex;
 			int k = this.selectionEnd - this.firstCharacterIndex;
 			String string = font.trimToWidth(this.text.substring(this.firstCharacterIndex), this.getInnerWidth());
