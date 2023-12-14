@@ -22,6 +22,7 @@
 
 package io.github.axolotlclient.AxolotlClientConfig.impl.ui.rounded.screen;
 
+import io.github.axolotlclient.AxolotlClientConfig.api.AxolotlClientConfig;
 import io.github.axolotlclient.AxolotlClientConfig.api.manager.ConfigManager;
 import io.github.axolotlclient.AxolotlClientConfig.api.options.OptionCategory;
 import io.github.axolotlclient.AxolotlClientConfig.api.ui.screen.ConfigScreen;
@@ -69,6 +70,6 @@ public class RoundedConfigScreen extends io.github.axolotlclient.AxolotlClientCo
 
 	@Override
 	public void removed() {
-		configManager.save();
+		AxolotlClientConfig.getInstance().save(category);
 	}
 }

@@ -155,10 +155,10 @@ public interface DrawingUtil {
 			maxWidth = Math.max(font.getWidth(s), maxWidth);
 		}
 		if (maxWidth > screenWidth - x) {
-			x = (int) (screenWidth - maxWidth);
+			x = (int) (screenWidth - maxWidth-4);
 		}
 		if (height > screenHeight - y) {
-			y = (int) (screenHeight-height);
+			y = (int) (screenHeight-height-5);
 		}
 
 		fillRoundedRect(ctx, x + 2, y + 2, maxWidth + 5, height + 6, Colors.foreground(), 5);

@@ -39,9 +39,9 @@ import org.jetbrains.annotations.Nullable;
 public class VanillaButtonListWidget extends ButtonListWidget {
 	public VanillaButtonListWidget(ConfigManager manager, OptionCategory category, int screenWidth, int screenHeight, int top, int bottom, int entryHeight) {
 		super(manager, category, screenWidth, screenHeight, top, bottom, entryHeight);
-		setRenderBackground(Minecraft.getInstance().world == null);
-		setRenderHeader(Minecraft.getInstance().world == null, headerHeight);
-		setRenderHorizontalShadows(Minecraft.getInstance().world == null);
+		setRenderBackground(false);
+		setRenderHeader(false, headerHeight);
+		setRenderHorizontalShadows(false);
 	}
 
 	@Override

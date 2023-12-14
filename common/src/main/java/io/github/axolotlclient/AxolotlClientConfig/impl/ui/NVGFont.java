@@ -30,12 +30,8 @@ import java.nio.Buffer;
 import java.nio.ByteBuffer;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Supplier;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import lombok.Getter;
 import org.lwjgl.Version;
@@ -162,7 +158,9 @@ public class NVGFont implements AutoCloseable {
 			builder.append(text.charAt(i));
 			i += (backwards ? -1 : 1);
 		}
-		builder.delete(builder.length() - 1 - Character.charCount(builder.codePointAt(builder.length() - 1)), builder.length() - 1);
+		try {
+			builder.delete(builder.length() - 1 - Character.charCount(builder.codePointAt(builder.length() - 1)), builder.length() - 1);
+		} catch (Exception ignored){}
 		if (backwards) {
 			builder.reverse();
 		}

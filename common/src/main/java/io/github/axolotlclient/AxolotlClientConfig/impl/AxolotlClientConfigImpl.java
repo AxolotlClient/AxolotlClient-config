@@ -28,6 +28,7 @@ import java.util.HashMap;
 
 import io.github.axolotlclient.AxolotlClientConfig.api.AxolotlClientConfig;
 import io.github.axolotlclient.AxolotlClientConfig.api.manager.ConfigManager;
+import io.github.axolotlclient.AxolotlClientConfig.api.options.OptionCategory;
 import lombok.Getter;
 
 public class AxolotlClientConfigImpl implements AxolotlClientConfig {
@@ -51,6 +52,34 @@ public class AxolotlClientConfigImpl implements AxolotlClientConfig {
 	@Override
 	public ConfigManager getConfigManager(String name) {
 		return registeredManagers.get(name);
+	}
+
+	@Override
+	public void saveAll() {
+		registeredManagers.values().forEach(ConfigManager::save);
+	}
+
+	@Override
+	public void save(OptionCategory category) {
+		for (ConfigManager manager : registeredManagers.values()){
+			if (findCategory(manager.getRoot(), category)){
+				manager.save();
+			}
+		}
+	}
+
+	private boolean findCategory(OptionCategory root, OptionCategory category){
+		if (root.equals(category)){
+			return true;
+		}
+		boolean found = false;
+		for (OptionCategory sub : root.getSubCategories()){
+			found = findCategory(sub, category);
+			if (found) {
+				break;
+			}
+		}
+		return found;
 	}
 
 	public void registerTickListener(Runnable run) {

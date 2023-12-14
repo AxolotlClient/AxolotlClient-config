@@ -31,7 +31,6 @@ import io.github.axolotlclient.AxolotlClientConfig.api.options.OptionCategory;
 import io.github.axolotlclient.AxolotlClientConfig.api.util.Colors;
 import io.github.axolotlclient.AxolotlClientConfig.impl.ui.vanilla.EntryListWidget;
 import io.github.axolotlclient.AxolotlClientConfig.impl.util.DrawUtil;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.text.Text;
@@ -40,7 +39,8 @@ import org.jetbrains.annotations.Nullable;
 public class VanillaEntryListWidget extends EntryListWidget {
 	public VanillaEntryListWidget(ConfigManager manager, OptionCategory category, int screenWidth, int screenHeight, int top, int bottom, int entryHeight) {
 		super(manager, category, screenWidth, screenHeight, top, bottom, entryHeight);
-		setRenderBackground(MinecraftClient.getInstance().world == null);
+		setRenderBackground(false);
+		setRenderHeader(false, headerHeight);
 	}
 
 	protected void addOptions(ConfigManager manager, Collection<Option<?>> options) {
@@ -82,7 +82,7 @@ public class VanillaEntryListWidget extends EntryListWidget {
 		public void render(GuiGraphics graphics, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float tickDelta) {
 			super.render(graphics, index, y, x, entryWidth, entryHeight, mouseX, mouseY, hovered, tickDelta);
 
-			DrawUtil.drawScrollingText(graphics, Text.translatable(option.getName()),  width / 2 + WIDGET_ROW_LEFT,
+			DrawUtil.drawScrollingText(graphics, Text.translatable(option.getName()), width / 2 + WIDGET_ROW_LEFT,
 				y, WIDGET_WIDTH, entryHeight, Colors.text());
 		}
 	}

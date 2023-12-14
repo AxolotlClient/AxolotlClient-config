@@ -31,7 +31,6 @@ import io.github.axolotlclient.AxolotlClientConfig.api.options.OptionCategory;
 import io.github.axolotlclient.AxolotlClientConfig.api.util.Colors;
 import io.github.axolotlclient.AxolotlClientConfig.impl.ui.vanilla.ButtonListWidget;
 import io.github.axolotlclient.AxolotlClientConfig.impl.util.DrawUtil;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.widget.AbstractButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.TranslatableText;
@@ -40,9 +39,9 @@ import org.jetbrains.annotations.Nullable;
 public class VanillaButtonListWidget extends ButtonListWidget {
 	public VanillaButtonListWidget(ConfigManager manager, OptionCategory category, int screenWidth, int screenHeight, int top, int bottom, int entryHeight) {
 		super(manager, category, screenWidth, screenHeight, top, bottom, entryHeight);
-		setRenderBackground(MinecraftClient.getInstance().world == null);
-		setRenderHeader(MinecraftClient.getInstance().world == null, headerHeight);
-		setRenderHorizontalShadows(MinecraftClient.getInstance().world == null);
+		setRenderBackground(false);
+		setRenderHeader(false, headerHeight);
+		setRenderHorizontalShadows(false);
 	}
 
 	@Override

@@ -22,6 +22,7 @@
 
 package io.github.axolotlclient.AxolotlClientConfig.impl.ui.vanilla.screen;
 
+import io.github.axolotlclient.AxolotlClientConfig.api.AxolotlClientConfig;
 import io.github.axolotlclient.AxolotlClientConfig.api.manager.ConfigManager;
 import io.github.axolotlclient.AxolotlClientConfig.api.options.OptionCategory;
 import io.github.axolotlclient.AxolotlClientConfig.api.ui.screen.ConfigScreen;
@@ -48,9 +49,9 @@ public class VanillaConfigScreen extends Screen implements ConfigScreen {
 
 	@Override
 	protected void init() {
-		addDrawableSelectableElement(new VanillaEntryListWidget(configManager, category, width, height, 45, height - 55, 25));
 		addDrawableSelectableElement(ButtonWidget.builder(CommonTexts.BACK, w -> closeScreen())
 			.position(width / 2 - 75, height - 45).build());
+		addDrawableSelectableElement(new VanillaEntryListWidget(configManager, category, width, height, 45, height - 55, 25));
 	}
 
 	@Override
@@ -63,6 +64,10 @@ public class VanillaConfigScreen extends Screen implements ConfigScreen {
 	@Override
 	public void closeScreen() {
 		client.setScreen(parent);
-		configManager.save();
+	}
+
+	@Override
+	public void removed() {
+		AxolotlClientConfig.getInstance().save(category);
 	}
 }

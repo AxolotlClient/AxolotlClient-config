@@ -22,6 +22,7 @@
 
 package io.github.axolotlclient.AxolotlClientConfig.impl.ui.vanilla.screen;
 
+import io.github.axolotlclient.AxolotlClientConfig.api.AxolotlClientConfig;
 import io.github.axolotlclient.AxolotlClientConfig.api.manager.ConfigManager;
 import io.github.axolotlclient.AxolotlClientConfig.api.options.OptionCategory;
 import io.github.axolotlclient.AxolotlClientConfig.api.ui.screen.ConfigScreen;
@@ -49,9 +50,9 @@ public class VanillaConfigScreen extends io.github.axolotlclient.AxolotlClientCo
 	@Override
 	public void init() {
 		super.init();
-		addDrawableChild(new VanillaButtonListWidget(configManager, category, width, height, 45, height - 55, 25));
 		addDrawableChild(new VanillaButtonWidget(width / 2 - 75, height - 45, 150, 20,
 			ScreenTexts.BACK, w -> MinecraftClient.getInstance().openScreen(parent)));
+		addDrawableChild(new VanillaButtonListWidget(configManager, category, width, height, 45, height - 55, 25));
 	}
 
 	@Override
@@ -64,6 +65,6 @@ public class VanillaConfigScreen extends io.github.axolotlclient.AxolotlClientCo
 
 	@Override
 	public void removed() {
-		configManager.save();
+		AxolotlClientConfig.getInstance().save(category);
 	}
 }
