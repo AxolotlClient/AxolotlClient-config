@@ -50,6 +50,16 @@ public class AxolotlClientConfigImpl implements AxolotlClientConfig {
 	}
 
 	@Override
+	public ConfigManager getConfigManager(OptionCategory category) {
+		for (ConfigManager manager : registeredManagers.values()){
+			if (findCategory(manager.getRoot(), category)){
+				return manager;
+			}
+		}
+		throw new IllegalStateException("Category "+category.getName()+" is not in any registered ConfigManager!");
+	}
+
+	@Override
 	public ConfigManager getConfigManager(String name) {
 		return registeredManagers.get(name);
 	}
@@ -61,11 +71,7 @@ public class AxolotlClientConfigImpl implements AxolotlClientConfig {
 
 	@Override
 	public void save(OptionCategory category) {
-		for (ConfigManager manager : registeredManagers.values()){
-			if (findCategory(manager.getRoot(), category)){
-				manager.save();
-			}
-		}
+		getConfigManager(category).save();
 	}
 
 	private boolean findCategory(OptionCategory root, OptionCategory category){

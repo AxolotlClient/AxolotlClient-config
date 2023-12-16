@@ -36,7 +36,6 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import io.github.axolotlclient.AxolotlClientConfig.api.manager.ConfigManager;
 import io.github.axolotlclient.AxolotlClientConfig.api.options.OptionCategory;
 import io.github.axolotlclient.AxolotlClientConfig.api.options.WidgetIdentifieable;
 import io.github.axolotlclient.AxolotlClientConfig.api.ui.ConfigUI;
@@ -129,27 +128,27 @@ public class ConfigUIImpl implements ConfigUI {
 		return styles.keySet();
 	}
 
-	public <T> T getScreen(ClassLoader loader, ConfigManager manager, OptionCategory category, T parent) {
-		return getScreen(loader, getCurrentStyle(), manager, category, parent);
+	public <T> T getScreen(ClassLoader loader, OptionCategory category, T parent) {
+		return getScreen(loader, getCurrentStyle(), category, parent);
 	}
 
 	@SuppressWarnings("unchecked")
-	private   <T> T getScreen(ClassLoader loader, Style style, ConfigManager manager, OptionCategory category, T parent) {
+	private   <T> T getScreen(ClassLoader loader, Style style, OptionCategory category, T parent) {
 		String name = style.getScreen();
 		if (name == null || name.trim().isEmpty()) {
 			if (style.equals(getDefaultStyle())) {
 				throw new IllegalStateException("Something is seriously wrong! The default style's screen is empty! default style: " + getDefaultStyle());
 			}
 			if (style.getParentStyleName().isPresent()) {
-				return getScreen(loader, getStyle(style.getParentStyleName().get()), manager, category, parent);
+				return getScreen(loader, getStyle(style.getParentStyleName().get()), category, parent);
 			} else {
-				return getScreen(loader, getDefaultStyle(), manager, category, parent);
+				return getScreen(loader, getDefaultStyle(), category, parent);
 			}
 		}
 		try {
 			Class<?> c = Class.forName(name, true, loader);
 			Constructor<?> screenConstructor = null;
-			Object[] params = {parent, manager, category};
+			Object[] params = {parent, category};
 			for (Constructor<?> con : c.getDeclaredConstructors()) {
 				if (con.getParameterTypes().length != params.length) {
 					continue;
@@ -170,7 +169,7 @@ public class ConfigUIImpl implements ConfigUI {
 				throw new IllegalStateException("Constructor couldn't be found!");
 			}
 			return (T) screenConstructor
-				.newInstance(parent, manager, category);
+				.newInstance(parent, category);
 		} catch (Throwable e) {
 			throw new IllegalStateException("Error while getting screen for " + style.getName(), e);
 		}

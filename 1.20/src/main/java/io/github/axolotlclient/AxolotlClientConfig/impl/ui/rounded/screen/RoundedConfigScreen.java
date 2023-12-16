@@ -45,10 +45,10 @@ public class RoundedConfigScreen extends Screen implements ConfigScreen, Drawing
 	private final ConfigManager configManager;
 	private final OptionCategory category;
 
-	public RoundedConfigScreen(Screen parent, ConfigManager manager, OptionCategory category) {
+	public RoundedConfigScreen(Screen parent, OptionCategory category) {
 		super(Text.translatable(category.getName()));
 		this.parent = parent;
-		this.configManager = manager;
+		this.configManager = AxolotlClientConfig.getInstance().getConfigManager(category);
 		this.category = category;
 	}
 
@@ -76,6 +76,6 @@ public class RoundedConfigScreen extends Screen implements ConfigScreen, Drawing
 
 	@Override
 	public void removed() {
-		AxolotlClientConfig.getInstance().save(category);
+		configManager.save();
 	}
 }

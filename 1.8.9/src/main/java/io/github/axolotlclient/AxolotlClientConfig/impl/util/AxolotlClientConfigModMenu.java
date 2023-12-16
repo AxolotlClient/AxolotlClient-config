@@ -32,24 +32,12 @@ import io.github.axolotlclient.AxolotlClientConfig.impl.AxolotlClientConfigImpl;
 
 public class AxolotlClientConfigModMenu implements ModMenuApi {
 
-	/**
-	 * Used to provide config screen factories for other mods. This takes second
-	 * priority to a mod's own config screen factory provider. For example, if
-	 * mod `xyz` supplies a config screen factory, mod `abc` providing a config
-	 * screen to `xyz` will be pointless, as the one provided by `xyz` will be
-	 * used.
-	 * <p>
-	 * This method is NOT meant to be used to add a config screen factory to
-	 * your own mod.
-	 *
-	 * @return a map of mod ids to screen factories.
-	 */
 	@Override
 	public Map<String, ConfigScreenFactory<?>> getProvidedConfigScreenFactories() {
 		Map<String, ConfigScreenFactory<?>> map = new HashMap<>();
 		AxolotlClientConfigImpl.getInstance().getRegisteredManagers().forEach((s, manager) ->
 			map.put(s, parent -> ConfigUI.getInstance().getScreen(this.getClass().getClassLoader(),
-				manager, manager.getRoot(), parent)));
+				manager.getRoot(), parent)));
 		return map;
 	}
 }

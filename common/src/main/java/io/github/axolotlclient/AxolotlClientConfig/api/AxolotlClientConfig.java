@@ -34,9 +34,7 @@ public interface AxolotlClientConfig {
 
 	void register(ConfigManager manager);
 
-	default ConfigManager getConfigManager(OptionCategory root) {
-		return getConfigManager(root.getName());
-	}
+	ConfigManager getConfigManager(OptionCategory category);
 
 	ConfigManager getConfigManager(String name);
 

@@ -40,10 +40,10 @@ public class VanillaConfigScreen extends Screen implements ConfigScreen {
 	private final ConfigManager configManager;
 	private final OptionCategory category;
 
-	public VanillaConfigScreen(Screen parent, ConfigManager manager, OptionCategory category) {
+	public VanillaConfigScreen(Screen parent, OptionCategory category) {
 		super(Text.translatable(category.getName()));
 		this.parent = parent;
-		this.configManager = manager;
+		this.configManager = AxolotlClientConfig.getInstance().getConfigManager(category);
 		this.category = category;
 	}
 
@@ -68,6 +68,6 @@ public class VanillaConfigScreen extends Screen implements ConfigScreen {
 
 	@Override
 	public void removed() {
-		AxolotlClientConfig.getInstance().save(category);
+		configManager.save();
 	}
 }

@@ -40,10 +40,10 @@ public class VanillaConfigScreen extends io.github.axolotlclient.AxolotlClientCo
 	private final ConfigManager configManager;
 	private final OptionCategory category;
 
-	public VanillaConfigScreen(Screen parent, ConfigManager manager, OptionCategory category) {
+	public VanillaConfigScreen(Screen parent, OptionCategory category) {
 		super(category.getName());
 		this.parent = parent;
-		this.configManager = manager;
+		this.configManager = AxolotlClientConfig.getInstance().getConfigManager(category);
 		this.category = category;
 	}
 
@@ -65,6 +65,6 @@ public class VanillaConfigScreen extends io.github.axolotlclient.AxolotlClientCo
 
 	@Override
 	public void removed() {
-		AxolotlClientConfig.getInstance().save(category);
+		configManager.save();
 	}
 }

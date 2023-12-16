@@ -22,7 +22,6 @@
 
 package io.github.axolotlclient.AxolotlClientConfig.impl.util;
 
-import io.github.axolotlclient.AxolotlClientConfig.api.manager.ConfigManager;
 import io.github.axolotlclient.AxolotlClientConfig.api.options.OptionCategory;
 import io.github.axolotlclient.AxolotlClientConfig.api.options.WidgetIdentifieable;
 import io.github.axolotlclient.AxolotlClientConfig.api.ui.ConfigUI;
@@ -33,8 +32,8 @@ import net.minecraft.client.gui.widget.ClickableWidget;
 @UtilityClass
 public class ConfigStyles {
 
-	public Screen createScreen(Screen parent, ConfigManager manager, OptionCategory category) {
-		return ConfigUI.getInstance().getScreen(ConfigStyles.class.getClassLoader(), manager, category, parent);
+	public Screen createScreen(Screen parent, OptionCategory category) {
+		return ConfigUI.getInstance().getScreen(ConfigStyles.class.getClassLoader(), category, parent);
 	}
 
 	public ClickableWidget createWidget(int x, int y, int width, int height, WidgetIdentifieable option) {

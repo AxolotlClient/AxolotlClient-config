@@ -41,7 +41,7 @@ public interface ConfigUI {
 
 	void setStyle(String name);
 
-	<T> T getScreen(ClassLoader loader, ConfigManager manager, OptionCategory category, T parent);
+	<T> T getScreen(ClassLoader loader, OptionCategory category, T parent);
 
 	Object getWidget(int x, int y, int width, int height, WidgetIdentifieable id, ClassLoader loader);
 

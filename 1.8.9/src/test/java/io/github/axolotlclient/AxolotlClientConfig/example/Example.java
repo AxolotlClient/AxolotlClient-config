@@ -117,7 +117,7 @@ public class Example implements ClientModInitializer {
 	public Function<Screen, ? extends Screen> getConfigScreenFactory(String name) {
 		ConfigManager manager = AxolotlClientConfig.getInstance().getConfigManager(name);
 		return parent -> ConfigUI.getInstance().getScreen(this.getClass().getClassLoader(),
-			manager, manager.getRoot(), parent);
+			manager.getRoot(), parent);
 	}
 
 	public enum TestEnum {

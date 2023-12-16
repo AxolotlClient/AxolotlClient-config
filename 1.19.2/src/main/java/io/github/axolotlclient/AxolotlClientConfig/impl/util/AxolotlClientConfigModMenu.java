@@ -49,7 +49,7 @@ public class AxolotlClientConfigModMenu implements ModMenuApi {
 		Map<String, ConfigScreenFactory<?>> map = new HashMap<>();
 		AxolotlClientConfigImpl.getInstance().getRegisteredManagers().forEach((s, manager) ->
 			map.put(s, parent -> ConfigUI.getInstance().getScreen(this.getClass().getClassLoader(),
-				manager, manager.getRoot(), parent)));
+				manager.getRoot(), parent)));
 		return map;
 	}
 }

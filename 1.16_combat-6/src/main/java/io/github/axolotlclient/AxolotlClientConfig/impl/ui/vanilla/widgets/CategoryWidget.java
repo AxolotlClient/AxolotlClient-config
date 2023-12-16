@@ -23,7 +23,6 @@
 package io.github.axolotlclient.AxolotlClientConfig.impl.ui.vanilla.widgets;
 
 import io.github.axolotlclient.AxolotlClientConfig.api.options.OptionCategory;
-import io.github.axolotlclient.AxolotlClientConfig.api.ui.screen.ConfigScreen;
 import io.github.axolotlclient.AxolotlClientConfig.impl.options.OptionCategoryImpl;
 import io.github.axolotlclient.AxolotlClientConfig.impl.util.ConfigStyles;
 import net.minecraft.client.MinecraftClient;
@@ -43,8 +42,7 @@ public class CategoryWidget extends VanillaButtonWidget {
 	public void onPress() {
 		if (MinecraftClient.getInstance().currentScreen != null) {
 			MinecraftClient.getInstance().openScreen(
-				ConfigStyles.createScreen(MinecraftClient.getInstance().currentScreen,
-					((ConfigScreen) MinecraftClient.getInstance().currentScreen).getConfigManager(), category));
+				ConfigStyles.createScreen(MinecraftClient.getInstance().currentScreen, category));
 		}
 
 

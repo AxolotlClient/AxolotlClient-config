@@ -32,3 +32,4 @@ workspace/
 
 # macOS
 *.DS_Store
+.profileconfig.json

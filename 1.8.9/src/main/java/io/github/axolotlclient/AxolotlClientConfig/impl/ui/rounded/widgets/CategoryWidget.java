@@ -23,7 +23,6 @@
 package io.github.axolotlclient.AxolotlClientConfig.impl.ui.rounded.widgets;
 
 import io.github.axolotlclient.AxolotlClientConfig.api.options.OptionCategory;
-import io.github.axolotlclient.AxolotlClientConfig.api.ui.screen.ConfigScreen;
 import io.github.axolotlclient.AxolotlClientConfig.impl.options.OptionCategoryImpl;
 import io.github.axolotlclient.AxolotlClientConfig.impl.util.ConfigStyles;
 import net.minecraft.client.Minecraft;
@@ -43,8 +42,7 @@ public class CategoryWidget extends RoundedButtonWidget {
 	public void onPress() {
 		if (Minecraft.getInstance().screen != null) {
 			Minecraft.getInstance().openScreen(
-				ConfigStyles.createScreen(Minecraft.getInstance().screen,
-					((ConfigScreen) Minecraft.getInstance().screen).getConfigManager(), category));
+				ConfigStyles.createScreen(Minecraft.getInstance().screen, category));
 		}
 	}
 }
