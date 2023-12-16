@@ -80,7 +80,7 @@ public class AxolotlClientConfigImpl implements AxolotlClientConfig {
 		}
 		boolean found = false;
 		for (OptionCategory sub : root.getSubCategories()){
-			found = findCategory(sub, category);
+			found = sub.includeInParentTree() && findCategory(sub, category);
 			if (found) {
 				break;
 			}
