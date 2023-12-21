@@ -1,0 +1,14 @@
+language.name=English
+language.region=US
+language.code=en_US
+
+action.reset=Reset
+select_color=Select Color
+option.current=Current Color:
+option.chroma=Chroma
+option.speed=Chroma Speed
+option.alpha=Alpha
+open_selector=Open Selector
+open_editor=Open Editor
+draw_graphics=Draw Graphics
+clear_graphics=Clear Graphics

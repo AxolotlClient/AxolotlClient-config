@@ -5,7 +5,6 @@
   "compatibilityLevel": "JAVA_8",
   "mixins": [],
   "client": [
-    "SharedConstantsMixin"
   ],
   "injectors": {
     "defaultRequire": 1

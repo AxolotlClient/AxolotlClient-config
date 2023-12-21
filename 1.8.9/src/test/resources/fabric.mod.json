@@ -15,11 +15,8 @@
   "icon": "assets/axolotlclientconfig-test/icon.png",
   "environment": "client",
   "entrypoints": {
-    "client": [
+    "client-init": [
       "io.github.axolotlclient.AxolotlClientConfig.example.Example"
-    ],
-    "modmenu": [
-      "io.github.axolotlclient.AxolotlClientConfig.example.ExampleModMenu"
     ]
   },
   "depends": {

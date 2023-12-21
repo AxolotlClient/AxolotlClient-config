@@ -1,0 +1,34 @@
+{
+  "styles": {
+    "vanilla": {
+      "widgets": {
+        "boolean": "io.github.axolotlclient.AxolotlClientConfig.impl.ui.vanilla.widgets.BooleanWidget",
+        "string": "io.github.axolotlclient.AxolotlClientConfig.impl.ui.vanilla.widgets.StringWidget",
+        "enum": "io.github.axolotlclient.AxolotlClientConfig.impl.ui.vanilla.widgets.EnumWidget",
+        "string[]": "io.github.axolotlclient.AxolotlClientConfig.impl.ui.vanilla.widgets.StringArrayWidget",
+        "color": "io.github.axolotlclient.AxolotlClientConfig.impl.ui.vanilla.widgets.ColorWidget",
+        "double": "io.github.axolotlclient.AxolotlClientConfig.impl.ui.vanilla.widgets.DoubleWidget",
+        "float": "io.github.axolotlclient.AxolotlClientConfig.impl.ui.vanilla.widgets.FloatWidget",
+        "integer": "io.github.axolotlclient.AxolotlClientConfig.impl.ui.vanilla.widgets.IntegerWidget",
+        "category": "io.github.axolotlclient.AxolotlClientConfig.impl.ui.vanilla.widgets.CategoryWidget",
+        "graphics": "io.github.axolotlclient.AxolotlClientConfig.impl.ui.vanilla.widgets.GraphicsWidget"
+      },
+      "screen": "io.github.axolotlclient.AxolotlClientConfig.impl.ui.vanilla.screen.VanillaConfigScreen"
+    },
+    "rounded": {
+      "widgets": {
+        "boolean": "io.github.axolotlclient.AxolotlClientConfig.impl.ui.rounded.widgets.PillBooleanWidget",
+        "string[]": "io.github.axolotlclient.AxolotlClientConfig.impl.ui.rounded.widgets.StringArrayButtonWidget",
+        "category": "io.github.axolotlclient.AxolotlClientConfig.impl.ui.rounded.widgets.CategoryWidget",
+        "string": "io.github.axolotlclient.AxolotlClientConfig.impl.ui.rounded.widgets.StringWidget",
+        "enum": "io.github.axolotlclient.AxolotlClientConfig.impl.ui.rounded.widgets.EnumWidget",
+        "color": "io.github.axolotlclient.AxolotlClientConfig.impl.ui.rounded.widgets.ColorWidget",
+        "double": "io.github.axolotlclient.AxolotlClientConfig.impl.ui.rounded.widgets.DoubleWidget",
+        "float": "io.github.axolotlclient.AxolotlClientConfig.impl.ui.rounded.widgets.FloatWidget",
+        "integer": "io.github.axolotlclient.AxolotlClientConfig.impl.ui.rounded.widgets.IntegerWidget",
+        "graphics": "io.github.axolotlclient.AxolotlClientConfig.impl.ui.rounded.widgets.GraphicsWidget"
+      },
+      "screen": "io.github.axolotlclient.AxolotlClientConfig.impl.ui.rounded.screen.RoundedConfigScreen"
+    }
+  }
+}

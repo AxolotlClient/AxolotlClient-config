@@ -8,22 +8,22 @@
       "name": "AxolotlClientConfig",
       "description": "Config lib for AxolotlClient",
       "contributors": {
-        "moehreag": "Owner",
-        "YakisikliBaran": "Contributor",
-        "DragonEggBedrockBreaking": "Contributor",
-        "TheKodeToad": "Contributor"
+        "moehreag": "Owner"
       },
       "contact": {
         "homepage": "https://axolotlclient.github.io/",
         "issues": "https://github.com/AxolotlClient/Axolotlclient-config/issues",
         "sources": "https://github.com/Axolotlclient?tab=repositories"
       },
-      "icon": "assets/axolotlclient/icon.png"
+      "icon": "assets/axolotlclientconfig/icon.png"
     },
     "intermediate_mappings": "net.fabricmc:intermediary",
     "entrypoints": {
       "modmenu": [
-        "io.github.axolotlclient.AxolotlClientConfig.screen.ModMenuConfigScreens"
+        "io.github.axolotlclient.AxolotlClientConfig.impl.util.AxolotlClientConfigModMenu"
+      ],
+      "client_init": [
+        "io.github.axolotlclient.AxolotlClientConfig.impl.AxolotlClientConfigMod"
       ]
     },
     "depends": [
@@ -32,7 +32,7 @@
         "versions": ">=0.16.0-"
       },
       {
-        "id": "quilt_client_command",
+        "id": "quilt_lifecycle_events",
         "versions": ">=4.0.0-"
       },
       {

@@ -1,7 +1,7 @@
 plugins {
-    id 'java'
-	id 'io.github.juuxel.loom-quiltflower' version '1.8.+'
-	id "fabric-loom" version "1.1.+"
+	id 'java'
+	id "org.quiltmc.loom"
+	id 'ploceus'
 }
 
 group = maven_group
@@ -15,29 +15,59 @@ repositories {
 	maven {
 		url = "https://moehreag.duckdns.org/maven/releases"
 	}
-	maven {
-		name = "legacy-fabric"
-		url = "https://repo.legacyfabric.net/repository/legacyfabric/"
-	}
+	mavenLocal()
 	mavenCentral()
+}
+
+loom {
+	mods {
+		"axolotlclientconfig" {
+			sourceSet("main")
+		}
+		"axolotlclientconfig-test" {
+			sourceSet("test")
+		}
+	}
 }
 
 dependencies {
 	minecraft "com.mojang:minecraft:${project.minecraft_18}"
-	mappings "net.legacyfabric:yarn:${project.mappings_18}"
+	mappings "net.ornithemc:feather:${project.mappings_18}"
 
-	modImplementation "net.fabricmc:fabric-loader:${project.fabric_loader}"
-	//modImplementation "org.quiltmc:quilt-loader:${project.quilt_loader}"
+	modRuntimeOnly "net.fabricmc:fabric-loader:${project.fabric_loader}"
+	modCompileOnly "org.quiltmc:quilt-loader:${project.quilt_loader}"
 
-	modImplementation include("io.github.moehreag:LegacyClientCommands:1.0.0")
+	ploceus.dependOsl(osl)
 
-	modImplementation "net.legacyfabric.legacy-fabric-api:legacy-fabric-api:${project.lfapi}+${project.minecraft_18}"
-
-	modCompileOnlyApi(files("libs/legacy-modmenu-1.2.0+1.8.9-dev.jar"))
+	modImplementation("com.terraformersmc:modmenu:0.1.1+mc1.8.9")
 
 	implementation include(project(":common"))
 
-	localRuntime("org.ow2.asm:asm-tree:9.4")
+	modCompileOnly("com.github.zarzelcow:legacy-lwjgl3:1.1.3") {
+		exclude group: 'org.lwjgl', module: 'lwjgl-glfw'
+		exclude group: 'org.lwjgl', module: 'lwjgl-openal'
+		exclude group: 'org.lwjgl', module: 'lwjgl-opengl'
+		exclude group: 'org.lwjgl', module: 'lwjgl'
+		exclude group: 'net.fabricmc'
+		exclude group: 'org.javassist'
+	}
+	modLocalRuntime("com.github.zarzelcow:legacy-lwjgl3:1.1.3:all-remapped") {
+		exclude group: 'org.lwjgl', module: 'lwjgl-glfw'
+		exclude group: 'org.lwjgl', module: 'lwjgl-openal'
+		exclude group: 'org.lwjgl', module: 'lwjgl-opengl'
+		exclude group: 'org.lwjgl', module: 'lwjgl'
+		exclude group: 'net.fabricmc'
+		exclude group: 'org.javassist'
+	}
+
+	def lwjglVersion = "3.3.2"
+	api include("org.lwjgl:lwjgl-nanovg:$lwjglVersion")
+	include runtimeOnly("org.lwjgl:lwjgl-nanovg:$lwjglVersion:natives-linux")
+	include runtimeOnly("org.lwjgl:lwjgl-nanovg:$lwjglVersion:natives-linux-arm64")
+	include runtimeOnly("org.lwjgl:lwjgl-nanovg:$lwjglVersion:natives-windows")
+	include runtimeOnly("org.lwjgl:lwjgl-nanovg:$lwjglVersion:natives-windows-arm64")
+	include runtimeOnly("org.lwjgl:lwjgl-nanovg:$lwjglVersion:natives-macos")
+	include runtimeOnly("org.lwjgl:lwjgl-nanovg:$lwjglVersion:natives-macos-arm64")
 }
 
 processResources {
@@ -65,7 +95,7 @@ publishing {
 		maven {
 			name = "owlMaven"
 			def repository = project.version.toString().contains("beta") || project.version.toString().contains("alpha") ? "snapshots" : "releases"
-			url = "https://moehreag.duckdns.org/maven/"+repository
+			url = "https://moehreag.duckdns.org/maven/" + repository
 			credentials(PasswordCredentials)
 			authentication {
 				basic(BasicAuthentication)

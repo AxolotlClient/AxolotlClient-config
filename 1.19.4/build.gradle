@@ -1,6 +1,6 @@
 plugins {
-    id 'java'
-	id "org.quiltmc.loom" version "1.0.+"
+	id 'java'
+	id "org.quiltmc.loom"
 }
 
 group = maven_group
@@ -19,22 +19,41 @@ repositories {
 	}
 }
 
+loom {
+	mods {
+		"axolotlclientconfig" {
+			sourceSet("main")
+		}
+		"axolotlclientconfig-test" {
+			sourceSet("test")
+		}
+	}
+}
+
 dependencies {
 	minecraft "com.mojang:minecraft:${project.minecraft_1194}"
 	mappings "org.quiltmc:quilt-mappings:${project.mappings_1194}:intermediary-v2"
 
 	modImplementation "org.quiltmc:quilt-loader:${project.quilt_loader}"
 
-	modApi include("org.quiltmc.qsl.core:qsl_base:${project.qsl_1194}+${project.minecraft_1194}")
-	modApi include("org.quiltmc.qsl.core:lifecycle_events:${project.qsl_1194}+${project.minecraft_1194}")
-	modApi include("org.quiltmc.qsl.core:resource_loader:${project.qsl_1194}+${project.minecraft_1194}")
-	modApi include("org.quiltmc.qsl.management:client_command:${project.qsl_1194}+${project.minecraft_1194}")
+	modApi("org.quiltmc.qsl.core:qsl_base:${project.qsl_1194}+${project.minecraft_1194}")
+	modApi("org.quiltmc.qsl.core:lifecycle_events:${project.qsl_1194}+${project.minecraft_1194}")
+	modApi("org.quiltmc.qsl.core:resource_loader:${project.qsl_1194}+${project.minecraft_1194}")
+	modApi("org.quiltmc.qsl.management:client_command:${project.qsl_1194}+${project.minecraft_1194}")
 
-	modCompileOnlyApi("com.terraformersmc:modmenu:6.1.0-beta.3"){
+	modCompileOnlyApi("com.terraformersmc:modmenu:6.1.0-beta.3") {
 		transitive = false
 	}
 
 	implementation include(project(":common"))
+
+	implementation include("org.lwjgl:lwjgl-nanovg:3.3.1")
+	runtimeOnly include('org.lwjgl:lwjgl-nanovg:3.3.1:natives-linux')
+	runtimeOnly include('org.lwjgl:lwjgl-nanovg:3.3.1:natives-linux-arm64')
+	runtimeOnly include('org.lwjgl:lwjgl-nanovg:3.3.1:natives-windows')
+	runtimeOnly include('org.lwjgl:lwjgl-nanovg:3.3.1:natives-windows-arm64')
+	runtimeOnly include('org.lwjgl:lwjgl-nanovg:3.3.1:natives-macos')
+	runtimeOnly include('org.lwjgl:lwjgl-nanovg:3.3.1:natives-macos-arm64')
 }
 
 processResources {
@@ -62,7 +81,7 @@ publishing {
 		maven {
 			name = "owlMaven"
 			def repository = project.version.toString().contains("beta") || project.version.toString().contains("alpha") ? "snapshots" : "releases"
-			url = "https://moehreag.duckdns.org/maven/"+repository
+			url = "https://moehreag.duckdns.org/maven/" + repository
 			credentials(PasswordCredentials)
 			authentication {
 				basic(BasicAuthentication)

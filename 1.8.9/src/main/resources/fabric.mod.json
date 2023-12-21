@@ -7,20 +7,20 @@
   "authors": [
     "moehreag"
   ],
-  "contributors":[
-    "YakisikliBaran",
-    "DragonEggBedrockBreaking",
-    "TheKodeToad",
-    "CornetPanique86"
-  ],
   "contact": {
     "homepage": "https://axolotlclient.github.io/",
-    "sources": "https://github.com/AxolotlClient/AxolotlClient-mod/tree/1.8.9"
+    "sources": "https://github.com/AxolotlClient/AxolotlClient-config/"
   },
   "license": "LGPL-3.0-or-later",
-  "icon": "assets/axolotlclient/icon.png",
+  "icon": "assets/axolotlclientconfig/icon.png",
   "environment": "client",
   "entrypoints": {
+    "client-init": [
+      "io.github.axolotlclient.AxolotlClientConfig.impl.AxolotlClientConfigMod"
+    ],
+    "modmenu": [
+      "io.github.axolotlclient.AxolotlClientConfig.impl.util.AxolotlClientConfigModMenu"
+    ]
   },
   "mixins": [
     "axolotlclientconfig.mixins.json"
@@ -31,6 +31,9 @@
   "depends": {
     "fabricloader": ">=0.14.0",
     "minecraft": "1.8.9",
-    "legacy-fabric-api": ">=1.7.0"
+    "osl-resource-loader": "*",
+    "osl-lifecycle-events": "*",
+    "osl-keybinds": "*",
+    "osl-entrypoints": "*"
   }
 }
