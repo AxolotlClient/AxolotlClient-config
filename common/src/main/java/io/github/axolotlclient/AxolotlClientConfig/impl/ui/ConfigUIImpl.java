@@ -87,6 +87,7 @@ public class ConfigUIImpl implements ConfigUI {
 
 	public void postReload() {
 		if (styles.isEmpty()) {
+			System.out.println("Falling back to using the classloader to find widget definitions!");
 			try {
 				Enumeration<URL> list = this.getClass().getClassLoader().getResources("/assets/axolotlclientconfig/config.ui.json");
 				while (list.hasMoreElements()) {
@@ -206,6 +207,35 @@ public class ConfigUIImpl implements ConfigUI {
 			runnable.run();
 		} else {
 			runWhenLoaded.add(runnable);
+		}
+	}
+
+	@Override
+	public void addWidget(String styleName, String widgetId, String widgetClassName) {
+		styles.computeIfAbsent(styleName, name -> new StyleImpl(name, new HashMap<>(), null, null))
+			.getWidgets().put(widgetId, widgetClassName);
+	}
+
+	@Override
+	public void addStyle(Style style) {
+		if (!styles.containsKey(style.getName())) {
+			styles.put(style.getName(), style);
+		} else {
+			Style prev = styles.get(style.getName());
+			style.getWidgets().putAll(prev.getWidgets());
+			String screen = style.getScreen() == null ? prev.getScreen() : style.getScreen();
+			styles.put(style.getName(), new StyleImpl(style.getName(), style.getWidgets(), screen,
+				style.getParentStyleName().orElse(prev.getParentStyleName().orElse(null))));
+		}
+	}
+
+	@Override
+	public void addScreen(String styleName, String screenClassName) {
+		if (styles.containsKey(styleName)){
+			Style style = styles.get(styleName);
+			styles.put(style.getName(), new StyleImpl(styleName, style.getWidgets(), screenClassName, style.getParentStyleName().orElse(null)));
+		} else {
+			styles.put(styleName, new StyleImpl(styleName, new HashMap<>(), screenClassName, null));
 		}
 	}
 }

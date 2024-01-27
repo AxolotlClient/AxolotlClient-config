@@ -26,14 +26,17 @@ import java.util.Map;
 import java.util.Optional;
 
 import io.github.axolotlclient.AxolotlClientConfig.api.ui.Style;
-import lombok.Data;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
-@Data
+@EqualsAndHashCode @ToString
+@AllArgsConstructor
 public class StyleImpl implements Style {
 
 	private final String name;
 	private final Map<String, String> widgets;
-	private final String screen;
+	private String screen;
 	private final String parentStyle;
 
 	@Override

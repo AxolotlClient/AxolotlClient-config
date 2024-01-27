@@ -48,4 +48,18 @@ public interface ConfigUI {
 	void runWhenLoaded(Runnable runnable);
 
 	String getUiJsonPath();
+
+	void addWidget(String styleName, String widgetId, String widgetClassName);
+
+	default void addWidget(String styleName, String widgetId, Class<?> widgetClass){
+		addWidget(styleName, widgetId, widgetClass.getName());
+	}
+
+	void addStyle(Style style);
+
+	void addScreen(String styleName, String screenClassName);
+
+	default void addScreen(String styleName, Class<?> screenClass){
+		addScreen(styleName, screenClass.getName());
+	}
 }
