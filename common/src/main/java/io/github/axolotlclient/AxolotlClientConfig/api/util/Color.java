@@ -43,6 +43,7 @@ public class Color implements Runnable, Cloneable {
 	private float chromaSpeed;
 
 	private NVGColor nvgColor;
+	private final Object o = new Object();
 
 	public Color(int color) {
 		this(color >> 16 & 0xFF, color >> 8 & 0xFF, color & 0xFF, color >> 24 & 0xFF);
@@ -50,7 +51,9 @@ public class Color implements Runnable, Cloneable {
 
 	public Color(int color, boolean chroma) {
 		this(color);
-		setChroma(chroma);
+		if (chroma) {
+			setChroma(true);
+		}
 	}
 
 	public Color(int r, int g, int b) {
@@ -59,7 +62,9 @@ public class Color implements Runnable, Cloneable {
 
 	public Color(int r, int g, int b, boolean chroma) {
 		this(r, g, b);
-		setChroma(chroma);
+		if (chroma) {
+			setChroma(true);
+		}
 	}
 
 	public Color(int r, int g, int b, int a) {
@@ -76,7 +81,9 @@ public class Color implements Runnable, Cloneable {
 		this.blue = blue;
 		this.alpha = alpha;
 		this.chromaSpeed = chromaSpeed;
-		setChroma(chroma);
+		if (chroma) {
+			setChroma(true);
+		}
 	}
 
 	public static Color fromHSV(float[] vals) {
@@ -143,7 +150,7 @@ public class Color implements Runnable, Cloneable {
 		return toInt(get());
 	}
 
-	public static int toInt(Color c){
+	public static int toInt(Color c) {
 		int color = c.getAlpha();
 		color = (color << 8) + c.getRed();
 		color = (color << 8) + c.getGreen();
@@ -179,12 +186,13 @@ public class Color implements Runnable, Cloneable {
 	}
 
 	public void setChroma(boolean chroma) {
-		if (chroma && !this.chroma) {
+		if (!chroma) {
+			AxolotlClientConfigImpl.getInstance().removeTickListener(this);
+		} else if (!this.chroma) {
 			AxolotlClientConfigImpl.getInstance().registerTickListener(this);
 			chromaHue = toHSV()[0];
-		} else if (!chroma && this.chroma) {
-			AxolotlClientConfigImpl.getInstance().removeTickListener(this);
 		}
+
 		this.chroma = chroma;
 	}
 
@@ -258,7 +266,7 @@ public class Color implements Runnable, Cloneable {
 		return this;
 	}
 
-	@Override
+	/*@Override
 	public Color clone() {
 		try {
 			Color clone = ((Color) super.clone()).mutable();
@@ -275,6 +283,39 @@ public class Color implements Runnable, Cloneable {
 			throw new AssertionError();
 		}
 	}
+
+	public int hashCode() {
+		final int PRIME = 59;
+		int result = 1;
+		result = result * PRIME + this.red;
+		result = result * PRIME + this.green;
+		result = result * PRIME + this.blue;
+		result = result * PRIME + this.alpha;
+		//result = result * PRIME + Float.floatToIntBits(this.chromaSpeed);
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (!(obj instanceof Color)){
+			return false;
+		}
+
+		Color other = (Color) obj;
+		if (other.red != red){
+			return false;
+		}
+		if (other.green != green){
+			return false;
+		}
+		if (other.blue != blue){
+			return false;
+		}
+		if (other.alpha != alpha){
+			return false;
+		}
+		return true;//other.chromaSpeed == chromaSpeed;
+	}*/
 
 	private static class ImmutableColor extends Color {
 		public ImmutableColor(int red, int green, int blue, int alpha, boolean chroma, float chromaSpeed) {
@@ -367,6 +408,11 @@ public class Color implements Runnable, Cloneable {
 
 		@Override
 		public Color immutable() {
+			return this;
+		}
+
+		@Override
+		public Color clone() {
 			return this;
 		}
 

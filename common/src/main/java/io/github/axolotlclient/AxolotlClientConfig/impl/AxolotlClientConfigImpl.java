@@ -22,9 +22,7 @@
 
 package io.github.axolotlclient.AxolotlClientConfig.impl;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
+import java.util.*;
 
 import io.github.axolotlclient.AxolotlClientConfig.api.AxolotlClientConfig;
 import io.github.axolotlclient.AxolotlClientConfig.api.manager.ConfigManager;
@@ -41,7 +39,11 @@ public class AxolotlClientConfigImpl implements AxolotlClientConfig {
 	private final HashMap<String, ConfigManager> registeredManagers = new HashMap<>();
 
 	public void runTick() {
-		listeners.forEach(Runnable::run);
+		synchronized (listeners) {
+			for (Runnable listener : listeners) {
+				listener.run();
+			}
+		}
 	}
 
 	@Override
@@ -89,10 +91,14 @@ public class AxolotlClientConfigImpl implements AxolotlClientConfig {
 	}
 
 	public void registerTickListener(Runnable run) {
-		listeners.add(run);
+		synchronized (listeners) {
+			listeners.add(run);
+		}
 	}
 
 	public void removeTickListener(Runnable run) {
-		listeners.remove(run);
+		synchronized (listeners) {
+			listeners.remove(run);
+		}
 	}
 }

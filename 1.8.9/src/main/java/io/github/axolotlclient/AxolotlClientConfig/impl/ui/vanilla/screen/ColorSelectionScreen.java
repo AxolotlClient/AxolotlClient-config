@@ -67,14 +67,14 @@ public class ColorSelectionScreen extends io.github.axolotlclient.AxolotlClientC
 		addDrawableChild(new VanillaButtonWidget(width / 2 - 75, height - 40, 150, 20,
 			I18n.translate("gui.back"), buttonWidget -> minecraft.openScreen(parent)));
 
-		chroma = new BooleanOption("option.chroma", option.get().isChroma(), val -> {
-			option.get().setChroma(val);
+		chroma = new BooleanOption("option.chroma", option.getOriginal().isChroma(), val -> {
+			option.getOriginal().setChroma(val);
 		});
-		speed = new FloatOption("option.speed", option.get().getChromaSpeed(), val -> {
-			option.get().setChromaSpeed(val);
+		speed = new FloatOption("option.speed", option.getOriginal().getChromaSpeed(), val -> {
+			option.getOriginal().setChromaSpeed(val);
 		}, 0f, 4f);
 		alpha = new IntegerOption("option.alpha", option.get().getAlpha(), val -> {
-			option.get().setAlpha(val);
+			option.getOriginal().setAlpha(val);
 			children().forEach(e -> {
 				if (e instanceof io.github.axolotlclient.AxolotlClientConfig.impl.ui.rounded.widgets.TextFieldWidget) {
 					((io.github.axolotlclient.AxolotlClientConfig.impl.ui.rounded.widgets.TextFieldWidget) e).setText(option.get().toString().split(";")[0]);
@@ -103,8 +103,8 @@ public class ColorSelectionScreen extends io.github.axolotlclient.AxolotlClientC
 			text.setChangedListener(s -> {
 				try {
 					option.set(Color.parse(s));
-					option.get().setChroma(chroma.get());
-					option.get().setChromaSpeed(speed.get());
+					option.getOriginal().setChroma(chroma.get());
+					option.getOriginal().setChromaSpeed(speed.get());
 
 					children().forEach(e -> {
 						if (e instanceof Updatable) {
@@ -131,7 +131,7 @@ public class ColorSelectionScreen extends io.github.axolotlclient.AxolotlClientC
 
 		drawString(minecraft.textRenderer, I18n.translate("option.current"), buttonsX, 40, Colors.text().toInt());
 
-		DrawUtil.fillRect(buttonsX, 55, 150, 40, option.get().get().toInt());
+		DrawUtil.fillRect(buttonsX, 55, 150, 40, option.get().toInt());
 		DrawUtil.outlineRect(buttonsX, 55, 150, 40, Colors.BLACK.toInt());
 
 		int y = 105;
@@ -160,9 +160,9 @@ public class ColorSelectionScreen extends io.github.axolotlclient.AxolotlClientC
 				final int r = pixelBuffer.get(0) & 0xff;
 				final int g = pixelBuffer.get(1) & 0xff;
 				final int b = pixelBuffer.get(2) & 0xff;
-				option.get().setRed(r);
-				option.get().setGreen(g);
-				option.get().setBlue(b);
+				option.getOriginal().setRed(r);
+				option.getOriginal().setGreen(g);
+				option.getOriginal().setBlue(b);
 
 				children().forEach(e -> {
 					if (e instanceof Updatable) {
