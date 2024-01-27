@@ -26,10 +26,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Constructor;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.net.URL;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import com.google.gson.Gson;
@@ -89,14 +87,20 @@ public class ConfigUIImpl implements ConfigUI {
 
 	public void postReload() {
 		if (styles.isEmpty()) {
-			try (InputStream stream = this.getClass().getResourceAsStream("/assets/axolotlclientconfig/config.ui.json")) {
-				read(stream);
+			try {
+				Enumeration<URL> list = this.getClass().getClassLoader().getResources("/assets/axolotlclientconfig/config.ui.json");
+				while (list.hasMoreElements()) {
+					try (InputStream stream = list.nextElement().openStream()) {
+						read(stream);
+					}
+				}
 			} catch (IOException e) {
 				throw new RuntimeException(e);
 			}
 		}
 		loaded = true;
 		runWhenLoaded.forEach(Runnable::run);
+		runWhenLoaded.clear();
 	}
 
 	private String getOrNull(JsonElement element, String child) {
@@ -133,7 +137,7 @@ public class ConfigUIImpl implements ConfigUI {
 	}
 
 	@SuppressWarnings("unchecked")
-	private   <T> T getScreen(ClassLoader loader, Style style, OptionCategory category, T parent) {
+	private <T> T getScreen(ClassLoader loader, Style style, OptionCategory category, T parent) {
 		String name = style.getScreen();
 		if (name == null || name.trim().isEmpty()) {
 			if (style.equals(getDefaultStyle())) {
