@@ -84,10 +84,10 @@ public class ColorSelectionWidget extends Overlay {
 
 		slidersVisible = true;
 
-		addDrawableChild(textInput = new TextFieldWidget(MinecraftClient.getInstance().textRenderer,
+		addDrawableSelectableElement(textInput = new TextFieldWidget(MinecraftClient.getInstance().textRenderer,
 			currentRect.x, currentRect.y + currentRect.height + 10, currentRect.width, 20, Text.empty()));
 
-		addDrawableChild(chromaWidget = new BooleanWidget(currentRect.x, currentRect.y + currentRect.height + 40, currentRect.width, 20, chroma) {
+		addDrawableSelectableElement(chromaWidget = new BooleanWidget(currentRect.x, currentRect.y + currentRect.height + 40, currentRect.width, 20, chroma) {
 			@Override
 			public boolean canHover() {
 				return true;
@@ -105,10 +105,10 @@ public class ColorSelectionWidget extends Overlay {
 			}
 		});
 
-		addDrawableChild(redSlider = new ColorSliderWidget(currentRect.x, currentRect.y + currentRect.height + 65, currentRect.width, 20, red));
-		addDrawableChild(greenSlider = new ColorSliderWidget(currentRect.x, currentRect.y + currentRect.height + 90, currentRect.width, 20, green));
-		addDrawableChild(blueSlider = new ColorSliderWidget(currentRect.x, currentRect.y + currentRect.height + 115, currentRect.width, 20, blue));
-		addDrawableChild(alphaSlider = new ColorSliderWidget(currentRect.x, currentRect.y + currentRect.height + 140, currentRect.width, 20, alpha));
+		addDrawableSelectableElement(redSlider = new ColorSliderWidget(currentRect.x, currentRect.y + currentRect.height + 65, currentRect.width, 20, red));
+		addDrawableSelectableElement(greenSlider = new ColorSliderWidget(currentRect.x, currentRect.y + currentRect.height + 90, currentRect.width, 20, green));
+		addDrawableSelectableElement(blueSlider = new ColorSliderWidget(currentRect.x, currentRect.y + currentRect.height + 115, currentRect.width, 20, blue));
+		addDrawableSelectableElement(alphaSlider = new ColorSliderWidget(currentRect.x, currentRect.y + currentRect.height + 140, currentRect.width, 20, alpha));
 
 		textInput.setChangedListener(s -> {
 			alphaSlider.update();
@@ -131,10 +131,10 @@ public class ColorSelectionWidget extends Overlay {
 			blue.set(option.get().getBlue());
 		}
 
-		addDrawableChild(textInput = new TextFieldWidget(MinecraftClient.getInstance().textRenderer,
+		addDrawableSelectableElement(textInput = new TextFieldWidget(MinecraftClient.getInstance().textRenderer,
 			currentRect.x, currentRect.y + currentRect.height + 10, currentRect.width, 20, Text.empty()));
 
-		addDrawableChild(chromaWidget = new BooleanWidget(currentRect.x, currentRect.y + currentRect.height + 40, currentRect.width, 20, chroma) {
+		addDrawableSelectableElement(chromaWidget = new BooleanWidget(currentRect.x, currentRect.y + currentRect.height + 40, currentRect.width, 20, chroma) {
 			@Override
 			public boolean canHover() {
 				return true;
@@ -152,13 +152,13 @@ public class ColorSelectionWidget extends Overlay {
 			}
 		});
 
-		addDrawableChild(alphaSlider = new ColorSliderWidget(pickerImage.x, pickerImage.y + pickerImage.height + 20, pickerImage.width, 20, alpha));
+		addDrawableSelectableElement(alphaSlider = new ColorSliderWidget(pickerImage.x, pickerImage.y + pickerImage.height + 20, pickerImage.width, 20, alpha));
 
 		if (slidersVisible) {
 
-			addDrawableChild(redSlider = new ColorSliderWidget(currentRect.x, currentRect.y + currentRect.height + 65, currentRect.width, 20, red));
-			addDrawableChild(greenSlider = new ColorSliderWidget(currentRect.x, currentRect.y + currentRect.height + 90, currentRect.width, 20, green));
-			addDrawableChild(blueSlider = new ColorSliderWidget(currentRect.x, currentRect.y + currentRect.height + 115, currentRect.width, 20, blue));
+			addDrawableSelectableElement(redSlider = new ColorSliderWidget(currentRect.x, currentRect.y + currentRect.height + 65, currentRect.width, 20, red));
+			addDrawableSelectableElement(greenSlider = new ColorSliderWidget(currentRect.x, currentRect.y + currentRect.height + 90, currentRect.width, 20, green));
+			addDrawableSelectableElement(blueSlider = new ColorSliderWidget(currentRect.x, currentRect.y + currentRect.height + 115, currentRect.width, 20, blue));
 		}
 
 		textInput.setChangedListener(s -> {
@@ -189,8 +189,6 @@ public class ColorSelectionWidget extends Overlay {
 	}
 
 	public void tick() {
-		textInput.tick();
-
 		if (!Objects.equals(textInput.getText(), option.get().toString())) {
 			if (textInput.isFocused()) {
 				option.set(Color.parse(textInput.getText()));
@@ -283,7 +281,7 @@ public class ColorSelectionWidget extends Overlay {
 		return false;
 	}
 
-	private static class ColorSliderWidget extends OptionSliderWidget<IntegerOption, Integer> {
+	public static class ColorSliderWidget extends OptionSliderWidget<IntegerOption, Integer> {
 
 		public ColorSliderWidget(int x, int y, int width, int height, IntegerOption option) {
 			super(x, y, width, height, option);

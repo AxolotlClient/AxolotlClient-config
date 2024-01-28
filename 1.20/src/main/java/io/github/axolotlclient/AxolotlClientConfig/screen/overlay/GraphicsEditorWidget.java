@@ -10,7 +10,7 @@ import io.github.axolotlclient.AxolotlClientConfig.util.DrawUtil;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
-import net.minecraft.client.gui.widget.ButtonWidget;
+import net.minecraft.client.gui.widget.button.ButtonWidget;
 import net.minecraft.client.gui.widget.PressableWidget;
 import net.minecraft.text.Text;
 import net.minecraft.util.Util;
@@ -59,14 +59,14 @@ public class GraphicsEditorWidget extends Overlay {
 		maxGridWidth = Math.min(maxGridWidth, gridCollumns * pixelSize);
 		maxGridHeight = Math.min(maxGridHeight, gridRows * pixelSize);
 
-		addDrawableChild(new ElementSelectable(gridX, gridY, maxGridWidth, maxGridHeight));
+		addDrawableSelectableElement(new ElementSelectable(gridX, gridY, maxGridWidth, maxGridHeight));
 
-		addDrawableChild(ButtonWidget.builder(Text.translatable("clearGraphics"),
+		addDrawableSelectableElement(ButtonWidget.builder(Text.translatable("clearGraphics"),
 				buttonWidget -> clearGraphics())
 			.width(50).position(gridX + maxGridWidth + 10, gridY).build());
 
 		if (option.mayDrawHint()) {
-			addDrawableChild(
+			addDrawableSelectableElement(
 				new BooleanWidget(gridX + maxGridWidth + 10, gridY + 25, 50, 20,
 					new BooleanOption("showHint", option::setDrawHint, option.isDrawHint())) {
 					@Override

@@ -32,7 +32,7 @@ public class Overlay extends Screen {
 
 		overlay = new Rectangle(100, 50, width, height);
 
-		addSelectableChild(parent.backButton);
+		addSelectableElement(parent.backButton);
 	}
 
 	@Override
@@ -98,8 +98,8 @@ public class Overlay extends Screen {
 	}
 
 	@Override
-	public boolean mouseScrolled(double mouseX, double mouseY, double amount) {
-		return super.mouseScrolled(mouseX, mouseY, amount) || parent.mouseScrolled(mouseX, mouseY, amount);
+	public boolean mouseScrolled(double mouseX, double mouseY, double amountX, double amountY) {
+		return super.mouseScrolled(mouseX, mouseY, amountX, amountY) || parent.mouseScrolled(mouseX, mouseY, amountX, amountY);
 	}
 
 	public String getModId() {

@@ -12,7 +12,7 @@ import net.minecraft.client.gui.*;
 import net.minecraft.client.gui.screen.ScreenArea;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.gui.screen.narration.NarrationPart;
-import net.minecraft.client.gui.widget.ButtonWidget;
+import net.minecraft.client.gui.widget.button.ButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
@@ -46,12 +46,12 @@ public class ColorOptionWidget extends ButtonWidget implements OptionWidget, Par
 		this.option = option;
 		textField = new TextFieldWidget(MinecraftClient.getInstance().textRenderer, x, y, 128, 19, getMessage()) {
 			@Override
-			public void moveCursor(int offset) {
+			public void moveCursor(int offset, boolean bl) {
 				if (getCursor() == getText().length() && offset >= 1) {
 					MinecraftClient.getInstance().currentScreen.keyPressed(InputUtil.KEY_TAB_CODE, 0, 0);
 					return;
 				}
-				super.moveCursor(offset);
+				super.moveCursor(offset, bl);
 			}
 		};
 		textField.setText(option.get().toString());
@@ -107,8 +107,8 @@ public class ColorOptionWidget extends ButtonWidget implements OptionWidget, Par
 	}
 
 	@Override
-	public boolean mouseScrolled(double mouseX, double mouseY, double amount) {
-		return ParentElement.super.mouseScrolled(mouseX, mouseY, amount);
+	public boolean mouseScrolled(double mouseX, double mouseY, double amountX, double amountY) {
+		return ParentElement.super.mouseScrolled(mouseX, mouseY, amountX, amountY);
 	}
 
 	@Override
@@ -129,10 +129,6 @@ public class ColorOptionWidget extends ButtonWidget implements OptionWidget, Par
 	@Override
 	public void setDragging(boolean dragging) {
 
-	}
-
-	public void tick() {
-		textField.tick();
 	}
 
 	@Override

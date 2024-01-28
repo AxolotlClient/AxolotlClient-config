@@ -35,6 +35,8 @@ dependencies {
 	}
 
 	implementation include(project(":common"))
+
+	implementation(annotationProcessor("io.github.llamalad7:mixinextras-fabric:0.3.5")) // since loom is so old here this is needed
 }
 
 processResources {

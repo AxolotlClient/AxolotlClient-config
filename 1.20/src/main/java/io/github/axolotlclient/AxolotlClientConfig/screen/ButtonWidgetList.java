@@ -17,7 +17,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.ParentElement;
 import net.minecraft.client.gui.Selectable;
 import net.minecraft.client.gui.widget.ClickableWidget;
-import net.minecraft.client.gui.widget.ElementListWidget;
+import net.minecraft.client.gui.widget.list.ElementListWidget;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.MathHelper;
 import org.lwjgl.opengl.GL11;
@@ -36,9 +36,7 @@ public class ButtonWidgetList extends ElementListWidget<ButtonWidgetList.Pair> {
 		super(minecraftClient, width, height, top, bottom, entryHeight);
 
 		this.setRenderBackground(false);
-		this.setRenderHorizontalShadows(false);
 		this.setRenderHeader(false, 0);
-		this.setRenderSelection(false);
 		this.category = category;
 
 		this.entries = constructEntries(category);
@@ -73,16 +71,16 @@ public class ButtonWidgetList extends ElementListWidget<ButtonWidgetList.Pair> {
 	}
 
 	public void renderTooltips(GuiGraphics graphics, int mouseX, int mouseY) {
-		ConfigUtils.applyScissor(0, top, this.width, bottom - top);
+		graphics.enableScissor(0, top, this.width, this.bottom);
 		entries.forEach(pair -> pair.renderTooltips(graphics, mouseX, mouseY));
-		GL11.glDisable(GL11.GL_SCISSOR_TEST);
+		graphics.disableScissor();
 	}
 
 	@Override
 	protected void renderList(GuiGraphics graphics, int x, int y, float delta) {
-		ConfigUtils.applyScissor(0, top, this.width, bottom - top);
+		graphics.enableScissor(0, top, this.width, this.bottom);
 		super.renderList(graphics, x, y, delta);
-		GL11.glDisable(GL11.GL_SCISSOR_TEST);
+		graphics.disableScissor();
 	}
 
 	@Override
@@ -244,9 +242,9 @@ public class ButtonWidgetList extends ElementListWidget<ButtonWidgetList.Pair> {
 		protected void renderTooltip(GuiGraphics graphics, Tooltippable option, int x, int y) {
 			if (MinecraftClient.getInstance().currentScreen instanceof OptionsScreenBuilder &&
 				option.getTooltip() != null && y < bottom && y > top) {
-				GL11.glDisable(GL11.GL_SCISSOR_TEST);
+				graphics.disableScissor();
 				((OptionsScreenBuilder) MinecraftClient.getInstance().currentScreen).renderTooltip(graphics, option, x, y);
-				ConfigUtils.applyScissor(0, top, width, bottom - top);
+				graphics.enableScissor(0, top, width, bottom);
 			}
 		}
 

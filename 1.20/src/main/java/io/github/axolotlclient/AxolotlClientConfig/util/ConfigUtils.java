@@ -28,17 +28,4 @@ public class ConfigUtils {
 	public static void sendChatMessage(Text msg) {
 		MinecraftClient.getInstance().inGameHud.getChatHud().addMessage(msg);
 	}
-
-	public static void applyScissor(int x, int y, int width, int height) {
-		GL11.glEnable(GL11.GL_SCISSOR_TEST);
-		Window window = MinecraftClient.getInstance().getWindow();
-		int scale = (int) window.getScaleFactor();
-		GL11.glScissor(x * scale, (window.getScaledHeight() - height - y) * scale, width * scale, height * scale);
-	}
-
-	public static String[] copyArrayWithoutFirstEntry(String[] strings) {
-		String[] strings2 = new String[strings.length - 1];
-		System.arraycopy(strings, 1, strings2, 0, strings.length - 1);
-		return strings2;
-	}
 }

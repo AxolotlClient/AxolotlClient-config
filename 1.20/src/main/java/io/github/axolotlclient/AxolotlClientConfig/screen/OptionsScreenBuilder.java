@@ -11,7 +11,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.gui.screen.narration.NarrationPart;
-import net.minecraft.client.gui.widget.ButtonWidget;
+import net.minecraft.client.gui.widget.button.ButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.text.CommonTexts;
 import net.minecraft.text.Text;
@@ -46,16 +46,17 @@ public class OptionsScreenBuilder extends Screen {
 
 	@Override
 	public void render(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
-		renderBackground(graphics);
+		super.render(graphics, mouseX, mouseY, delta);
+	}
 
-		this.list.render(graphics, mouseX, mouseY, delta);
+	@Override
+	public void renderBackground(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
+		super.renderBackground(graphics, mouseX, mouseY, delta);
+		this.list.renderList(graphics, mouseX, mouseY, delta);
 		graphics.drawCenteredShadowedText(textRenderer, cat.getTranslatedName(), width / 2, 25, -1);
-
 		if (overlay == null) {
 			list.renderTooltips(graphics, mouseX, mouseY);
 		}
-
-		super.render(graphics, mouseX, mouseY, delta);
 	}
 
 	@Override
@@ -70,9 +71,9 @@ public class OptionsScreenBuilder extends Screen {
 		} else {
 			pickerWasOpened = false;
 		}
-		this.addSelectableChild(list);
+		this.addSelectableElement(list);
 
-		this.addDrawableChild(backButton = ButtonWidget.builder(CommonTexts.BACK, buttonWidget -> {
+		this.addDrawableSelectableElement(backButton = ButtonWidget.builder(CommonTexts.BACK, buttonWidget -> {
 			if (isPickerOpen()) {
 				closeOverlay();
 			} else {
@@ -82,7 +83,7 @@ public class OptionsScreenBuilder extends Screen {
 			AxolotlClientConfigManager.getInstance().saveCurrentConfig();
 		}).positionAndSize(this.width / 2 - 100, this.height - 40, 200, 20).build());
 
-		this.addDrawableChild(searchWidget = new TextFieldWidget(MinecraftClient.getInstance().textRenderer, width - 120, 20, 100, 20, Text.translatable("search")) {
+		this.addDrawableSelectableElement(searchWidget = new TextFieldWidget(MinecraftClient.getInstance().textRenderer, width - 120, 20, 100, 20, Text.translatable("search")) {
 
 			@Override
 			public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
@@ -138,7 +139,6 @@ public class OptionsScreenBuilder extends Screen {
 	@Override
 	public void tick() {
 		this.list.tick();
-		searchWidget.tick();
 	}
 
 	@Override
@@ -197,11 +197,11 @@ public class OptionsScreenBuilder extends Screen {
 	}
 
 	@Override
-	public boolean mouseScrolled(double mouseX, double mouseY, double amount) {
+	public boolean mouseScrolled(double mouseX, double mouseY, double amountX, double amountY) {
 		if (list.isMouseOver(mouseX, mouseY)) {
-			return list.mouseScrolled(mouseX, mouseY, amount);
+			return list.mouseScrolled(mouseX, mouseY, amountX, amountY);
 		}
-		return super.mouseScrolled(mouseX, mouseY, amount);
+		return super.mouseScrolled(mouseX, mouseY, amountX, amountY);
 	}
 
 	@Override
