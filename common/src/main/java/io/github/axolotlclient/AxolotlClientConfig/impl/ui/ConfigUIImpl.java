@@ -50,7 +50,6 @@ public class ConfigUIImpl implements ConfigUI {
 	private final String uiJsonPath = "axolotlclientconfig:config.ui.json";
 	private final Map<String, Style> styles = new HashMap<>();
 	private String currentStyle = "vanilla";
-	private boolean loaded;
 
 	private ConfigUIImpl() {
 	}
@@ -99,9 +98,8 @@ public class ConfigUIImpl implements ConfigUI {
 				throw new RuntimeException(e);
 			}
 		}
-		loaded = true;
+
 		runWhenLoaded.forEach(Runnable::run);
-		runWhenLoaded.clear();
 	}
 
 	private String getOrNull(JsonElement element, String child) {
@@ -203,11 +201,7 @@ public class ConfigUIImpl implements ConfigUI {
 	}
 
 	public void runWhenLoaded(Runnable runnable) {
-		if (loaded) {
-			runnable.run();
-		} else {
-			runWhenLoaded.add(runnable);
-		}
+		runWhenLoaded.add(runnable);
 	}
 
 	@Override

@@ -76,8 +76,8 @@ public class ColorSelectionScreen extends io.github.axolotlclient.AxolotlClientC
 		alpha = new IntegerOption("option.alpha", option.get().getAlpha(), val -> {
 			option.getOriginal().setAlpha(val);
 			children().forEach(e -> {
-				if (e instanceof io.github.axolotlclient.AxolotlClientConfig.impl.ui.rounded.widgets.TextFieldWidget) {
-					((io.github.axolotlclient.AxolotlClientConfig.impl.ui.rounded.widgets.TextFieldWidget) e).setText(option.get().toString().split(";")[0]);
+				if (e instanceof TextFieldWidget) {
+					((TextFieldWidget) e).setText(option.get().toString().split(";")[0]);
 				}
 			});
 		}, 0, 255);

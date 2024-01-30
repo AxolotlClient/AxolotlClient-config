@@ -22,6 +22,8 @@
 
 package io.github.axolotlclient.AxolotlClientConfig.impl.ui.rounded.widgets;
 
+import java.text.DecimalFormat;
+
 import io.github.axolotlclient.AxolotlClientConfig.api.util.Colors;
 import io.github.axolotlclient.AxolotlClientConfig.impl.options.NumberOption;
 import io.github.axolotlclient.AxolotlClientConfig.impl.ui.rounded.NVGHolder;
@@ -51,7 +53,7 @@ public class SliderWidget<O extends NumberOption<N>, N extends Number> extends R
 			updateMessage();
 		}
 
-		fillRoundedRect(ctx, getX(), getY() + getHeight() / 2 - 1, getWidth(), 2, Colors.foreground(), 1);
+		fillRoundedRect(ctx, getX(), getY() + getHeight() / 2f - 1, getWidth(), 2, Colors.foreground(), 1);
 
 		NanoVG.nvgBeginPath(ctx);
 		NanoVG.nvgCircle(ctx, (float) (getX() + (this.value * (getWidth() - 4))), getY() + getHeight() / 2f, 4);
@@ -95,7 +97,8 @@ public class SliderWidget<O extends NumberOption<N>, N extends Number> extends R
 	}
 
 	private void updateMessage() {
-		setMessage(String.valueOf(option.get()));
+		DecimalFormat format = new DecimalFormat("0.##");
+		setMessage(format.format(option.get().doubleValue()));
 	}
 
 	@Override
