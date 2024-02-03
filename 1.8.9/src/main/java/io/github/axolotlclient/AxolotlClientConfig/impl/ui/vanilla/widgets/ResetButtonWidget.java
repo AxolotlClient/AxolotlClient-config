@@ -29,13 +29,13 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.render.Window;
 import net.minecraft.client.resource.language.I18n;
 
-public class ResetButtonWidget extends VanillaButtonWidget {
+public class ResetButtonWidget<T> extends VanillaButtonWidget {
 
-	private final Option<?> option;
+	private final Option<T> option;
 
-	public ResetButtonWidget(int x, int y, int width, int height, Option<?> option) {
+	public ResetButtonWidget(int x, int y, int width, int height, Option<T> option) {
 		super(x, y, width, height, I18n.translate("action.reset"), widget -> {
-			option.setDefault();
+			option.set(option.getDefault());
 			Window window = new Window(Minecraft.getInstance());
 			int i = (int) window.getScaledWidth();
 			int j = (int) window.getScaledHeight();

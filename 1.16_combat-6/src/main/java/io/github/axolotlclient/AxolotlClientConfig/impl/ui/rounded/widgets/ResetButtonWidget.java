@@ -36,13 +36,13 @@ import net.minecraft.text.MutableText;
 import net.minecraft.text.TranslatableText;
 import org.lwjgl.nanovg.NanoVG;
 
-public class ResetButtonWidget extends RoundedButtonWidget {
+public class ResetButtonWidget<T> extends RoundedButtonWidget {
 
-	private final Option<?> option;
+	private final Option<T> option;
 
-	public ResetButtonWidget(int x, int y, int width, int height, Option<?> option) {
+	public ResetButtonWidget(int x, int y, int width, int height, Option<T> option) {
 		super(x, y, width, height, LiteralText.EMPTY, widget -> {
-			option.setDefault();
+			option.set(option.getDefault());
 			Window window = MinecraftClient.getInstance().getWindow();
 			int i = window.getScaledWidth();
 			int j = window.getScaledHeight();

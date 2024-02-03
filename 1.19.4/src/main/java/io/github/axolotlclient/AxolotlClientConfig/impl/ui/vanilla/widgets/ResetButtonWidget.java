@@ -31,13 +31,13 @@ import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 
-public class ResetButtonWidget extends ButtonWidget {
+public class ResetButtonWidget<T> extends ButtonWidget {
 
-	private final Option<?> option;
+	private final Option<T> option;
 
-	public ResetButtonWidget(int x, int y, int width, int height, Option<?> option) {
+	public ResetButtonWidget(int x, int y, int width, int height, Option<T> option) {
 		super(x, y, width, height, Text.translatable("action.reset"), widget -> {
-			option.setDefault();
+			option.set(option.getDefault());
 			Window window = MinecraftClient.getInstance().getWindow();
 			int i = window.getScaledWidth();
 			int j = window.getScaledHeight();

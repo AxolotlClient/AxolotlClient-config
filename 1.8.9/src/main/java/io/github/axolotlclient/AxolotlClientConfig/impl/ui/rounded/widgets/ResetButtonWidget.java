@@ -32,13 +32,13 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.render.Window;
 import org.lwjgl.nanovg.NanoVG;
 
-public class ResetButtonWidget extends RoundedButtonWidget {
+public class ResetButtonWidget<T> extends RoundedButtonWidget {
 
-	private final Option<?> option;
+	private final Option<T> option;
 
-	public ResetButtonWidget(int x, int y, int width, int height, Option<?> option) {
+	public ResetButtonWidget(int x, int y, int width, int height, Option<T> option) {
 		super(x, y, width, height, "", widget -> {
-			option.setDefault();
+			option.set(option.getDefault());
 			Window window = new Window(Minecraft.getInstance());
 			double i = window.getScaledWidth();
 			double j = window.getScaledHeight();
