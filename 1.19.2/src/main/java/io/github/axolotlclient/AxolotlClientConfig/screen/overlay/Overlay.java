@@ -36,17 +36,17 @@ public class Overlay extends Screen {
 
     @Override
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-        parent.render(matrices, mouseX, mouseY, delta);
+		parent.render(matrices, mouseX, mouseY, delta);
 
-        DrawUtil.fillRect(matrices, overlay, Color.DARK_GRAY.withAlpha(127));
-        DrawUtil.outlineRect(matrices, overlay, Color.BLACK);
+		DrawUtil.getInstance().drawRect(matrices, overlay, Color.DARK_GRAY.withAlpha(127).getAsInt(), 12);
+		DrawUtil.getInstance().outlineRect(matrices, overlay, Color.WHITE.getAsInt(), 12);
 
-        drawCenteredText(matrices, MinecraftClient.getInstance().textRenderer, title, MinecraftClient.getInstance().getWindow().getScaledWidth()/2, 54, -1);
+		drawCenteredText(matrices, MinecraftClient.getInstance().textRenderer, title, MinecraftClient.getInstance().getWindow().getScaledWidth() / 2, 54, -1);
 
-        RenderSystem.setShaderColor(1, 1, 1, 1);
+		RenderSystem.setShaderColor(1, 1, 1, 1);
 
-        super.render(matrices, mouseX, mouseY, delta);
-    }
+		super.render(matrices, mouseX, mouseY, delta);
+	}
 
     @Override
     public void tick() {

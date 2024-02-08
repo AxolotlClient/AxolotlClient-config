@@ -27,12 +27,12 @@ public class Overlay extends ButtonWidget {
     @Override
     public void render(MinecraftClient client, int mouseX, int mouseY) {
 
-        DrawUtil.fillRect(overlay, Color.DARK_GRAY.withAlpha(127));
-        DrawUtil.outlineRect(overlay, Color.BLACK);
+		DrawUtil.getInstance().drawRect(overlay, Color.DARK_GRAY.withAlpha(127).getAsInt(), 12);
+		DrawUtil.getInstance().outlineRect(overlay, Color.WHITE.getAsInt(), 12);
 
-        drawCenteredString(MinecraftClient.getInstance().textRenderer, message, window.getWidth()/2, 54, -1);
+		drawCenteredString(MinecraftClient.getInstance().textRenderer, message, window.getWidth() / 2, 54, -1);
 
-    }
+	}
 
     public void tick(){
 

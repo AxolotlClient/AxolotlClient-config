@@ -29,8 +29,9 @@ dependencies {
 	modApi include("org.quiltmc.qsl.core:qsl_base:${project.qsl_1192}+${project.minecraft_1192}")
 	modApi include("org.quiltmc.qsl.core:lifecycle_events:${project.qsl_1192}+${project.minecraft_1192}")
 	modApi include("org.quiltmc.qsl.management:client_command:${project.qsl_1192}+${project.minecraft_1192}")
+	modApi include("org.quiltmc.qsl.core:resource_loader:${project.qsl_1192}+${project.minecraft_1192}")
 
-	modApi("com.terraformersmc:modmenu:4.1.2")
+	modCompileOnlyApi("com.terraformersmc:modmenu:4.1.2")
 
 	implementation include(project(":common"))
 }

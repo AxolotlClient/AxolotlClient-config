@@ -81,6 +81,7 @@ public class Example implements ClientModInitializer {
 					AxolotlClientConfigManager.getInstance().openConfigScreen(modid);
                 }), new BooleanOption("enabled", false));
         example.add(sub);
+		example.add(AxolotlClientConfigConfig.roundedRects);
 
         AxolotlClientConfigManager.getInstance().registerConfig(modid, new ConfigHolder() {
             @Override
