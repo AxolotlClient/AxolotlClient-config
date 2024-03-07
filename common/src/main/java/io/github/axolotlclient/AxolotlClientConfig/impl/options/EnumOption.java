@@ -25,7 +25,7 @@ package io.github.axolotlclient.AxolotlClientConfig.impl.options;
 import lombok.Getter;
 
 @Getter
-public class EnumOption<T extends Enum<T>> extends OptionBase<T> {
+public class EnumOption<T> extends OptionBase<T> {
 
 	private final Class<T> clazz;
 
