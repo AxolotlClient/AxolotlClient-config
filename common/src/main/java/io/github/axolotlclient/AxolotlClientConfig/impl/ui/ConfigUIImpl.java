@@ -26,6 +26,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Parameter;
 import java.net.URL;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -192,9 +193,28 @@ public class ConfigUIImpl implements ConfigUI {
 				return getWidget(x, y, width, height, id, loader, getDefaultStyle());
 			}
 		}
+
 		try {
-			return Class.forName(name, true, loader)
-				.getDeclaredConstructor(int.class, int.class, int.class, int.class, id.getClass())
+			var clazz = Class.forName(name, true, loader);
+			for (Constructor<?> c : clazz.getDeclaredConstructors()) {
+				Parameter[] parameters = c.getParameters();
+				if (parameters.length != 5) {
+					continue;
+				}
+				for (int i = 0; i < parameters.length; i++) {
+					Parameter parameter = parameters[i];
+					if (i < 4 && parameter.getType() == int.class) {
+						continue;
+					}
+					if (i == 4 && parameter.getType().isAssignableFrom(id.getClass())) {
+						return c.newInstance(x, y, width, height, id);
+					}
+					break;
+				}
+
+			}
+
+			return clazz.getDeclaredConstructor(int.class, int.class, int.class, int.class, id.getClass())
 				.newInstance(x, y, width, height, id);
 		} catch (Throwable e) {
 			throw new IllegalStateException("Error while getting widget for " + style.getName(), e);
