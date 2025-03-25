@@ -5,7 +5,7 @@ plugins {
 	id("fabric-loom")
 }
 
-val minecraft = "1.21.5-rc2"
+val minecraft = "1.21.5"
 val parchmentMinecraft = "1.21.4"
 val parchment = "2025.03.23"
 val fapiVersion = "0.119.5+1.21.5"
