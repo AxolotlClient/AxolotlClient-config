@@ -29,8 +29,14 @@ import java.nio.ByteBuffer;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
 import java.util.Arrays;
+import java.util.concurrent.CompletableFuture;
+import java.util.function.Consumer;
 
+import com.mojang.blaze3d.buffers.BufferType;
+import com.mojang.blaze3d.buffers.BufferUsage;
 import com.mojang.blaze3d.platform.NativeImage;
+import com.mojang.blaze3d.platform.Window;
+import com.mojang.blaze3d.systems.RenderSystem;
 import io.github.axolotlclient.AxolotlClientConfig.api.options.Option;
 import io.github.axolotlclient.AxolotlClientConfig.api.util.Color;
 import io.github.axolotlclient.AxolotlClientConfig.api.util.Rectangle;
@@ -202,5 +208,35 @@ public class DrawUtil implements DrawingUtil {
 			writer.invokeWrite(channel);
 			return out.toByteArray();
 		}
+	}
+
+	public static void readPixel(int x, int y, Consumer<byte[]> consumer) {
+		var client = Minecraft.getInstance();
+		var target = client.getMainRenderTarget();
+		var device = RenderSystem.getDevice();
+		var tex = target.getColorTexture();
+		if (tex == null) {
+			return;
+		}
+		var buf = device.createBuffer(() -> "Pixel Buffer", BufferType.PIXEL_PACK, BufferUsage.STATIC_READ, target.width* target.height*tex.getFormat().pixelSize());
+		var commandEncoder = RenderSystem.getDevice().createCommandEncoder();
+		var out = new byte[4];
+		commandEncoder.copyTextureToBuffer(tex, buf, 0, () -> {
+			try (var read = commandEncoder.readBuffer(buf)) {
+				read.data().get(out);
+				consumer.accept(out);
+			}
+			buf.close();
+		}, 0, toGlCoordsX(client.getWindow(), x), toGlCoordsY(client, y), 1, 1);
+	}
+
+	private static int toGlCoordsX(Window window, double x) {
+		return (int) (x * window.getGuiScale());
+	}
+
+	private static int toGlCoordsY(Minecraft minecraft, double y) {
+		Window window = minecraft.getWindow();
+		double scale = window.getGuiScale();
+		return Math.round((float) (minecraft.getMainRenderTarget().height - y * scale - scale));
 	}
 }

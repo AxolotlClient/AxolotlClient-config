@@ -5,12 +5,12 @@ plugins {
 	id("fabric-loom")
 }
 
-val minecraft = "1.21.4"
+val minecraft = "1.21.5-rc2"
 val parchmentMinecraft = "1.21.4"
 val parchment = "2025.03.23"
-val fapiVersion = "0.110.5"
+val fapiVersion = "0.119.5+1.21.5"
 group = project.property("maven_group") as String
-version = "${project.property("version")}+$minecraft"
+version = "${project.property("version")}+1.21.5"
 base.archivesName = "AxolotlClient-config"
 
 repositories {
@@ -40,7 +40,7 @@ dependencies {
 
 	modImplementation("net.fabricmc:fabric-loader:${project.property("fabric_loader")}")
 
-	modImplementation("net.fabricmc.fabric-api:fabric-api:${fapiVersion}+${minecraft}")
+	modImplementation("net.fabricmc.fabric-api:fabric-api:${fapiVersion}")
 
 	modCompileOnlyApi("com.terraformersmc:modmenu:6.1.0-beta.3") {
 		isTransitive = false

@@ -80,21 +80,39 @@ public class NVGMC {
 
 		long ctx = getNvgContext();
 
+		boolean separate = active;
+		if (!separate) {
+			startFrame(scale);
+		}
+
+
+		run.accept(ctx);
+
+		if (!separate) {
+			endFrame();
+		}
+	}
+
+	public static void startFrame() {
+		startFrame(true);
+	}
+
+	public static void startFrame(boolean scale) {
+		long ctx = getNvgContext();
 		int width = propertiesProvider.getWidth();
 		int height = propertiesProvider.getHeight();
 		NanoVG.nvgBeginFrame(ctx, width,
 			height,
 			(float) width / height);
 		active = true;
-
 		if (scale) {
 			float factor = propertiesProvider.getScaleFactor();
 			NanoVG.nvgScale(ctx, factor, factor);
 		}
+	}
 
-		run.accept(ctx);
-
+	public static void endFrame() {
 		active = false;
-		NanoVG.nvgEndFrame(ctx);
+		NanoVG.nvgEndFrame(getNvgContext());
 	}
 }
