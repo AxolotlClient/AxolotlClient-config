@@ -18,8 +18,8 @@ pluginManagement {
 }
 
 include 'common'
-//include '1.8.9'
-//include '1.16_combat-6'
-//include '1.20'
-//include '1.21'
+include '1.8.9'
+include '1.16_combat-6'
+include '1.20'
+include '1.21'
 include '1.21.5'
