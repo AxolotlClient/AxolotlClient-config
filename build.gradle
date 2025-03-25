@@ -2,8 +2,8 @@ plugins {
 	id 'maven-publish'
 	id 'java'
 	id 'io.freefair.lombok' version "8.+"
-	id 'fabric-loom' version "1.8.+" apply false
-	id 'ploceus' version "1.8.+" apply false
+	id 'fabric-loom' version "1.10.+" apply false
+	id 'ploceus' version "1.10.+" apply false
 	id "dev.yumi.gradle.licenser" version "1.0.+"
 }
 
