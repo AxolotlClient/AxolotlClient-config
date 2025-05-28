@@ -29,11 +29,9 @@ import java.nio.ByteBuffer;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
 import java.util.Arrays;
-import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
-import com.mojang.blaze3d.buffers.BufferType;
-import com.mojang.blaze3d.buffers.BufferUsage;
+import com.mojang.blaze3d.buffers.GpuBuffer;
 import com.mojang.blaze3d.platform.NativeImage;
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -184,8 +182,8 @@ public class DrawUtil implements DrawingUtil {
 		String[] text = tooltip.split("<br>");
 		if (!text[0].isEmpty() || text.length > 1) {
 			Font renderer = Minecraft.getInstance().font;
-			graphics.renderComponentTooltip(renderer,
-				Arrays.stream(text).map(Component::nullToEmpty).toList(), x - 2, y + 12 + 3 + 10);
+			graphics.setTooltipForNextFrame(renderer,
+				Arrays.stream(text).map(Component::nullToEmpty).map(Component::getVisualOrderText).toList(), x - 2, y + 12 + 3 + 10);
 		}
 	}
 
@@ -204,7 +202,7 @@ public class DrawUtil implements DrawingUtil {
 	public static byte[] writeToByteArray(NativeImage image) throws IOException {
 		try (var out = new ByteArrayOutputStream(); var channel = Channels.newChannel(out)) {
 			// javac is drunk
-			@SuppressWarnings("DataFlowIssue") NativeImageInvoker writer = (NativeImageInvoker)(Object) image;
+			@SuppressWarnings("DataFlowIssue") NativeImageInvoker writer = (NativeImageInvoker) (Object) image;
 			writer.invokeWrite(channel);
 			return out.toByteArray();
 		}
@@ -218,11 +216,11 @@ public class DrawUtil implements DrawingUtil {
 		if (tex == null) {
 			return;
 		}
-		var buf = device.createBuffer(() -> "Pixel Buffer", BufferType.PIXEL_PACK, BufferUsage.STATIC_READ, target.width* target.height*tex.getFormat().pixelSize());
+		var buf = device.createBuffer(() -> "Pixel Buffer", GpuBuffer.USAGE_COPY_DST | GpuBuffer.USAGE_MAP_READ, target.width * target.height * tex.getFormat().pixelSize());
 		var commandEncoder = RenderSystem.getDevice().createCommandEncoder();
 		var out = new byte[4];
 		commandEncoder.copyTextureToBuffer(tex, buf, 0, () -> {
-			try (var read = commandEncoder.readBuffer(buf)) {
+			try (var read = commandEncoder.mapBuffer(buf, true, false)) {
 				read.data().get(out);
 				consumer.accept(out);
 			}

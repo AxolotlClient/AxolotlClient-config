@@ -3,13 +3,13 @@
   "id": "axolotlclientconfig",
   "version": "${version}",
   "name": "AxolotlClientConfig",
-  "description": "Config Mod for AxolotlClient",
+  "description": "Config Library for AxolotlClient",
   "authors": [
     "moehreag"
   ],
   "contact": {
-    "homepage": "https://axolotlclient.github.io/",
-    "sources": "https://github.com/AxolotlClient/AxolotlClient-config/"
+    "homepage": "https://axolotlclient.com/",
+    "sources": "https://github.com/AxolotlClient/AxolotlClient-config"
   },
   "license": "LGPL-3.0-or-later",
   "icon": "assets/axolotlclientconfig/icon.png",
@@ -25,9 +25,6 @@
   "mixins": [
     "axolotlclientconfig.mixins.json"
   ],
-  "custom": {
-    "modmenu:clientsideOnly": true
-  },
   "depends": {
     "fabricloader": ">=0.14.0",
     "minecraft": "1.8.9",
