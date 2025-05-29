@@ -29,6 +29,7 @@ import java.nio.ByteBuffer;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
 import java.util.Arrays;
+import java.util.Optional;
 import java.util.function.Consumer;
 
 import com.mojang.blaze3d.buffers.GpuBuffer;
@@ -42,6 +43,7 @@ import io.github.axolotlclient.AxolotlClientConfig.impl.mixin.NativeImageInvoker
 import io.github.axolotlclient.AxolotlClientConfig.impl.ui.DrawingUtil;
 import io.github.axolotlclient.AxolotlClientConfig.impl.ui.NVGFont;
 import io.github.axolotlclient.AxolotlClientConfig.impl.ui.rounded.NVGHolder;
+import net.minecraft.ChatFormatting;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
@@ -49,6 +51,8 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.FormattedText;
+import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import org.lwjgl.nanovg.NanoVG;
@@ -166,11 +170,11 @@ public class DrawUtil implements DrawingUtil {
 			double f = Math.sin((Math.PI / 2) * Math.cos((Math.PI * 2) * d / e)) / 2.0 + 0.5;
 			double g = Mth.lerp(f, 0.0, r);
 			drawingUtil.pushScissor(NVGHolder.getContext(), left, top, right, bottom);
-			drawingUtil.drawString(NVGHolder.getContext(), font, text.getString(), left - (int) g, y, color);
+			drawingUtil.drawString(NVGHolder.getContext(), font, getFormattedString(text), left - (int) g, y, color);
 			drawingUtil.popScissor(NVGHolder.getContext());
 		} else {
 			float centerX = Mth.clamp(center, left + textWidth / 2, right - textWidth / 2);
-			drawingUtil.drawCenteredString(NVGHolder.getContext(), font, text.getString(), centerX, y, color);
+			drawingUtil.drawCenteredString(NVGHolder.getContext(), font, getFormattedString(text), centerX, y, color);
 		}
 	}
 
@@ -236,5 +240,33 @@ public class DrawUtil implements DrawingUtil {
 		Window window = minecraft.getWindow();
 		double scale = window.getGuiScale();
 		return Math.round((float) (minecraft.getMainRenderTarget().height - y * scale - scale));
+	}
+
+	public static String getFormattedString(FormattedText component) {
+		StringBuilder builder = new StringBuilder();
+		component.visit((style, string) -> {
+			if (style.getColor() != null && !style.getColor().serialize().contains("#")) {
+				builder.append(ChatFormatting.getByName(style.getColor().serialize()));
+			}
+			if (style.isBold()) {
+				builder.append(ChatFormatting.BOLD);
+			}
+			if (style.isUnderlined()) {
+				builder.append(ChatFormatting.UNDERLINE);
+			}
+			if (style.isObfuscated()) {
+				builder.append(ChatFormatting.OBFUSCATED);
+			}
+			if (style.isItalic()) {
+				builder.append(ChatFormatting.ITALIC);
+			}
+			if (style.isStrikethrough()) {
+				builder.append(ChatFormatting.STRIKETHROUGH);
+			}
+			builder.append(string);
+			builder.append(ChatFormatting.RESET);
+			return Optional.empty();
+		}, Style.EMPTY);
+		return builder.toString();
 	}
 }

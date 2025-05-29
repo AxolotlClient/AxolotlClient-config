@@ -22,9 +22,7 @@
 
 package io.github.axolotlclient.AxolotlClientConfig.impl.ui;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -77,43 +75,47 @@ public class FormattingUtil implements DrawingUtil {
 				float partX = x;
 				float lastPartX;
 				boolean strikethrough = false, italic = false, bold = false, underlined = false;
-				for (String part : parts) {
+				List<Line> decorations = new ArrayList<>(parts.length);
+				for (int i = 0, partsLength = parts.length; i < partsLength; i++) {
+					String part = parts[i];
 					if (part.isEmpty()) {
 						continue;
 					}
-					char first = part.charAt(0);
-					switch (first) {
-						case 'm':
-							strikethrough = true;
-							part = part.substring(1);
-							break;
-						case 'k': // obfuscated
-							part = part.substring(1);
-							part = obfuscateString(font, part);
-							break;
-						case 'l':
-							bold = boldItalicSupported;
-							part = part.substring(1);
-							break;
-						case 'n':
-							underlined = true;
-							part = part.substring(1);
-							break;
-						case 'o':
-							italic = boldItalicSupported;
-							part = part.substring(1);
-							break;
-						case 'r':
-							strikethrough = italic = bold = underlined = false;
-							part = part.substring(1);
-							break;
-						default:
-							if (MINECRAFT_COLOR_CODES.containsKey(first)) {
-								textColor = MINECRAFT_COLOR_CODES.get(first).withAlpha(color.getAlpha()).toNVG();
+					if (i != 0) {
+						char first = part.charAt(0);
+						switch (first) {
+							case 'm':
+								strikethrough = true;
 								part = part.substring(1);
-							} else {
-								textColor = color.toNVG();
-							}
+								break;
+							case 'k': // obfuscated
+								part = part.substring(1);
+								part = obfuscateString(font, part);
+								break;
+							case 'l':
+								bold = boldItalicSupported;
+								part = part.substring(1);
+								break;
+							case 'n':
+								underlined = true;
+								part = part.substring(1);
+								break;
+							case 'o':
+								italic = boldItalicSupported;
+								part = part.substring(1);
+								break;
+							case 'r':
+								strikethrough = italic = bold = underlined = false;
+								part = part.substring(1);
+								break;
+							default:
+								if (MINECRAFT_COLOR_CODES.containsKey(first)) {
+									textColor = MINECRAFT_COLOR_CODES.get(first).withAlpha(color.getAlpha()).toNVG();
+									part = part.substring(1);
+								} else {
+									textColor = color.toNVG();
+								}
+						}
 					}
 					NanoVG.nvgFillColor(ctx, textColor);
 					if (bold || italic) { // bold and italic actually are separate fonts
@@ -122,17 +124,21 @@ public class FormattingUtil implements DrawingUtil {
 						partX = font.renderString(part, lastPartX = partX, y);
 					}
 					if (underlined || strikethrough) {
-						NanoVG.nvgBeginPath(ctx);
 						if (underlined) {
-							NanoVG.nvgMoveTo(ctx, lastPartX, y + lineHeight + 1);
-							NanoVG.nvgLineTo(ctx, partX, y + lineHeight + 1);
+							decorations.add(new Line(lastPartX, y+lineHeight+1, partX, y+lineHeight+1));
 						}
 						if (strikethrough) {
-							NanoVG.nvgMoveTo(ctx, lastPartX, y + lineHeight / 2 + 1);
-							NanoVG.nvgLineTo(ctx, partX, y + lineHeight / 2 + 1);
+							decorations.add(new Line(lastPartX, y+lineHeight/2+1, partX, y+lineHeight/2+1));
 						}
-						NanoVG.nvgFill(ctx);
 					}
+				}
+				if (!decorations.isEmpty()) {
+					NanoVG.nvgBeginPath(ctx);
+					decorations.forEach(line -> {
+						NanoVG.nvgMoveTo(ctx, line.x(), line.y());
+						NanoVG.nvgLineTo(ctx, line.x2(), line.y2());
+					});
+					NanoVG.nvgFill(ctx);
 				}
 				return partX;
 			}
@@ -155,4 +161,6 @@ public class FormattingUtil implements DrawingUtil {
 		}
 		return builder.toString();
 	}
+
+	private record Line(float x, float y, float x2, float y2) {}
 }

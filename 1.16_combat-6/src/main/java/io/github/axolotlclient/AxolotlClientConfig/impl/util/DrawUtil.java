@@ -29,6 +29,7 @@ import java.nio.ByteBuffer;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
 import java.util.Arrays;
+import java.util.Optional;
 import java.util.Stack;
 import java.util.stream.Collectors;
 
@@ -45,7 +46,10 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.util.Window;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.text.StringVisitable;
+import net.minecraft.text.Style;
 import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.MathHelper;
@@ -251,5 +255,33 @@ public class DrawUtil implements DrawingUtil {
 			Screen screen = MinecraftClient.getInstance().currentScreen;
 			INSTANCE.drawTooltip(ctx, font, text, x, y, screen.width, screen.height);
 		}
+	}
+
+	public static String getFormattedString(StringVisitable component) {
+		StringBuilder builder = new StringBuilder();
+		component.visit((style, string) -> {
+			if (style.getColor() != null && !style.getColor().getName().contains("#")) {
+				builder.append(Formatting.byName(style.getColor().getName()));
+			}
+			if (style.isBold()) {
+				builder.append(Formatting.BOLD);
+			}
+			if (style.isUnderlined()) {
+				builder.append(Formatting.UNDERLINE);
+			}
+			if (style.isObfuscated()) {
+				builder.append(Formatting.OBFUSCATED);
+			}
+			if (style.isItalic()) {
+				builder.append(Formatting.ITALIC);
+			}
+			if (style.isStrikethrough()) {
+				builder.append(Formatting.STRIKETHROUGH);
+			}
+			builder.append(string);
+			builder.append(Formatting.RESET);
+			return Optional.empty();
+		}, Style.EMPTY);
+		return builder.toString();
 	}
 }

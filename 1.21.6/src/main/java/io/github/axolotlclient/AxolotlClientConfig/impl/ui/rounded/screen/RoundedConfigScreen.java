@@ -54,14 +54,6 @@ public class RoundedConfigScreen extends Screen implements ConfigScreen, Drawing
 	}
 
 	@Override
-	public void render(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
-		NVGUtil.wrap(ctx -> {
-			NVGHolder.setContext(ctx);
-			super.render(graphics, mouseX, mouseY, delta);
-		});
-	}
-
-	@Override
 	public void renderBackground(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
 		super.renderBackground(graphics, mouseX, mouseY, delta);
 

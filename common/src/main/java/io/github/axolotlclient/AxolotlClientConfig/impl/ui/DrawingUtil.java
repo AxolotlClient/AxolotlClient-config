@@ -25,6 +25,7 @@ package io.github.axolotlclient.AxolotlClientConfig.impl.ui;
 import io.github.axolotlclient.AxolotlClientConfig.api.util.Color;
 import io.github.axolotlclient.AxolotlClientConfig.api.util.Colors;
 import org.lwjgl.nanovg.NVGColor;
+import org.lwjgl.nanovg.NanoVG;
 
 import static org.lwjgl.nanovg.NanoVG.*;
 
@@ -102,6 +103,12 @@ public interface DrawingUtil {
 
 	default float drawString(long ctx, NVGFont font, String text, float x, float y, Color color) {
 		return drawStringWithFormatting(ctx, font, text, x, y, color);
+	}
+
+	default float drawUnformattedString(long ctx, NVGFont font, String text, float x, float y, Color color) {
+		NanoVG.nvgFillColor(ctx, color.toNVG());
+		font.bind();
+		return font.renderString(text, x, y);
 	}
 
 	default float drawStringWithFormatting(long ctx, NVGFont font, String text, float x, float y, Color color) {

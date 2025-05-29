@@ -23,6 +23,7 @@
 package io.github.axolotlclient.AxolotlClientConfig.impl.ui.rounded.widgets;
 
 import io.github.axolotlclient.AxolotlClientConfig.impl.ui.rounded.NVGHolder;
+import io.github.axolotlclient.AxolotlClientConfig.impl.util.DrawUtil;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentUtils;
@@ -49,7 +50,7 @@ public class TextOnlyButtonWidget extends RoundedButtonWidget {
 	@Override
 	protected void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
 		Component message = isHoveredOrFocused() ? highlightedContent : content;
-		drawString(NVGHolder.getContext(), NVGHolder.getFont(), message.getString(), getX(), this.getY(),
+		drawString(NVGHolder.getContext(), NVGHolder.getFont(), DrawUtil.getFormattedString(message), getX(), this.getY(),
 			(this.active ? activeColor : inactiveColor).withAlpha((int) (alpha * 255)));
 	}
 }

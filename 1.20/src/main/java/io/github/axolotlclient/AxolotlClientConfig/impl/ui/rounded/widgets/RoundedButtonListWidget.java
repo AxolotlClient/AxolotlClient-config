@@ -35,7 +35,7 @@ import io.github.axolotlclient.AxolotlClientConfig.impl.ui.rounded.NVGHolder;
 import io.github.axolotlclient.AxolotlClientConfig.impl.util.DrawUtil;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.widget.ClickableWidget;
-import net.minecraft.text.Text;
+import net.minecraft.client.resource.language.I18n;
 import org.jetbrains.annotations.Nullable;
 
 public class RoundedButtonListWidget extends ButtonListWidget {
@@ -88,7 +88,7 @@ public class RoundedButtonListWidget extends ButtonListWidget {
 		public void render(GuiGraphics graphics, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float tickDelta) {
 			super.render(graphics, index, y, x, entryWidth, entryHeight, mouseX, mouseY, hovered, tickDelta);
 
-			drawScrollingText(NVGHolder.getContext(), NVGHolder.getFont(), Text.translatable(option.getName()).getString(),
+			drawScrollingText(NVGHolder.getContext(), NVGHolder.getFont(), I18n.translate(option.getName()),
 				width / 2 + WIDGET_ROW_LEFT, y, WIDGET_WIDTH, entryHeight, Colors.accent());
 		}
 	}

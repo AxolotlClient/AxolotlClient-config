@@ -23,6 +23,7 @@
 package io.github.axolotlclient.AxolotlClientConfig.impl.ui.rounded.widgets;
 
 import io.github.axolotlclient.AxolotlClientConfig.impl.ui.rounded.NVGHolder;
+import io.github.axolotlclient.AxolotlClientConfig.impl.util.DrawUtil;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
@@ -48,7 +49,7 @@ public class TextOnlyButtonWidget extends RoundedButtonWidget {
 	@Override
 	public void renderButton(MatrixStack graphics, int mouseX, int mouseY, float delta) {
 		Text message = isHovered() ? highlightedContent : content;
-		drawString(NVGHolder.getContext(), NVGHolder.getFont(), message.getString(), getX(), this.getY(),
+		drawString(NVGHolder.getContext(), NVGHolder.getFont(), DrawUtil.getFormattedString(message), getX(), this.getY(),
 			(this.active ? activeColor : inactiveColor).withAlpha((int) (alpha * 255)));
 	}
 }
