@@ -44,7 +44,8 @@ dependencies {
 
 	implementation include(project(":common"))
 
-	modApi("io.github.moehreag:legacy-lwjgl3:$legacy_lwjgl3+${project.minecraft_18}")
+	modCompileOnly("io.github.moehreag:legacy-lwjgl3:$legacy_lwjgl3+${project.minecraft_18}")
+	modLocalRuntime("io.github.moehreag:legacy-lwjgl3:$legacy_lwjgl3+${project.minecraft_18}:all-remapped")
 
 	def lwjglVersion = "3.3.5"
 	api include("org.lwjgl:lwjgl-nanovg:$lwjglVersion")
