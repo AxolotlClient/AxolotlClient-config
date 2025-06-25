@@ -194,7 +194,7 @@ public class DrawUtil extends GuiElement implements DrawingUtil {
 			double e = Math.max((double) r * 0.5, 3.0);
 			double f = Math.sin((Math.PI / 2) * Math.cos((Math.PI * 2) * d / e)) / 2.0 + 0.5;
 			double g = MathHelper.clampedLerp(f, 0.0, r);
-			drawingUtil.pushScissor(NVGHolder.getContext(), left, top, right-left, bottom-top);
+			drawingUtil.pushScissor(NVGHolder.getContext(), left, top, right - left, bottom - top);
 			drawingUtil.drawString(NVGHolder.getContext(), font, text, left - (int) g, y, color);
 			drawingUtil.popScissor(NVGHolder.getContext());
 		} else {
@@ -211,6 +211,11 @@ public class DrawUtil extends GuiElement implements DrawingUtil {
 		}
 		String[] text = tooltip.split("<br>");
 		if (!text[0].isEmpty() || text.length > 1) {
+			// Uhhh hm?
+			TextRenderer renderer = Minecraft.getInstance().textRenderer;
+			text = Arrays.stream(text)
+				.flatMap((text1) -> renderer.split(text1, 170).stream())
+				.toArray(String[]::new);
 			INSTANCE.renderTooltip(Arrays.asList(text), x - 2, y + 12 + 3 + 10);
 		}
 
@@ -285,6 +290,9 @@ public class DrawUtil extends GuiElement implements DrawingUtil {
 		String[] text = tooltip.split("<br>");
 		if (!text[0].isEmpty() || text.length > 1) {
 			Screen screen = Minecraft.getInstance().screen;
+			text = Arrays.stream(text)
+				.flatMap((text1) -> Minecraft.getInstance().textRenderer.split(text1, 170).stream())
+				.toArray(String[]::new);
 			INSTANCE.drawTooltip(ctx, font, text, x, y, screen.width, screen.height);
 		}
 

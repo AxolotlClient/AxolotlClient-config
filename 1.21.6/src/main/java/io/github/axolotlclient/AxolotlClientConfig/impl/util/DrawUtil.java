@@ -187,7 +187,9 @@ public class DrawUtil implements DrawingUtil {
 		if (!text[0].isEmpty() || text.length > 1) {
 			Font renderer = Minecraft.getInstance().font;
 			graphics.setTooltipForNextFrame(renderer,
-				Arrays.stream(text).map(Component::nullToEmpty).map(Component::getVisualOrderText).toList(), x - 2, y + 12 + 3 + 10);
+				Arrays.stream(text).map(Component::nullToEmpty)
+					.flatMap((text1) -> renderer.split(text1, 170).stream())
+					.toList(), x - 2, y + 12 + 3 + 10);
 		}
 	}
 
@@ -199,6 +201,13 @@ public class DrawUtil implements DrawingUtil {
 		String[] text = tooltip.split("<br>");
 		if (!text[0].isEmpty() || text.length > 1) {
 			Screen screen = Minecraft.getInstance().screen;
+			// Uhhh hm?
+			Font renderer = Minecraft.getInstance().font;
+			text = Arrays.stream(text).map(Component::nullToEmpty)
+				.flatMap((text1) -> renderer.splitIgnoringLanguage(text1, 170).stream())
+				.map(FormattedText::getString)
+				.toArray(String[]::new);
+
 			INSTANCE.drawTooltip(ctx, font, text, x, y, screen.width, screen.height);
 		}
 	}

@@ -240,8 +240,9 @@ public class DrawUtil implements DrawingUtil {
 		}
 		String[] text = tooltip.split("<br>");
 		if (!text[0].isEmpty() || text.length > 1) {
-			MinecraftClient.getInstance().currentScreen.renderTooltip(graphics,
-				Arrays.stream(text).map(Text::of).collect(Collectors.toList()), x, y);
+			MinecraftClient.getInstance().currentScreen.renderOrderedTooltip(graphics,
+				Arrays.stream(text).map(Text::of)
+					.flatMap((text1) -> MinecraftClient.getInstance().textRenderer.wrapLines(text1, 170).stream()).collect(Collectors.toList()), x, y);
 		}
 	}
 
@@ -253,6 +254,12 @@ public class DrawUtil implements DrawingUtil {
 		String[] text = tooltip.split("<br>");
 		if (!text[0].isEmpty() || text.length > 1) {
 			Screen screen = MinecraftClient.getInstance().currentScreen;
+			// Uhhh hm?
+			TextRenderer renderer = MinecraftClient.getInstance().textRenderer;
+			text = Arrays.stream(text).map(Text::of)
+				.flatMap((text1) -> renderer.getTextHandler().wrapLines(text1, 170, Style.EMPTY).stream())
+				.map(StringVisitable::getString)
+				.toArray(String[]::new);
 			INSTANCE.drawTooltip(ctx, font, text, x, y, screen.width, screen.height);
 		}
 	}

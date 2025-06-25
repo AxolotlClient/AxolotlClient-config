@@ -40,6 +40,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.tooltip.DefaultTooltipPositioner;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.text.StringVisitable;
 import net.minecraft.text.Style;
@@ -180,7 +181,8 @@ public class DrawUtil implements DrawingUtil {
 		if (!text[0].isEmpty() || text.length > 1) {
 			TextRenderer renderer = MinecraftClient.getInstance().textRenderer;
 			graphics.drawTooltip(renderer,
-				Arrays.stream(text).map(Text::of).toList(), x - 2, y + 12 + 3 + 10);
+				Arrays.stream(text).map(Text::of)
+					.flatMap((text1) -> renderer.wrapLines(text1, 170).stream()).toList(), DefaultTooltipPositioner.INSTANCE, x - 2, y + 12 + 3 + 10);
 		}
 	}
 
@@ -192,6 +194,12 @@ public class DrawUtil implements DrawingUtil {
 		String[] text = tooltip.split("<br>");
 		if (!text[0].isEmpty() || text.length > 1) {
 			Screen screen = MinecraftClient.getInstance().currentScreen;
+			// Uhhh hm?
+			TextRenderer renderer = MinecraftClient.getInstance().textRenderer;
+			text = Arrays.stream(text).map(Text::of)
+				.flatMap((text1) -> renderer.getTextHandler().wrapLines(text1, 170, Style.EMPTY).stream())
+				.map(StringVisitable::getString)
+				.toArray(String[]::new);
 			INSTANCE.drawTooltip(ctx, font, text, x, y, screen.width, screen.height);
 		}
 	}
