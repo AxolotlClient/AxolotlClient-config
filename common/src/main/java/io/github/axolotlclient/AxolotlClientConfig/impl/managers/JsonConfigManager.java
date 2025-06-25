@@ -24,7 +24,6 @@ package io.github.axolotlclient.AxolotlClientConfig.impl.managers;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -38,8 +37,10 @@ import io.github.axolotlclient.AxolotlClientConfig.api.manager.ConfigManager;
 import io.github.axolotlclient.AxolotlClientConfig.api.options.Option;
 import io.github.axolotlclient.AxolotlClientConfig.api.options.OptionCategory;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @RequiredArgsConstructor
+@Slf4j
 public class JsonConfigManager implements ConfigManager {
 
 	protected static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
@@ -55,9 +56,9 @@ public class JsonConfigManager implements ConfigManager {
 		save(object, root);
 
 		try {
-			Files.write(file, GSON.toJson(object).getBytes(StandardCharsets.UTF_8));
+			Files.writeString(file, GSON.toJson(object));
 		} catch (IOException e) {
-
+			log.warn("Failed to save config: ", e);
 		}
 	}
 
@@ -90,6 +91,7 @@ public class JsonConfigManager implements ConfigManager {
 				return;
 			}
 		} catch (IOException e) {
+			log.warn("Failed to load config: ", e);
 		}
 
 		setDefaults(root);

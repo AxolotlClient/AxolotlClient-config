@@ -24,15 +24,16 @@ package io.github.axolotlclient.AxolotlClientConfig.impl.managers;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
 import com.google.gson.JsonObject;
 import io.github.axolotlclient.AxolotlClientConfig.api.options.OptionCategory;
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 
+@Slf4j
 public class VersionedJsonConfigManager extends JsonConfigManager {
 
 	protected ConfigVersion version;
@@ -70,9 +71,9 @@ public class VersionedJsonConfigManager extends JsonConfigManager {
 		object.add("config", config);
 
 		try {
-			Files.write(file, GSON.toJson(object).getBytes(StandardCharsets.UTF_8));
+			Files.writeString(file, GSON.toJson(object));
 		} catch (IOException e) {
-
+			log.warn("Failed to save config: ", e);
 		}
 	}
 
@@ -109,7 +110,7 @@ public class VersionedJsonConfigManager extends JsonConfigManager {
 				return;
 			}
 		} catch (IOException e) {
-
+			log.warn("Failed to load config: ", e);
 		}
 
 		setDefaults(getRoot());

@@ -5,8 +5,10 @@ plugins {
 group 'io.github.axolotlclient.AxolotlClient-config'
 archivesBaseName = "AxolotlClientConfig-common"
 
-sourceCompatibility = JavaVersion.VERSION_17
-targetCompatibility = JavaVersion.VERSION_17
+java {
+	sourceCompatibility = JavaVersion.VERSION_17
+	targetCompatibility = JavaVersion.VERSION_17
+}
 
 repositories {
 	mavenCentral()
@@ -24,6 +26,7 @@ dependencies {
 
 	compileOnly("org.lwjgl:lwjgl-nanovg:3.3.2")
 
+	compileOnly("org.slf4j:slf4j-api:2.0.16")
 }
 
 // Configure the maven publication
