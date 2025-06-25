@@ -29,7 +29,7 @@ import java.nio.file.Path;
 
 import com.google.gson.JsonObject;
 import io.github.axolotlclient.AxolotlClientConfig.api.options.OptionCategory;
-import lombok.Data;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 
@@ -120,26 +120,23 @@ public class VersionedJsonConfigManager extends JsonConfigManager {
 		JsonObject convert(ConfigVersion from, ConfigVersion to, OptionCategory root, JsonObject oldConfig);
 	}
 
-	@Data
-	public static class ConfigVersion implements Comparable<ConfigVersion> {
-		private final int major, minor, patch;
-
+	public record ConfigVersion(@Getter int major, @Getter int minor, @Getter int patch) implements Comparable<ConfigVersion> {
 		@Override
-		public String toString() {
+		public @NotNull String toString() {
 			return major + "." + minor + "." + patch;
 		}
 
 		@Override
 		public int compareTo(@NotNull VersionedJsonConfigManager.ConfigVersion o) {
-			int major = Integer.compare(getMajor(), o.getMajor());
+			int major = Integer.compare(major(), o.major());
 			if (major != 0) {
 				return major;
 			}
-			int minor = Integer.compare(getMinor(), o.getMinor());
+			int minor = Integer.compare(minor(), o.minor());
 			if (minor != 0) {
 				return minor;
 			}
-			return Integer.compare(getPatch(), o.getPatch());
+			return Integer.compare(patch(), o.patch());
 		}
 	}
 }

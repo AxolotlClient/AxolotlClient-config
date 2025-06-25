@@ -29,6 +29,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -63,19 +64,22 @@ public class JsonConfigManager implements ConfigManager {
 	}
 
 	protected void save(JsonObject object, OptionCategory category) {
-		for (OptionCategory child : category.getSubCategories()) {
-			if (child.includeInParentTree()) {
+		for (Map.Entry<OptionCategory, Boolean> child : category.getSubCategoryMap().entrySet()) {
+			var childCategory = child.getKey();
+			if (child.getValue() && childCategory.includeInParentTree()) {
 				JsonObject childObject = new JsonObject();
-				save(childObject, child);
+				save(childObject, childCategory);
 				if (!childObject.entrySet().isEmpty()) {
-					object.add(child.getName(), childObject);
+					object.add(childCategory.getName(), childObject);
 				}
 			}
 		}
 
-		category.getOptions().forEach(o -> {
-			String value = o.toSerializedValue();
-			if (value != null) object.addProperty(o.getName(), value);
+		category.getOptionMap().forEach((o, s) -> {
+			if (s) {
+				String value = o.toSerializedValue();
+				if (value != null) object.addProperty(o.getName(), value);
+			}
 		});
 	}
 
@@ -112,7 +116,8 @@ public class JsonConfigManager implements ConfigManager {
 	}
 
 	protected void load(OptionCategory category, JsonObject object) {
-		category.getOptions().forEach(option -> {
+		category.getOptionMap().forEach((option, s) -> {
+			if (!s) return;
 			if (object.has(option.getName())) {
 				try {
 					option.fromSerializedValue(object.get(option.getName()).getAsString());
@@ -123,16 +128,20 @@ public class JsonConfigManager implements ConfigManager {
 				option.setDefault();
 			}
 		});
-		category.getSubCategories().forEach(cat -> {
-			if (cat.includeInParentTree() && object.has(cat.getName())) {
+		category.getSubCategoryMap().forEach((cat, s) -> {
+			if (s && cat.includeInParentTree() && object.has(cat.getName())) {
 				load(cat, object.get(cat.getName()).getAsJsonObject());
 			}
 		});
 	}
 
 	protected void setDefaults(OptionCategory category) {
-		category.getOptions().forEach(Option::setDefault);
-		category.getSubCategories().stream().filter(OptionCategory::includeInParentTree)
+		category.getOptionMap().entrySet().stream().filter(Map.Entry::getValue)
+			.map(Map.Entry::getKey).forEach(Option::setDefault);
+		category.getSubCategoryMap().entrySet().stream()
+			.filter(Map.Entry::getValue)
+			.map(Map.Entry::getKey)
+			.filter(OptionCategory::includeInParentTree)
 			.forEach(this::setDefaults);
 	}
 }

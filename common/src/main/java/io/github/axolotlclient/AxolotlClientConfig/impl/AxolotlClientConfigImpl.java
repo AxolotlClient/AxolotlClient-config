@@ -25,6 +25,7 @@ package io.github.axolotlclient.AxolotlClientConfig.impl;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Map;
 
 import io.github.axolotlclient.AxolotlClientConfig.api.AxolotlClientConfig;
 import io.github.axolotlclient.AxolotlClientConfig.api.manager.ConfigManager;
@@ -84,8 +85,8 @@ public class AxolotlClientConfigImpl implements AxolotlClientConfig {
 			return true;
 		}
 		boolean found = false;
-		for (OptionCategory sub : root.getSubCategories()) {
-			found = sub.includeInParentTree() && findCategory(sub, category);
+		for (Map.Entry<OptionCategory, Boolean> sub : root.getSubCategoryMap().entrySet()) {
+			found = (sub.getValue() || sub.getKey().includeInParentTree()) && findCategory(sub.getKey(), category);
 			if (found) {
 				break;
 			}

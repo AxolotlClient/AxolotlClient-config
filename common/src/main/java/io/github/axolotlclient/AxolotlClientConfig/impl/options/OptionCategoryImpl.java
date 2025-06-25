@@ -22,9 +22,9 @@
 
 package io.github.axolotlclient.AxolotlClientConfig.impl.options;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import io.github.axolotlclient.AxolotlClientConfig.api.options.Option;
 import io.github.axolotlclient.AxolotlClientConfig.api.options.OptionCategory;
@@ -33,29 +33,49 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
-@Getter
 @RequiredArgsConstructor
 public class OptionCategoryImpl implements OptionCategory {
 
+	@Getter
 	private final String name;
 
-	private final Collection<Option<?>> options = new ArrayList<>();
-	private final Collection<OptionCategory> subCategories = new ArrayList<>();
+	private final Map<Option<?>, Boolean> options = new LinkedHashMap<>();
+	private final Map<OptionCategory, Boolean> subCategories = new LinkedHashMap<>();
+
+	@Override
+	public Collection<OptionCategory> getSubCategories() {
+		return subCategories.keySet();
+	}
+
+	@Override
+	public Collection<Option<?>> getOptions() {
+		return options.keySet();
+	}
+
+	@Override
+	public Map<OptionCategory, Boolean> getSubCategoryMap() {
+		return subCategories;
+	}
+
+	@Override
+	public Map<Option<?>, Boolean> getOptionMap() {
+		return options;
+	}
 
 	@Accessors(fluent = true)
 	@Setter
+	@Getter
 	private boolean includeInParentTree = true;
 
-	@Override
-	public void add(Option<?>... options) {
-		Collections.addAll(this.options, options);
+	public OptionCategory add(Option<?> option, boolean save) {
+		this.options.put(option, save);
+		return this;
 	}
 
-	@Override
-	public void add(OptionCategory... categories) {
-		Collections.addAll(subCategories, categories);
+	public OptionCategory add(OptionCategory category, boolean save) {
+		this.subCategories.put(category, save);
+		return this;
 	}
-
 
 	@Override
 	public String getWidgetIdentifier() {

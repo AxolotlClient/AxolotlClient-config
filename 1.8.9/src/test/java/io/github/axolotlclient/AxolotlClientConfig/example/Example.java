@@ -114,6 +114,8 @@ public class Example implements ClientModInitializer {
 			AxolotlClientConfig.getInstance().getConfigManager(modid).load();
 			ConfigUI.getInstance().setStyle(option.get());
 		});
+
+		example.add(new StringOption("Unsaved Option", "This is a default value"), false);
 	}
 
 	public Function<Screen, ? extends Screen> getConfigScreenFactory(String name) {

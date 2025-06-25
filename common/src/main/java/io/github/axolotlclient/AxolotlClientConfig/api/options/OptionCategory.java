@@ -23,6 +23,7 @@
 package io.github.axolotlclient.AxolotlClientConfig.api.options;
 
 import java.util.Collection;
+import java.util.Map;
 
 import io.github.axolotlclient.AxolotlClientConfig.impl.options.OptionCategoryImpl;
 
@@ -38,9 +39,27 @@ public interface OptionCategory extends WidgetIdentifieable {
 
 	Collection<Option<?>> getOptions();
 
-	void add(Option<?>... options);
+	Map<OptionCategory, Boolean> getSubCategoryMap();
 
-	void add(OptionCategory... categories);
+	Map<Option<?>, Boolean> getOptionMap();
+
+	default OptionCategory add(Option<?>... options) {
+		for (Option<?> option : options) {
+			add(option, true);
+		}
+		return this;
+	}
+
+	default OptionCategory add(OptionCategory... categories) {
+		for (OptionCategory category : categories) {
+			add(category, true);
+		}
+		return this;
+	}
+
+	OptionCategory add(Option<?> option, boolean save);
+
+	OptionCategory add(OptionCategory category, boolean save);
 
 	boolean includeInParentTree();
 
