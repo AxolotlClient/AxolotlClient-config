@@ -43,18 +43,16 @@ public interface OptionCategory extends WidgetIdentifieable {
 
 	Map<Option<?>, Boolean> getOptionMap();
 
-	default OptionCategory add(Option<?>... options) {
+	default void add(Option<?>... options) {
 		for (Option<?> option : options) {
 			add(option, true);
 		}
-		return this;
 	}
 
-	default OptionCategory add(OptionCategory... categories) {
+	default void add(OptionCategory... categories) {
 		for (OptionCategory category : categories) {
 			add(category, true);
 		}
-		return this;
 	}
 
 	OptionCategory add(Option<?> option, boolean save);
