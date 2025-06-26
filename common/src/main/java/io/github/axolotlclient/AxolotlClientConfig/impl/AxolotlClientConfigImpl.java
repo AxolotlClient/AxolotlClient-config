@@ -86,7 +86,10 @@ public class AxolotlClientConfigImpl implements AxolotlClientConfig {
 		}
 		boolean found = false;
 		for (Map.Entry<OptionCategory, Boolean> sub : root.getSubCategoryMap().entrySet()) {
-			found = (sub.getValue() || sub.getKey().includeInParentTree()) && findCategory(sub.getKey(), category);
+			if (!sub.getValue()) {
+				continue;
+			}
+			found = findCategory(sub.getKey(), category);
 			if (found) {
 				break;
 			}

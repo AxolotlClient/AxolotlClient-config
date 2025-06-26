@@ -66,7 +66,7 @@ public class JsonConfigManager implements ConfigManager {
 	protected void save(JsonObject object, OptionCategory category) {
 		for (Map.Entry<OptionCategory, Boolean> child : category.getSubCategoryMap().entrySet()) {
 			var childCategory = child.getKey();
-			if (child.getValue() && childCategory.includeInParentTree()) {
+			if (child.getValue()) {
 				JsonObject childObject = new JsonObject();
 				save(childObject, childCategory);
 				if (!childObject.entrySet().isEmpty()) {
@@ -129,7 +129,7 @@ public class JsonConfigManager implements ConfigManager {
 			}
 		});
 		category.getSubCategoryMap().forEach((cat, s) -> {
-			if (s && cat.includeInParentTree() && object.has(cat.getName())) {
+			if (s && object.has(cat.getName())) {
 				load(cat, object.get(cat.getName()).getAsJsonObject());
 			}
 		});
@@ -141,7 +141,6 @@ public class JsonConfigManager implements ConfigManager {
 		category.getSubCategoryMap().entrySet().stream()
 			.filter(Map.Entry::getValue)
 			.map(Map.Entry::getKey)
-			.filter(OptionCategory::includeInParentTree)
 			.forEach(this::setDefaults);
 	}
 }

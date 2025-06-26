@@ -51,7 +51,7 @@ public interface OptionCategory extends WidgetIdentifieable {
 
 	default void add(OptionCategory... categories) {
 		for (OptionCategory category : categories) {
-			add(category, true);
+			add(category, category.includeInParentTree());
 		}
 	}
 
@@ -59,7 +59,9 @@ public interface OptionCategory extends WidgetIdentifieable {
 
 	OptionCategory add(OptionCategory category, boolean save);
 
+	@Deprecated(since = "3.0.12")
 	boolean includeInParentTree();
 
+	@Deprecated(since = "3.0.12")
 	OptionCategory includeInParentTree(boolean includeInParentTree);
 }
