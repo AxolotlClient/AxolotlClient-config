@@ -31,14 +31,14 @@ import io.github.axolotlclient.AxolotlClientConfig.impl.ui.Updatable;
 import io.github.axolotlclient.AxolotlClientConfig.impl.ui.rounded.NVGHolder;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
-import net.minecraft.text.TranslatableText;
 import org.lwjgl.nanovg.NanoVG;
 
 public class SliderWidget<O extends NumberOption<N>, N extends Number> extends net.minecraft.client.gui.widget.SliderWidget implements DrawingUtil, Updatable {
+	private static final DecimalFormat format = new DecimalFormat("0.##");
 	private final O option;
 
 	public SliderWidget(int x, int y, int width, int height, O option) {
-		super(x, y, width, height, new TranslatableText(String.valueOf(option.get())), 0);
+		super(x, y, width, height, new LiteralText(format.format(option.get().doubleValue())), 0);
 		this.value = ((option.get().doubleValue() - option.getMin().doubleValue()) / (option.getMax().doubleValue() - option.getMin().doubleValue()));
 		this.option = option;
 	}
@@ -80,7 +80,6 @@ public class SliderWidget<O extends NumberOption<N>, N extends Number> extends n
 	}
 
 	public void updateMessage() {
-		DecimalFormat format = new DecimalFormat("0.##");
 		setMessage(new LiteralText(format.format(option.get().doubleValue())));
 	}
 

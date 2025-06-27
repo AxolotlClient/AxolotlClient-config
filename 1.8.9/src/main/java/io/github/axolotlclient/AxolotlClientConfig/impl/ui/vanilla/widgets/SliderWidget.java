@@ -33,12 +33,13 @@ import net.minecraft.client.sound.system.SoundManager;
 import net.minecraft.util.math.MathHelper;
 
 public class SliderWidget<O extends NumberOption<N>, N extends Number> extends VanillaButtonWidget {
+	private static final DecimalFormat format = new DecimalFormat("0.##");
 
 	private final O option;
 	protected double value;
 
 	public SliderWidget(int x, int y, int width, int height, O option) {
-		super(x, y, width, height, String.valueOf(option.get()), widget -> {
+		super(x, y, width, height, format.format(option.get().doubleValue()), widget -> {
 		});
 		this.value = ((option.get().doubleValue() - option.getMin().doubleValue()) / (option.getMax().doubleValue() - option.getMin().doubleValue()));
 		this.option = option;
@@ -104,7 +105,6 @@ public class SliderWidget<O extends NumberOption<N>, N extends Number> extends V
 	}
 
 	private void updateMessage() {
-		DecimalFormat format = new DecimalFormat("0.##");
 		setMessage(format.format(option.get().doubleValue()));
 	}
 

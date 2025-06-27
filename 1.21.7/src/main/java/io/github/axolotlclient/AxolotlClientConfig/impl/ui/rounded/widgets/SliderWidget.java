@@ -34,10 +34,11 @@ import net.minecraft.network.chat.Component;
 import org.lwjgl.nanovg.NanoVG;
 
 public class SliderWidget<O extends NumberOption<N>, N extends Number> extends net.minecraft.client.gui.components.AbstractSliderButton implements DrawingUtil, Updatable {
+	private static final DecimalFormat format = new DecimalFormat("0.##");
 	private final O option;
 
 	public SliderWidget(int x, int y, int width, int height, O option) {
-		super(x, y, width, height, Component.translatable(String.valueOf(option.get())), 0);
+		super(x, y, width, height, Component.literal(format.format(option.get().doubleValue())), 0);
 		this.value = ((option.get().doubleValue() - option.getMin().doubleValue()) / (option.getMax().doubleValue() - option.getMin().doubleValue()));
 		this.option = option;
 	}
@@ -71,7 +72,6 @@ public class SliderWidget<O extends NumberOption<N>, N extends Number> extends n
 	}
 
 	public void updateMessage() {
-		DecimalFormat format = new DecimalFormat("0.##");
 		setMessage(Component.literal(format.format(option.get().doubleValue())));
 	}
 
