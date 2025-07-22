@@ -125,16 +125,17 @@ public class FormattingUtil implements DrawingUtil {
 					}
 					if (underlined || strikethrough) {
 						if (underlined) {
-							decorations.add(new Line(lastPartX, y+lineHeight+1, partX, y+lineHeight+1));
+							decorations.add(new Line(lastPartX, y+lineHeight+1, partX, y+lineHeight+1, textColor));
 						}
 						if (strikethrough) {
-							decorations.add(new Line(lastPartX, y+lineHeight/2+1, partX, y+lineHeight/2+1));
+							decorations.add(new Line(lastPartX, y+lineHeight/2+1, partX, y+lineHeight/2+1, textColor));
 						}
 					}
 				}
 				if (!decorations.isEmpty()) {
 					NanoVG.nvgBeginPath(ctx);
 					decorations.forEach(line -> {
+						NanoVG.nvgFillColor(ctx, line.color());
 						NanoVG.nvgMoveTo(ctx, line.x(), line.y());
 						NanoVG.nvgLineTo(ctx, line.x2(), line.y2());
 					});
@@ -148,8 +149,8 @@ public class FormattingUtil implements DrawingUtil {
 		return font.renderString(text, x, y);
 	}
 
-	private String obfuscateString(NVGFont font, String s) {
-		String characters = "ÀÁÂÈÊËÍÓÔÕÚßãõğİıŒœŞşŴŵžȇ !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~ÇüéâäàåçêëèïîìÄÅÉæÆôöòûùÿÖÜø£Ø×ƒáíóúñÑªº¿®¬½¼¡«»░▒▓│┤╡╢╖╕╣║╗╝╜╛┐└┴┬├─┼╞╟╚╔╩╦╠═╬╧╨╤╥╙╘╒╓╫╪┘┌█▄▌▐▀αβΓπΣσμτΦΘΩδ∞∅∈∩≡±≥≤⌠⌡÷≈°∙·√ⁿ²■";
+	private String obfuscateString(NVGFont font, String s) {// ░▒▓│┤╡╢╖╕╣║╗╝╜╛┐└┴┬├─┼╞╟╚╔╩╦╠═╬╧╨╤╥╙╘╒╓╫╪┘┌█▄▌▐▀
+		String characters = "ÀÁÂÈÊËÍÓÔÕÚßãõğİıŒœŞşŴŵžȇ !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~ÇüéâäàåçêëèïîìÄÅÉæÆôöòûùÿÖÜø£Ø×ƒáíóúñÑªº¿®¬½¼¡«»αβΓπΣσμτΦΘΩδ∞∅∈∩≡±≥≤⌠⌡÷≈°∙·√ⁿ²■";
 		StringBuilder builder = new StringBuilder(s.length());
 		for (char c : s.toCharArray()) {
 			float width = font.getWidth(String.valueOf(c));
@@ -162,5 +163,5 @@ public class FormattingUtil implements DrawingUtil {
 		return builder.toString();
 	}
 
-	private record Line(float x, float y, float x2, float y2) {}
+	private record Line(float x, float y, float x2, float y2, NVGColor color) {}
 }

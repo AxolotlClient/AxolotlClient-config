@@ -300,9 +300,6 @@ public class TextFieldWidget extends ClickableWidget implements DrawingUtil {
 					}
 					return true;
 				}
-				default -> {
-					return false;
-				}
 				case 261 -> {
 					if (this.editable) {
 						this.erase(1);
@@ -332,6 +329,9 @@ public class TextFieldWidget extends ClickableWidget implements DrawingUtil {
 				case 269 -> {
 					this.setCursorToEnd(Screen.hasShiftDown());
 					return true;
+				}
+				default -> {
+					return false;
 				}
 			}
 		}
@@ -377,7 +377,7 @@ public class TextFieldWidget extends ClickableWidget implements DrawingUtil {
 				k = string.length();
 			}
 
-			if (string.length() > 0) {
+			if (!string.isEmpty()) {
 				String string2 = bl ? string.substring(0, j) : string;
 				n = (int) drawString(ctx, font, string2, (float) l, (float) m, i);
 			}
@@ -391,8 +391,17 @@ public class TextFieldWidget extends ClickableWidget implements DrawingUtil {
 				--n;
 			}
 
-			if (string.length() > 0 && bl && j < string.length()) {
+			if (!string.isEmpty() && bl && j < string.length()) {
 				n = (int) drawString(ctx, font, string.substring(j), n, (float) m, i);
+			}
+
+
+			if (this.hint != null && string.isEmpty() && !this.isFocused()) {
+				drawString(ctx, font, this.hint, n, m, i);
+			}
+
+			if (!bl3 && this.suggestion != null) {
+				drawString(ctx, font, this.suggestion, n - 1, m, Colors.GRAY);
 			}
 
 			if (bl2) {

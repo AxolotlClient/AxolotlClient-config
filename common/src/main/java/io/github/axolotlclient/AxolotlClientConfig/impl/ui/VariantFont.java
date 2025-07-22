@@ -23,6 +23,7 @@
 package io.github.axolotlclient.AxolotlClientConfig.impl.ui;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.ByteBuffer;
 
 import org.lwjgl.nanovg.NanoVG;
@@ -32,11 +33,11 @@ public class VariantFont extends NVGFont {
 	private final int italicVariant, boldVariant, boldItalicVariant;
 	private final ByteBuffer italicBuffer, boldBuffer, boldItalicBuffer;
 
-	VariantFont(long ctx, String regularFontPath, String italicPath, String boldPath, String boldItalicPath) throws IOException {
-		super(ctx, VariantFont.class.getResourceAsStream(regularFontPath));
-		italicVariant = createFont(ctx, italicBuffer = mallocAndRead(VariantFont.class.getResourceAsStream(italicPath)), "italic");
-		boldVariant = createFont(ctx, boldBuffer = mallocAndRead(VariantFont.class.getResourceAsStream(boldPath)), "bold");
-		boldItalicVariant = createFont(ctx, boldItalicBuffer = mallocAndRead(VariantFont.class.getResourceAsStream(boldItalicPath)), "boldItalic");
+	VariantFont(long ctx, InputStream regularFontPath, InputStream italicPath, InputStream boldPath, InputStream boldItalicPath) throws IOException {
+		super(ctx, regularFontPath);
+		italicVariant = createFont(ctx, italicBuffer = mallocAndRead(italicPath), "italic");
+		boldVariant = createFont(ctx, boldBuffer = mallocAndRead(boldPath), "bold");
+		boldItalicVariant = createFont(ctx, boldItalicBuffer = mallocAndRead(boldItalicPath), "boldItalic");
 	}
 
 	public float renderString(String text, float x, float y, boolean italic, boolean bold) {

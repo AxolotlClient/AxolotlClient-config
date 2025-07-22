@@ -30,6 +30,7 @@ import io.github.axolotlclient.AxolotlClientConfig.impl.options.ColorOption;
 import io.github.axolotlclient.AxolotlClientConfig.impl.options.GraphicsOption;
 import io.github.axolotlclient.AxolotlClientConfig.impl.ui.DrawingUtil;
 import io.github.axolotlclient.AxolotlClientConfig.impl.ui.rounded.NVGHolder;
+import io.github.axolotlclient.AxolotlClientConfig.impl.ui.rounded.NVGUtil;
 import io.github.axolotlclient.AxolotlClientConfig.impl.ui.rounded.widgets.RoundedButtonWidget;
 import io.github.axolotlclient.AxolotlClientConfig.impl.util.ConfigStyles;
 import net.minecraft.client.gui.GuiGraphics;
@@ -99,55 +100,58 @@ public class GraphicsEditorScreen extends Screen implements DrawingUtil {
 
 	@Override
 	public void render(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
-		long ctx = NVGHolder.getContext();
-		super.render(graphics, mouseX, mouseY, delta);
+		NVGUtil.wrap(ctx -> {
+			super.render(graphics, mouseX, mouseY, delta);
 
-		drawCenteredString(ctx, NVGHolder.getFont(), title.getString(), width / 2f, 25, Colors.text());
+			drawCenteredString(ctx, NVGHolder.getFont(), title.getString(), width / 2f, 25, Colors.text());
 
-		// Draw pixels
-		for (int x = 0; x < gridColumns; x++) {
-			for (int y = 0; y < gridRows; y++) {
-				if (option.get().getPixelColor(x, y) != 0) {
-					fill(ctx, gridX + x * pixelSize, gridY + y * pixelSize, pixelSize, pixelSize, new Color(option.get().getPixelColor(x, y)));
-				} else {
-					if (x % 2 == 0 && y % 2 == 0 || (x % 2 != 0 && y % 2 != 0)) {
-						fill(ctx, gridX + x * pixelSize, gridY + y * pixelSize, pixelSize, pixelSize, CHECKERBOARD_COLOR_1);
+			// Draw pixels
+			for (int x = 0; x < gridColumns; x++) {
+				for (int y = 0; y < gridRows; y++) {
+					if (option.get().getPixelColor(x, y) != 0) {
+						fill(ctx, gridX + x * pixelSize, gridY + y * pixelSize, pixelSize, pixelSize, new Color(option.get().getPixelColor(x, y)));
 					} else {
-						fill(ctx, gridX + x * pixelSize, gridY + y * pixelSize, pixelSize, pixelSize, CHECKERBOARD_COLOR_2);
+						if (x % 2 == 0 && y % 2 == 0 || (x % 2 != 0 && y % 2 != 0)) {
+							fill(ctx, gridX + x * pixelSize, gridY + y * pixelSize, pixelSize, pixelSize, CHECKERBOARD_COLOR_1);
+						} else {
+							fill(ctx, gridX + x * pixelSize, gridY + y * pixelSize, pixelSize, pixelSize, CHECKERBOARD_COLOR_2);
+						}
 					}
 				}
 			}
-		}
 
-		int mouseGridX = (int) Math.floor((mouseX - gridX) / (float) pixelSize);
-		int mouseGridY = (int) Math.floor((mouseY - gridY) / (float) pixelSize);
+			int mouseGridX = (int) Math.floor((mouseX - gridX) / (float) pixelSize);
+			int mouseGridY = (int) Math.floor((mouseY - gridY) / (float) pixelSize);
 
-		if (mouseGridX >= 0 && mouseGridY >= 0 && mouseGridX < gridColumns && mouseGridY < gridRows && !keyboardInput) {
+			if (mouseGridX >= 0 && mouseGridY >= 0 && mouseGridX < gridColumns && mouseGridY < gridRows && !keyboardInput) {
 
-			if (mouseDown) {
-				if (mouseButton == 0) {
-					this.graphics.setPixelColor(mouseGridX, mouseGridY, colorOption.get().get());
-				} else if (mouseButton == 1) {
-					this.graphics.setPixelColor(mouseGridX, mouseGridY, Colors.TRANSPARENT);
+				if (mouseDown) {
+					if (mouseButton == 0) {
+						this.graphics.setPixelColor(mouseGridX, mouseGridY, colorOption.get().get());
+					} else if (mouseButton == 1) {
+						this.graphics.setPixelColor(mouseGridX, mouseGridY, Colors.TRANSPARENT);
+					}
 				}
+
+				focusedPixel[0] = mouseGridX;
+				focusedPixel[1] = mouseGridY;
 			}
+			outline(NVGHolder.getContext(), gridX + (pixelSize * focusedPixel[0]), gridY + (pixelSize * focusedPixel[1]), pixelSize, pixelSize, Colors.GREEN, 1);
 
-			focusedPixel[0] = mouseGridX;
-			focusedPixel[1] = mouseGridY;
-		}
-		outline(NVGHolder.getContext(), gridX + (pixelSize * focusedPixel[0]), gridY + (pixelSize * focusedPixel[1]), pixelSize, pixelSize, Colors.GREEN, 1);
-
-		drawString(NVGHolder.getContext(), NVGHolder.getFont(), Component.translatable("option.current").getString(),
-			gridX + maxGridWidth + 10, gridY, Colors.text());
-		fillRoundedRect(NVGHolder.getContext(), gridX + maxGridWidth + 10, gridY + 12, 100, 20, colorOption.get().get(), 5);
-		outlineRoundedRect(NVGHolder.getContext(), gridX + maxGridWidth + 10, gridY + 12, 100, 20, Colors.BLACK, 5, 1);
+			drawString(NVGHolder.getContext(), NVGHolder.getFont(), Component.translatable("option.current").getString(),
+				gridX + maxGridWidth + 10, gridY, Colors.text());
+			fillRoundedRect(NVGHolder.getContext(), gridX + maxGridWidth + 10, gridY + 12, 100, 20, colorOption.get().get(), 5);
+			outlineRoundedRect(NVGHolder.getContext(), gridX + maxGridWidth + 10, gridY + 12, 100, 20, Colors.BLACK, 5, 1);
+		});
 	}
 
 	@Override
 	public void renderBackground(GuiGraphics graphics, int i, int j, float f) {
 		super.renderBackground(graphics, i, j, f);
-		graphics.fill(0, 0, 1, 1, 0); // Don't ask, it seems to work
-		fillRoundedRect(NVGHolder.getContext(), 15, 15, width - 30, height - 30, Colors.background(), 12);
+		//graphics.fill(0, 0, 1, 1, 0); // Don't ask, it seems to work
+		NVGUtil.wrap(ctx -> {
+			fillRoundedRect(NVGHolder.getContext(), 15, 15, width - 30, height - 30, Colors.background(), 12);
+		});
 	}
 
 	@Override

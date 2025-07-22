@@ -28,6 +28,7 @@ import lombok.Setter;
 import org.lwjgl.nanovg.NVGColor;
 import org.lwjgl.nanovg.NanoVG;
 
+@SuppressWarnings("unused")
 public class Color implements Runnable {
 
 	@Getter
@@ -85,17 +86,17 @@ public class Color implements Runnable {
 		}
 	}
 
-	public static Color fromHSV(float[] vals) {
+	public static Color fromHSB(float[] vals) {
 		if (vals.length == 3) {
-			return fromHSV(vals[0], vals[1], vals[2]);
+			return fromHSB(vals[0], vals[1], vals[2]);
 		} else if (vals.length == 4) {
-			return fromHSV(vals[0], vals[1], vals[2]).withAlpha((int) (vals[3] * 255));
+			return fromHSB(vals[0], vals[1], vals[2]).withAlpha((int) (vals[3] * 255));
 		}
 		throw new IllegalArgumentException();
 	}
 
-	public static Color fromHSV(float hue, float saturation, float value) {
-		return new Color(java.awt.Color.HSBtoRGB(hue, saturation, value));
+	public static Color fromHSB(float hue, float saturation, float brightness) {
+		return new Color(java.awt.Color.HSBtoRGB(hue, saturation, brightness));
 	}
 
 	public static Color parse(String color) {
@@ -172,7 +173,7 @@ public class Color implements Runnable {
 		return chroma ? withHue(chromaHue) : this;
 	}
 
-	public float[] toHSV() {
+	public float[] toHSB() {
 		float[] vals = new float[4];
 		java.awt.Color.RGBtoHSB(getRed(), getGreen(), getBlue(), vals);
 		vals[3] = getAlpha() / 255f;
@@ -189,7 +190,7 @@ public class Color implements Runnable {
 			AxolotlClientConfigImpl.getInstance().removeTickListener(this);
 		} else if (!this.chroma) {
 			AxolotlClientConfigImpl.getInstance().registerTickListener(this);
-			chromaHue = toHSV()[0];
+			chromaHue = toHSB()[0];
 		}
 
 		this.chroma = chroma;
@@ -228,33 +229,81 @@ public class Color implements Runnable {
 	}
 
 	public Color withHue(float hue) {
-		float[] vals = toHSV();
+		float[] vals = toHSB();
 		if (vals[0] == hue) {
 			return this;
 		} else {
 			vals[0] = hue;
-			return fromHSV(vals);
+			return fromHSB(vals);
 		}
 	}
 
 	public Color withSaturation(float saturation) {
-		float[] vals = toHSV();
+		float[] vals = toHSB();
 		if (vals[1] == saturation) {
 			return this;
 		} else {
 			vals[1] = saturation;
-			return fromHSV(vals);
+			return fromHSB(vals);
 		}
 	}
 
 	public Color withBrightness(float brightness) {
-		float[] vals = toHSV();
+		float[] vals = toHSB();
 		if (vals[2] == brightness) {
 			return this;
 		} else {
 			vals[2] = brightness;
-			return fromHSV(vals);
+			return fromHSB(vals);
 		}
+	}
+
+	public float getHue() {
+		return toHSB()[0];
+	}
+
+	public float getSaturation() {
+		return toHSB()[1];
+	}
+
+	public float getBrightness() {
+		return toHSB()[2];
+	}
+
+	public Color set(int red, int green, int blue, int alpha) {
+		setRed(red);
+		setGreen(green);
+		setBlue(blue);
+		setAlpha(alpha);
+		return this;
+	}
+
+	public Color setHSB(float hue, float saturation, float brightness) {
+		int color = java.awt.Color.HSBtoRGB(hue, saturation, brightness);
+		set(color >> 16 & 0xFF, color >> 8 & 0xFF, color & 0xFF, color >> 24 & 0xFF);
+		return this;
+	}
+
+	public Color setHSB(float[] hsb) {
+		return setHSB(hsb[0], hsb[1], hsb[2]);
+	}
+
+	public Color setHue(float hue) {
+		var hsb = toHSB();
+		hsb[0] = hue;
+		return setHSB(hsb);
+	}
+
+	public Color setSaturation(float saturation) {
+		var hsb = toHSB();
+		hsb[1] = saturation;
+		return setHSB(hsb);
+	}
+
+	public Color setBrightness(float brightness) {
+		var hsb = toHSB();
+		hsb[2] = brightness;
+		return setHSB(hsb);
 	}
 
 	public Color immutable() {
@@ -350,6 +399,36 @@ public class Color implements Runnable {
 		}
 
 		@Override
+		public Color set(int red, int green, int blue, int alpha) {
+			throw new UnsupportedOperationException("Immutable Color Object!");
+		}
+
+		@Override
+		public Color setHSB(float hue, float saturation, float brightness) {
+			throw new UnsupportedOperationException("Immutable Color Object!");
+		}
+
+		@Override
+		public Color setHSB(float[] hsb) {
+			throw new UnsupportedOperationException("Immutable Color Object!");
+		}
+
+		@Override
+		public Color setHue(float hue) {
+			throw new UnsupportedOperationException("Immutable Color Object!");
+		}
+
+		@Override
+		public Color setSaturation(float saturation) {
+			throw new UnsupportedOperationException("Immutable Color Object!");
+		}
+
+		@Override
+		public Color setBrightness(float brightness) {
+			throw new UnsupportedOperationException("Immutable Color Object!");
+		}
+
+		@Override
 		public void setChromaSpeed(float chromaSpeed) {
 			throw new UnsupportedOperationException("Immutable Color Object!");
 		}
@@ -386,23 +465,23 @@ public class Color implements Runnable {
 
 		@Override
 		public Color withHue(float hue) {
-			float[] vals = toHSV();
+			float[] vals = toHSB();
 			vals[0] = hue;
-			return fromHSV(vals);
+			return fromHSB(vals);
 		}
 
 		@Override
 		public Color withSaturation(float saturation) {
-			float[] vals = toHSV();
+			float[] vals = toHSB();
 			vals[1] = saturation;
-			return fromHSV(vals);
+			return fromHSB(vals);
 		}
 
 		@Override
 		public Color withBrightness(float brightness) {
-			float[] vals = toHSV();
+			float[] vals = toHSB();
 			vals[2] = brightness;
-			return fromHSV(vals);
+			return fromHSB(vals);
 		}
 
 		@Override

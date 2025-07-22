@@ -75,8 +75,10 @@ processResources {
 	}
 }
 
-runClient {
-	classpath(sourceSets.test.runtimeClasspath)
+afterEvaluate {
+	runClient {
+		classpath(sourceSets.test.runtimeClasspath)
+	}
 }
 
 // Configure the maven publication

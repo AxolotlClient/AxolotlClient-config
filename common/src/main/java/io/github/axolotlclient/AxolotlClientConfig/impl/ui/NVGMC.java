@@ -52,8 +52,12 @@ public class NVGMC {
 		initialized = true;
 	}
 
-	public static NVGFont createFont(String regular, String italic, String bold, String boldItalic) throws IOException {
+	public static NVGFont createFont(InputStream regular, InputStream italic, InputStream bold, InputStream boldItalic) throws IOException {
 		return new VariantFont(getNvgContext(), regular, italic, bold, boldItalic);
+	}
+
+	public static NVGFont createFont(String regular, String italic, String bold, String boldItalic) throws IOException {
+		return createFont(NVGMC.class.getResourceAsStream(regular), NVGMC.class.getResourceAsStream(italic), NVGMC.class.getResourceAsStream(bold), NVGMC.class.getResourceAsStream(boldItalic));
 	}
 
 	public static NVGFont createFont(InputStream ttf) throws IOException {
@@ -85,7 +89,6 @@ public class NVGMC {
 			startFrame(scale);
 		}
 
-
 		run.accept(ctx);
 
 		if (!separate) {
@@ -112,7 +115,9 @@ public class NVGMC {
 	}
 
 	public static void endFrame() {
-		active = false;
-		NanoVG.nvgEndFrame(getNvgContext());
+		if (active) {
+			active = false;
+			NanoVG.nvgEndFrame(getNvgContext());
+		}
 	}
 }

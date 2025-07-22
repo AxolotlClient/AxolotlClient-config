@@ -35,6 +35,7 @@ import io.github.axolotlclient.AxolotlClientConfig.impl.options.IntegerOption;
 import io.github.axolotlclient.AxolotlClientConfig.impl.ui.DrawingUtil;
 import io.github.axolotlclient.AxolotlClientConfig.impl.ui.Updatable;
 import io.github.axolotlclient.AxolotlClientConfig.impl.ui.rounded.NVGHolder;
+import io.github.axolotlclient.AxolotlClientConfig.impl.ui.rounded.NVGUtil;
 import io.github.axolotlclient.AxolotlClientConfig.impl.ui.rounded.widgets.RoundedButtonWidget;
 import io.github.axolotlclient.AxolotlClientConfig.impl.ui.rounded.widgets.TextFieldWidget;
 import io.github.axolotlclient.AxolotlClientConfig.impl.util.ConfigStyles;
@@ -122,47 +123,50 @@ public class ColorSelectionScreen extends Screen implements DrawingUtil {
 
 	@Override
 	public void render(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
-		long ctx = NVGHolder.getContext();
-		super.render(graphics, mouseX, mouseY, delta);
+		NVGUtil.wrap(ctx -> {
+			super.render(graphics, mouseX, mouseY, delta);
 
-		drawCenteredString(ctx, NVGHolder.getFont(), title.getString(), width / 2f, 20, Colors.text());
+			drawCenteredString(ctx, NVGHolder.getFont(), title.getString(), width / 2f, 20, Colors.text());
 
-		if (paint == null || paint.address() == 0) {
-			int image = DrawUtil.nvgCreateImage(ctx, ResourceLocation.fromNamespaceAndPath("axolotlclientconfig", "textures/gui/colorwheel.png"));
-			paint = nvgImagePattern(ctx, selectorX, selectorY, selectorRadius * 2, selectorRadius * 2, 0, image, 1, NVGPaint.create());
-		}
+			if (paint == null || paint.address() == 0) {
+				int image = DrawUtil.nvgCreateImage(ctx, ResourceLocation.fromNamespaceAndPath("axolotlclientconfig", "textures/gui/colorwheel.png"));
+				paint = nvgImagePattern(ctx, selectorX, selectorY, selectorRadius * 2, selectorRadius * 2, 0, image, 1, NVGPaint.create());
+			}
 
-		nvgBeginPath(ctx);
-		nvgRoundedRect(ctx, selectorX, selectorY, selectorRadius * 2, selectorRadius * 2, selectorRadius);
-		nvgFillPaint(ctx, paint);
-		nvgFill(ctx);
+			nvgBeginPath(ctx);
+			nvgRoundedRect(ctx, selectorX, selectorY, selectorRadius * 2, selectorRadius * 2, selectorRadius);
+			nvgFillPaint(ctx, paint);
+			nvgFill(ctx);
 
-		nvgBeginPath(ctx);
-		nvgRoundedRect(ctx, selectorX, selectorY, selectorRadius * 2, selectorRadius * 2, selectorRadius);
-		nvgStrokeColor(ctx, Colors.BLACK.toNVG());
-		nvgStrokeWidth(ctx, 1);
-		nvgStroke(ctx);
+			nvgBeginPath(ctx);
+			nvgRoundedRect(ctx, selectorX, selectorY, selectorRadius * 2, selectorRadius * 2, selectorRadius);
+			nvgStrokeColor(ctx, Colors.BLACK.toNVG());
+			nvgStrokeWidth(ctx, 1);
+			nvgStroke(ctx);
 
-		drawString(ctx, NVGHolder.getFont(), I18n.get("option.current"), buttonsX, 40, Colors.text());
+			drawString(ctx, NVGHolder.getFont(), I18n.get("option.current"), buttonsX, 40, Colors.text());
 
-		fillRoundedRect(ctx, buttonsX, 55, 150, 40, option.get(), 10);
-		outlineRoundedRect(ctx, buttonsX, 55, 150, 40, Colors.BLACK, 10, 1);
+			fillRoundedRect(ctx, buttonsX, 55, 150, 40, option.get(), 10);
+			outlineRoundedRect(ctx, buttonsX, 55, 150, 40, Colors.BLACK, 10, 1);
 
-		int y = 105;
-		drawString(ctx, NVGHolder.getFont(), I18n.get("option.chroma"), buttonsX, y, Colors.text());
-		y += 45;
-		if (height > 300) {
-			drawString(ctx, NVGHolder.getFont(), I18n.get("option.speed"), buttonsX, y, Colors.text());
+			int y = 105;
+			drawString(ctx, NVGHolder.getFont(), I18n.get("option.chroma"), buttonsX, y, Colors.text());
 			y += 45;
-		}
-		drawString(ctx, NVGHolder.getFont(), I18n.get("option.alpha"), buttonsX, y, Colors.text());
+			if (height > 300) {
+				drawString(ctx, NVGHolder.getFont(), I18n.get("option.speed"), buttonsX, y, Colors.text());
+				y += 45;
+			}
+			drawString(ctx, NVGHolder.getFont(), I18n.get("option.alpha"), buttonsX, y, Colors.text());
+		});
 	}
 
 	@Override
 	public void renderBackground(GuiGraphics graphics, int i, int j, float f) {
 		super.renderBackground(graphics, i, j, f);
-		graphics.fill(0, 0, 1, 1, 0); // Don't ask, it seems to work
-		fillRoundedRect(NVGHolder.getContext(), 15, 15, width - 30, height - 30, Colors.background(), 12);
+		//graphics.fill(0, 0, 1, 1, 0); // Don't ask, it seems to work
+		NVGUtil.wrap(ctx -> {
+			fillRoundedRect(NVGHolder.getContext(), 15, 15, width - 30, height - 30, Colors.background(), 12);
+		});
 	}
 
 	@Override

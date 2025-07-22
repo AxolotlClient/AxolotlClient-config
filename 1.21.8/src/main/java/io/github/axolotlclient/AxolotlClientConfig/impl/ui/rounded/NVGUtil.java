@@ -29,6 +29,10 @@ import io.github.axolotlclient.AxolotlClientConfig.impl.ui.NVGMC;
 public class NVGUtil {
 
 	public static void wrap(Consumer<Long> function) {
-		NVGMC.wrap(function);
+		NVGMC.startFrame();
+		NVGMC.wrap(ctx -> {
+			NVGHolder.setContext(ctx);
+			function.accept(ctx);
+		});
 	}
 }

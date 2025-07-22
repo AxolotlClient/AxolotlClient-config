@@ -393,6 +393,14 @@ public class TextFieldWidget extends AbstractButton implements DrawingUtil {
 				n = (int) drawString(ctx, font, string.substring(j), n, (float) m, i);
 			}
 
+			if (this.hint != null && string.isEmpty() && !this.isFocused()) {
+				drawString(ctx, font, this.hint, n, m, i);
+			}
+
+			if (!bl3 && this.suggestion != null) {
+				drawString(ctx, font, this.suggestion, n - 1, m, Colors.GRAY);
+			}
+
 			if (bl2) {
 				if (bl3) {
 					fillRoundedRect(ctx, o, m - 1, 1, 2 + NVGHolder.getFont().getLineHeight(), i, 2);

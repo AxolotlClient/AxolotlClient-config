@@ -54,12 +54,18 @@ public class RoundedConfigScreen extends Screen implements ConfigScreen, Drawing
 	}
 
 	@Override
+	public void render(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
+		NVGUtil.wrap(ctx -> {
+			super.render(graphics, mouseX, mouseY, delta);
+		});
+	}
+
+	@Override
 	public void renderBackground(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
 		super.renderBackground(graphics, mouseX, mouseY, delta);
-
-		graphics.fill(0, 0, 1, 1, 0); // Don't ask, it seems to work
-
-		fillRoundedRect(NVGHolder.getContext(), 15, 15, width - 30, height - 30, Colors.background(), 12);
+		NVGUtil.wrap(ctx -> {
+			fillRoundedRect(NVGHolder.getContext(), 15, 15, width - 30, height - 30, Colors.background(), 12);
+		});
 	}
 
 	@Override
