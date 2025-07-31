@@ -37,19 +37,25 @@ import com.google.gson.JsonObject;
 import io.github.axolotlclient.AxolotlClientConfig.api.manager.ConfigManager;
 import io.github.axolotlclient.AxolotlClientConfig.api.options.Option;
 import io.github.axolotlclient.AxolotlClientConfig.api.options.OptionCategory;
-import lombok.RequiredArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
-@RequiredArgsConstructor
 @Slf4j
 public class JsonConfigManager implements ConfigManager {
 
 	protected static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
-	protected final Path file;
-	protected final OptionCategory root;
+	@Getter @Setter
+	protected Path file;
+	@Getter @Setter
+	protected OptionCategory root;
 	protected List<String> suppressedNames = new ArrayList<>();
 
+	public JsonConfigManager(Path file, OptionCategory root) {
+		this.file = file;
+		this.root = root;
+	}
 
 	@Override
 	public void save() {
@@ -57,6 +63,7 @@ public class JsonConfigManager implements ConfigManager {
 		save(object, root);
 
 		try {
+			Files.createDirectories(file.getParent());
 			Files.writeString(file, GSON.toJson(object));
 		} catch (IOException e) {
 			log.warn("Failed to save config: ", e);
@@ -99,11 +106,6 @@ public class JsonConfigManager implements ConfigManager {
 		}
 
 		setDefaults(root);
-	}
-
-	@Override
-	public OptionCategory getRoot() {
-		return root;
 	}
 
 	public Collection<String> getSuppressedNames() {
