@@ -135,7 +135,18 @@ public class DrawUtil extends GuiElement implements DrawingUtil {
 	}
 
 	public static void pushScissor(Rectangle rect) {
+		if (!scissorStack.isEmpty()) {
+			rect = intersection(rect, scissorStack.peek());
+		}
 		setScissor(scissorStack.push(rect));
+	}
+
+	private static Rectangle intersection(Rectangle a, Rectangle b) {
+		int x = Math.max(a.x(), b.x());
+		int y = Math.max(a.y(), b.y());
+		int right = Math.min(a.x() + a.width(), b.x() + b.width());
+		int bottom = Math.min(a.y() + a.height(), b.y() + b.height());
+		return x < right && y < bottom ? new Rectangle(x, y, right - x, bottom - y) : new Rectangle(0, 0, 0, 0);
 	}
 
 	public static void popScissor() {
