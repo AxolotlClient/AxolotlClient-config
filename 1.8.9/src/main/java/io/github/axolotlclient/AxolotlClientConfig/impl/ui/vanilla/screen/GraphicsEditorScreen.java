@@ -38,17 +38,17 @@ import org.lwjgl.input.Keyboard;
 
 public class GraphicsEditorScreen extends io.github.axolotlclient.AxolotlClientConfig.impl.ui.Screen implements DrawingUtil {
 
-	private final Screen parent;
-	private final GraphicsOption option;
-	private final int[] focusedPixel = new int[2];
+	protected final Screen parent;
+	protected final GraphicsOption option;
+	protected final int[] focusedPixel = new int[2];
 	private final ColorOption colorOption = new ColorOption("current", Colors.WHITE);
-	private int maxGridWidth;
-	private int maxGridHeight;
-	private int gridColumns;
-	private int gridRows;
-	private int pixelSize;
-	private int gridX;
-	private int gridY;
+	protected int maxGridWidth;
+	protected int maxGridHeight;
+	protected int gridColumns;
+	protected int gridRows;
+	protected int pixelSize;
+	protected int gridX;
+	protected int gridY;
 	private boolean mouseDown;
 	private int mouseButton;
 	private boolean keyboardInput;
@@ -73,7 +73,7 @@ public class GraphicsEditorScreen extends io.github.axolotlclient.AxolotlClientC
 
 		pixelSize = Math.min(maxGridHeight / gridRows, maxGridWidth / gridColumns);
 
-		gridX = (int) (new Window(Minecraft.getInstance()).getScaledWidth() / 2 - (gridColumns * pixelSize) / 2);
+		gridX = (int) (new Window(Minecraft.getInstance()).getScaledWidth() / 2 - (gridColumns * pixelSize) / 2f);
 		maxGridWidth = Math.min(maxGridWidth, gridColumns * pixelSize);
 		maxGridHeight = Math.min(maxGridHeight, gridRows * pixelSize);
 

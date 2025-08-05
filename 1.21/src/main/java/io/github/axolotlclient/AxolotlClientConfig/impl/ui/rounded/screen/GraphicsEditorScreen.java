@@ -47,17 +47,17 @@ public class GraphicsEditorScreen extends Screen implements DrawingUtil {
 	private static final Color CHECKERBOARD_COLOR_1 = new Color(0xFF242424);
 	private static final Color CHECKERBOARD_COLOR_2 = new Color(0xFF383838);
 	private static final ColorOption colorOption = new ColorOption("current", Colors.WHITE);
-	private final Screen parent;
-	private final GraphicsOption option;
+	protected final Screen parent;
+	protected final GraphicsOption option;
 	private final Graphics graphics;
-	private final int[] focusedPixel = new int[2];
-	private int gridX;
-	private int gridY;
-	private int maxGridWidth;
-	private int maxGridHeight;
-	private int gridColumns;
-	private int gridRows;
-	private int pixelSize;
+	protected final int[] focusedPixel = new int[2];
+	protected int gridX;
+	protected int gridY;
+	protected int maxGridWidth;
+	protected int maxGridHeight;
+	protected int gridColumns;
+	protected int gridRows;
+	protected int pixelSize;
 	private boolean keyboardInput;
 	private boolean mouseDown;
 	private int mouseButton;
@@ -72,10 +72,6 @@ public class GraphicsEditorScreen extends Screen implements DrawingUtil {
 
 	@Override
 	protected void init() {
-		addDrawableSelectableElement(new RoundedButtonWidget(width / 2 - 75, height - 40, Text.translatable("gui.back"),
-			button -> MinecraftClient.getInstance().setScreen(parent)));
-
-
 		gridX = 110;
 		gridY = 40;
 
@@ -97,6 +93,8 @@ public class GraphicsEditorScreen extends Screen implements DrawingUtil {
 		clear.setWidth(100);
 		addDrawableSelectableElement(clear);
 		addDrawableSelectableElement(new ElementSelectable(gridX, gridY, maxGridWidth, maxGridHeight));
+		addDrawableSelectableElement(new RoundedButtonWidget(width / 2 - 75, height - 40, Text.translatable("gui.back"),
+			button -> MinecraftClient.getInstance().setScreen(parent)));
 	}
 
 	@Override

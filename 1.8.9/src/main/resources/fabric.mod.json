@@ -32,6 +32,6 @@
     "osl-lifecycle-events": "*",
     "osl-keybinds": "*",
     "osl-entrypoints": "*",
-    "legacy-lwjgl3": "1.2.x"
+    "legacy-lwjgl3": ">=1.2.0"
   }
 }

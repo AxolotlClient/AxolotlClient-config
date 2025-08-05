@@ -28,7 +28,6 @@ subprojects {
 	repositories {
 		mavenLocal()
 		mavenCentral()
-		maven { url 'https://jitpack.io' }
 	}
 
 	project.extensions.configure(JavaPluginExtension.class) {

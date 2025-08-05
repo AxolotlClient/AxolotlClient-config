@@ -40,17 +40,17 @@ import org.lwjgl.glfw.GLFW;
 
 public class GraphicsEditorScreen extends io.github.axolotlclient.AxolotlClientConfig.impl.ui.Screen implements DrawingUtil {
 
-	private final Screen parent;
-	private final GraphicsOption option;
-	private final int[] focusedPixel = new int[2];
+	protected final Screen parent;
+	protected final GraphicsOption option;
+	protected final int[] focusedPixel = new int[2];
 	private final ColorOption colorOption = new ColorOption("current", Colors.WHITE);
-	private int maxGridWidth;
-	private int maxGridHeight;
-	private int gridColumns;
-	private int gridRows;
-	private int pixelSize;
-	private int gridX;
-	private int gridY;
+	protected int maxGridWidth;
+	protected int maxGridHeight;
+	protected int gridColumns;
+	protected int gridRows;
+	protected int pixelSize;
+	protected int gridX;
+	protected int gridY;
 	private boolean mouseDown;
 	private int mouseButton;
 	private boolean keyboardInput;
@@ -63,7 +63,6 @@ public class GraphicsEditorScreen extends io.github.axolotlclient.AxolotlClientC
 
 	@Override
 	public void init() {
-
 		super.init();
 		gridX = 110;
 		gridY = 40;
