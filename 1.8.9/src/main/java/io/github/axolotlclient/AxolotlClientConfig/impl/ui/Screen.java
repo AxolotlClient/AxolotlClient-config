@@ -71,7 +71,7 @@ public abstract class Screen extends net.minecraft.client.gui.screen.Screen impl
 		int x = Mouse.getEventX() * this.width / this.minecraft.width;
 		int y = this.height - Mouse.getEventY() * this.height / this.minecraft.height - 1;
 		if (scroll != 0) {
-			children.forEach(e -> e.mouseScrolled(x, y, 0, scroll));
+			mouseScrolled(x, y, 0, scroll);
 		}
 	}
 

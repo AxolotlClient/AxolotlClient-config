@@ -122,7 +122,7 @@ public abstract class EntryListWidget<E extends EntryListWidget.Entry<E>> extend
 		return this.children;
 	}
 
-	protected final void clearEntries() {
+	protected void clearEntries() {
 		this.children.clear();
 	}
 

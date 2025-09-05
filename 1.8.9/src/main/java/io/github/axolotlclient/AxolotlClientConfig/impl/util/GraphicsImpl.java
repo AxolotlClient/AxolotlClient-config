@@ -52,7 +52,7 @@ public class GraphicsImpl implements Graphics {
 	protected int[][] read(byte[] bytes) {
 		try {
 			BufferedImage image = readImage(bytes);
-			int[][] data = new int[Math.max(image.getHeight(), this.data.length)][Math.max(image.getWidth(), this.data.length)];
+			int[][] data = new int[this.data != null ? Math.max(image.getHeight(), this.data.length) : image.getHeight()][this.data != null ? Math.max(image.getWidth(), this.data.length) : image.getWidth()];
 
 			for (int y = 0; y < image.getHeight(); y++) {
 				for (int x = 0; x < image.getWidth(); x++) {

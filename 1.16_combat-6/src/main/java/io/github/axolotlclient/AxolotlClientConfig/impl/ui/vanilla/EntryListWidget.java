@@ -127,7 +127,7 @@ public abstract class EntryListWidget<E extends EntryListWidget.Entry<E>> extend
 		return this.children;
 	}
 
-	protected final void clearEntries() {
+	protected void clearEntries() {
 		this.children.clear();
 	}
 
@@ -137,7 +137,7 @@ public abstract class EntryListWidget<E extends EntryListWidget.Entry<E>> extend
 	}
 
 	protected E getEntry(int index) {
-		return (E) this.children().get(index);
+		return this.children().get(index);
 	}
 
 	protected int addEntry(E entry) {
@@ -174,9 +174,9 @@ public abstract class EntryListWidget<E extends EntryListWidget.Entry<E>> extend
 		int l = j + i;
 		int m = MathHelper.floor(y - (double) this.top) - this.headerHeight + (int) this.getScrollAmount() - 4;
 		int n = m / this.itemHeight;
-		return (E) (x < (double) this.getScrollbarPositionX() && x >= (double) k && x <= (double) l && n >= 0 && m >= 0 && n < this.getEntryCount()
+		return x < (double) this.getScrollbarPositionX() && x >= (double) k && x <= (double) l && n >= 0 && m >= 0 && n < this.getEntryCount()
 			? this.children().get(n)
-			: null);
+			: null;
 	}
 
 	public void updateSize(int width, int height, int top, int bottom) {
@@ -540,7 +540,7 @@ public abstract class EntryListWidget<E extends EntryListWidget.Entry<E>> extend
 	protected boolean removeEntry(E entry) {
 		boolean bl = this.children.remove(entry);
 		if (bl && entry == this.getSelectedOrNull()) {
-			this.setSelected((E) null);
+			this.setSelected(null);
 		}
 
 		return bl;
@@ -575,10 +575,10 @@ public abstract class EntryListWidget<E extends EntryListWidget.Entry<E>> extend
 	}
 
 	class Entries extends AbstractList<E> {
-		private final List<E> entries = Lists.<E>newArrayList();
+		private final List<E> entries = Lists.newArrayList();
 
 		public E get(int i) {
-			return (E) this.entries.get(i);
+			return this.entries.get(i);
 		}
 
 		public int size() {
@@ -586,7 +586,7 @@ public abstract class EntryListWidget<E extends EntryListWidget.Entry<E>> extend
 		}
 
 		public E set(int i, E entry) {
-			E entry2 = (E) this.entries.set(i, entry);
+			E entry2 = this.entries.set(i, entry);
 			EntryListWidget.this.setEntryParentList(entry);
 			return entry2;
 		}
@@ -597,7 +597,7 @@ public abstract class EntryListWidget<E extends EntryListWidget.Entry<E>> extend
 		}
 
 		public E remove(int i) {
-			return (E) this.entries.remove(i);
+			return this.entries.remove(i);
 		}
 	}
 }

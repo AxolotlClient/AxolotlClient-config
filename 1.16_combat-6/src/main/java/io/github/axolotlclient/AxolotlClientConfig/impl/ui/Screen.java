@@ -34,7 +34,7 @@ import net.minecraft.text.TranslatableText;
 public abstract class Screen extends net.minecraft.client.gui.screen.Screen {
 
 	protected final String title;
-	private final List<Drawable> drawables = Lists.newArrayList();
+	protected final List<Drawable> drawables = Lists.newArrayList();
 	protected MinecraftClient client;
 
 	public Screen(String title) {
@@ -64,5 +64,11 @@ public abstract class Screen extends net.minecraft.client.gui.screen.Screen {
 	public void resize(MinecraftClient client, int width, int height) {
 		drawables.clear();
 		super.resize(client, width, height);
+	}
+
+	public void clear() {
+		children.clear();
+		buttons.clear();
+		drawables.clear();
 	}
 }
