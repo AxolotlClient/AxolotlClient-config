@@ -39,7 +39,7 @@ public abstract class Screen extends net.minecraft.client.gui.screen.Screen impl
 	private final List<Selectable> selectables = Lists.newArrayList();
 	private Element focused;
 	private boolean dragging;
-	private int lastMouseDragPosX, lastMouseDragPosY = -1;
+	private int lastMouseDragPosX, lastMouseDragPosY, dragOffsetX, dragOffsetY;
 
 	public Screen(String title) {
 		this.title = title;
@@ -82,6 +82,8 @@ public abstract class Screen extends net.minecraft.client.gui.screen.Screen impl
 
 	@Override
 	protected void mouseClicked(int mouseX, int mouseY, int button) {
+		lastMouseDragPosX = mouseX - dragOffsetX;
+		lastMouseDragPosY = mouseY - dragOffsetY;
 		mouseClicked((double) mouseX, mouseY, button);
 	}
 
@@ -92,13 +94,11 @@ public abstract class Screen extends net.minecraft.client.gui.screen.Screen impl
 
 	@Override
 	protected void mouseDragged(int mouseX, int mouseY, int button, long lastClick) {
-		if (lastMouseDragPosX == -1 || lastMouseDragPosY == -1) {
-			lastMouseDragPosX = mouseX;
-			lastMouseDragPosY = mouseY;
-		}
-		mouseDragged(mouseX, mouseY, button, mouseX - lastMouseDragPosX, mouseY - lastMouseDragPosY);
-		lastMouseDragPosX = mouseX;
-		lastMouseDragPosY = mouseY;
+		int dX = mouseX - lastMouseDragPosX - dragOffsetX;
+		dragOffsetX = mouseX - lastMouseDragPosX;
+		int dY = mouseY - lastMouseDragPosY - dragOffsetY;
+		dragOffsetY = mouseY - lastMouseDragPosY;
+		mouseDragged(mouseX, mouseY, button, dX, dY);
 	}
 
 	protected <T extends Element & Drawable & Selectable> T addDrawableChild(T drawableElement) {
@@ -119,11 +119,11 @@ public abstract class Screen extends net.minecraft.client.gui.screen.Screen impl
 
 	protected void remove(Element child) {
 		if (child instanceof Drawable) {
-			this.drawables.remove((Drawable) child);
+			this.drawables.remove(child);
 		}
 
 		if (child instanceof Selectable) {
-			this.selectables.remove((Selectable) child);
+			this.selectables.remove(child);
 		}
 
 		this.children.remove(child);
