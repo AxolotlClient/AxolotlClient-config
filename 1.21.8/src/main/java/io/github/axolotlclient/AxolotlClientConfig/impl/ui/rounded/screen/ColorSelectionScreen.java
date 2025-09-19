@@ -37,12 +37,13 @@ import io.github.axolotlclient.AxolotlClientConfig.impl.ui.Updatable;
 import io.github.axolotlclient.AxolotlClientConfig.impl.ui.rounded.NVGHolder;
 import io.github.axolotlclient.AxolotlClientConfig.impl.ui.rounded.NVGUtil;
 import io.github.axolotlclient.AxolotlClientConfig.impl.ui.rounded.widgets.RoundedButtonWidget;
-import io.github.axolotlclient.AxolotlClientConfig.impl.ui.rounded.widgets.TextFieldWidget;
+import io.github.axolotlclient.AxolotlClientConfig.impl.ui.rounded.widgets.RoundedEditBox;
 import io.github.axolotlclient.AxolotlClientConfig.impl.util.ConfigStyles;
 import io.github.axolotlclient.AxolotlClientConfig.impl.util.DrawUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -72,8 +73,8 @@ public class ColorSelectionScreen extends Screen implements DrawingUtil {
 		alpha = new IntegerOption("option.alpha", option.getOriginal().getAlpha(), val -> {
 			option.getOriginal().setAlpha(val);
 			children().forEach(e -> {
-				if (e instanceof TextFieldWidget) {
-					((TextFieldWidget) e).setText(option.getOriginal().toString().split(";")[0]);
+				if (e instanceof RoundedEditBox) {
+					((RoundedEditBox) e).setValue(option.getOriginal().toString().split(";")[0]);
 				}
 			});
 		}, 0, 255);
@@ -101,8 +102,8 @@ public class ColorSelectionScreen extends Screen implements DrawingUtil {
 		y += 45;
 		if (this.height - 250 > 0) {
 			y -= 20;
-			TextFieldWidget text = new TextFieldWidget(buttonsX, y, 150, 20, Component.empty());
-			text.setChangedListener(s -> {
+			var text = new RoundedEditBox(buttonsX, y, 150, 20, Component.empty());
+			text.setResponder(s -> {
 				try {
 					option.set(Color.parse(s));
 					option.getOriginal().setChroma(chroma.get());
@@ -116,7 +117,7 @@ public class ColorSelectionScreen extends Screen implements DrawingUtil {
 				} catch (Throwable ignored) {
 				}
 			});
-			text.setText(option.get().toString().split(";")[0]);
+			text.setValue(option.get().toString().split(";")[0]);
 			addRenderableWidget(text);
 		}
 	}
@@ -170,8 +171,10 @@ public class ColorSelectionScreen extends Screen implements DrawingUtil {
 	}
 
 	@Override
-	public boolean mouseClicked(double mouseX, double mouseY, int button) {
-
+	public boolean mouseClicked(MouseButtonEvent event, boolean doubleClick) {
+		var mouseX = event.x();
+		var mouseY = event.y();
+		var button = event.button();
 		if (button == 0) {
 			double x = (selectorX + selectorRadius - mouseX);
 			double y = (selectorY + selectorRadius - mouseY);
@@ -196,15 +199,15 @@ public class ColorSelectionScreen extends Screen implements DrawingUtil {
 					}
 				});
 				children().forEach(e -> {
-					if (e instanceof TextFieldWidget) {
-						((TextFieldWidget) e).setText(option.get().toString().split(";")[0]);
+					if (e instanceof RoundedEditBox) {
+						((RoundedEditBox) e).setValue(option.get().toString().split(";")[0]);
 					}
 				});
 				return true;
 			}
 		}
 
-		return super.mouseClicked(mouseX, mouseY, button);
+		return super.mouseClicked(event, doubleClick);
 	}
 
 	private int toGlCoordsX(double x) {

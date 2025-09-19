@@ -26,8 +26,10 @@ import io.github.axolotlclient.AxolotlClientConfig.impl.options.ColorOption;
 import io.github.axolotlclient.AxolotlClientConfig.impl.ui.vanilla.screen.ColorSelectionScreen;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.input.InputWithModifiers;
 import net.minecraft.network.chat.Component;
 
+@SuppressWarnings("unused")
 public class ColorWidget extends Button {
 	private final ColorOption option;
 
@@ -38,7 +40,7 @@ public class ColorWidget extends Button {
 	}
 
 	@Override
-	public void onPress() {
+	public void onPress(InputWithModifiers input) {
 		Minecraft.getInstance()
 			.setScreen(new ColorSelectionScreen(Minecraft.getInstance().screen, option));
 	}

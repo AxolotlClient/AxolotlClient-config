@@ -27,22 +27,23 @@ import io.github.axolotlclient.AxolotlClientConfig.impl.ui.DrawingUtil;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 
-public class StringWidget extends TextFieldWidget implements DrawingUtil {
+@SuppressWarnings("unused")
+public class StringWidget extends RoundedEditBox implements DrawingUtil {
 	private final StringOption option;
 
 	public StringWidget(int x, int y, int width, int height, StringOption option) {
 		super(x, y, width, height, Component.translatable(option.getName()));
 
 		setMaxLength(option.getMaxLength());
-		write(option.get());
+		insertText(option.get());
 		this.option = option;
-		setChangedListener(option::set);
+		setResponder(option::set);
 	}
 
 	@Override
 	public void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
-		if (!option.get().equals(getText())) {
-			setText(option.get());
+		if (!option.get().equals(getValue())) {
+			setValue(option.get());
 		}
 		super.renderWidget(graphics, mouseX, mouseY, delta);
 	}

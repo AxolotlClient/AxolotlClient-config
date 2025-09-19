@@ -27,8 +27,10 @@ import io.github.axolotlclient.AxolotlClientConfig.impl.options.OptionCategoryIm
 import io.github.axolotlclient.AxolotlClientConfig.impl.util.ConfigStyles;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.input.InputWithModifiers;
 import net.minecraft.network.chat.Component;
 
+@SuppressWarnings("unused")
 public class CategoryWidget extends Button {
 
 	private final OptionCategory category;
@@ -40,7 +42,7 @@ public class CategoryWidget extends Button {
 	}
 
 	@Override
-	public void onPress() {
+	public void onPress(InputWithModifiers input) {
 		if (Minecraft.getInstance().screen != null) {
 			Minecraft.getInstance().setScreen(
 				ConfigStyles.createScreen(Minecraft.getInstance().screen, category));

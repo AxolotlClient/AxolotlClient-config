@@ -22,6 +22,7 @@
 
 package io.github.axolotlclient.AxolotlClientConfig.impl.ui.rounded.widgets;
 
+import com.mojang.blaze3d.platform.cursor.CursorTypes;
 import io.github.axolotlclient.AxolotlClientConfig.api.util.Color;
 import io.github.axolotlclient.AxolotlClientConfig.api.util.Colors;
 import io.github.axolotlclient.AxolotlClientConfig.impl.ui.DrawingUtil;
@@ -62,6 +63,9 @@ public class RoundedButtonWidget extends Button implements DrawingUtil {
 
 		Color i = this.active ? activeColor : inactiveColor;
 		this.drawScrollableText(NVGHolder.getFont(), i.withAlpha((int) (this.alpha * 255)));
+		if (this.isHovered()) {
+			graphics.requestCursor(this.isActive() ? CursorTypes.POINTING_HAND : CursorTypes.NOT_ALLOWED);
+		}
 	}
 
 	private void drawScrollableText(NVGFont font, Color color) {

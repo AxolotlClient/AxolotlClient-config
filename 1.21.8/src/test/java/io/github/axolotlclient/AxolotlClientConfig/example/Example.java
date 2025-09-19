@@ -39,6 +39,7 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.resources.ResourceLocation;
 
 public class Example implements ClientModInitializer {
 
@@ -49,6 +50,7 @@ public class Example implements ClientModInitializer {
 	public void onInitializeClient() {
 		Instance = this;
 		final String modid = "axolotlclientconfig-test";
+		var keyCategory = KeyMapping.Category.register(ResourceLocation.fromNamespaceAndPath(modid, modid));
 
 		OptionCategory example = OptionCategory.create(modid);
 		example.add(new BooleanOption("boolean", true));
@@ -99,7 +101,7 @@ public class Example implements ClientModInitializer {
 
 		AxolotlClientConfig.getInstance().register(new JsonConfigManager(FabricLoader.getInstance().getConfigDir().resolve(modid + ".json"), example));
 
-		KeyMapping bind = new KeyMapping(modid, InputConstants.KEY_O, modid);
+		KeyMapping bind = new KeyMapping(modid, InputConstants.KEY_O, keyCategory);
 
 		ClientTickEvents.END_CLIENT_TICK.register(client -> {
 			if (bind.consumeClick()) {

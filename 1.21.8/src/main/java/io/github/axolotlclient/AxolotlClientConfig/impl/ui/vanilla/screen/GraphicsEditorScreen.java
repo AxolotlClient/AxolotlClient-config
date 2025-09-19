@@ -34,6 +34,9 @@ import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.input.InputWithModifiers;
+import net.minecraft.client.input.KeyEvent;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 
@@ -143,14 +146,17 @@ public class GraphicsEditorScreen extends Screen implements DrawingUtil {
 	}
 
 	@Override
-	public boolean mouseClicked(double mouseX, double mouseY, int button) {
+	public boolean mouseClicked(MouseButtonEvent event, boolean doubleClick) {
+		var mouseX = event.x();
+		var mouseY = event.y();
+		var button = event.button();
 		if (mouseX >= gridX && mouseY >= gridY && mouseX <= gridX + maxGridWidth && mouseY <= gridY + maxGridHeight && !mouseDown) {
 			mouseDown = true;
 			mouseButton = button;
 			keyboardInput = false;
 			return true;
 		}
-		return super.mouseClicked(mouseX, mouseY, button);
+		return super.mouseClicked(event, doubleClick);
 	}
 
 	private void clearGraphics() {
@@ -162,7 +168,7 @@ public class GraphicsEditorScreen extends Screen implements DrawingUtil {
 	}
 
 	@Override
-	public boolean mouseReleased(double mouseX, double mouseY, int button) {
+	public boolean mouseReleased(MouseButtonEvent event) {
 		if (mouseDown) {
 			mouseDown = false;
 			return true;
@@ -182,7 +188,8 @@ public class GraphicsEditorScreen extends Screen implements DrawingUtil {
 		}
 
 		@Override
-		public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+		public boolean keyPressed(KeyEvent event) {
+			var keyCode = event.key();
 			keyboardInput = true;
 			if (keyCode == InputConstants.KEY_UP) {
 				if (focusedPixel[1] > 0) {
@@ -208,11 +215,11 @@ public class GraphicsEditorScreen extends Screen implements DrawingUtil {
 			if (keyCode == InputConstants.KEY_DELETE) {
 				option.get().setPixelColor(focusedPixel[0], focusedPixel[1], Colors.TRANSPARENT);
 			}
-			return super.keyPressed(keyCode, scanCode, modifiers);
+			return super.keyPressed(event);
 		}
 
 		@Override
-		public void onPress() {
+		public void onPress(InputWithModifiers input) {
 			option.get().setPixelColor(focusedPixel[0], focusedPixel[1], colorOption.get().get());
 		}
 

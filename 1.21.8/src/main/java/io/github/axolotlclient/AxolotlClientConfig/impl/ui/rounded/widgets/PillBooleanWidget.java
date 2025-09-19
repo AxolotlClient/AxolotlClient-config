@@ -28,8 +28,10 @@ import io.github.axolotlclient.AxolotlClientConfig.impl.ui.Updatable;
 import io.github.axolotlclient.AxolotlClientConfig.impl.ui.rounded.NVGHolder;
 import net.minecraft.Util;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.input.InputWithModifiers;
 import net.minecraft.network.chat.CommonComponents;
 
+@SuppressWarnings("unused")
 public class PillBooleanWidget extends RoundedButtonWidget implements Updatable {
 
 	protected static final int HANDLE_MARGIN = 3;
@@ -108,8 +110,8 @@ public class PillBooleanWidget extends RoundedButtonWidget implements Updatable 
 	}
 
 	@Override
-	public void onPress() {
-		super.onPress();
+	public void onPress(InputWithModifiers modifiers) {
+		super.onPress(modifiers);
 		state = targetState;
 		targetState = !targetState;
 		tickTime = Util.getMillis();

@@ -370,9 +370,9 @@ public class TextFieldWidget extends ClickableWidget implements DrawingUtil {
 			String string = font.trimToWidth(this.text.substring(this.firstCharacterIndex), this.getInnerWidth());
 			boolean bl = j >= 0 && j <= string.length();
 			boolean bl2 = this.isFocused() && (Util.getMeasuringTimeMs() - this.focusedTime) / 300L % 2L == 0L && bl;
-			int l = this.drawsBackground ? this.getX() + 4 : this.getX();
-			int m = this.drawsBackground ? this.getY() + (this.getHeight() - 8) / 2 : this.getY();
-			int n = l;
+			float l = this.drawsBackground ? this.getX() + 4 : this.getX();
+			float m = this.drawsBackground ? this.getY() + (this.getHeight() - 8) / 2f : this.getY();
+			float n = l;
 			if (k > string.length()) {
 				k = string.length();
 			}
@@ -383,7 +383,7 @@ public class TextFieldWidget extends ClickableWidget implements DrawingUtil {
 			}
 
 			boolean bl3 = this.selectionStart < this.text.length() || this.text.length() >= this.getMaxLength();
-			int o = n;
+			float o = n;
 			if (!bl) {
 				o = j > 0 ? l + this.getWidth() : l;
 			} else if (bl3) {

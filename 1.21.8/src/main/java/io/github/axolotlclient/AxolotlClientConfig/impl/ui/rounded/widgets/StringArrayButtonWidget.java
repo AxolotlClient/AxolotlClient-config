@@ -22,16 +22,17 @@
 
 package io.github.axolotlclient.AxolotlClientConfig.impl.ui.rounded.widgets;
 
-import com.mojang.blaze3d.platform.InputConstants;
 import io.github.axolotlclient.AxolotlClientConfig.impl.options.StringArrayOption;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.navigation.CommonInputs;
-import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.input.KeyEvent;
+import net.minecraft.client.input.MouseButtonEvent;
+import net.minecraft.client.input.MouseButtonInfo;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import org.apache.commons.lang3.ArrayUtils;
 
+@SuppressWarnings("unused")
 public class StringArrayButtonWidget extends RoundedButtonWidget {
 
 	private final StringArrayOption option;
@@ -51,13 +52,13 @@ public class StringArrayButtonWidget extends RoundedButtonWidget {
 	}
 
 	@Override
-	public boolean mouseClicked(double mouseX, double mouseY, int button) {
+	public boolean mouseClicked(MouseButtonEvent mouseButtonEvent, boolean doubleClick) {
 		if (this.active && this.visible) {
-			if (this.isValidClickButton(button)) {
-				boolean bl = this.isMouseOver(mouseX, mouseY);
+			if (this.isValidClickButton(mouseButtonEvent.buttonInfo())) {
+				boolean bl = this.isMouseOver(mouseButtonEvent.x(), mouseButtonEvent.y());
 				if (bl) {
 					this.playDownSound(Minecraft.getInstance().getSoundManager());
-					this.cycle(button == 0 ? 1 : -1, true);
+					this.cycle(mouseButtonEvent.button() == 0 ? 1 : -1, true);
 					return true;
 				}
 			}
@@ -66,15 +67,16 @@ public class StringArrayButtonWidget extends RoundedButtonWidget {
 	}
 
 	@Override
-	public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+	public boolean keyPressed(KeyEvent keyEvent) {
+
 		if (!this.active || !this.visible) {
 			return false;
-		} else if (CommonInputs.selected(keyCode) || keyCode == InputConstants.KEY_RIGHT) {
+		} else if (keyEvent.isSelection() || keyEvent.isRight()) {
 			if (this.cycle(1, false)) {
 				this.playDownSound(Minecraft.getInstance().getSoundManager());
 				return true;
 			}
-		} else if (keyCode == InputConstants.KEY_LEFT) {
+		} else if (keyEvent.isLeft()) {
 			if (this.cycle(-1, false)) {
 				this.playDownSound(Minecraft.getInstance().getSoundManager());
 				return true;
@@ -84,17 +86,17 @@ public class StringArrayButtonWidget extends RoundedButtonWidget {
 	}
 
 	@Override
-	protected boolean isValidClickButton(int button) {
-		return button == 0 || button == 1;
+	protected boolean isValidClickButton(MouseButtonInfo mouseButtonInfo) {
+		return mouseButtonInfo.button() == 0 || mouseButtonInfo.button() == 1;
 	}
 
 	private boolean cycle(int step, boolean wrap) {
-		if (Screen.hasShiftDown()) {
+		if (Minecraft.getInstance().hasShiftDown()) {
 			step *= -1;
 		}
 		String[] values = option.getValues();
 		int i = ArrayUtils.indexOf(values, option.get());
-		if (!wrap && (i == 0 || i == values.length-1)) {
+		if (!wrap && (i == 0 || i == values.length - 1)) {
 			return false;
 		}
 		option.set(values[Math.floorMod(i + step, values.length)]);

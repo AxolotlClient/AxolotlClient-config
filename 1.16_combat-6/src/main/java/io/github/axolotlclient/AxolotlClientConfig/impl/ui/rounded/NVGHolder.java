@@ -42,7 +42,7 @@ public class NVGHolder {
 	public static NVGFont getFont() {
 		if (font == null) {
 			try {
-				font = NVGMC.createFont("/Inter-Regular.ttf", "/Inter-Italic.ttf", "/Inter-Bold.ttf", "/Inter-BoldItalic.ttf");
+				font = NVGMC.createFont("/assets/axolotlclientconfig/font/Inter-Regular.ttf", "/assets/axolotlclientconfig/font/Inter-Italic.ttf", "/assets/axolotlclientconfig/font/Inter-Bold.ttf", "/assets/axolotlclientconfig/font/Inter-BoldItalic.ttf");
 			} catch (IOException ignored) {
 
 			}

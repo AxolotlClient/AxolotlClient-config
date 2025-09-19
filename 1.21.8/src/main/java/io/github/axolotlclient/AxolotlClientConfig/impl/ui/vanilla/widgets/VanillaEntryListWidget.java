@@ -62,9 +62,10 @@ public class VanillaEntryListWidget extends EntryListWidget {
 	}
 
 	@Override
-	protected void renderDecorations(GuiGraphics graphics, int mouseX, int mouseY) {
+	public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+		super.renderWidget(guiGraphics, mouseX, mouseY, partialTick);
 		if (getHovered() != null && getHovered() instanceof VanillaOptionEntry) {
-			DrawUtil.drawTooltip(graphics, ((VanillaOptionEntry) getHovered()).option,
+			DrawUtil.drawTooltip(guiGraphics, ((VanillaOptionEntry) getHovered()).option,
 				mouseX, mouseY);
 		}
 	}
@@ -81,11 +82,11 @@ public class VanillaEntryListWidget extends EntryListWidget {
 		}
 
 		@Override
-		public void render(GuiGraphics graphics, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float tickDelta) {
-			super.render(graphics, index, y, x, entryWidth, entryHeight, mouseX, mouseY, hovered, tickDelta);
+		public void renderContent(GuiGraphics graphics, int mouseX, int mouseY, boolean hovered, float tickDelta) {
+			super.renderContent(graphics, mouseX, mouseY, hovered, tickDelta);
 
 			DrawUtil.drawScrollingText(graphics, Component.translatable(option.getName()), width / 2 + WIDGET_ROW_LEFT,
-				y, WIDGET_WIDTH, entryHeight, Colors.text());
+				getContentY(), WIDGET_WIDTH, getContentHeight(), Colors.text());
 		}
 	}
 }

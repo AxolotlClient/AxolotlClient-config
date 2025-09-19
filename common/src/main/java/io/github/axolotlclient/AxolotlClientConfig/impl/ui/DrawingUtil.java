@@ -59,6 +59,7 @@ public interface DrawingUtil {
 		nvgBeginPath(ctx);
 		nvgFillColor(ctx, color.toNVG());
 		nvgArc(ctx, centerX, centerY, radius, nvgDegToRad(startDeg), nvgDegToRad(endDeg), NVG_CW);
+		nvgLineTo(ctx, centerX, centerY);
 		nvgFill(ctx);
 	}
 

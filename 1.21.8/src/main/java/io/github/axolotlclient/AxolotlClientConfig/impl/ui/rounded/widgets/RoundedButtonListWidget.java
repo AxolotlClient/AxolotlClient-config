@@ -65,8 +65,9 @@ public class RoundedButtonListWidget extends ButtonListWidget {
 	}
 
 	@Override
-	protected void renderDecorations(GuiGraphics graphics, int mouseX, int mouseY) {
-		super.renderDecorations(graphics, mouseX, mouseY);
+	public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+		super.renderWidget(guiGraphics, mouseX, mouseY, partialTick);
+
 		if (getHovered() != null && getHovered() instanceof RoundedOptionEntry) {
 			DrawUtil.drawTooltip(NVGHolder.getContext(), NVGHolder.getFont(), ((RoundedOptionEntry) getHovered()).option,
 				mouseX, mouseY);
@@ -90,11 +91,11 @@ public class RoundedButtonListWidget extends ButtonListWidget {
 		}
 
 		@Override
-		public void render(GuiGraphics graphics, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float tickDelta) {
-			super.render(graphics, index, y, x, entryWidth, entryHeight, mouseX, mouseY, hovered, tickDelta);
+		public void renderContent(GuiGraphics graphics, int mouseX, int mouseY, boolean hovered, float tickDelta) {
+			super.renderContent(graphics, mouseX, mouseY, hovered, tickDelta);
 
 			drawScrollingText(NVGHolder.getContext(), NVGHolder.getFont(), I18n.get(option.getName()),
-				width / 2 + WIDGET_ROW_LEFT, y, WIDGET_WIDTH, entryHeight, Colors.accent());
+				width / 2 + WIDGET_ROW_LEFT, getContentY(), WIDGET_WIDTH, getContentHeight(), Colors.accent());
 		}
 	}
 }

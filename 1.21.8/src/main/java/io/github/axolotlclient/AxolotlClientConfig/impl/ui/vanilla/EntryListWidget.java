@@ -37,6 +37,7 @@ import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.ContainerObjectSelectionList;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.narration.NarratableEntry;
+import net.minecraft.client.input.MouseButtonInfo;
 import net.minecraft.client.resources.language.I18n;
 import org.jetbrains.annotations.Nullable;
 
@@ -98,7 +99,7 @@ public class EntryListWidget extends ContainerObjectSelectionList<EntryListWidge
 	}
 
 	protected AbstractWidget createWidget(int x, WidgetIdentifieable id) {
-		return ConfigStyles.createWidget(x, 0, WIDGET_WIDTH, itemHeight - 5, id);
+		return ConfigStyles.createWidget(x, 0, WIDGET_WIDTH, 20, id);
 	}
 
 	public void setSearchFilter(String filter) {
@@ -128,7 +129,7 @@ public class EntryListWidget extends ContainerObjectSelectionList<EntryListWidge
 	}
 
 	@Override
-	protected boolean isValidClickButton(int index) {
+	protected boolean isValidClickButton(MouseButtonInfo index) {
 		return true;
 	}
 
@@ -169,9 +170,9 @@ public class EntryListWidget extends ContainerObjectSelectionList<EntryListWidge
 		}
 
 		@Override
-		public void render(GuiGraphics graphics, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float tickDelta) {
+		public void renderContent(GuiGraphics graphics, int mouseX, int mouseY, boolean hovered, float tickDelta) {
 			children.forEach(c -> {
-				c.setY(y);
+				c.setY(getContentY());
 				c.render(graphics, mouseX, mouseY, tickDelta);
 			});
 		}

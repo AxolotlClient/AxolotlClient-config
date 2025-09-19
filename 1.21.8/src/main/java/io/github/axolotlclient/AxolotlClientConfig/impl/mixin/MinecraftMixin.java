@@ -22,24 +22,31 @@
 
 package io.github.axolotlclient.AxolotlClientConfig.impl.mixin;
 
+import com.mojang.blaze3d.opengl.GlConst;
+import com.mojang.blaze3d.opengl.GlStateManager;
+import com.mojang.blaze3d.pipeline.BlendFunction;
 import io.github.axolotlclient.AxolotlClientConfig.impl.ui.NVGMC;
 import net.minecraft.client.Minecraft;
+import org.spongepowered.asm.mixin.Debug;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+@Debug(export = true)
 @Mixin(Minecraft.class)
 public class MinecraftMixin {
-
-	/*@Inject(method = "runTick", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/systems/RenderSystem;executePendingTasks()V", remap = false))
-	private void startNvgFrame(CallbackInfo ci) {
-		NVGMC.startFrame();
-		NVGUtil.wrap(NVGHolder::setContext);
-	}*/
 
 	@Inject(method = "runTick", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/pipeline/RenderTarget;blitToScreen()V", shift = At.Shift.AFTER))
 	private void endNvgFrame(CallbackInfo ci) {
 		NVGMC.endFrame();
+		GlStateManager._enableBlend();
+		var blendFunction = BlendFunction.ADDITIVE;
+		GlStateManager._blendFuncSeparate(
+			GlConst.toGl(blendFunction.sourceColor()),
+			GlConst.toGl(blendFunction.destColor()),
+			GlConst.toGl(blendFunction.sourceAlpha()),
+			GlConst.toGl(blendFunction.destAlpha())
+		);
 	}
 }

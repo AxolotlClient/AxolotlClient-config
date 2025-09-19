@@ -69,7 +69,7 @@ public class NVGMC {
 		return new NVGFont(getNvgContext(), fontHandle);
 	}
 
-	private static long getNvgContext() {
+	public static long getNvgContext() {
 		if (nvgContext == 0 || !initialized) {
 			initNVG();
 		}

@@ -26,8 +26,10 @@ import io.github.axolotlclient.AxolotlClientConfig.impl.options.GraphicsOption;
 import io.github.axolotlclient.AxolotlClientConfig.impl.ui.vanilla.screen.GraphicsEditorScreen;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.input.InputWithModifiers;
 import net.minecraft.network.chat.Component;
 
+@SuppressWarnings("unused")
 public class GraphicsWidget extends Button {
 	private final GraphicsOption option;
 
@@ -38,7 +40,7 @@ public class GraphicsWidget extends Button {
 	}
 
 	@Override
-	public void onPress() {
+	public void onPress(InputWithModifiers input) {
 		Minecraft.getInstance()
 			.setScreen(new GraphicsEditorScreen(Minecraft.getInstance().screen, option));
 	}

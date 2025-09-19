@@ -26,8 +26,10 @@ import io.github.axolotlclient.AxolotlClientConfig.api.options.OptionCategory;
 import io.github.axolotlclient.AxolotlClientConfig.impl.options.OptionCategoryImpl;
 import io.github.axolotlclient.AxolotlClientConfig.impl.util.ConfigStyles;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.input.InputWithModifiers;
 import net.minecraft.network.chat.Component;
 
+@SuppressWarnings("unused")
 public class CategoryWidget extends RoundedButtonWidget {
 
 	private final OptionCategory category;
@@ -39,7 +41,7 @@ public class CategoryWidget extends RoundedButtonWidget {
 	}
 
 	@Override
-	public void onPress() {
+	public void onPress(InputWithModifiers modifiers) {
 		if (Minecraft.getInstance().screen != null) {
 			Minecraft.getInstance().setScreen(
 				ConfigStyles.createScreen(Minecraft.getInstance().screen, category));

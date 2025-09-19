@@ -39,6 +39,7 @@ import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.ContainerObjectSelectionList;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.narration.NarratableEntry;
+import net.minecraft.client.input.MouseButtonInfo;
 import net.minecraft.client.resources.language.I18n;
 import org.jetbrains.annotations.Nullable;
 
@@ -126,7 +127,7 @@ public class ButtonListWidget extends ContainerObjectSelectionList<ButtonListWid
 	}
 
 	protected AbstractWidget createWidget(int x, WidgetIdentifieable id) {
-		return ConfigStyles.createWidget(x, 0, WIDGET_WIDTH, itemHeight - 5, id);
+		return ConfigStyles.createWidget(x, 0, WIDGET_WIDTH, 20, id);
 	}
 
 	protected Entry createOptionEntry(AbstractWidget widget, Option<?> option, @Nullable AbstractWidget other, @Nullable Option<?> otherOption) {
@@ -154,13 +155,13 @@ public class ButtonListWidget extends ContainerObjectSelectionList<ButtonListWid
 	}
 
 	@Override
-	protected void renderScrollbar(GuiGraphics guiGraphics) {
+	protected void renderScrollbar(GuiGraphics guiGraphics, int mouseX, int mouseY) {
 		if (this.scrollbarVisible()) {
 			int i = this.scrollBarX();
 			int j = this.scrollerHeight();
 			int k = this.scrollBarY();
-			fillRoundedRect(NVGHolder.getContext(), i, getY(), 6, getHeight(), Colors.foreground(), 6 / 2);
-			fillRoundedRect(NVGHolder.getContext(), i, k, 6, j, Colors.accent(), 6 / 2);
+			fillRoundedRect(NVGHolder.getContext(), i, getY(), 6, getHeight(), Colors.foreground(), 6 / 2f);
+			fillRoundedRect(NVGHolder.getContext(), i, k, 6, j, Colors.accent(), 6 / 2f);
 		}
 	}
 
@@ -172,7 +173,7 @@ public class ButtonListWidget extends ContainerObjectSelectionList<ButtonListWid
 	}
 
 	@Override
-	protected boolean isValidClickButton(int button) {
+	protected boolean isValidClickButton(MouseButtonInfo button) {
 		return true;
 	}
 
@@ -190,9 +191,9 @@ public class ButtonListWidget extends ContainerObjectSelectionList<ButtonListWid
 		}
 
 		@Override
-		public void render(GuiGraphics graphics, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float tickDelta) {
+		public void renderContent(GuiGraphics graphics, int mouseX, int mouseY, boolean hovered, float tickDelta) {
 			children.forEach(c -> {
-				c.setY(y);
+				c.setY(getContentY());
 				c.render(graphics, mouseX, mouseY, tickDelta);
 			});
 		}

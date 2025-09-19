@@ -30,9 +30,7 @@ public class NVGUtil {
 
 	public static void wrap(Consumer<Long> function) {
 		NVGMC.startFrame();
-		NVGMC.wrap(ctx -> {
-			NVGHolder.setContext(ctx);
-			function.accept(ctx);
-		});
+		NVGHolder.setContext(NVGMC.getNvgContext());
+		function.accept(NVGMC.getNvgContext());
 	}
 }

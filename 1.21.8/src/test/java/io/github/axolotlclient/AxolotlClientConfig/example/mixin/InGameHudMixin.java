@@ -22,6 +22,9 @@
 
 package io.github.axolotlclient.AxolotlClientConfig.example.mixin;
 
+import io.github.axolotlclient.AxolotlClientConfig.api.util.Colors;
+import io.github.axolotlclient.AxolotlClientConfig.impl.ui.DrawingUtil;
+import io.github.axolotlclient.AxolotlClientConfig.impl.ui.rounded.NVGUtil;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiGraphics;
@@ -31,11 +34,14 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(Gui.class)
-public class InGameHudMixin {
+public class InGameHudMixin implements DrawingUtil {
 
 	@Inject(method = "renderEffects", at = @At(value = "HEAD"))
 	private void onHudRender(GuiGraphics graphics, DeltaTracker tracker, CallbackInfo ci) {
 		graphics.fill(50, 50, 100, 100, -162555);
 		//graphics.drawTexture(Example.getInstance().graphicsOption.getTexture(), 50, 50, 0, 0, 50, 50, 50, 50);
+		NVGUtil.wrap(ctx -> {
+			fillCircle(ctx, 20, 20, Colors.DARK_YELLOW, 5, 72, 350);
+		});
 	}
 }
