@@ -24,18 +24,21 @@ package io.github.axolotlclient.AxolotlClientConfig.impl.ui.rounded.widgets;
 
 import java.text.DecimalFormat;
 
+import com.mojang.blaze3d.platform.cursor.CursorTypes;
 import io.github.axolotlclient.AxolotlClientConfig.api.util.Colors;
 import io.github.axolotlclient.AxolotlClientConfig.impl.options.NumberOption;
 import io.github.axolotlclient.AxolotlClientConfig.impl.ui.DrawingUtil;
 import io.github.axolotlclient.AxolotlClientConfig.impl.ui.Updatable;
 import io.github.axolotlclient.AxolotlClientConfig.impl.ui.rounded.NVGHolder;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import org.lwjgl.nanovg.NanoVG;
 
 public class SliderWidget<O extends NumberOption<N>, N extends Number> extends net.minecraft.client.gui.components.AbstractSliderButton implements DrawingUtil, Updatable {
 	private static final DecimalFormat format = new DecimalFormat("0.##");
 	private final O option;
+	private boolean dragging;
 
 	public SliderWidget(int x, int y, int width, int height, O option) {
 		super(x, y, width, height, Component.literal(format.format(option.get().doubleValue())), 0);
@@ -69,6 +72,9 @@ public class SliderWidget<O extends NumberOption<N>, N extends Number> extends n
 
 		drawCenteredString(ctx, NVGHolder.getFont(), this.getMessage().getString(), (float) (getX() + (this.value * (getWidth() - 4))),
 			this.getY() + (this.getHeight() / 2f - 8) / 2f - 4, Colors.text());
+		if (this.isHovered()) {
+			graphics.requestCursor(this.dragging ? CursorTypes.RESIZE_EW : CursorTypes.POINTING_HAND);
+		}
 	}
 
 	public void updateMessage() {
@@ -85,5 +91,17 @@ public class SliderWidget<O extends NumberOption<N>, N extends Number> extends n
 	public void update() {
 		this.value = ((option.get().doubleValue() - option.getMin().doubleValue()) / (option.getMax().doubleValue() - option.getMin().doubleValue()));
 		updateMessage();
+	}
+
+	@Override
+	public void onClick(MouseButtonEvent mouseButtonEvent, boolean bl) {
+		this.dragging = this.active;
+		super.onClick(mouseButtonEvent, bl);
+	}
+
+	@Override
+	public void onRelease(MouseButtonEvent mouseButtonEvent) {
+		this.dragging = false;
+		super.onRelease(mouseButtonEvent);
 	}
 }

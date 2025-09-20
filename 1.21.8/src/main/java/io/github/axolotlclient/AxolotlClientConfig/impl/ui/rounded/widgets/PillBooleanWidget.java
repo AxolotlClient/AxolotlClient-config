@@ -22,6 +22,7 @@
 
 package io.github.axolotlclient.AxolotlClientConfig.impl.ui.rounded.widgets;
 
+import com.mojang.blaze3d.platform.cursor.CursorTypes;
 import io.github.axolotlclient.AxolotlClientConfig.api.util.Colors;
 import io.github.axolotlclient.AxolotlClientConfig.impl.options.BooleanOption;
 import io.github.axolotlclient.AxolotlClientConfig.impl.ui.Updatable;
@@ -46,7 +47,7 @@ public class PillBooleanWidget extends RoundedButtonWidget implements Updatable 
 	private int notWidth;
 
 	public PillBooleanWidget(int x, int y, int width, int height, BooleanOption option) {
-		super(x, y, 40, height, option.get() ? CommonComponents.OPTION_ON : CommonComponents.OPTION_OFF, widget -> {
+		super(x + width - 40 - 22, y, 40 + 22, height, option.get() ? CommonComponents.OPTION_ON : CommonComponents.OPTION_OFF, widget -> {
 			option.set(!option.get());
 			widget.setMessage(option.get() ? CommonComponents.OPTION_ON : CommonComponents.OPTION_OFF);
 		});
@@ -60,25 +61,21 @@ public class PillBooleanWidget extends RoundedButtonWidget implements Updatable 
 		}
 
 		handleWidth = height - HANDLE_MARGIN * 2;
-		onPosition = super.getWidth() - handleWidth - HANDLE_MARGIN;
+		onPosition = getWidth() - handleWidth - HANDLE_MARGIN;
 
 		this.notWidth = width;
 	}
 
 	@Override
-	public int getWidth() {
-		return notWidth;
-	}
-
-	@Override
 	public void setWidth(int value) {
-		setX(getX() + value - 40);
+		setX(getX() + getWidth() - value -22);
 		this.notWidth = value;
+		super.setWidth(value);
 	}
 
 	@Override
 	protected void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
-		fillRoundedRect(NVGHolder.getContext(), getX(), getY(), super.getWidth(), getHeight(), Colors.foreground(), Math.min(getHeight(), super.getWidth()) / 2f);
+		fillRoundedRect(NVGHolder.getContext(), getX(), getY(), getWidth(), getHeight(), Colors.foreground(), Math.min(getHeight(), getWidth()) / 2f);
 
 		if (((Util.getMillis() - tickTime) / 300L) % 2L == 0L) {
 			tickTime = Util.getMillis();
@@ -97,6 +94,9 @@ public class PillBooleanWidget extends RoundedButtonWidget implements Updatable 
 		double x = getX() + OFF_POSITION + (onPosition - OFF_POSITION) * progress;
 		double widthProgress = progress > 0.5f ? 1 - progress : progress;
 		drawHandle(NVGHolder.getContext(), (float) x, getY(), (float) (handleWidth + (handleWidth * widthProgress)));
+		if (this.isHovered()) {
+			graphics.requestCursor(this.isActive() ? CursorTypes.POINTING_HAND : CursorTypes.NOT_ALLOWED);
+		}
 	}
 
 	protected void drawHandle(long ctx, float x, float y, float width) {
