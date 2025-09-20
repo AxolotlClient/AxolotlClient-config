@@ -50,13 +50,13 @@ public class VanillaConfigScreen extends Screen implements ConfigScreen {
 	@Override
 	protected void init() {
 		searchVisible = false;
-		EditBox searchInput = addRenderableWidget(new EditBox(font, width/2 - 75, 20, 150, 20, Component.empty()));
+		EditBox searchInput = addRenderableWidget(new EditBox(font, width / 2 - 75, 20, 150, 20, Component.empty()));
 		searchInput.visible = false;
 		addRenderableWidget(Button.builder(CommonComponents.GUI_BACK, w -> onClose())
 			.pos(width / 2 - 75, height - 45).build());
 		var list = addRenderableWidget(new VanillaEntryListWidget(configManager, category, width, height, 45, height - 55, 25));
 		searchInput.setResponder(list::setSearchFilter);
-		addRenderableWidget(new PlainTextButton(width/2 - font.width(getTitle())/2, 25,
+		addRenderableWidget(new PlainTextButton(width / 2 - font.width(getTitle()) / 2, 25,
 			font.width(getTitle()), font.lineHeight, getTitle(), w -> {
 			w.visible = false;
 			searchInput.visible = searchVisible = true;

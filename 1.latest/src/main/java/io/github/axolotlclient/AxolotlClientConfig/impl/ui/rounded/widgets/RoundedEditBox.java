@@ -414,7 +414,7 @@ public class RoundedEditBox extends AbstractWidget implements DrawingUtil {
 			int l = Mth.clamp(this.highlightPos - this.displayPos, 0, string.length());
 			if (!string.isEmpty()) {
 				String string2 = bl ? string.substring(0, j) : string;
-				k = drawString(ctx, font, string2, k, this.textY, i)+1;
+				k = drawString(ctx, font, string2, k, this.textY, i) + 1;
 			}
 
 			boolean bl3 = this.cursorPos < this.value.length() || this.value.length() >= this.getMaxLength();

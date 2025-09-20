@@ -39,12 +39,10 @@ public class PillBooleanWidget extends RoundedButtonWidget implements Updatable 
 	protected static final int OFF_POSITION = HANDLE_MARGIN;
 	private final BooleanOption option;
 	protected int handleWidth;
-	protected int onPosition;
 	private boolean state;
 	private boolean targetState;
 	private double progress;
 	private long tickTime = Util.getMillis();
-	private int notWidth;
 
 	public PillBooleanWidget(int x, int y, int width, int height, BooleanOption option) {
 		super(x + width - 40 - 22, y, 40 + 22, height, option.get() ? CommonComponents.OPTION_ON : CommonComponents.OPTION_OFF, widget -> {
@@ -61,15 +59,11 @@ public class PillBooleanWidget extends RoundedButtonWidget implements Updatable 
 		}
 
 		handleWidth = height - HANDLE_MARGIN * 2;
-		onPosition = getWidth() - handleWidth - HANDLE_MARGIN;
-
-		this.notWidth = width;
 	}
 
 	@Override
 	public void setWidth(int value) {
-		setX(getX() + getWidth() - value -22);
-		this.notWidth = value;
+		setX(getX() + getWidth() - value - 22);
 		super.setWidth(value);
 	}
 
@@ -91,7 +85,7 @@ public class PillBooleanWidget extends RoundedButtonWidget implements Updatable 
 			}
 		}
 
-		double x = getX() + OFF_POSITION + (onPosition - OFF_POSITION) * progress;
+		double x = getX() + OFF_POSITION + (getWidth() - handleWidth - HANDLE_MARGIN - OFF_POSITION) * progress;
 		double widthProgress = progress > 0.5f ? 1 - progress : progress;
 		drawHandle(NVGHolder.getContext(), (float) x, getY(), (float) (handleWidth + (handleWidth * widthProgress)));
 		if (this.isHovered()) {
@@ -105,7 +99,7 @@ public class PillBooleanWidget extends RoundedButtonWidget implements Updatable 
 
 		if (isFocused()) {
 			outlineRoundedRect(ctx, x, y + HANDLE_MARGIN, width, getHeight() - HANDLE_MARGIN * 2,
-					Colors.highlight(), Math.min(width, getHeight()) / 2f + HANDLE_MARGIN, 1);
+				Colors.highlight(), Math.min(width, getHeight()) / 2f + HANDLE_MARGIN, 1);
 		}
 	}
 
