@@ -44,8 +44,7 @@ dependencies {
 
 	implementation include(project(":common"))
 
-	modCompileOnly("io.github.moehreag:legacy-lwjgl3:$legacy_lwjgl3+${project.minecraft_18}")
-	modLocalRuntime("io.github.moehreag:legacy-lwjgl3:$legacy_lwjgl3+${project.minecraft_18}:all-remapped")
+	modImplementation("io.github.moehreag:legacy-lwjgl3:$legacy_lwjgl3+${project.minecraft_18}")
 
 	def lwjglVersion = "3.3.5"
 	api include("org.lwjgl:lwjgl-nanovg:$lwjglVersion")
@@ -55,6 +54,10 @@ dependencies {
 	include runtimeOnly("org.lwjgl:lwjgl-nanovg:$lwjglVersion:natives-windows-arm64")
 	include runtimeOnly("org.lwjgl:lwjgl-nanovg:$lwjglVersion:natives-macos")
 	include runtimeOnly("org.lwjgl:lwjgl-nanovg:$lwjglVersion:natives-macos-arm64")
+}
+
+configurations.configureEach {
+	exclude(group: "org.lwjgl.lwjgl")
 }
 
 processResources {
