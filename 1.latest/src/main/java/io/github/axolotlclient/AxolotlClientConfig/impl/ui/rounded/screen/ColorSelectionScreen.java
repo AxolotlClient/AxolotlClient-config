@@ -82,6 +82,7 @@ public class ColorSelectionScreen extends Screen implements DrawingUtil {
 
 	@Override
 	public void init() {
+		//noinspection DataFlowIssue
 		addRenderableWidget(new RoundedButtonWidget(width / 2 - 75, height - 40, Component.translatable("gui.back"),
 			button -> minecraft.setScreen(parent)));
 
@@ -165,9 +166,7 @@ public class ColorSelectionScreen extends Screen implements DrawingUtil {
 	public void renderBackground(GuiGraphics graphics, int i, int j, float f) {
 		super.renderBackground(graphics, i, j, f);
 		//graphics.fill(0, 0, 1, 1, 0); // Don't ask, it seems to work
-		NVGUtil.wrap(ctx -> {
-			fillRoundedRect(NVGHolder.getContext(), 15, 15, width - 30, height - 30, Colors.background(), 12);
-		});
+		NVGUtil.wrap(ctx -> fillRoundedRect(NVGHolder.getContext(), 15, 15, width - 30, height - 30, Colors.background(), 12));
 	}
 
 	@Override
@@ -203,6 +202,7 @@ public class ColorSelectionScreen extends Screen implements DrawingUtil {
 						((RoundedEditBox) e).setValue(option.get().toString().split(";")[0]);
 					}
 				});
+				option.updated();
 				return true;
 			}
 		}
@@ -211,11 +211,13 @@ public class ColorSelectionScreen extends Screen implements DrawingUtil {
 	}
 
 	private int toGlCoordsX(double x) {
+		//noinspection DataFlowIssue
 		Window window = minecraft.getWindow();
 		return (int) (x * window.getGuiScale());
 	}
 
 	private int toGlCoordsY(double y) {
+		//noinspection DataFlowIssue
 		Window window = minecraft.getWindow();
 		double scale = window.getGuiScale();
 		return Math.round((float) (minecraft.getMainRenderTarget().height - y * scale - scale));

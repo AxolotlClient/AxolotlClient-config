@@ -33,7 +33,7 @@ public abstract class OptionBase<T> implements Option<T> {
 	@Getter
 	private final String tooltip;
 	private final T defaultValue;
-	private final ChangeListener<T> changeListener;
+	protected final ChangeListener<T> changeListener;
 	protected T value;
 
 	public OptionBase(String name, T defaultValue) {

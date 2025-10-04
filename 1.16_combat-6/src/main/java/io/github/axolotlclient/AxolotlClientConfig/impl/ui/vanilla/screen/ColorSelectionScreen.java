@@ -174,6 +174,7 @@ public class ColorSelectionScreen extends io.github.axolotlclient.AxolotlClientC
 						((TextFieldWidget) e).setText(option.get().toString().split(";")[0]);
 					}
 				});
+				option.updated();
 				return true;
 			}
 		}

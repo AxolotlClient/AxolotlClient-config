@@ -102,6 +102,7 @@ public class ColorSelectionScreen extends Screen implements DrawingUtil {
 		y += 45;
 		if (this.height - 250 > 0) {
 			y -= 20;
+			//noinspection DataFlowIssue
 			TextFieldWidget text = new TextFieldWidget(client.textRenderer, buttonsX, y, 150, 20, Text.empty());
 			text.setChangedListener(s -> {
 				try {
@@ -200,6 +201,7 @@ public class ColorSelectionScreen extends Screen implements DrawingUtil {
 						((TextFieldWidget) e).setText(option.get().toString().split(";")[0]);
 					}
 				});
+				option.updated();
 				return true;
 			}
 		}

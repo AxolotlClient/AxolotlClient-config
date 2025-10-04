@@ -29,13 +29,11 @@ import io.github.axolotlclient.AxolotlClientConfig.impl.ui.ConfigUIImpl;
 import io.github.axolotlclient.AxolotlClientConfig.impl.ui.NVGMC;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
-import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
+import net.fabricmc.fabric.api.resource.v1.ResourceLoader;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.PackType;
-import net.minecraft.server.packs.resources.ResourceManager;
-import org.jetbrains.annotations.NotNull;
+import net.minecraft.server.packs.resources.ResourceManagerReloadListener;
 
 public class AxolotlClientConfigMod implements ClientModInitializer {
 
@@ -60,14 +58,8 @@ public class AxolotlClientConfigMod implements ClientModInitializer {
 			}
 		});
 
-		ResourceManagerHelper.get(PackType.CLIENT_RESOURCES).registerReloadListener(new SimpleSynchronousResourceReloadListener() {
-			@Override
-			public @NotNull ResourceLocation getFabricId() {
-				return ResourceLocation.fromNamespaceAndPath("axolotlclientconfig", "resource_listener");
-			}
-
-			@Override
-			public void onResourceManagerReload(ResourceManager resourceManager) {
+		ResourceLoader.get(PackType.CLIENT_RESOURCES).registerReloader(ResourceLocation.fromNamespaceAndPath("axolotlclientconfig", "resource_listener"),
+			(ResourceManagerReloadListener) manager -> {
 				ConfigUIImpl.getInstance().preReload();
 				Minecraft.getInstance().getResourceManager()
 					.getResourceStack(ResourceLocation.parse(ConfigUIImpl.getInstance().getUiJsonPath())).forEach(resource -> {
@@ -77,7 +69,6 @@ public class AxolotlClientConfigMod implements ClientModInitializer {
 						}
 					});
 				ConfigUIImpl.getInstance().postReload();
-			}
-		});
+			});
 	}
 }

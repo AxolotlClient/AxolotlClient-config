@@ -97,6 +97,7 @@ public class ColorSelectionScreen extends Screen {
 		y += 45;
 		if (this.height - 250 > 0) {
 			y -= 20;
+			//noinspection DataFlowIssue
 			TextFieldWidget text = new TextFieldWidget(client.textRenderer, buttonsX, y, 150, 20, Text.empty());
 			text.setChangedListener(s -> {
 				try {
@@ -121,6 +122,7 @@ public class ColorSelectionScreen extends Screen {
 	public void render(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
 		renderBackground(graphics);
 		super.render(graphics, mouseX, mouseY, delta);
+		//noinspection DataFlowIssue
 		graphics.drawCenteredShadowedText(client.textRenderer, title, width / 2, 20, Colors.text().toInt());
 
 		graphics.drawTexture(texture, (int) selectorX, (int) selectorY, 0, 0, selectorRadius * 2, selectorRadius * 2, selectorRadius * 2, selectorRadius * 2);
@@ -172,6 +174,7 @@ public class ColorSelectionScreen extends Screen {
 						((TextFieldWidget) e).setText(option.get().toString().split(";")[0]);
 					}
 				});
+				option.updated();
 				return true;
 			}
 		}
@@ -192,6 +195,7 @@ public class ColorSelectionScreen extends Screen {
 
 	@Override
 	public void closeScreen() {
+		//noinspection DataFlowIssue
 		client.setScreen(parent);
 	}
 }

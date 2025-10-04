@@ -92,6 +92,7 @@ public class ColorSelectionScreen extends Screen {
 		y += 45;
 		if (this.height - 250 > 0) {
 			y -= 20;
+			//noinspection DataFlowIssue
 			EditBox text = new EditBox(minecraft.font, buttonsX, y, 150, 20, Component.empty());
 			text.setResponder(s -> {
 				try {
@@ -115,6 +116,7 @@ public class ColorSelectionScreen extends Screen {
 	@Override
 	public void render(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
 		super.render(graphics, mouseX, mouseY, delta);
+		//noinspection DataFlowIssue
 		graphics.drawCenteredString(minecraft.font, title, width / 2, 20, Colors.text().toInt());
 
 		graphics.blit(RenderPipelines.GUI_TEXTURED, texture, (int) selectorX, (int) selectorY, 0, 0, selectorRadius * 2, selectorRadius * 2, selectorRadius * 2, selectorRadius * 2);
@@ -167,6 +169,7 @@ public class ColorSelectionScreen extends Screen {
 								((EditBox) e).setValue(option.get().toString().split(";")[0]);
 							}
 						});
+						option.updated();
 					}
 				});
 				return true;
@@ -178,6 +181,7 @@ public class ColorSelectionScreen extends Screen {
 
 	@Override
 	public void onClose() {
+		//noinspection DataFlowIssue
 		minecraft.setScreen(parent);
 	}
 }

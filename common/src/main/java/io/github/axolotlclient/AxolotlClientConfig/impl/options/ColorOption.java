@@ -23,6 +23,7 @@
 package io.github.axolotlclient.AxolotlClientConfig.impl.options;
 
 import io.github.axolotlclient.AxolotlClientConfig.api.util.Color;
+import org.jetbrains.annotations.ApiStatus;
 
 public class ColorOption extends OptionBase<Color> {
 
@@ -66,5 +67,8 @@ public class ColorOption extends OptionBase<Color> {
 		return "color";
 	}
 
-
+	@ApiStatus.Internal
+	public void updated() {
+		changeListener.onChange(getOriginal());
+	}
 }
