@@ -5,12 +5,12 @@ plugins {
 	id("fabric-loom")
 }
 
-val minecraft = "1.21.9"
-val parchmentMinecraft = "1.21.8"
-val parchment = "2025.07.18"
-val fapiVersion = "0.133.11+1.21.9"
+val minecraft = "1.21.10"
+val parchmentMinecraft = "1.21.9"
+val parchment = "2025.10.05"
+val fapiVersion = "0.135.0+1.21.10"
 group = project.property("maven_group") as String
-version = "${project.property("version")}+1.21.9"
+version = "${project.property("version")}+1.21.10"
 base.archivesName = "AxolotlClient-config"
 
 repositories {
