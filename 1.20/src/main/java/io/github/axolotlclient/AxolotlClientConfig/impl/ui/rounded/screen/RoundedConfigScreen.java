@@ -22,24 +22,28 @@
 
 package io.github.axolotlclient.AxolotlClientConfig.impl.ui.rounded.screen;
 
+import org.jetbrains.annotations.NotNull;
+
 import io.github.axolotlclient.AxolotlClientConfig.api.AxolotlClientConfig;
 import io.github.axolotlclient.AxolotlClientConfig.api.manager.ConfigManager;
 import io.github.axolotlclient.AxolotlClientConfig.api.options.OptionCategory;
 import io.github.axolotlclient.AxolotlClientConfig.api.ui.screen.ConfigScreen;
 import io.github.axolotlclient.AxolotlClientConfig.api.util.Colors;
 import io.github.axolotlclient.AxolotlClientConfig.impl.ui.DrawingUtil;
+import io.github.axolotlclient.AxolotlClientConfig.impl.ui.RecreatableScreen;
 import io.github.axolotlclient.AxolotlClientConfig.impl.ui.rounded.NVGHolder;
 import io.github.axolotlclient.AxolotlClientConfig.impl.ui.rounded.NVGUtil;
 import io.github.axolotlclient.AxolotlClientConfig.impl.ui.rounded.widgets.RoundedButtonListWidget;
 import io.github.axolotlclient.AxolotlClientConfig.impl.ui.rounded.widgets.RoundedButtonWidget;
 import io.github.axolotlclient.AxolotlClientConfig.impl.ui.rounded.widgets.TextFieldWidget;
 import io.github.axolotlclient.AxolotlClientConfig.impl.ui.rounded.widgets.TextOnlyButtonWidget;
+import io.github.axolotlclient.AxolotlClientConfig.impl.util.ConfigStyles;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.text.CommonTexts;
 import net.minecraft.text.Text;
 
-public class RoundedConfigScreen extends Screen implements ConfigScreen, DrawingUtil {
+public class RoundedConfigScreen extends Screen implements ConfigScreen, DrawingUtil, RecreatableScreen {
 
 	private final Screen parent;
 	private final ConfigManager configManager;
@@ -94,5 +98,10 @@ public class RoundedConfigScreen extends Screen implements ConfigScreen, Drawing
 		if (configManager != null) {
 			configManager.save();
 		}
+	}
+
+	@Override
+	public @NotNull Screen recreate() {
+		return ConfigStyles.createScreen(RecreatableScreen.tryRecreate(parent), category);
 	}
 }

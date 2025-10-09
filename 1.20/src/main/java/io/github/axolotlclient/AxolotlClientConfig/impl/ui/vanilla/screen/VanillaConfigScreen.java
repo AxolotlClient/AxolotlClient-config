@@ -22,11 +22,15 @@
 
 package io.github.axolotlclient.AxolotlClientConfig.impl.ui.vanilla.screen;
 
+import org.jetbrains.annotations.NotNull;
+
 import io.github.axolotlclient.AxolotlClientConfig.api.AxolotlClientConfig;
 import io.github.axolotlclient.AxolotlClientConfig.api.manager.ConfigManager;
 import io.github.axolotlclient.AxolotlClientConfig.api.options.OptionCategory;
 import io.github.axolotlclient.AxolotlClientConfig.api.ui.screen.ConfigScreen;
+import io.github.axolotlclient.AxolotlClientConfig.impl.ui.RecreatableScreen;
 import io.github.axolotlclient.AxolotlClientConfig.impl.ui.vanilla.widgets.VanillaEntryListWidget;
+import io.github.axolotlclient.AxolotlClientConfig.impl.util.ConfigStyles;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
@@ -35,7 +39,7 @@ import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.text.CommonTexts;
 import net.minecraft.text.Text;
 
-public class VanillaConfigScreen extends Screen implements ConfigScreen {
+public class VanillaConfigScreen extends Screen implements ConfigScreen, RecreatableScreen {
 	private final Screen parent;
 	private final ConfigManager configManager;
 	private final OptionCategory category;
@@ -86,5 +90,10 @@ public class VanillaConfigScreen extends Screen implements ConfigScreen {
 		if (configManager != null) {
 			configManager.save();
 		}
+	}
+
+	@Override
+	public @NotNull Screen recreate() {
+		return ConfigStyles.createScreen(RecreatableScreen.tryRecreate(parent), category);
 	}
 }
