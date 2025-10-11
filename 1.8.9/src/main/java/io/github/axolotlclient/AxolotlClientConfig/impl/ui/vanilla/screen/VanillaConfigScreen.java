@@ -22,19 +22,23 @@
 
 package io.github.axolotlclient.AxolotlClientConfig.impl.ui.vanilla.screen;
 
+import org.jetbrains.annotations.NotNull;
+
 import io.github.axolotlclient.AxolotlClientConfig.api.AxolotlClientConfig;
 import io.github.axolotlclient.AxolotlClientConfig.api.manager.ConfigManager;
 import io.github.axolotlclient.AxolotlClientConfig.api.options.OptionCategory;
 import io.github.axolotlclient.AxolotlClientConfig.api.ui.screen.ConfigScreen;
+import io.github.axolotlclient.AxolotlClientConfig.impl.ui.RecreatableScreen;
 import io.github.axolotlclient.AxolotlClientConfig.impl.ui.TextFieldWidget;
 import io.github.axolotlclient.AxolotlClientConfig.impl.ui.vanilla.widgets.PlainTextButtonWidget;
 import io.github.axolotlclient.AxolotlClientConfig.impl.ui.vanilla.widgets.VanillaButtonListWidget;
 import io.github.axolotlclient.AxolotlClientConfig.impl.ui.vanilla.widgets.VanillaButtonWidget;
+import io.github.axolotlclient.AxolotlClientConfig.impl.util.ConfigStyles;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.resource.language.I18n;
 
-public class VanillaConfigScreen extends io.github.axolotlclient.AxolotlClientConfig.impl.ui.Screen implements ConfigScreen {
+public class VanillaConfigScreen extends io.github.axolotlclient.AxolotlClientConfig.impl.ui.Screen implements ConfigScreen, RecreatableScreen {
 	private final Screen parent;
 	private final ConfigManager configManager;
 	private final OptionCategory category;
@@ -77,5 +81,10 @@ public class VanillaConfigScreen extends io.github.axolotlclient.AxolotlClientCo
 		if (configManager != null) {
 			configManager.save();
 		}
+	}
+
+	@Override
+	public @NotNull Screen recreate() {
+		return ConfigStyles.createScreen(RecreatableScreen.tryRecreate(parent), category);
 	}
 }
