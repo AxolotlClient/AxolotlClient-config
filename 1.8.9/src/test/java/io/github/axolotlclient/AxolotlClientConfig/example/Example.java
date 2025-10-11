@@ -31,6 +31,7 @@ import io.github.axolotlclient.AxolotlClientConfig.api.ui.ConfigUI;
 import io.github.axolotlclient.AxolotlClientConfig.api.util.Colors;
 import io.github.axolotlclient.AxolotlClientConfig.impl.managers.JsonConfigManager;
 import io.github.axolotlclient.AxolotlClientConfig.impl.options.*;
+import io.github.axolotlclient.AxolotlClientConfig.impl.ui.RecreatableScreen;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;
@@ -109,7 +110,8 @@ public class Example implements ClientModInitializer {
 				ConfigUI.getInstance().getStyleNames().toArray(new String[0]),
 				ConfigUI.getInstance().getCurrentStyle().getName(), s -> {
 				ConfigUI.getInstance().setStyle(s);
-				Minecraft.getInstance().openScreen(null);
+				var screen = RecreatableScreen.tryRecreate(Minecraft.getInstance().screen);
+				Minecraft.getInstance().openScreen(screen);
 			}));
 			AxolotlClientConfig.getInstance().getConfigManager(modid).load();
 			ConfigUI.getInstance().setStyle(option.get());
