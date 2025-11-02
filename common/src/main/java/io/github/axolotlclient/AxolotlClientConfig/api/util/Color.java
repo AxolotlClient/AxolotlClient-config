@@ -25,8 +25,6 @@ package io.github.axolotlclient.AxolotlClientConfig.api.util;
 import io.github.axolotlclient.AxolotlClientConfig.impl.AxolotlClientConfigImpl;
 import lombok.Getter;
 import lombok.Setter;
-import org.lwjgl.nanovg.NVGColor;
-import org.lwjgl.nanovg.NanoVG;
 
 @SuppressWarnings("unused")
 public class Color implements Runnable {
@@ -42,8 +40,6 @@ public class Color implements Runnable {
 	@Getter
 	@Setter
 	private float chromaSpeed;
-
-	private NVGColor nvgColor;
 
 	public Color(int color) {
 		this(color >> 16 & 0xFF, color >> 8 & 0xFF, color & 0xFF, color >> 24 & 0xFF);
@@ -156,17 +152,6 @@ public class Color implements Runnable {
 		color = (color << 8) + c.getGreen();
 		color = (color << 8) + c.getBlue();
 		return color;
-	}
-
-	public NVGColor toNVG() {
-		if (nvgColor == null) {
-			nvgColor = NanoVG.nvgRGBA((byte) getRed(), (byte) getGreen(), (byte) getBlue(), (byte) getAlpha(), NVGColor.create());
-			return nvgColor;
-		}
-		if (nvgColor.a() * 255 != getAlpha() || nvgColor.b() * 255 != getBlue() || nvgColor.g() * 255 != getGreen() || nvgColor.r() * 255 != getRed()) {
-			return nvgColor.a(getAlpha() / 255f).r(getRed() / 255f).g(getGreen() / 255f).b(getBlue() / 255f);
-		}
-		return nvgColor;
 	}
 
 	public Color get() {

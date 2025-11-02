@@ -1,0 +1,13 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "io.github.axolotlclient.AxolotlClientConfig.impl.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "mixins": [],
+  "client": [
+    "NativeImageInvoker"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

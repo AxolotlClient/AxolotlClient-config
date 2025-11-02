@@ -3,7 +3,7 @@ plugins {
 }
 
 group 'io.github.axolotlclient.AxolotlClient-config'
-archivesBaseName = "AxolotlClientConfig-common"
+base.archivesName = "AxolotlClientConfig-common"
 
 java {
 	sourceCompatibility = JavaVersion.VERSION_17
@@ -24,8 +24,6 @@ dependencies {
 	compileOnly("commons-io:commons-io:2.4")
 	compileOnly("org.apache.commons:commons-lang3:3.3.2")
 
-	compileOnly("org.lwjgl:lwjgl-nanovg:3.3.2")
-
 	compileOnly("org.slf4j:slf4j-api:2.0.16")
 }
 
@@ -33,7 +31,7 @@ dependencies {
 publishing {
 	publications {
 		mavenJava(MavenPublication) {
-			artifactId = archivesBaseName
+			artifactId = base.archivesName.get()
 			from components.java
 		}
 	}
