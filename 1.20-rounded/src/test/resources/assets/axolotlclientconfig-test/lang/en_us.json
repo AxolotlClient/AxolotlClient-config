@@ -1,6 +1,0 @@
-{
-  "style":"Style",
-  "style.tooltip": "The UI style to be used by the config library<br>Click to toggle.",
-  "boolean.tooltip": "Example Description!<br>Line two<br>Line three",
-  "loooooooooooooooooooooooooooooooong option name.tooltip": "this is a very long and daunting tooltip, fortunately it will be wrapped automatically! Otherwise this surely wouldn't fit on any screen."
-}
